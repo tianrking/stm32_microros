@@ -1,0 +1,1757 @@
+ARM GAS  /tmp/ccEheNME.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jdapimin.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.default_decompress_parms,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	default_decompress_parms:
+  26              	.LVL0:
+  27              	.LFB10:
+  28              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdapimin.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * jdapimin.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Copyright (C) 1994-1998, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Modified 2009 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This file contains application interface code for the decompression half
+  10:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * of the JPEG library.  These are the "minimum" API routines that may be
+  11:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * needed in either the normal full-decompression case or the
+  12:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * transcoding-only case.
+  13:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+  14:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Most of the routines intended to be called directly by an application
+  15:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * are in this file or in jdapistd.c.  But also see jcomapi.c for routines
+  16:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * shared by compression and decompression, and jdtrans.c for the transcoding
+  17:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * case.
+  18:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+  19:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  20:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #define JPEG_INTERNALS
+  21:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #include "jinclude.h"
+  22:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #include "jpeglib.h"
+  23:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  24:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+  26:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Initialization of a JPEG decompression object.
+  27:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * The error manager must already be set up (in case memory manager fails).
+  28:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+  29:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  30:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(void)
+ARM GAS  /tmp/ccEheNME.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_CreateDecompress (j_decompress_ptr cinfo, int version, size_t structsize)
+  32:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+  33:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int i;
+  34:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  35:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Guard against version mismatches between library and caller. */
+  36:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->mem = NULL;		/* so jpeg_destroy knows mem mgr not called */
+  37:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (version != JPEG_LIB_VERSION)
+  38:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_LIB_VERSION, JPEG_LIB_VERSION, version);
+  39:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (structsize != SIZEOF(struct jpeg_decompress_struct))
+  40:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_STRUCT_SIZE, 
+  41:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	     (int) SIZEOF(struct jpeg_decompress_struct), (int) structsize);
+  42:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  43:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* For debugging purposes, we zero the whole master structure.
+  44:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    * But the application has already set the err pointer, and may have set
+  45:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    * client_data, so we have to save and restore those fields.
+  46:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    * Note: if application hasn't set client_data, tools like Purify may
+  47:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    * complain here.
+  48:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    */
+  49:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   {
+  50:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     struct jpeg_error_mgr * err = cinfo->err;
+  51:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     void * client_data = cinfo->client_data; /* ignore Purify complaint here */
+  52:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     MEMZERO(cinfo, SIZEOF(struct jpeg_decompress_struct));
+  53:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->err = err;
+  54:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->client_data = client_data;
+  55:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+  56:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->is_decompressor = TRUE;
+  57:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  58:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Initialize a memory manager instance for this object */
+  59:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_memory_mgr((j_common_ptr) cinfo);
+  60:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  61:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Zero out pointers to permanent structures. */
+  62:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->progress = NULL;
+  63:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->src = NULL;
+  64:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   for (i = 0; i < NUM_QUANT_TBLS; i++)
+  66:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+  67:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   for (i = 0; i < NUM_HUFF_TBLS; i++) {
+  69:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+  70:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->ac_huff_tbl_ptrs[i] = NULL;
+  71:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+  72:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  73:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Initialize marker processor so application can override methods
+  74:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    * for COM, APPn markers before calling jpeg_read_header.
+  75:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****    */
+  76:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->marker_list = NULL;
+  77:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_marker_reader(cinfo);
+  78:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  79:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* And initialize the overall input controller. */
+  80:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_input_controller(cinfo);
+  81:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  82:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* OK, I'm ready */
+  83:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->global_state = DSTATE_START;
+  84:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+  85:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  86:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  87:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ARM GAS  /tmp/ccEheNME.s 			page 3
+
+
+  88:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Destruction of a JPEG decompression object
+  89:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+  90:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  91:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(void)
+  92:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_destroy_decompress (j_decompress_ptr cinfo)
+  93:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+  94:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
+  95:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+  96:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  97:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+  98:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+  99:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Abort processing of a JPEG decompression operation,
+ 100:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * but don't destroy the object itself.
+ 101:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 102:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 103:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(void)
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_abort_decompress (j_decompress_ptr cinfo)
+ 105:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 106:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 108:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 109:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 110:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 111:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Set default decompression parameters.
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 113:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 114:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** LOCAL(void)
+ 115:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** default_decompress_parms (j_decompress_ptr cinfo)
+ 116:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+  29              		.loc 1 116 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 116 1 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 0446     		mov	r4, r0
+ 117:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Guess the input colorspace, and set output colorspace accordingly. */
+ 118:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* (Wish JPEG committee had provided a real way to specify this...) */
+ 119:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Note application may override our guesses. */
+ 120:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   switch (cinfo->num_components) {
+  40              		.loc 1 120 3 is_stmt 1 view .LVU2
+  41              		.loc 1 120 16 is_stmt 0 view .LVU3
+  42 0004 436A     		ldr	r3, [r0, #36]
+  43              		.loc 1 120 3 view .LVU4
+  44 0006 032B     		cmp	r3, #3
+  45 0008 0ED0     		beq	.L2
+  46 000a 042B     		cmp	r3, #4
+  47 000c 7DD0     		beq	.L3
+  48 000e 012B     		cmp	r3, #1
+  49 0010 05D0     		beq	.L22
+ 121:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case 1:
+ 122:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->jpeg_color_space = JCS_GRAYSCALE;
+ 123:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_GRAYSCALE;
+ARM GAS  /tmp/ccEheNME.s 			page 4
+
+
+ 124:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 125:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+ 126:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case 3:
+ 127:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if (cinfo->saw_JFIF_marker) {
+ 128:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->jpeg_color_space = JCS_YCbCr; /* JFIF implies YCbCr */
+ 129:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     } else if (cinfo->saw_Adobe_marker) {
+ 130:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 131:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 132:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB;
+ 133:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 134:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 1:
+ 135:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr;
+ 136:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 137:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       default:
+ 138:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	WARNMS1(cinfo, JWRN_ADOBE_XFORM, cinfo->Adobe_transform);
+ 139:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 140:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 141:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 142:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     } else {
+ 143:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* Saw no special markers, try to guess from the component IDs */
+ 144:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid0 = cinfo->comp_info[0].component_id;
+ 145:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid1 = cinfo->comp_info[1].component_id;
+ 146:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid2 = cinfo->comp_info[2].component_id;
+ 147:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       if (cid0 == 1 && cid1 == 2 && cid2 == 3)
+ 149:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume JFIF w/out marker */
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else if (cid0 == 82 && cid1 == 71 && cid2 == 66)
+ 151:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB; /* ASCII 'R', 'G', 'B' */
+ 152:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else {
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	TRACEMS3(cinfo, 1, JTRC_UNKNOWN_IDS, cid0, cid1, cid2);
+ 154:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 155:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 156:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 157:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Always guess RGB is proper output colorspace. */
+ 158:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_RGB;
+ 159:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 160:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+ 161:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case 4:
+ 162:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if (cinfo->saw_Adobe_marker) {
+ 163:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 164:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 165:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_CMYK;
+ 166:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 167:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 2:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCCK;
+ 169:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 170:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       default:
+ 171:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	WARNMS1(cinfo, JWRN_ADOBE_XFORM, cinfo->Adobe_transform);
+ 172:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCCK; /* assume it's YCCK */
+ 173:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 174:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 175:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     } else {
+ 176:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* No special markers, assume straight CMYK. */
+ 177:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->jpeg_color_space = JCS_CMYK;
+ 178:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 179:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_CMYK;
+ 180:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ARM GAS  /tmp/ccEheNME.s 			page 5
+
+
+ 181:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+ 182:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   default:
+ 183:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->jpeg_color_space = JCS_UNKNOWN;
+  50              		.loc 1 183 5 is_stmt 1 view .LVU5
+  51              		.loc 1 183 29 is_stmt 0 view .LVU6
+  52 0012 0023     		movs	r3, #0
+  53 0014 80F82830 		strb	r3, [r0, #40]
+ 184:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_UNKNOWN;
+  54              		.loc 1 184 5 is_stmt 1 view .LVU7
+  55              		.loc 1 184 28 is_stmt 0 view .LVU8
+  56 0018 80F82930 		strb	r3, [r0, #41]
+ 185:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+  57              		.loc 1 185 5 is_stmt 1 view .LVU9
+  58 001c 0DE0     		b	.L5
+  59              	.L22:
+ 122:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_GRAYSCALE;
+  60              		.loc 1 122 5 view .LVU10
+ 122:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->out_color_space = JCS_GRAYSCALE;
+  61              		.loc 1 122 29 is_stmt 0 view .LVU11
+  62 001e 80F82830 		strb	r3, [r0, #40]
+ 123:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+  63              		.loc 1 123 5 is_stmt 1 view .LVU12
+ 123:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+  64              		.loc 1 123 28 is_stmt 0 view .LVU13
+  65 0022 80F82930 		strb	r3, [r0, #41]
+ 124:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+  66              		.loc 1 124 5 is_stmt 1 view .LVU14
+  67 0026 08E0     		b	.L5
+  68              	.L2:
+ 127:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->jpeg_color_space = JCS_YCbCr; /* JFIF implies YCbCr */
+  69              		.loc 1 127 5 view .LVU15
+ 127:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->jpeg_color_space = JCS_YCbCr; /* JFIF implies YCbCr */
+  70              		.loc 1 127 14 is_stmt 0 view .LVU16
+  71 0028 D0F81C31 		ldr	r3, [r0, #284]
+ 127:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->jpeg_color_space = JCS_YCbCr; /* JFIF implies YCbCr */
+  72              		.loc 1 127 8 view .LVU17
+  73 002c 1BB3     		cbz	r3, .L6
+ 128:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     } else if (cinfo->saw_Adobe_marker) {
+  74              		.loc 1 128 7 is_stmt 1 view .LVU18
+ 128:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     } else if (cinfo->saw_Adobe_marker) {
+  75              		.loc 1 128 31 is_stmt 0 view .LVU19
+  76 002e 0323     		movs	r3, #3
+  77 0030 80F82830 		strb	r3, [r0, #40]
+  78              	.LVL1:
+  79              	.L7:
+ 158:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+  80              		.loc 1 158 5 is_stmt 1 view .LVU20
+ 158:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+  81              		.loc 1 158 28 is_stmt 0 view .LVU21
+  82 0034 0223     		movs	r3, #2
+  83 0036 84F82930 		strb	r3, [r4, #41]
+ 159:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+  84              		.loc 1 159 5 is_stmt 1 view .LVU22
+  85              	.L5:
+ 186:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 187:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 188:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Set defaults for other decompression parameters. */
+ARM GAS  /tmp/ccEheNME.s 			page 6
+
+
+ 189:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->scale_num = cinfo->block_size;		/* 1:1 scaling */
+  86              		.loc 1 189 3 view .LVU23
+  87              		.loc 1 189 27 is_stmt 0 view .LVU24
+  88 003a D4F8A831 		ldr	r3, [r4, #424]
+  89              		.loc 1 189 20 view .LVU25
+  90 003e E362     		str	r3, [r4, #44]
+ 190:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->scale_denom = cinfo->block_size;
+  91              		.loc 1 190 3 is_stmt 1 view .LVU26
+  92              		.loc 1 190 22 is_stmt 0 view .LVU27
+  93 0040 2363     		str	r3, [r4, #48]
+ 191:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->output_gamma = 1.0;
+  94              		.loc 1 191 3 is_stmt 1 view .LVU28
+  95              		.loc 1 191 23 is_stmt 0 view .LVU29
+  96 0042 0022     		movs	r2, #0
+  97 0044 444B     		ldr	r3, .L25
+  98 0046 C4E90E23 		strd	r2, [r4, #56]
+ 192:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->buffered_image = FALSE;
+  99              		.loc 1 192 3 is_stmt 1 view .LVU30
+ 100              		.loc 1 192 25 is_stmt 0 view .LVU31
+ 101 004a 0023     		movs	r3, #0
+ 102 004c 2364     		str	r3, [r4, #64]
+ 193:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->raw_data_out = FALSE;
+ 103              		.loc 1 193 3 is_stmt 1 view .LVU32
+ 104              		.loc 1 193 23 is_stmt 0 view .LVU33
+ 105 004e 6364     		str	r3, [r4, #68]
+ 194:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->dct_method = JDCT_DEFAULT;
+ 106              		.loc 1 194 3 is_stmt 1 view .LVU34
+ 107              		.loc 1 194 21 is_stmt 0 view .LVU35
+ 108 0050 84F84830 		strb	r3, [r4, #72]
+ 195:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->do_fancy_upsampling = TRUE;
+ 109              		.loc 1 195 3 is_stmt 1 view .LVU36
+ 110              		.loc 1 195 30 is_stmt 0 view .LVU37
+ 111 0054 0122     		movs	r2, #1
+ 112 0056 E264     		str	r2, [r4, #76]
+ 196:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->do_block_smoothing = TRUE;
+ 113              		.loc 1 196 3 is_stmt 1 view .LVU38
+ 114              		.loc 1 196 29 is_stmt 0 view .LVU39
+ 115 0058 2265     		str	r2, [r4, #80]
+ 197:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->quantize_colors = FALSE;
+ 116              		.loc 1 197 3 is_stmt 1 view .LVU40
+ 117              		.loc 1 197 26 is_stmt 0 view .LVU41
+ 118 005a 6365     		str	r3, [r4, #84]
+ 198:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* We set these in case application only sets quantize_colors. */
+ 199:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->dither_mode = JDITHER_FS;
+ 119              		.loc 1 199 3 is_stmt 1 view .LVU42
+ 120              		.loc 1 199 22 is_stmt 0 view .LVU43
+ 121 005c 0221     		movs	r1, #2
+ 122 005e 84F85810 		strb	r1, [r4, #88]
+ 200:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 201:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->two_pass_quantize = TRUE;
+ 123              		.loc 1 201 3 is_stmt 1 view .LVU44
+ 124              		.loc 1 201 28 is_stmt 0 view .LVU45
+ 125 0062 E265     		str	r2, [r4, #92]
+ 202:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #else
+ 203:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->two_pass_quantize = FALSE;
+ 204:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** #endif
+ 205:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->desired_number_of_colors = 256;
+ARM GAS  /tmp/ccEheNME.s 			page 7
+
+
+ 126              		.loc 1 205 3 is_stmt 1 view .LVU46
+ 127              		.loc 1 205 35 is_stmt 0 view .LVU47
+ 128 0064 4FF48072 		mov	r2, #256
+ 129 0068 2266     		str	r2, [r4, #96]
+ 206:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->colormap = NULL;
+ 130              		.loc 1 206 3 is_stmt 1 view .LVU48
+ 131              		.loc 1 206 19 is_stmt 0 view .LVU49
+ 132 006a C4F88830 		str	r3, [r4, #136]
+ 207:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Initialize for no mode change in buffered-image mode. */
+ 208:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->enable_1pass_quant = FALSE;
+ 133              		.loc 1 208 3 is_stmt 1 view .LVU50
+ 134              		.loc 1 208 29 is_stmt 0 view .LVU51
+ 135 006e 6366     		str	r3, [r4, #100]
+ 209:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->enable_external_quant = FALSE;
+ 136              		.loc 1 209 3 is_stmt 1 view .LVU52
+ 137              		.loc 1 209 32 is_stmt 0 view .LVU53
+ 138 0070 A366     		str	r3, [r4, #104]
+ 210:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->enable_2pass_quant = FALSE;
+ 139              		.loc 1 210 3 is_stmt 1 view .LVU54
+ 140              		.loc 1 210 29 is_stmt 0 view .LVU55
+ 141 0072 E366     		str	r3, [r4, #108]
+ 211:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 142              		.loc 1 211 1 view .LVU56
+ 143 0074 10BD     		pop	{r4, pc}
+ 144              	.LVL2:
+ 145              	.L6:
+ 129:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 146              		.loc 1 129 12 is_stmt 1 view .LVU57
+ 129:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 147              		.loc 1 129 21 is_stmt 0 view .LVU58
+ 148 0076 D0F82831 		ldr	r3, [r0, #296]
+ 129:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 149              		.loc 1 129 15 view .LVU59
+ 150 007a E3B1     		cbz	r3, .L8
+ 130:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 151              		.loc 1 130 7 is_stmt 1 view .LVU60
+ 130:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 152              		.loc 1 130 20 is_stmt 0 view .LVU61
+ 153 007c 90F82C31 		ldrb	r3, [r0, #300]	@ zero_extendqisi2
+ 154 0080 8BB1     		cbz	r3, .L9
+ 155 0082 012B     		cmp	r3, #1
+ 156 0084 13D0     		beq	.L10
+ 138:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 157              		.loc 1 138 2 is_stmt 1 view .LVU62
+ 158 0086 0368     		ldr	r3, [r0]
+ 159 0088 7422     		movs	r2, #116
+ 160 008a 5A61     		str	r2, [r3, #20]
+ 161 008c 0368     		ldr	r3, [r0]
+ 162 008e 90F82C21 		ldrb	r2, [r0, #300]	@ zero_extendqisi2
+ 163 0092 9A61     		str	r2, [r3, #24]
+ 164 0094 0368     		ldr	r3, [r0]
+ 165 0096 5B68     		ldr	r3, [r3, #4]
+ 166 0098 4FF0FF31 		mov	r1, #-1
+ 167 009c 9847     		blx	r3
+ 168              	.LVL3:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 169              		.loc 1 139 2 view .LVU63
+ARM GAS  /tmp/ccEheNME.s 			page 8
+
+
+ 139:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 170              		.loc 1 139 26 is_stmt 0 view .LVU64
+ 171 009e 0323     		movs	r3, #3
+ 172 00a0 84F82830 		strb	r3, [r4, #40]
+ 140:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 173              		.loc 1 140 2 is_stmt 1 view .LVU65
+ 174 00a4 C6E7     		b	.L7
+ 175              	.LVL4:
+ 176              	.L9:
+ 132:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 177              		.loc 1 132 2 view .LVU66
+ 132:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 178              		.loc 1 132 26 is_stmt 0 view .LVU67
+ 179 00a6 0223     		movs	r3, #2
+ 180 00a8 80F82830 		strb	r3, [r0, #40]
+ 133:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 1:
+ 181              		.loc 1 133 2 is_stmt 1 view .LVU68
+ 182 00ac C2E7     		b	.L7
+ 183              	.L10:
+ 135:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 184              		.loc 1 135 2 view .LVU69
+ 135:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 185              		.loc 1 135 26 is_stmt 0 view .LVU70
+ 186 00ae 0323     		movs	r3, #3
+ 187 00b0 80F82830 		strb	r3, [r0, #40]
+ 136:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       default:
+ 188              		.loc 1 136 2 is_stmt 1 view .LVU71
+ 189 00b4 BEE7     		b	.L7
+ 190              	.L8:
+ 191              	.LBB2:
+ 144:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid1 = cinfo->comp_info[1].component_id;
+ 192              		.loc 1 144 7 view .LVU72
+ 144:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid1 = cinfo->comp_info[1].component_id;
+ 193              		.loc 1 144 23 is_stmt 0 view .LVU73
+ 194 00b6 D0F8D830 		ldr	r3, [r0, #216]
+ 144:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid1 = cinfo->comp_info[1].component_id;
+ 195              		.loc 1 144 11 view .LVU74
+ 196 00ba 1A68     		ldr	r2, [r3]
+ 197              	.LVL5:
+ 145:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid2 = cinfo->comp_info[2].component_id;
+ 198              		.loc 1 145 7 is_stmt 1 view .LVU75
+ 145:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       int cid2 = cinfo->comp_info[2].component_id;
+ 199              		.loc 1 145 11 is_stmt 0 view .LVU76
+ 200 00bc 996D     		ldr	r1, [r3, #88]
+ 201              	.LVL6:
+ 146:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 202              		.loc 1 146 7 is_stmt 1 view .LVU77
+ 146:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 203              		.loc 1 146 11 is_stmt 0 view .LVU78
+ 204 00be D3F8B000 		ldr	r0, [r3, #176]
+ 205              	.LVL7:
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume JFIF w/out marker */
+ 206              		.loc 1 148 7 is_stmt 1 view .LVU79
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume JFIF w/out marker */
+ 207              		.loc 1 148 10 is_stmt 0 view .LVU80
+ 208 00c2 012A     		cmp	r2, #1
+ 209 00c4 11D0     		beq	.L23
+ARM GAS  /tmp/ccEheNME.s 			page 9
+
+
+ 210              	.L12:
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB; /* ASCII 'R', 'G', 'B' */
+ 211              		.loc 1 150 12 is_stmt 1 view .LVU81
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB; /* ASCII 'R', 'G', 'B' */
+ 212              		.loc 1 150 15 is_stmt 0 view .LVU82
+ 213 00c6 522A     		cmp	r2, #82
+ 214 00c8 17D0     		beq	.L24
+ 215              	.L13:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 216              		.loc 1 153 2 is_stmt 1 view .LVU83
+ 217              	.LBB3:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 218              		.loc 1 153 2 view .LVU84
+ 219 00ca 2368     		ldr	r3, [r4]
+ 220              	.LVL8:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 221              		.loc 1 153 2 view .LVU85
+ 222 00cc 9A61     		str	r2, [r3, #24]
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 223              		.loc 1 153 2 view .LVU86
+ 224 00ce D961     		str	r1, [r3, #28]
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 225              		.loc 1 153 2 view .LVU87
+ 226 00d0 1862     		str	r0, [r3, #32]
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 227              		.loc 1 153 2 view .LVU88
+ 228 00d2 2368     		ldr	r3, [r4]
+ 229              	.LVL9:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 230              		.loc 1 153 2 is_stmt 0 view .LVU89
+ 231 00d4 7122     		movs	r2, #113
+ 232              	.LVL10:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 233              		.loc 1 153 2 view .LVU90
+ 234 00d6 5A61     		str	r2, [r3, #20]
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 235              		.loc 1 153 2 is_stmt 1 view .LVU91
+ 236 00d8 2368     		ldr	r3, [r4]
+ 237 00da 5B68     		ldr	r3, [r3, #4]
+ 238 00dc 0121     		movs	r1, #1
+ 239              	.LVL11:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 240              		.loc 1 153 2 is_stmt 0 view .LVU92
+ 241 00de 2046     		mov	r0, r4
+ 242              	.LVL12:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 243              		.loc 1 153 2 view .LVU93
+ 244 00e0 9847     		blx	r3
+ 245              	.LVL13:
+ 246              	.LBE3:
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume it's YCbCr */
+ 247              		.loc 1 153 2 is_stmt 1 view .LVU94
+ 154:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 248              		.loc 1 154 2 view .LVU95
+ 154:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 249              		.loc 1 154 26 is_stmt 0 view .LVU96
+ 250 00e2 0323     		movs	r3, #3
+ARM GAS  /tmp/ccEheNME.s 			page 10
+
+
+ 251 00e4 84F82830 		strb	r3, [r4, #40]
+ 252 00e8 A4E7     		b	.L7
+ 253              	.LVL14:
+ 254              	.L23:
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume JFIF w/out marker */
+ 255              		.loc 1 148 21 discriminator 1 view .LVU97
+ 256 00ea 0229     		cmp	r1, #2
+ 257 00ec EBD1     		bne	.L12
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCbCr; /* assume JFIF w/out marker */
+ 258              		.loc 1 148 34 discriminator 2 view .LVU98
+ 259 00ee 0328     		cmp	r0, #3
+ 260 00f0 E9D1     		bne	.L12
+ 149:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else if (cid0 == 82 && cid1 == 71 && cid2 == 66)
+ 261              		.loc 1 149 2 is_stmt 1 view .LVU99
+ 149:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else if (cid0 == 82 && cid1 == 71 && cid2 == 66)
+ 262              		.loc 1 149 26 is_stmt 0 view .LVU100
+ 263 00f2 0323     		movs	r3, #3
+ 264 00f4 84F82830 		strb	r3, [r4, #40]
+ 265 00f8 9CE7     		b	.L7
+ 266              	.L24:
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB; /* ASCII 'R', 'G', 'B' */
+ 267              		.loc 1 150 27 discriminator 1 view .LVU101
+ 268 00fa 4729     		cmp	r1, #71
+ 269 00fc E5D1     		bne	.L13
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_RGB; /* ASCII 'R', 'G', 'B' */
+ 270              		.loc 1 150 41 discriminator 2 view .LVU102
+ 271 00fe 4228     		cmp	r0, #66
+ 272 0100 E3D1     		bne	.L13
+ 151:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else {
+ 273              		.loc 1 151 2 is_stmt 1 view .LVU103
+ 151:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else {
+ 274              		.loc 1 151 26 is_stmt 0 view .LVU104
+ 275 0102 0223     		movs	r3, #2
+ 276 0104 84F82830 		strb	r3, [r4, #40]
+ 277 0108 94E7     		b	.L7
+ 278              	.LVL15:
+ 279              	.L3:
+ 151:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       else {
+ 280              		.loc 1 151 26 view .LVU105
+ 281              	.LBE2:
+ 162:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 282              		.loc 1 162 5 is_stmt 1 view .LVU106
+ 162:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 283              		.loc 1 162 14 is_stmt 0 view .LVU107
+ 284 010a D0F82831 		ldr	r3, [r0, #296]
+ 162:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       switch (cinfo->Adobe_transform) {
+ 285              		.loc 1 162 8 view .LVU108
+ 286 010e E3B1     		cbz	r3, .L14
+ 163:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 287              		.loc 1 163 7 is_stmt 1 view .LVU109
+ 163:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 0:
+ 288              		.loc 1 163 20 is_stmt 0 view .LVU110
+ 289 0110 90F82C31 		ldrb	r3, [r0, #300]	@ zero_extendqisi2
+ 290 0114 8BB1     		cbz	r3, .L15
+ 291 0116 022B     		cmp	r3, #2
+ 292 0118 13D0     		beq	.L16
+ 171:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	cinfo->jpeg_color_space = JCS_YCCK; /* assume it's YCCK */
+ARM GAS  /tmp/ccEheNME.s 			page 11
+
+
+ 293              		.loc 1 171 2 is_stmt 1 view .LVU111
+ 294 011a 0368     		ldr	r3, [r0]
+ 295 011c 7422     		movs	r2, #116
+ 296 011e 5A61     		str	r2, [r3, #20]
+ 297 0120 0368     		ldr	r3, [r0]
+ 298 0122 90F82C21 		ldrb	r2, [r0, #300]	@ zero_extendqisi2
+ 299 0126 9A61     		str	r2, [r3, #24]
+ 300 0128 0368     		ldr	r3, [r0]
+ 301 012a 5B68     		ldr	r3, [r3, #4]
+ 302 012c 4FF0FF31 		mov	r1, #-1
+ 303 0130 9847     		blx	r3
+ 304              	.LVL16:
+ 172:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 305              		.loc 1 172 2 view .LVU112
+ 172:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 306              		.loc 1 172 26 is_stmt 0 view .LVU113
+ 307 0132 0523     		movs	r3, #5
+ 308 0134 84F82830 		strb	r3, [r4, #40]
+ 173:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       }
+ 309              		.loc 1 173 2 is_stmt 1 view .LVU114
+ 310 0138 0AE0     		b	.L18
+ 311              	.LVL17:
+ 312              	.L15:
+ 165:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 313              		.loc 1 165 2 view .LVU115
+ 165:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 314              		.loc 1 165 26 is_stmt 0 view .LVU116
+ 315 013a 0423     		movs	r3, #4
+ 316 013c 80F82830 		strb	r3, [r0, #40]
+ 166:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       case 2:
+ 317              		.loc 1 166 2 is_stmt 1 view .LVU117
+ 318 0140 06E0     		b	.L18
+ 319              	.L16:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 320              		.loc 1 168 2 view .LVU118
+ 168:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	break;
+ 321              		.loc 1 168 26 is_stmt 0 view .LVU119
+ 322 0142 0523     		movs	r3, #5
+ 323 0144 80F82830 		strb	r3, [r0, #40]
+ 169:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       default:
+ 324              		.loc 1 169 2 is_stmt 1 view .LVU120
+ 325 0148 02E0     		b	.L18
+ 326              	.L14:
+ 177:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 327              		.loc 1 177 7 view .LVU121
+ 177:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 328              		.loc 1 177 31 is_stmt 0 view .LVU122
+ 329 014a 0423     		movs	r3, #4
+ 330 014c 80F82830 		strb	r3, [r0, #40]
+ 331              	.LVL18:
+ 332              	.L18:
+ 179:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 333              		.loc 1 179 5 is_stmt 1 view .LVU123
+ 179:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 334              		.loc 1 179 28 is_stmt 0 view .LVU124
+ 335 0150 0423     		movs	r3, #4
+ 336 0152 84F82930 		strb	r3, [r4, #41]
+ARM GAS  /tmp/ccEheNME.s 			page 12
+
+
+ 180:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     
+ 337              		.loc 1 180 5 is_stmt 1 view .LVU125
+ 338 0156 70E7     		b	.L5
+ 339              	.L26:
+ 340              		.align	2
+ 341              	.L25:
+ 342 0158 0000F03F 		.word	1072693248
+ 343              		.cfi_endproc
+ 344              	.LFE10:
+ 346              		.section	.text.jpeg_CreateDecompress,"ax",%progbits
+ 347              		.align	1
+ 348              		.global	jpeg_CreateDecompress
+ 349              		.syntax unified
+ 350              		.thumb
+ 351              		.thumb_func
+ 352              		.fpu fpv4-sp-d16
+ 354              	jpeg_CreateDecompress:
+ 355              	.LVL19:
+ 356              	.LFB7:
+  32:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int i;
+ 357              		.loc 1 32 1 view -0
+ 358              		.cfi_startproc
+ 359              		@ args = 0, pretend = 0, frame = 0
+ 360              		@ frame_needed = 0, uses_anonymous_args = 0
+  32:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int i;
+ 361              		.loc 1 32 1 is_stmt 0 view .LVU127
+ 362 0000 70B5     		push	{r4, r5, r6, lr}
+ 363              	.LCFI1:
+ 364              		.cfi_def_cfa_offset 16
+ 365              		.cfi_offset 4, -16
+ 366              		.cfi_offset 5, -12
+ 367              		.cfi_offset 6, -8
+ 368              		.cfi_offset 14, -4
+ 369 0002 0446     		mov	r4, r0
+ 370 0004 1546     		mov	r5, r2
+  33:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 371              		.loc 1 33 3 is_stmt 1 view .LVU128
+  36:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (version != JPEG_LIB_VERSION)
+ 372              		.loc 1 36 3 view .LVU129
+  36:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (version != JPEG_LIB_VERSION)
+ 373              		.loc 1 36 14 is_stmt 0 view .LVU130
+ 374 0006 0023     		movs	r3, #0
+ 375 0008 4360     		str	r3, [r0, #4]
+  37:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_LIB_VERSION, JPEG_LIB_VERSION, version);
+ 376              		.loc 1 37 3 is_stmt 1 view .LVU131
+  37:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_LIB_VERSION, JPEG_LIB_VERSION, version);
+ 377              		.loc 1 37 6 is_stmt 0 view .LVU132
+ 378 000a 5029     		cmp	r1, #80
+ 379 000c 0AD0     		beq	.L28
+  38:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (structsize != SIZEOF(struct jpeg_decompress_struct))
+ 380              		.loc 1 38 5 is_stmt 1 view .LVU133
+ 381 000e 0368     		ldr	r3, [r0]
+ 382 0010 0D22     		movs	r2, #13
+ 383              	.LVL20:
+  38:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (structsize != SIZEOF(struct jpeg_decompress_struct))
+ 384              		.loc 1 38 5 is_stmt 0 view .LVU134
+ 385 0012 5A61     		str	r2, [r3, #20]
+ARM GAS  /tmp/ccEheNME.s 			page 13
+
+
+ 386 0014 0368     		ldr	r3, [r0]
+ 387 0016 5022     		movs	r2, #80
+ 388 0018 9A61     		str	r2, [r3, #24]
+ 389 001a 0368     		ldr	r3, [r0]
+ 390 001c D961     		str	r1, [r3, #28]
+ 391 001e 0368     		ldr	r3, [r0]
+ 392 0020 1B68     		ldr	r3, [r3]
+ 393 0022 9847     		blx	r3
+ 394              	.LVL21:
+ 395              	.L28:
+  39:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_STRUCT_SIZE, 
+ 396              		.loc 1 39 3 is_stmt 1 view .LVU135
+  39:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT2(cinfo, JERR_BAD_STRUCT_SIZE, 
+ 397              		.loc 1 39 6 is_stmt 0 view .LVU136
+ 398 0024 B5F5F47F 		cmp	r5, #488
+ 399 0028 0CD0     		beq	.L29
+  40:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 	     (int) SIZEOF(struct jpeg_decompress_struct), (int) structsize);
+ 400              		.loc 1 40 5 is_stmt 1 view .LVU137
+ 401 002a 2368     		ldr	r3, [r4]
+ 402 002c 1622     		movs	r2, #22
+ 403 002e 5A61     		str	r2, [r3, #20]
+ 404 0030 2368     		ldr	r3, [r4]
+ 405 0032 4FF4F472 		mov	r2, #488
+ 406 0036 9A61     		str	r2, [r3, #24]
+ 407 0038 2368     		ldr	r3, [r4]
+ 408 003a DD61     		str	r5, [r3, #28]
+ 409 003c 2368     		ldr	r3, [r4]
+ 410 003e 1B68     		ldr	r3, [r3]
+ 411 0040 2046     		mov	r0, r4
+ 412 0042 9847     		blx	r3
+ 413              	.LVL22:
+ 414              	.L29:
+ 415              	.LBB4:
+  50:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     void * client_data = cinfo->client_data; /* ignore Purify complaint here */
+ 416              		.loc 1 50 5 view .LVU138
+  50:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     void * client_data = cinfo->client_data; /* ignore Purify complaint here */
+ 417              		.loc 1 50 29 is_stmt 0 view .LVU139
+ 418 0044 2668     		ldr	r6, [r4]
+ 419              	.LVL23:
+  51:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     MEMZERO(cinfo, SIZEOF(struct jpeg_decompress_struct));
+ 420              		.loc 1 51 5 is_stmt 1 view .LVU140
+  51:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     MEMZERO(cinfo, SIZEOF(struct jpeg_decompress_struct));
+ 421              		.loc 1 51 12 is_stmt 0 view .LVU141
+ 422 0046 E568     		ldr	r5, [r4, #12]
+ 423              	.LVL24:
+  52:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->err = err;
+ 424              		.loc 1 52 5 is_stmt 1 view .LVU142
+ 425 0048 4FF4F472 		mov	r2, #488
+ 426 004c 0021     		movs	r1, #0
+ 427 004e 2046     		mov	r0, r4
+ 428 0050 FFF7FEFF 		bl	memset
+ 429              	.LVL25:
+  53:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->client_data = client_data;
+ 430              		.loc 1 53 5 view .LVU143
+  53:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->client_data = client_data;
+ 431              		.loc 1 53 16 is_stmt 0 view .LVU144
+ 432 0054 2660     		str	r6, [r4]
+ARM GAS  /tmp/ccEheNME.s 			page 14
+
+
+  54:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 433              		.loc 1 54 5 is_stmt 1 view .LVU145
+  54:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 434              		.loc 1 54 24 is_stmt 0 view .LVU146
+ 435 0056 E560     		str	r5, [r4, #12]
+ 436              	.LBE4:
+  56:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 437              		.loc 1 56 3 is_stmt 1 view .LVU147
+  56:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 438              		.loc 1 56 26 is_stmt 0 view .LVU148
+ 439 0058 0123     		movs	r3, #1
+ 440 005a 2361     		str	r3, [r4, #16]
+  59:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 441              		.loc 1 59 3 is_stmt 1 view .LVU149
+ 442 005c 2046     		mov	r0, r4
+ 443 005e FFF7FEFF 		bl	jinit_memory_mgr
+ 444              	.LVL26:
+  62:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->src = NULL;
+ 445              		.loc 1 62 3 view .LVU150
+  62:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   cinfo->src = NULL;
+ 446              		.loc 1 62 19 is_stmt 0 view .LVU151
+ 447 0062 0023     		movs	r3, #0
+ 448 0064 A360     		str	r3, [r4, #8]
+  63:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 449              		.loc 1 63 3 is_stmt 1 view .LVU152
+  63:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 450              		.loc 1 63 14 is_stmt 0 view .LVU153
+ 451 0066 A361     		str	r3, [r4, #24]
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 452              		.loc 1 65 3 is_stmt 1 view .LVU154
+ 453              	.LVL27:
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 454              		.loc 1 65 3 is_stmt 0 view .LVU155
+ 455 0068 06E0     		b	.L30
+ 456              	.LVL28:
+ 457              	.L31:
+  66:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 458              		.loc 1 66 5 is_stmt 1 discriminator 3 view .LVU156
+  66:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 459              		.loc 1 66 30 is_stmt 0 discriminator 3 view .LVU157
+ 460 006a 03F12802 		add	r2, r3, #40
+ 461 006e 04EB8202 		add	r2, r4, r2, lsl #2
+ 462 0072 0021     		movs	r1, #0
+ 463 0074 5160     		str	r1, [r2, #4]
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 464              		.loc 1 65 35 is_stmt 1 discriminator 3 view .LVU158
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 465              		.loc 1 65 36 is_stmt 0 discriminator 3 view .LVU159
+ 466 0076 0133     		adds	r3, r3, #1
+ 467              	.LVL29:
+ 468              	.L30:
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 469              		.loc 1 65 15 is_stmt 1 discriminator 1 view .LVU160
+  65:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->quant_tbl_ptrs[i] = NULL;
+ 470              		.loc 1 65 3 is_stmt 0 discriminator 1 view .LVU161
+ 471 0078 032B     		cmp	r3, #3
+ 472 007a F6DD     		ble	.L31
+ARM GAS  /tmp/ccEheNME.s 			page 15
+
+
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 473              		.loc 1 68 10 view .LVU162
+ 474 007c 0023     		movs	r3, #0
+ 475              	.LVL30:
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 476              		.loc 1 68 10 view .LVU163
+ 477 007e 0BE0     		b	.L32
+ 478              	.LVL31:
+ 479              	.L33:
+  69:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->ac_huff_tbl_ptrs[i] = NULL;
+ 480              		.loc 1 69 5 is_stmt 1 discriminator 3 view .LVU164
+  69:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->ac_huff_tbl_ptrs[i] = NULL;
+ 481              		.loc 1 69 32 is_stmt 0 discriminator 3 view .LVU165
+ 482 0080 03F12C02 		add	r2, r3, #44
+ 483 0084 04EB8202 		add	r2, r4, r2, lsl #2
+ 484 0088 0021     		movs	r1, #0
+ 485 008a 5160     		str	r1, [r2, #4]
+  70:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 486              		.loc 1 70 5 is_stmt 1 discriminator 3 view .LVU166
+  70:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 487              		.loc 1 70 32 is_stmt 0 discriminator 3 view .LVU167
+ 488 008c 03F13002 		add	r2, r3, #48
+ 489 0090 04EB8202 		add	r2, r4, r2, lsl #2
+ 490 0094 5160     		str	r1, [r2, #4]
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 491              		.loc 1 68 34 is_stmt 1 discriminator 3 view .LVU168
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 492              		.loc 1 68 35 is_stmt 0 discriminator 3 view .LVU169
+ 493 0096 0133     		adds	r3, r3, #1
+ 494              	.LVL32:
+ 495              	.L32:
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 496              		.loc 1 68 15 is_stmt 1 discriminator 1 view .LVU170
+  68:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->dc_huff_tbl_ptrs[i] = NULL;
+ 497              		.loc 1 68 3 is_stmt 0 discriminator 1 view .LVU171
+ 498 0098 032B     		cmp	r3, #3
+ 499 009a F1DD     		ble	.L33
+  76:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_marker_reader(cinfo);
+ 500              		.loc 1 76 3 is_stmt 1 view .LVU172
+  76:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_marker_reader(cinfo);
+ 501              		.loc 1 76 22 is_stmt 0 view .LVU173
+ 502 009c 0023     		movs	r3, #0
+ 503              	.LVL33:
+  76:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jinit_marker_reader(cinfo);
+ 504              		.loc 1 76 22 view .LVU174
+ 505 009e C4F83431 		str	r3, [r4, #308]
+  77:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 506              		.loc 1 77 3 is_stmt 1 view .LVU175
+ 507 00a2 2046     		mov	r0, r4
+ 508 00a4 FFF7FEFF 		bl	jinit_marker_reader
+ 509              	.LVL34:
+  80:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 510              		.loc 1 80 3 view .LVU176
+ 511 00a8 2046     		mov	r0, r4
+ 512 00aa FFF7FEFF 		bl	jinit_input_controller
+ 513              	.LVL35:
+  83:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ARM GAS  /tmp/ccEheNME.s 			page 16
+
+
+ 514              		.loc 1 83 3 view .LVU177
+  83:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 515              		.loc 1 83 23 is_stmt 0 view .LVU178
+ 516 00ae C823     		movs	r3, #200
+ 517 00b0 6361     		str	r3, [r4, #20]
+  84:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 518              		.loc 1 84 1 view .LVU179
+ 519 00b2 70BD     		pop	{r4, r5, r6, pc}
+  84:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 520              		.loc 1 84 1 view .LVU180
+ 521              		.cfi_endproc
+ 522              	.LFE7:
+ 524              		.section	.text.jpeg_destroy_decompress,"ax",%progbits
+ 525              		.align	1
+ 526              		.global	jpeg_destroy_decompress
+ 527              		.syntax unified
+ 528              		.thumb
+ 529              		.thumb_func
+ 530              		.fpu fpv4-sp-d16
+ 532              	jpeg_destroy_decompress:
+ 533              	.LVL36:
+ 534              	.LFB8:
+  93:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
+ 535              		.loc 1 93 1 is_stmt 1 view -0
+ 536              		.cfi_startproc
+ 537              		@ args = 0, pretend = 0, frame = 0
+ 538              		@ frame_needed = 0, uses_anonymous_args = 0
+  93:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
+ 539              		.loc 1 93 1 is_stmt 0 view .LVU182
+ 540 0000 08B5     		push	{r3, lr}
+ 541              	.LCFI2:
+ 542              		.cfi_def_cfa_offset 8
+ 543              		.cfi_offset 3, -8
+ 544              		.cfi_offset 14, -4
+  94:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 545              		.loc 1 94 3 is_stmt 1 view .LVU183
+ 546 0002 FFF7FEFF 		bl	jpeg_destroy
+ 547              	.LVL37:
+  95:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 548              		.loc 1 95 1 is_stmt 0 view .LVU184
+ 549 0006 08BD     		pop	{r3, pc}
+ 550              		.cfi_endproc
+ 551              	.LFE8:
+ 553              		.section	.text.jpeg_abort_decompress,"ax",%progbits
+ 554              		.align	1
+ 555              		.global	jpeg_abort_decompress
+ 556              		.syntax unified
+ 557              		.thumb
+ 558              		.thumb_func
+ 559              		.fpu fpv4-sp-d16
+ 561              	jpeg_abort_decompress:
+ 562              	.LVL38:
+ 563              	.LFB9:
+ 105:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
+ 564              		.loc 1 105 1 is_stmt 1 view -0
+ 565              		.cfi_startproc
+ 566              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /tmp/ccEheNME.s 			page 17
+
+
+ 567              		@ frame_needed = 0, uses_anonymous_args = 0
+ 105:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
+ 568              		.loc 1 105 1 is_stmt 0 view .LVU186
+ 569 0000 08B5     		push	{r3, lr}
+ 570              	.LCFI3:
+ 571              		.cfi_def_cfa_offset 8
+ 572              		.cfi_offset 3, -8
+ 573              		.cfi_offset 14, -4
+ 106:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 574              		.loc 1 106 3 is_stmt 1 view .LVU187
+ 575 0002 FFF7FEFF 		bl	jpeg_abort
+ 576              	.LVL39:
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 577              		.loc 1 107 1 is_stmt 0 view .LVU188
+ 578 0006 08BD     		pop	{r3, pc}
+ 579              		.cfi_endproc
+ 580              	.LFE9:
+ 582              		.section	.text.jpeg_consume_input,"ax",%progbits
+ 583              		.align	1
+ 584              		.global	jpeg_consume_input
+ 585              		.syntax unified
+ 586              		.thumb
+ 587              		.thumb_func
+ 588              		.fpu fpv4-sp-d16
+ 590              	jpeg_consume_input:
+ 591              	.LVL40:
+ 592              	.LFB12:
+ 212:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 213:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 214:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 215:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Decompression startup: read start of JPEG datastream to see what's there.
+ 216:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Need only initialize JPEG object and supply a data source before calling.
+ 217:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+ 218:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This routine will read as far as the first SOS marker (ie, actual start of
+ 219:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * compressed data), and will save all tables and parameters in the JPEG
+ 220:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * object.  It will also initialize the decompression parameters to default
+ 221:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * values, and finally return JPEG_HEADER_OK.  On return, the application may
+ 222:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * adjust the decompression parameters and then call jpeg_start_decompress.
+ 223:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * (Or, if the application only wanted to determine the image parameters,
+ 224:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * the data need not be decompressed.  In that case, call jpeg_abort or
+ 225:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * jpeg_destroy to release any temporary space.)
+ 226:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * If an abbreviated (tables only) datastream is presented, the routine will
+ 227:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * return JPEG_HEADER_TABLES_ONLY upon reaching EOI.  The application may then
+ 228:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * re-use the JPEG object to read the abbreviated image datastream(s).
+ 229:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * It is unnecessary (but OK) to call jpeg_abort in this case.
+ 230:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * The JPEG_SUSPENDED return code only occurs if the data source module
+ 231:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * requests suspension of the decompressor.  In this case the application
+ 232:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * should load more source data and then re-call jpeg_read_header to resume
+ 233:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * processing.
+ 234:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * If a non-suspending data source is used and require_image is TRUE, then the
+ 235:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * return code need not be inspected since only JPEG_HEADER_OK is possible.
+ 236:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+ 237:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This routine is now just a front end to jpeg_consume_input, with some
+ 238:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * extra error checking.
+ 239:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 240:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 241:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(int)
+ARM GAS  /tmp/ccEheNME.s 			page 18
+
+
+ 242:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_read_header (j_decompress_ptr cinfo, boolean require_image)
+ 243:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 244:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int retcode;
+ 245:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (cinfo->global_state != DSTATE_START &&
+ 247:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state != DSTATE_INHEADER)
+ 248:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 249:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 250:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   retcode = jpeg_consume_input(cinfo);
+ 251:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 252:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   switch (retcode) {
+ 253:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case JPEG_REACHED_SOS:
+ 254:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = JPEG_HEADER_OK;
+ 255:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 256:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case JPEG_REACHED_EOI:
+ 257:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if (require_image)		/* Complain if application wanted an image */
+ 258:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_NO_IMAGE);
+ 259:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Reset to start state; it would be safer to require the application to
+ 260:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****      * call jpeg_abort, but we can't change it now for compatibility reasons.
+ 261:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****      * A side effect is to free any temporary memory (there shouldn't be any).
+ 262:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****      */
+ 263:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     jpeg_abort((j_common_ptr) cinfo); /* sets state = DSTATE_START */
+ 264:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = JPEG_HEADER_TABLES_ONLY;
+ 265:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 266:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case JPEG_SUSPENDED:
+ 267:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* no work */
+ 268:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 269:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 270:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 271:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   return retcode;
+ 272:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 273:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 274:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 275:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 276:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Consume data in advance of what the decompressor requires.
+ 277:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This can be called at any time once the decompressor object has
+ 278:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * been created and a data source has been set up.
+ 279:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+ 280:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This routine is essentially a state machine that handles a couple
+ 281:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * of critical state-transition actions, namely initial setup and
+ 282:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * transition from header scanning to ready-for-start_decompress.
+ 283:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * All the actual input is done via the input controller's consume_input
+ 284:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * method.
+ 285:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 286:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 287:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(int)
+ 288:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_consume_input (j_decompress_ptr cinfo)
+ 289:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 593              		.loc 1 289 1 is_stmt 1 view -0
+ 594              		.cfi_startproc
+ 595              		@ args = 0, pretend = 0, frame = 0
+ 596              		@ frame_needed = 0, uses_anonymous_args = 0
+ 597              		.loc 1 289 1 is_stmt 0 view .LVU190
+ 598 0000 38B5     		push	{r3, r4, r5, lr}
+ 599              	.LCFI4:
+ 600              		.cfi_def_cfa_offset 16
+ 601              		.cfi_offset 3, -16
+ARM GAS  /tmp/ccEheNME.s 			page 19
+
+
+ 602              		.cfi_offset 4, -12
+ 603              		.cfi_offset 5, -8
+ 604              		.cfi_offset 14, -4
+ 605 0002 0446     		mov	r4, r0
+ 290:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int retcode = JPEG_SUSPENDED;
+ 606              		.loc 1 290 3 is_stmt 1 view .LVU191
+ 607              	.LVL41:
+ 291:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 292:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* NB: every possible DSTATE value should be listed in this switch */
+ 293:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   switch (cinfo->global_state) {
+ 608              		.loc 1 293 3 view .LVU192
+ 609              		.loc 1 293 16 is_stmt 0 view .LVU193
+ 610 0004 4369     		ldr	r3, [r0, #20]
+ 611              		.loc 1 293 3 view .LVU194
+ 612 0006 C83B     		subs	r3, r3, #200
+ 613 0008 0A2B     		cmp	r3, #10
+ 614 000a 27D8     		bhi	.L40
+ 615 000c DFE803F0 		tbb	[pc, r3]
+ 616              	.L42:
+ 617 0010 06       		.byte	(.L45-.L42)/2
+ 618 0011 10       		.byte	(.L44-.L42)/2
+ 619 0012 31       		.byte	(.L46-.L42)/2
+ 620 0013 20       		.byte	(.L41-.L42)/2
+ 621 0014 20       		.byte	(.L41-.L42)/2
+ 622 0015 20       		.byte	(.L41-.L42)/2
+ 623 0016 20       		.byte	(.L41-.L42)/2
+ 624 0017 20       		.byte	(.L41-.L42)/2
+ 625 0018 20       		.byte	(.L41-.L42)/2
+ 626 0019 26       		.byte	(.L40-.L42)/2
+ 627 001a 20       		.byte	(.L41-.L42)/2
+ 628 001b 00       		.p2align 1
+ 629              	.L45:
+ 294:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_START:
+ 295:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Start-of-datastream actions: reset appropriate modules */
+ 296:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     (*cinfo->inputctl->reset_input_controller) (cinfo);
+ 630              		.loc 1 296 5 is_stmt 1 view .LVU195
+ 631              		.loc 1 296 12 is_stmt 0 view .LVU196
+ 632 001c D0F8C831 		ldr	r3, [r0, #456]
+ 633              		.loc 1 296 6 view .LVU197
+ 634 0020 5B68     		ldr	r3, [r3, #4]
+ 635 0022 9847     		blx	r3
+ 636              	.LVL42:
+ 297:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Initialize application's data source module */
+ 298:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     (*cinfo->src->init_source) (cinfo);
+ 637              		.loc 1 298 5 is_stmt 1 view .LVU198
+ 638              		.loc 1 298 12 is_stmt 0 view .LVU199
+ 639 0024 A369     		ldr	r3, [r4, #24]
+ 640              		.loc 1 298 6 view .LVU200
+ 641 0026 9B68     		ldr	r3, [r3, #8]
+ 642 0028 2046     		mov	r0, r4
+ 643 002a 9847     		blx	r3
+ 644              	.LVL43:
+ 299:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_INHEADER;
+ 645              		.loc 1 299 5 is_stmt 1 view .LVU201
+ 646              		.loc 1 299 25 is_stmt 0 view .LVU202
+ 647 002c C923     		movs	r3, #201
+ 648 002e 6361     		str	r3, [r4, #20]
+ARM GAS  /tmp/ccEheNME.s 			page 20
+
+
+ 649              	.L44:
+ 300:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /*FALLTHROUGH*/
+ 301:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_INHEADER:
+ 302:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = (*cinfo->inputctl->consume_input) (cinfo);
+ 650              		.loc 1 302 5 is_stmt 1 view .LVU203
+ 651              		.loc 1 302 22 is_stmt 0 view .LVU204
+ 652 0030 D4F8C831 		ldr	r3, [r4, #456]
+ 653              		.loc 1 302 16 view .LVU205
+ 654 0034 1B68     		ldr	r3, [r3]
+ 655 0036 2046     		mov	r0, r4
+ 656 0038 9847     		blx	r3
+ 657              	.LVL44:
+ 658 003a 0546     		mov	r5, r0
+ 659              	.LVL45:
+ 303:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if (retcode == JPEG_REACHED_SOS) { /* Found SOS, prepare to decompress */
+ 660              		.loc 1 303 5 is_stmt 1 view .LVU206
+ 661              		.loc 1 303 8 is_stmt 0 view .LVU207
+ 662 003c 0128     		cmp	r0, #1
+ 663 003e 01D0     		beq	.L48
+ 664              	.LVL46:
+ 665              	.L39:
+ 304:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* Set up default parameters based on header data */
+ 305:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       default_decompress_parms(cinfo);
+ 306:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* Set global state: ready for start_decompress */
+ 307:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state = DSTATE_READY;
+ 308:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 309:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 310:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_READY:
+ 311:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Can't advance past first SOS until start_decompress is called */
+ 312:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = JPEG_REACHED_SOS;
+ 313:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 314:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_PRELOAD:
+ 315:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_PRESCAN:
+ 316:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_SCANNING:
+ 317:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_RAW_OK:
+ 318:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_BUFIMAGE:
+ 319:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_BUFPOST:
+ 320:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_STOPPING:
+ 321:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = (*cinfo->inputctl->consume_input) (cinfo);
+ 322:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 323:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   default:
+ 324:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 325:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 326:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   return retcode;
+ 327:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 666              		.loc 1 327 1 view .LVU208
+ 667 0040 2846     		mov	r0, r5
+ 668 0042 38BD     		pop	{r3, r4, r5, pc}
+ 669              	.LVL47:
+ 670              	.L48:
+ 305:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* Set global state: ready for start_decompress */
+ 671              		.loc 1 305 7 is_stmt 1 view .LVU209
+ 672 0044 2046     		mov	r0, r4
+ 673              	.LVL48:
+ 305:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       /* Set global state: ready for start_decompress */
+ 674              		.loc 1 305 7 is_stmt 0 view .LVU210
+ 675 0046 FFF7FEFF 		bl	default_decompress_parms
+ARM GAS  /tmp/ccEheNME.s 			page 21
+
+
+ 676              	.LVL49:
+ 307:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 677              		.loc 1 307 7 is_stmt 1 view .LVU211
+ 307:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     }
+ 678              		.loc 1 307 27 is_stmt 0 view .LVU212
+ 679 004a CA23     		movs	r3, #202
+ 680 004c 6361     		str	r3, [r4, #20]
+ 681 004e F7E7     		b	.L39
+ 682              	.LVL50:
+ 683              	.L41:
+ 321:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 684              		.loc 1 321 5 is_stmt 1 view .LVU213
+ 321:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 685              		.loc 1 321 22 is_stmt 0 view .LVU214
+ 686 0050 D0F8C831 		ldr	r3, [r0, #456]
+ 321:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 687              		.loc 1 321 16 view .LVU215
+ 688 0054 1B68     		ldr	r3, [r3]
+ 689 0056 9847     		blx	r3
+ 690              	.LVL51:
+ 321:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 691              		.loc 1 321 16 view .LVU216
+ 692 0058 0546     		mov	r5, r0
+ 693              	.LVL52:
+ 322:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   default:
+ 694              		.loc 1 322 5 is_stmt 1 view .LVU217
+ 695 005a F1E7     		b	.L39
+ 696              	.LVL53:
+ 697              	.L40:
+ 324:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 698              		.loc 1 324 5 view .LVU218
+ 699 005c 0368     		ldr	r3, [r0]
+ 700 005e 1522     		movs	r2, #21
+ 701 0060 5A61     		str	r2, [r3, #20]
+ 702 0062 0368     		ldr	r3, [r0]
+ 703 0064 4269     		ldr	r2, [r0, #20]
+ 704 0066 9A61     		str	r2, [r3, #24]
+ 705 0068 0368     		ldr	r3, [r0]
+ 706 006a 1B68     		ldr	r3, [r3]
+ 707 006c 9847     		blx	r3
+ 708              	.LVL54:
+ 290:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 709              		.loc 1 290 7 is_stmt 0 view .LVU219
+ 710 006e 0025     		movs	r5, #0
+ 711 0070 E6E7     		b	.L39
+ 712              	.LVL55:
+ 713              	.L46:
+ 293:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case DSTATE_START:
+ 714              		.loc 1 293 3 view .LVU220
+ 715 0072 0125     		movs	r5, #1
+ 716              	.LVL56:
+ 326:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 717              		.loc 1 326 3 is_stmt 1 view .LVU221
+ 326:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 718              		.loc 1 326 10 is_stmt 0 view .LVU222
+ 719 0074 E4E7     		b	.L39
+ 720              		.cfi_endproc
+ARM GAS  /tmp/ccEheNME.s 			page 22
+
+
+ 721              	.LFE12:
+ 723              		.section	.text.jpeg_read_header,"ax",%progbits
+ 724              		.align	1
+ 725              		.global	jpeg_read_header
+ 726              		.syntax unified
+ 727              		.thumb
+ 728              		.thumb_func
+ 729              		.fpu fpv4-sp-d16
+ 731              	jpeg_read_header:
+ 732              	.LVL57:
+ 733              	.LFB11:
+ 243:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int retcode;
+ 734              		.loc 1 243 1 is_stmt 1 view -0
+ 735              		.cfi_startproc
+ 736              		@ args = 0, pretend = 0, frame = 0
+ 737              		@ frame_needed = 0, uses_anonymous_args = 0
+ 243:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   int retcode;
+ 738              		.loc 1 243 1 is_stmt 0 view .LVU224
+ 739 0000 70B5     		push	{r4, r5, r6, lr}
+ 740              	.LCFI5:
+ 741              		.cfi_def_cfa_offset 16
+ 742              		.cfi_offset 4, -16
+ 743              		.cfi_offset 5, -12
+ 744              		.cfi_offset 6, -8
+ 745              		.cfi_offset 14, -4
+ 746 0002 0446     		mov	r4, r0
+ 747 0004 0E46     		mov	r6, r1
+ 244:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 748              		.loc 1 244 3 is_stmt 1 view .LVU225
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state != DSTATE_INHEADER)
+ 749              		.loc 1 246 3 view .LVU226
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state != DSTATE_INHEADER)
+ 750              		.loc 1 246 12 is_stmt 0 view .LVU227
+ 751 0006 4369     		ldr	r3, [r0, #20]
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state != DSTATE_INHEADER)
+ 752              		.loc 1 246 43 view .LVU228
+ 753 0008 C83B     		subs	r3, r3, #200
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state != DSTATE_INHEADER)
+ 754              		.loc 1 246 6 view .LVU229
+ 755 000a 012B     		cmp	r3, #1
+ 756 000c 08D9     		bls	.L50
+ 248:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 757              		.loc 1 248 5 is_stmt 1 view .LVU230
+ 758 000e 0368     		ldr	r3, [r0]
+ 759 0010 1522     		movs	r2, #21
+ 760 0012 5A61     		str	r2, [r3, #20]
+ 761 0014 0368     		ldr	r3, [r0]
+ 762 0016 4269     		ldr	r2, [r0, #20]
+ 763 0018 9A61     		str	r2, [r3, #24]
+ 764 001a 0368     		ldr	r3, [r0]
+ 765 001c 1B68     		ldr	r3, [r3]
+ 766 001e 9847     		blx	r3
+ 767              	.LVL58:
+ 768              	.L50:
+ 250:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 769              		.loc 1 250 3 view .LVU231
+ 250:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ARM GAS  /tmp/ccEheNME.s 			page 23
+
+
+ 770              		.loc 1 250 13 is_stmt 0 view .LVU232
+ 771 0020 2046     		mov	r0, r4
+ 772 0022 FFF7FEFF 		bl	jpeg_consume_input
+ 773              	.LVL59:
+ 774 0026 0546     		mov	r5, r0
+ 775              	.LVL60:
+ 252:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case JPEG_REACHED_SOS:
+ 776              		.loc 1 252 3 is_stmt 1 view .LVU233
+ 777 0028 0128     		cmp	r0, #1
+ 778 002a 0CD0     		beq	.L49
+ 779 002c 0228     		cmp	r0, #2
+ 780 002e 0AD1     		bne	.L49
+ 257:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_NO_IMAGE);
+ 781              		.loc 1 257 5 view .LVU234
+ 257:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_NO_IMAGE);
+ 782              		.loc 1 257 8 is_stmt 0 view .LVU235
+ 783 0030 36B1     		cbz	r6, .L52
+ 258:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Reset to start state; it would be safer to require the application to
+ 784              		.loc 1 258 7 is_stmt 1 view .LVU236
+ 785 0032 2368     		ldr	r3, [r4]
+ 786 0034 3522     		movs	r2, #53
+ 787 0036 5A61     		str	r2, [r3, #20]
+ 788 0038 2368     		ldr	r3, [r4]
+ 789 003a 1B68     		ldr	r3, [r3]
+ 790 003c 2046     		mov	r0, r4
+ 791              	.LVL61:
+ 258:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Reset to start state; it would be safer to require the application to
+ 792              		.loc 1 258 7 is_stmt 0 view .LVU237
+ 793 003e 9847     		blx	r3
+ 794              	.LVL62:
+ 795              	.L52:
+ 263:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     retcode = JPEG_HEADER_TABLES_ONLY;
+ 796              		.loc 1 263 5 is_stmt 1 view .LVU238
+ 797 0040 2046     		mov	r0, r4
+ 798 0042 FFF7FEFF 		bl	jpeg_abort
+ 799              	.LVL63:
+ 264:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     break;
+ 800              		.loc 1 264 5 view .LVU239
+ 265:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   case JPEG_SUSPENDED:
+ 801              		.loc 1 265 5 view .LVU240
+ 271:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 802              		.loc 1 271 3 view .LVU241
+ 803              	.L49:
+ 272:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 804              		.loc 1 272 1 is_stmt 0 view .LVU242
+ 805 0046 2846     		mov	r0, r5
+ 806 0048 70BD     		pop	{r4, r5, r6, pc}
+ 272:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 807              		.loc 1 272 1 view .LVU243
+ 808              		.cfi_endproc
+ 809              	.LFE11:
+ 811              		.section	.text.jpeg_input_complete,"ax",%progbits
+ 812              		.align	1
+ 813              		.global	jpeg_input_complete
+ 814              		.syntax unified
+ 815              		.thumb
+ 816              		.thumb_func
+ARM GAS  /tmp/ccEheNME.s 			page 24
+
+
+ 817              		.fpu fpv4-sp-d16
+ 819              	jpeg_input_complete:
+ 820              	.LVL64:
+ 821              	.LFB13:
+ 328:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 329:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 330:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 331:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Have we finished reading the input file?
+ 332:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 333:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 334:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(boolean)
+ 335:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_input_complete (j_decompress_ptr cinfo)
+ 336:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 822              		.loc 1 336 1 is_stmt 1 view -0
+ 823              		.cfi_startproc
+ 824              		@ args = 0, pretend = 0, frame = 0
+ 825              		@ frame_needed = 0, uses_anonymous_args = 0
+ 826              		.loc 1 336 1 is_stmt 0 view .LVU245
+ 827 0000 10B5     		push	{r4, lr}
+ 828              	.LCFI6:
+ 829              		.cfi_def_cfa_offset 8
+ 830              		.cfi_offset 4, -8
+ 831              		.cfi_offset 14, -4
+ 832 0002 0446     		mov	r4, r0
+ 337:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Check for valid jpeg object */
+ 338:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (cinfo->global_state < DSTATE_START ||
+ 833              		.loc 1 338 3 is_stmt 1 view .LVU246
+ 834              		.loc 1 338 12 is_stmt 0 view .LVU247
+ 835 0004 4369     		ldr	r3, [r0, #20]
+ 836              		.loc 1 338 42 view .LVU248
+ 837 0006 C83B     		subs	r3, r3, #200
+ 838              		.loc 1 338 6 view .LVU249
+ 839 0008 0A2B     		cmp	r3, #10
+ 840 000a 08D9     		bls	.L55
+ 339:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state > DSTATE_STOPPING)
+ 340:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 841              		.loc 1 340 5 is_stmt 1 view .LVU250
+ 842 000c 0368     		ldr	r3, [r0]
+ 843 000e 1522     		movs	r2, #21
+ 844 0010 5A61     		str	r2, [r3, #20]
+ 845 0012 0368     		ldr	r3, [r0]
+ 846 0014 4269     		ldr	r2, [r0, #20]
+ 847 0016 9A61     		str	r2, [r3, #24]
+ 848 0018 0368     		ldr	r3, [r0]
+ 849 001a 1B68     		ldr	r3, [r3]
+ 850 001c 9847     		blx	r3
+ 851              	.LVL65:
+ 852              	.L55:
+ 341:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   return cinfo->inputctl->eoi_reached;
+ 853              		.loc 1 341 3 view .LVU251
+ 854              		.loc 1 341 15 is_stmt 0 view .LVU252
+ 855 001e D4F8C831 		ldr	r3, [r4, #456]
+ 342:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 856              		.loc 1 342 1 view .LVU253
+ 857 0022 5869     		ldr	r0, [r3, #20]
+ 858 0024 10BD     		pop	{r4, pc}
+ 859              		.loc 1 342 1 view .LVU254
+ARM GAS  /tmp/ccEheNME.s 			page 25
+
+
+ 860              		.cfi_endproc
+ 861              	.LFE13:
+ 863              		.section	.text.jpeg_has_multiple_scans,"ax",%progbits
+ 864              		.align	1
+ 865              		.global	jpeg_has_multiple_scans
+ 866              		.syntax unified
+ 867              		.thumb
+ 868              		.thumb_func
+ 869              		.fpu fpv4-sp-d16
+ 871              	jpeg_has_multiple_scans:
+ 872              	.LVL66:
+ 873              	.LFB14:
+ 343:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 344:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 345:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 346:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Is there more than one scan?
+ 347:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 348:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 349:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(boolean)
+ 350:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_has_multiple_scans (j_decompress_ptr cinfo)
+ 351:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 874              		.loc 1 351 1 is_stmt 1 view -0
+ 875              		.cfi_startproc
+ 876              		@ args = 0, pretend = 0, frame = 0
+ 877              		@ frame_needed = 0, uses_anonymous_args = 0
+ 878              		.loc 1 351 1 is_stmt 0 view .LVU256
+ 879 0000 10B5     		push	{r4, lr}
+ 880              	.LCFI7:
+ 881              		.cfi_def_cfa_offset 8
+ 882              		.cfi_offset 4, -8
+ 883              		.cfi_offset 14, -4
+ 884 0002 0446     		mov	r4, r0
+ 352:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Only valid after jpeg_read_header completes */
+ 353:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if (cinfo->global_state < DSTATE_READY ||
+ 885              		.loc 1 353 3 is_stmt 1 view .LVU257
+ 886              		.loc 1 353 12 is_stmt 0 view .LVU258
+ 887 0004 4369     		ldr	r3, [r0, #20]
+ 888              		.loc 1 353 42 view .LVU259
+ 889 0006 CA3B     		subs	r3, r3, #202
+ 890              		.loc 1 353 6 view .LVU260
+ 891 0008 082B     		cmp	r3, #8
+ 892 000a 08D9     		bls	.L58
+ 354:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       cinfo->global_state > DSTATE_STOPPING)
+ 355:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 893              		.loc 1 355 5 is_stmt 1 view .LVU261
+ 894 000c 0368     		ldr	r3, [r0]
+ 895 000e 1522     		movs	r2, #21
+ 896 0010 5A61     		str	r2, [r3, #20]
+ 897 0012 0368     		ldr	r3, [r0]
+ 898 0014 4269     		ldr	r2, [r0, #20]
+ 899 0016 9A61     		str	r2, [r3, #24]
+ 900 0018 0368     		ldr	r3, [r0]
+ 901 001a 1B68     		ldr	r3, [r3]
+ 902 001c 9847     		blx	r3
+ 903              	.LVL67:
+ 904              	.L58:
+ 356:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   return cinfo->inputctl->has_multiple_scans;
+ARM GAS  /tmp/ccEheNME.s 			page 26
+
+
+ 905              		.loc 1 356 3 view .LVU262
+ 906              		.loc 1 356 15 is_stmt 0 view .LVU263
+ 907 001e D4F8C831 		ldr	r3, [r4, #456]
+ 357:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 908              		.loc 1 357 1 view .LVU264
+ 909 0022 1869     		ldr	r0, [r3, #16]
+ 910 0024 10BD     		pop	{r4, pc}
+ 911              		.loc 1 357 1 view .LVU265
+ 912              		.cfi_endproc
+ 913              	.LFE14:
+ 915              		.section	.text.jpeg_finish_decompress,"ax",%progbits
+ 916              		.align	1
+ 917              		.global	jpeg_finish_decompress
+ 918              		.syntax unified
+ 919              		.thumb
+ 920              		.thumb_func
+ 921              		.fpu fpv4-sp-d16
+ 923              	jpeg_finish_decompress:
+ 924              	.LVL68:
+ 925              	.LFB15:
+ 358:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 359:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 360:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** /*
+ 361:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Finish JPEG decompression.
+ 362:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+ 363:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * This will normally just verify the file trailer and release temp storage.
+ 364:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  *
+ 365:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * Returns FALSE if suspended.  The return value need be inspected only if
+ 366:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  * a suspending data source is used.
+ 367:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****  */
+ 368:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** 
+ 369:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** GLOBAL(boolean)
+ 370:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** jpeg_finish_decompress (j_decompress_ptr cinfo)
+ 371:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** {
+ 926              		.loc 1 371 1 is_stmt 1 view -0
+ 927              		.cfi_startproc
+ 928              		@ args = 0, pretend = 0, frame = 0
+ 929              		@ frame_needed = 0, uses_anonymous_args = 0
+ 930              		.loc 1 371 1 is_stmt 0 view .LVU267
+ 931 0000 10B5     		push	{r4, lr}
+ 932              	.LCFI8:
+ 933              		.cfi_def_cfa_offset 8
+ 934              		.cfi_offset 4, -8
+ 935              		.cfi_offset 14, -4
+ 936 0002 0446     		mov	r4, r0
+ 372:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   if ((cinfo->global_state == DSTATE_SCANNING ||
+ 937              		.loc 1 372 3 is_stmt 1 view .LVU268
+ 938              		.loc 1 372 13 is_stmt 0 view .LVU269
+ 939 0004 4369     		ldr	r3, [r0, #20]
+ 940              		.loc 1 372 47 view .LVU270
+ 941 0006 A3F1CD02 		sub	r2, r3, #205
+ 942              		.loc 1 372 6 view .LVU271
+ 943 000a 012A     		cmp	r2, #1
+ 944 000c 18D9     		bls	.L69
+ 945              	.L61:
+ 373:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****        cinfo->global_state == DSTATE_RAW_OK) && ! cinfo->buffered_image) {
+ 374:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Terminate final pass of non-buffered mode */
+ARM GAS  /tmp/ccEheNME.s 			page 27
+
+
+ 375:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if (cinfo->output_scanline < cinfo->output_height)
+ 376:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 377:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     (*cinfo->master->finish_output_pass) (cinfo);
+ 378:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_STOPPING;
+ 379:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state == DSTATE_BUFIMAGE) {
+ 946              		.loc 1 379 10 is_stmt 1 view .LVU272
+ 947              		.loc 1 379 13 is_stmt 0 view .LVU273
+ 948 000e CF2B     		cmp	r3, #207
+ 949 0010 2CD0     		beq	.L70
+ 380:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Finishing after a buffered-image operation */
+ 381:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_STOPPING;
+ 382:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state != DSTATE_STOPPING) {
+ 950              		.loc 1 382 10 is_stmt 1 view .LVU274
+ 951              		.loc 1 382 13 is_stmt 0 view .LVU275
+ 952 0012 D22B     		cmp	r3, #210
+ 953 0014 09D0     		beq	.L66
+ 383:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* STOPPING = repeat call after a suspension, anything else is error */
+ 384:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 954              		.loc 1 384 5 is_stmt 1 view .LVU276
+ 955 0016 2368     		ldr	r3, [r4]
+ 956 0018 1522     		movs	r2, #21
+ 957 001a 5A61     		str	r2, [r3, #20]
+ 958 001c 2368     		ldr	r3, [r4]
+ 959 001e 6269     		ldr	r2, [r4, #20]
+ 960 0020 9A61     		str	r2, [r3, #24]
+ 961 0022 2368     		ldr	r3, [r4]
+ 962 0024 1B68     		ldr	r3, [r3]
+ 963 0026 2046     		mov	r0, r4
+ 964              	.LVL69:
+ 965              		.loc 1 384 5 is_stmt 0 view .LVU277
+ 966 0028 9847     		blx	r3
+ 967              	.LVL70:
+ 968              	.L66:
+ 385:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 386:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Read until EOI */
+ 387:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   while (! cinfo->inputctl->eoi_reached) {
+ 969              		.loc 1 387 9 is_stmt 1 view .LVU278
+ 970              		.loc 1 387 17 is_stmt 0 view .LVU279
+ 971 002a D4F8C831 		ldr	r3, [r4, #456]
+ 972              		.loc 1 387 27 view .LVU280
+ 973 002e 5A69     		ldr	r2, [r3, #20]
+ 974              		.loc 1 387 9 view .LVU281
+ 975 0030 FAB9     		cbnz	r2, .L71
+ 388:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     if ((*cinfo->inputctl->consume_input) (cinfo) == JPEG_SUSPENDED)
+ 976              		.loc 1 388 5 is_stmt 1 view .LVU282
+ 977              		.loc 1 388 10 is_stmt 0 view .LVU283
+ 978 0032 1B68     		ldr	r3, [r3]
+ 979 0034 2046     		mov	r0, r4
+ 980 0036 9847     		blx	r3
+ 981              	.LVL71:
+ 982              		.loc 1 388 8 view .LVU284
+ 983 0038 0346     		mov	r3, r0
+ 984 003a 0028     		cmp	r0, #0
+ 985 003c F5D1     		bne	.L66
+ 986 003e 20E0     		b	.L60
+ 987              	.LVL72:
+ 988              	.L69:
+ARM GAS  /tmp/ccEheNME.s 			page 28
+
+
+ 373:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Terminate final pass of non-buffered mode */
+ 989              		.loc 1 373 56 view .LVU285
+ 990 0040 026C     		ldr	r2, [r0, #64]
+ 373:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     /* Terminate final pass of non-buffered mode */
+ 991              		.loc 1 373 46 view .LVU286
+ 992 0042 002A     		cmp	r2, #0
+ 993 0044 E3D1     		bne	.L61
+ 375:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 994              		.loc 1 375 5 is_stmt 1 view .LVU287
+ 375:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 995              		.loc 1 375 14 is_stmt 0 view .LVU288
+ 996 0046 D0F88C20 		ldr	r2, [r0, #140]
+ 375:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 997              		.loc 1 375 39 view .LVU289
+ 998 004a 436F     		ldr	r3, [r0, #116]
+ 375:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       ERREXIT(cinfo, JERR_TOO_LITTLE_DATA);
+ 999              		.loc 1 375 8 view .LVU290
+ 1000 004c 9A42     		cmp	r2, r3
+ 1001 004e 05D2     		bcs	.L62
+ 376:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     (*cinfo->master->finish_output_pass) (cinfo);
+ 1002              		.loc 1 376 7 is_stmt 1 view .LVU291
+ 1003 0050 0368     		ldr	r3, [r0]
+ 1004 0052 4522     		movs	r2, #69
+ 1005 0054 5A61     		str	r2, [r3, #20]
+ 1006 0056 0368     		ldr	r3, [r0]
+ 1007 0058 1B68     		ldr	r3, [r3]
+ 1008 005a 9847     		blx	r3
+ 1009              	.LVL73:
+ 1010              	.L62:
+ 377:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_STOPPING;
+ 1011              		.loc 1 377 5 view .LVU292
+ 377:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_STOPPING;
+ 1012              		.loc 1 377 12 is_stmt 0 view .LVU293
+ 1013 005c D4F8B831 		ldr	r3, [r4, #440]
+ 377:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****     cinfo->global_state = DSTATE_STOPPING;
+ 1014              		.loc 1 377 6 view .LVU294
+ 1015 0060 5B68     		ldr	r3, [r3, #4]
+ 1016 0062 2046     		mov	r0, r4
+ 1017 0064 9847     		blx	r3
+ 1018              	.LVL74:
+ 378:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state == DSTATE_BUFIMAGE) {
+ 1019              		.loc 1 378 5 is_stmt 1 view .LVU295
+ 378:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state == DSTATE_BUFIMAGE) {
+ 1020              		.loc 1 378 25 is_stmt 0 view .LVU296
+ 1021 0066 D223     		movs	r3, #210
+ 1022 0068 6361     		str	r3, [r4, #20]
+ 1023 006a DEE7     		b	.L66
+ 1024              	.LVL75:
+ 1025              	.L70:
+ 381:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state != DSTATE_STOPPING) {
+ 1026              		.loc 1 381 5 is_stmt 1 view .LVU297
+ 381:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   } else if (cinfo->global_state != DSTATE_STOPPING) {
+ 1027              		.loc 1 381 25 is_stmt 0 view .LVU298
+ 1028 006c D223     		movs	r3, #210
+ 1029 006e 6361     		str	r3, [r4, #20]
+ 1030 0070 DBE7     		b	.L66
+ 1031              	.LVL76:
+ARM GAS  /tmp/ccEheNME.s 			page 29
+
+
+ 1032              	.L71:
+ 389:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****       return FALSE;		/* Suspend, come back later */
+ 390:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   }
+ 391:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* Do final cleanup */
+ 392:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   (*cinfo->src->term_source) (cinfo);
+ 1033              		.loc 1 392 3 is_stmt 1 view .LVU299
+ 1034              		.loc 1 392 10 is_stmt 0 view .LVU300
+ 1035 0072 A369     		ldr	r3, [r4, #24]
+ 1036              		.loc 1 392 4 view .LVU301
+ 1037 0074 9B69     		ldr	r3, [r3, #24]
+ 1038 0076 2046     		mov	r0, r4
+ 1039 0078 9847     		blx	r3
+ 1040              	.LVL77:
+ 393:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   /* We can use jpeg_abort to release memory and reset global_state */
+ 394:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   jpeg_abort((j_common_ptr) cinfo);
+ 1041              		.loc 1 394 3 is_stmt 1 view .LVU302
+ 1042 007a 2046     		mov	r0, r4
+ 1043 007c FFF7FEFF 		bl	jpeg_abort
+ 1044              	.LVL78:
+ 395:Middlewares/Third_Party/LibJPEG/source/jdapimin.c ****   return TRUE;
+ 1045              		.loc 1 395 3 view .LVU303
+ 1046              		.loc 1 395 10 is_stmt 0 view .LVU304
+ 1047 0080 0123     		movs	r3, #1
+ 1048              	.L60:
+ 396:Middlewares/Third_Party/LibJPEG/source/jdapimin.c **** }
+ 1049              		.loc 1 396 1 view .LVU305
+ 1050 0082 1846     		mov	r0, r3
+ 1051 0084 10BD     		pop	{r4, pc}
+ 1052              		.loc 1 396 1 view .LVU306
+ 1053              		.cfi_endproc
+ 1054              	.LFE15:
+ 1056              		.text
+ 1057              	.Letext0:
+ 1058              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 1059              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 1060              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 1061              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 1062              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 1063              		.file 7 "<built-in>"
+ARM GAS  /tmp/ccEheNME.s 			page 30
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jdapimin.c
+     /tmp/ccEheNME.s:18     .text.default_decompress_parms:0000000000000000 $t
+     /tmp/ccEheNME.s:25     .text.default_decompress_parms:0000000000000000 default_decompress_parms
+     /tmp/ccEheNME.s:342    .text.default_decompress_parms:0000000000000158 $d
+     /tmp/ccEheNME.s:347    .text.jpeg_CreateDecompress:0000000000000000 $t
+     /tmp/ccEheNME.s:354    .text.jpeg_CreateDecompress:0000000000000000 jpeg_CreateDecompress
+     /tmp/ccEheNME.s:525    .text.jpeg_destroy_decompress:0000000000000000 $t
+     /tmp/ccEheNME.s:532    .text.jpeg_destroy_decompress:0000000000000000 jpeg_destroy_decompress
+     /tmp/ccEheNME.s:554    .text.jpeg_abort_decompress:0000000000000000 $t
+     /tmp/ccEheNME.s:561    .text.jpeg_abort_decompress:0000000000000000 jpeg_abort_decompress
+     /tmp/ccEheNME.s:583    .text.jpeg_consume_input:0000000000000000 $t
+     /tmp/ccEheNME.s:590    .text.jpeg_consume_input:0000000000000000 jpeg_consume_input
+     /tmp/ccEheNME.s:617    .text.jpeg_consume_input:0000000000000010 $d
+     /tmp/ccEheNME.s:724    .text.jpeg_read_header:0000000000000000 $t
+     /tmp/ccEheNME.s:731    .text.jpeg_read_header:0000000000000000 jpeg_read_header
+     /tmp/ccEheNME.s:812    .text.jpeg_input_complete:0000000000000000 $t
+     /tmp/ccEheNME.s:819    .text.jpeg_input_complete:0000000000000000 jpeg_input_complete
+     /tmp/ccEheNME.s:864    .text.jpeg_has_multiple_scans:0000000000000000 $t
+     /tmp/ccEheNME.s:871    .text.jpeg_has_multiple_scans:0000000000000000 jpeg_has_multiple_scans
+     /tmp/ccEheNME.s:916    .text.jpeg_finish_decompress:0000000000000000 $t
+     /tmp/ccEheNME.s:923    .text.jpeg_finish_decompress:0000000000000000 jpeg_finish_decompress
+     /tmp/ccEheNME.s:628    .text.jpeg_consume_input:000000000000001b $d
+     /tmp/ccEheNME.s:628    .text.jpeg_consume_input:000000000000001c $t
+
+UNDEFINED SYMBOLS
+memset
+jinit_memory_mgr
+jinit_marker_reader
+jinit_input_controller
+jpeg_destroy
+jpeg_abort

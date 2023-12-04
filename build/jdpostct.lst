@@ -1,0 +1,1141 @@
+ARM GAS  /tmp/ccZmssoc.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jdpostct.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.start_pass_dpost,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	start_pass_dpost:
+  26              	.LVL0:
+  27              	.LFB7:
+  28              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdpostct.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * jdpostct.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Copyright (C) 1994-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * This file contains the decompression postprocessing controller.
+   9:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * This controller manages the upsampling, color conversion, and color
+  10:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * quantization/reduction steps; specifically, it controls the buffering
+  11:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * between upsample/color conversion and color quantization/reduction.
+  12:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  *
+  13:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * If no color quantization/reduction is required, then this module has no
+  14:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * work to do, and it just hands off to the upsample/color conversion code.
+  15:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * An integrated upsample/convert/quantize process would replace this module
+  16:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * entirely.
+  17:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+  18:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #define JPEG_INTERNALS
+  20:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #include "jinclude.h"
+  21:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #include "jpeglib.h"
+  22:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  23:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  24:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /* Private buffer controller object */
+  25:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  26:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** typedef struct {
+  27:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   struct jpeg_d_post_controller pub; /* public fields */
+  28:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  29:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Color quantization source buffer: this holds output data from
+  30:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****    * the upsample/color conversion step to be passed to the quantizer.
+ARM GAS  /tmp/ccZmssoc.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****    * For two-pass color quantization, we need a full-image buffer;
+  32:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****    * for one-pass operation, a strip buffer is sufficient.
+  33:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****    */
+  34:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   jvirt_sarray_ptr whole_image;	/* virtual array, or NULL if one-pass */
+  35:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JSAMPARRAY buffer;		/* strip buffer, or current strip of virtual */
+  36:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION strip_height;	/* buffer size in rows */
+  37:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* for two-pass mode only: */
+  38:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION starting_row;	/* row # of first row in current strip */
+  39:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION next_row;		/* index of next row to fill/empty in strip */
+  40:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** } my_post_controller;
+  41:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  42:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** typedef my_post_controller * my_post_ptr;
+  43:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  44:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  45:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /* Forward declarations */
+  46:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void) post_process_1pass
+  47:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	JPP((j_decompress_ptr cinfo,
+  48:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+  49:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION in_row_groups_avail,
+  50:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+  51:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION out_rows_avail));
+  52:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #ifdef QUANT_2PASS_SUPPORTED
+  53:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void) post_process_prepass
+  54:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	JPP((j_decompress_ptr cinfo,
+  55:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+  56:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION in_row_groups_avail,
+  57:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+  58:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION out_rows_avail));
+  59:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void) post_process_2pass
+  60:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	JPP((j_decompress_ptr cinfo,
+  61:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+  62:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION in_row_groups_avail,
+  63:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+  64:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	     JDIMENSION out_rows_avail));
+  65:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #endif
+  66:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  67:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  68:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+  69:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Initialize for a processing pass.
+  70:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+  71:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  72:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void)
+  73:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** start_pass_dpost (j_decompress_ptr cinfo, J_BUF_MODE pass_mode)
+  74:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** {
+  29              		.loc 1 74 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 74 1 is_stmt 0 view .LVU1
+  34 0000 30B5     		push	{r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 12
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 83B0     		sub	sp, sp, #12
+  41              	.LCFI1:
+ARM GAS  /tmp/ccZmssoc.s 			page 3
+
+
+  42              		.cfi_def_cfa_offset 24
+  75:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   my_post_ptr post = (my_post_ptr) cinfo->post;
+  43              		.loc 1 75 3 is_stmt 1 view .LVU2
+  44              		.loc 1 75 15 is_stmt 0 view .LVU3
+  45 0004 D0F8C441 		ldr	r4, [r0, #452]
+  46              	.LVL1:
+  76:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+  77:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   switch (pass_mode) {
+  47              		.loc 1 77 3 is_stmt 1 view .LVU4
+  48 0008 0229     		cmp	r1, #2
+  49 000a 2ED0     		beq	.L2
+  50 000c 0329     		cmp	r1, #3
+  51 000e 1CD0     		beq	.L3
+  52 0010 31B1     		cbz	r1, .L10
+  78:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   case JBUF_PASS_THRU:
+  79:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     if (cinfo->quantize_colors) {
+  80:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* Single-pass processing with color quantization. */
+  81:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       post->pub.post_process_data = post_process_1pass;
+  82:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* We could be doing buffered-image output before starting a 2-pass
+  83:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****        * color quantization; in that case, jinit_d_post_controller did not
+  84:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****        * allocate a strip buffer.  Use the virtual-array buffer as workspace.
+  85:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****        */
+  86:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       if (post->buffer == NULL) {
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	post->buffer = (*cinfo->mem->access_virt_sarray)
+  88:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  89:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	   (JDIMENSION) 0, post->strip_height, TRUE);
+  90:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       }
+  91:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     } else {
+  92:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* For single-pass processing without color quantization,
+  93:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****        * I have no work to do; just call the upsampler directly.
+  94:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****        */
+  95:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       post->pub.post_process_data = cinfo->upsample->upsample;
+  96:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+  97:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+  98:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #ifdef QUANT_2PASS_SUPPORTED
+  99:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   case JBUF_SAVE_AND_PASS:
+ 100:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     /* First pass of 2-pass quantization */
+ 101:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     if (post->whole_image == NULL)
+ 102:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 103:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_prepass;
+ 104:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 105:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   case JBUF_CRANK_DEST:
+ 106:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     /* Second pass of 2-pass quantization */
+ 107:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     if (post->whole_image == NULL)
+ 108:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 109:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_2pass;
+ 110:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 111:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 112:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   default:
+ 113:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+  53              		.loc 1 113 5 view .LVU5
+  54 0012 0368     		ldr	r3, [r0]
+  55 0014 0322     		movs	r2, #3
+  56 0016 5A61     		str	r2, [r3, #20]
+  57 0018 0368     		ldr	r3, [r0]
+  58 001a 1B68     		ldr	r3, [r3]
+  59 001c 9847     		blx	r3
+ARM GAS  /tmp/ccZmssoc.s 			page 4
+
+
+  60              	.LVL2:
+ 114:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+  61              		.loc 1 114 5 view .LVU6
+  62 001e 18E0     		b	.L6
+  63              	.LVL3:
+  64              	.L10:
+  79:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* Single-pass processing with color quantization. */
+  65              		.loc 1 79 5 view .LVU7
+  79:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* Single-pass processing with color quantization. */
+  66              		.loc 1 79 14 is_stmt 0 view .LVU8
+  67 0020 436D     		ldr	r3, [r0, #84]
+  79:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* Single-pass processing with color quantization. */
+  68              		.loc 1 79 8 view .LVU9
+  69 0022 6BB1     		cbz	r3, .L5
+  81:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* We could be doing buffered-image output before starting a 2-pass
+  70              		.loc 1 81 7 is_stmt 1 view .LVU10
+  81:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* We could be doing buffered-image output before starting a 2-pass
+  71              		.loc 1 81 35 is_stmt 0 view .LVU11
+  72 0024 174B     		ldr	r3, .L13
+  73 0026 6360     		str	r3, [r4, #4]
+  86:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	post->buffer = (*cinfo->mem->access_virt_sarray)
+  74              		.loc 1 86 7 is_stmt 1 view .LVU12
+  86:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	post->buffer = (*cinfo->mem->access_virt_sarray)
+  75              		.loc 1 86 15 is_stmt 0 view .LVU13
+  76 0028 E368     		ldr	r3, [r4, #12]
+  86:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	post->buffer = (*cinfo->mem->access_virt_sarray)
+  77              		.loc 1 86 10 view .LVU14
+  78 002a 93B9     		cbnz	r3, .L6
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  79              		.loc 1 87 2 is_stmt 1 view .LVU15
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  80              		.loc 1 87 24 is_stmt 0 view .LVU16
+  81 002c 4268     		ldr	r2, [r0, #4]
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  82              		.loc 1 87 18 view .LVU17
+  83 002e 2369     		ldr	r3, [r4, #16]
+  84 0030 A168     		ldr	r1, [r4, #8]
+  85              	.LVL4:
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  86              		.loc 1 87 18 view .LVU18
+  87 0032 0125     		movs	r5, #1
+  88 0034 0095     		str	r5, [sp]
+  89 0036 D569     		ldr	r5, [r2, #28]
+  90 0038 0022     		movs	r2, #0
+  91 003a A847     		blx	r5
+  92              	.LVL5:
+  87:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	  ((j_common_ptr) cinfo, post->whole_image,
+  93              		.loc 1 87 15 view .LVU19
+  94 003c E060     		str	r0, [r4, #12]
+  95 003e 08E0     		b	.L6
+  96              	.LVL6:
+  97              	.L5:
+  95:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+  98              		.loc 1 95 7 is_stmt 1 view .LVU20
+  95:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+  99              		.loc 1 95 42 is_stmt 0 view .LVU21
+ 100 0040 D0F8D831 		ldr	r3, [r0, #472]
+ARM GAS  /tmp/ccZmssoc.s 			page 5
+
+
+  95:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+ 101              		.loc 1 95 52 view .LVU22
+ 102 0044 5B68     		ldr	r3, [r3, #4]
+  95:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+ 103              		.loc 1 95 35 view .LVU23
+ 104 0046 6360     		str	r3, [r4, #4]
+ 105 0048 03E0     		b	.L6
+ 106              	.L3:
+ 101:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 107              		.loc 1 101 5 is_stmt 1 view .LVU24
+ 101:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 108              		.loc 1 101 13 is_stmt 0 view .LVU25
+ 109 004a A368     		ldr	r3, [r4, #8]
+ 101:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 110              		.loc 1 101 8 view .LVU26
+ 111 004c 33B1     		cbz	r3, .L11
+ 112              	.LVL7:
+ 113              	.L7:
+ 103:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 114              		.loc 1 103 5 is_stmt 1 view .LVU27
+ 103:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 115              		.loc 1 103 33 is_stmt 0 view .LVU28
+ 116 004e 0E4B     		ldr	r3, .L13+4
+ 117 0050 6360     		str	r3, [r4, #4]
+ 104:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   case JBUF_CRANK_DEST:
+ 118              		.loc 1 104 5 is_stmt 1 view .LVU29
+ 119              	.L6:
+ 115:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 116:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post->starting_row = post->next_row = 0;
+ 120              		.loc 1 116 3 view .LVU30
+ 121              		.loc 1 116 39 is_stmt 0 view .LVU31
+ 122 0052 0023     		movs	r3, #0
+ 123 0054 A361     		str	r3, [r4, #24]
+ 124              		.loc 1 116 22 view .LVU32
+ 125 0056 6361     		str	r3, [r4, #20]
+ 117:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** }
+ 126              		.loc 1 117 1 view .LVU33
+ 127 0058 03B0     		add	sp, sp, #12
+ 128              	.LCFI2:
+ 129              		.cfi_remember_state
+ 130              		.cfi_def_cfa_offset 12
+ 131              		@ sp needed
+ 132 005a 30BD     		pop	{r4, r5, pc}
+ 133              	.LVL8:
+ 134              	.L11:
+ 135              	.LCFI3:
+ 136              		.cfi_restore_state
+ 102:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_prepass;
+ 137              		.loc 1 102 7 is_stmt 1 view .LVU34
+ 138 005c 0368     		ldr	r3, [r0]
+ 139 005e 0322     		movs	r2, #3
+ 140 0060 5A61     		str	r2, [r3, #20]
+ 141 0062 0368     		ldr	r3, [r0]
+ 142 0064 1B68     		ldr	r3, [r3]
+ 143 0066 9847     		blx	r3
+ 144              	.LVL9:
+ 102:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_prepass;
+ARM GAS  /tmp/ccZmssoc.s 			page 6
+
+
+ 145              		.loc 1 102 7 is_stmt 0 view .LVU35
+ 146 0068 F1E7     		b	.L7
+ 147              	.LVL10:
+ 148              	.L2:
+ 107:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 149              		.loc 1 107 5 is_stmt 1 view .LVU36
+ 107:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 150              		.loc 1 107 13 is_stmt 0 view .LVU37
+ 151 006a A368     		ldr	r3, [r4, #8]
+ 107:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 152              		.loc 1 107 8 view .LVU38
+ 153 006c 13B1     		cbz	r3, .L12
+ 154              	.LVL11:
+ 155              	.L8:
+ 109:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 156              		.loc 1 109 5 is_stmt 1 view .LVU39
+ 109:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     break;
+ 157              		.loc 1 109 33 is_stmt 0 view .LVU40
+ 158 006e 074B     		ldr	r3, .L13+8
+ 159 0070 6360     		str	r3, [r4, #4]
+ 110:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 160              		.loc 1 110 5 is_stmt 1 view .LVU41
+ 161 0072 EEE7     		b	.L6
+ 162              	.LVL12:
+ 163              	.L12:
+ 108:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_2pass;
+ 164              		.loc 1 108 7 view .LVU42
+ 165 0074 0368     		ldr	r3, [r0]
+ 166 0076 0322     		movs	r2, #3
+ 167 0078 5A61     		str	r2, [r3, #20]
+ 168 007a 0368     		ldr	r3, [r0]
+ 169 007c 1B68     		ldr	r3, [r3]
+ 170 007e 9847     		blx	r3
+ 171              	.LVL13:
+ 108:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->pub.post_process_data = post_process_2pass;
+ 172              		.loc 1 108 7 is_stmt 0 view .LVU43
+ 173 0080 F5E7     		b	.L8
+ 174              	.L14:
+ 175 0082 00BF     		.align	2
+ 176              	.L13:
+ 177 0084 00000000 		.word	post_process_1pass
+ 178 0088 00000000 		.word	post_process_prepass
+ 179 008c 00000000 		.word	post_process_2pass
+ 180              		.cfi_endproc
+ 181              	.LFE7:
+ 183              		.section	.text.post_process_1pass,"ax",%progbits
+ 184              		.align	1
+ 185              		.syntax unified
+ 186              		.thumb
+ 187              		.thumb_func
+ 188              		.fpu fpv4-sp-d16
+ 190              	post_process_1pass:
+ 191              	.LVL14:
+ 192              	.LFB8:
+ 118:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 119:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 120:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+ARM GAS  /tmp/ccZmssoc.s 			page 7
+
+
+ 121:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Process some data in the one-pass (strip buffer) case.
+ 122:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * This is used for color precision reduction as well as one-pass quantization.
+ 123:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+ 124:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 125:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void)
+ 126:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** post_process_1pass (j_decompress_ptr cinfo,
+ 127:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+ 128:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JDIMENSION in_row_groups_avail,
+ 129:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+ 130:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JDIMENSION out_rows_avail)
+ 131:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** {
+ 193              		.loc 1 131 1 is_stmt 1 view -0
+ 194              		.cfi_startproc
+ 195              		@ args = 12, pretend = 0, frame = 8
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197              		.loc 1 131 1 is_stmt 0 view .LVU45
+ 198 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 199              	.LCFI4:
+ 200              		.cfi_def_cfa_offset 20
+ 201              		.cfi_offset 4, -20
+ 202              		.cfi_offset 5, -16
+ 203              		.cfi_offset 6, -12
+ 204              		.cfi_offset 7, -8
+ 205              		.cfi_offset 14, -4
+ 206 0002 87B0     		sub	sp, sp, #28
+ 207              	.LCFI5:
+ 208              		.cfi_def_cfa_offset 48
+ 209 0004 0446     		mov	r4, r0
+ 210 0006 0D9D     		ldr	r5, [sp, #52]
+ 132:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   my_post_ptr post = (my_post_ptr) cinfo->post;
+ 211              		.loc 1 132 3 is_stmt 1 view .LVU46
+ 212              		.loc 1 132 15 is_stmt 0 view .LVU47
+ 213 0008 D0F8C461 		ldr	r6, [r0, #452]
+ 214              	.LVL15:
+ 133:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION num_rows, max_rows;
+ 215              		.loc 1 133 3 is_stmt 1 view .LVU48
+ 134:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 135:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Fill the buffer, but not more than what we can dump out in one go. */
+ 136:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Note we rely on the upsampler to detect bottom of image. */
+ 137:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   max_rows = out_rows_avail - *out_row_ctr;
+ 216              		.loc 1 137 3 view .LVU49
+ 217              		.loc 1 137 31 is_stmt 0 view .LVU50
+ 218 000c 2F68     		ldr	r7, [r5]
+ 219              		.loc 1 137 12 view .LVU51
+ 220 000e 0E98     		ldr	r0, [sp, #56]
+ 221              	.LVL16:
+ 222              		.loc 1 137 12 view .LVU52
+ 223 0010 C01B     		subs	r0, r0, r7
+ 224              	.LVL17:
+ 138:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (max_rows > post->strip_height)
+ 225              		.loc 1 138 3 is_stmt 1 view .LVU53
+ 226              		.loc 1 138 22 is_stmt 0 view .LVU54
+ 227 0012 3769     		ldr	r7, [r6, #16]
+ 228              		.loc 1 138 6 view .LVU55
+ 229 0014 8742     		cmp	r7, r0
+ 230 0016 00D3     		bcc	.L16
+ 137:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (max_rows > post->strip_height)
+ARM GAS  /tmp/ccZmssoc.s 			page 8
+
+
+ 231              		.loc 1 137 12 view .LVU56
+ 232 0018 0746     		mov	r7, r0
+ 233              	.L16:
+ 234              	.LVL18:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     max_rows = post->strip_height;
+ 140:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   num_rows = 0;
+ 235              		.loc 1 140 3 is_stmt 1 view .LVU57
+ 236              		.loc 1 140 12 is_stmt 0 view .LVU58
+ 237 001a 0020     		movs	r0, #0
+ 238 001c 0590     		str	r0, [sp, #20]
+ 141:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   (*cinfo->upsample->upsample) (cinfo,
+ 239              		.loc 1 141 3 is_stmt 1 view .LVU59
+ 240              		.loc 1 141 10 is_stmt 0 view .LVU60
+ 241 001e D4F8D801 		ldr	r0, [r4, #472]
+ 242              		.loc 1 141 4 view .LVU61
+ 243 0022 0297     		str	r7, [sp, #8]
+ 244 0024 05AF     		add	r7, sp, #20
+ 245              	.LVL19:
+ 246              		.loc 1 141 4 view .LVU62
+ 247 0026 0197     		str	r7, [sp, #4]
+ 248 0028 F768     		ldr	r7, [r6, #12]
+ 249 002a 0097     		str	r7, [sp]
+ 250 002c 4768     		ldr	r7, [r0, #4]
+ 251 002e 2046     		mov	r0, r4
+ 252 0030 B847     		blx	r7
+ 253              	.LVL20:
+ 142:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		input_buf, in_row_group_ctr, in_row_groups_avail,
+ 143:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer, &num_rows, max_rows);
+ 144:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Quantize and emit data. */
+ 145:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   (*cinfo->cquantize->color_quantize) (cinfo,
+ 254              		.loc 1 145 3 is_stmt 1 view .LVU63
+ 255              		.loc 1 145 10 is_stmt 0 view .LVU64
+ 256 0032 D4F8E031 		ldr	r3, [r4, #480]
+ 146:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer, output_buf + *out_row_ctr, (int) num_rows);
+ 257              		.loc 1 146 30 view .LVU65
+ 258 0036 2968     		ldr	r1, [r5]
+ 145:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer, output_buf + *out_row_ctr, (int) num_rows);
+ 259              		.loc 1 145 4 view .LVU66
+ 260 0038 5F68     		ldr	r7, [r3, #4]
+ 261 003a 059B     		ldr	r3, [sp, #20]
+ 262 003c 0C9A     		ldr	r2, [sp, #48]
+ 263 003e 02EB8102 		add	r2, r2, r1, lsl #2
+ 264 0042 F168     		ldr	r1, [r6, #12]
+ 265 0044 2046     		mov	r0, r4
+ 266 0046 B847     		blx	r7
+ 267              	.LVL21:
+ 147:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   *out_row_ctr += num_rows;
+ 268              		.loc 1 147 3 is_stmt 1 view .LVU67
+ 269              		.loc 1 147 16 is_stmt 0 view .LVU68
+ 270 0048 2B68     		ldr	r3, [r5]
+ 271 004a 059A     		ldr	r2, [sp, #20]
+ 272 004c 1344     		add	r3, r3, r2
+ 273 004e 2B60     		str	r3, [r5]
+ 148:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** }
+ 274              		.loc 1 148 1 view .LVU69
+ 275 0050 07B0     		add	sp, sp, #28
+ 276              	.LCFI6:
+ARM GAS  /tmp/ccZmssoc.s 			page 9
+
+
+ 277              		.cfi_def_cfa_offset 20
+ 278              		@ sp needed
+ 279 0052 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 280              		.loc 1 148 1 view .LVU70
+ 281              		.cfi_endproc
+ 282              	.LFE8:
+ 284              		.section	.text.post_process_prepass,"ax",%progbits
+ 285              		.align	1
+ 286              		.syntax unified
+ 287              		.thumb
+ 288              		.thumb_func
+ 289              		.fpu fpv4-sp-d16
+ 291              	post_process_prepass:
+ 292              	.LVL22:
+ 293              	.LFB9:
+ 149:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 150:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 151:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 152:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 153:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+ 154:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Process some data in the first pass of 2-pass quantization.
+ 155:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+ 156:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 157:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void)
+ 158:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** post_process_prepass (j_decompress_ptr cinfo,
+ 159:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		      JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+ 160:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		      JDIMENSION in_row_groups_avail,
+ 161:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		      JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+ 162:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		      JDIMENSION out_rows_avail)
+ 163:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** {
+ 294              		.loc 1 163 1 is_stmt 1 view -0
+ 295              		.cfi_startproc
+ 296              		@ args = 12, pretend = 0, frame = 0
+ 297              		@ frame_needed = 0, uses_anonymous_args = 0
+ 298              		.loc 1 163 1 is_stmt 0 view .LVU72
+ 299 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 300              	.LCFI7:
+ 301              		.cfi_def_cfa_offset 36
+ 302              		.cfi_offset 4, -36
+ 303              		.cfi_offset 5, -32
+ 304              		.cfi_offset 6, -28
+ 305              		.cfi_offset 7, -24
+ 306              		.cfi_offset 8, -20
+ 307              		.cfi_offset 9, -16
+ 308              		.cfi_offset 10, -12
+ 309              		.cfi_offset 11, -8
+ 310              		.cfi_offset 14, -4
+ 311 0004 85B0     		sub	sp, sp, #20
+ 312              	.LCFI8:
+ 313              		.cfi_def_cfa_offset 56
+ 314 0006 0546     		mov	r5, r0
+ 315 0008 0E46     		mov	r6, r1
+ 316 000a 1746     		mov	r7, r2
+ 317 000c 9A46     		mov	r10, r3
+ 318 000e DDF83C90 		ldr	r9, [sp, #60]
+ 164:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   my_post_ptr post = (my_post_ptr) cinfo->post;
+ 319              		.loc 1 164 3 is_stmt 1 view .LVU73
+ARM GAS  /tmp/ccZmssoc.s 			page 10
+
+
+ 320              		.loc 1 164 15 is_stmt 0 view .LVU74
+ 321 0012 D0F8C441 		ldr	r4, [r0, #452]
+ 322              	.LVL23:
+ 165:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION old_next_row, num_rows;
+ 323              		.loc 1 165 3 is_stmt 1 view .LVU75
+ 166:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 167:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Reposition virtual buffer if at start of strip. */
+ 168:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (post->next_row == 0) {
+ 324              		.loc 1 168 3 view .LVU76
+ 325              		.loc 1 168 11 is_stmt 0 view .LVU77
+ 326 0016 A369     		ldr	r3, [r4, #24]
+ 327              	.LVL24:
+ 328              		.loc 1 168 6 view .LVU78
+ 329 0018 53B9     		cbnz	r3, .L19
+ 169:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->buffer = (*cinfo->mem->access_virt_sarray)
+ 330              		.loc 1 169 5 is_stmt 1 view .LVU79
+ 331              		.loc 1 169 21 is_stmt 0 view .LVU80
+ 332 001a 2369     		ldr	r3, [r4, #16]
+ 333 001c 6269     		ldr	r2, [r4, #20]
+ 334              	.LVL25:
+ 335              		.loc 1 169 21 view .LVU81
+ 336 001e A168     		ldr	r1, [r4, #8]
+ 337              	.LVL26:
+ 338              		.loc 1 169 21 view .LVU82
+ 339 0020 0120     		movs	r0, #1
+ 340              	.LVL27:
+ 341              		.loc 1 169 21 view .LVU83
+ 342 0022 0090     		str	r0, [sp]
+ 343 0024 6868     		ldr	r0, [r5, #4]
+ 344 0026 D0F81C80 		ldr	r8, [r0, #28]
+ 345 002a 2846     		mov	r0, r5
+ 346 002c C047     		blx	r8
+ 347              	.LVL28:
+ 348              		.loc 1 169 18 view .LVU84
+ 349 002e E060     		str	r0, [r4, #12]
+ 350              	.L19:
+ 170:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, post->whole_image,
+ 171:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 post->starting_row, post->strip_height, TRUE);
+ 172:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 173:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 174:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Upsample some data (up to a strip height's worth). */
+ 175:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   old_next_row = post->next_row;
+ 351              		.loc 1 175 3 is_stmt 1 view .LVU85
+ 352              		.loc 1 175 16 is_stmt 0 view .LVU86
+ 353 0030 D4F81880 		ldr	r8, [r4, #24]
+ 354              	.LVL29:
+ 176:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   (*cinfo->upsample->upsample) (cinfo,
+ 355              		.loc 1 176 3 is_stmt 1 view .LVU87
+ 356              		.loc 1 176 10 is_stmt 0 view .LVU88
+ 357 0034 D5F8D831 		ldr	r3, [r5, #472]
+ 358              		.loc 1 176 4 view .LVU89
+ 359 0038 2269     		ldr	r2, [r4, #16]
+ 360 003a 0292     		str	r2, [sp, #8]
+ 361 003c 04F11802 		add	r2, r4, #24
+ 362 0040 0192     		str	r2, [sp, #4]
+ 363 0042 E268     		ldr	r2, [r4, #12]
+ 364 0044 0092     		str	r2, [sp]
+ARM GAS  /tmp/ccZmssoc.s 			page 11
+
+
+ 365 0046 D3F804B0 		ldr	fp, [r3, #4]
+ 366 004a 5346     		mov	r3, r10
+ 367 004c 3A46     		mov	r2, r7
+ 368 004e 3146     		mov	r1, r6
+ 369 0050 2846     		mov	r0, r5
+ 370 0052 D847     		blx	fp
+ 371              	.LVL30:
+ 177:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		input_buf, in_row_group_ctr, in_row_groups_avail,
+ 178:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer, &post->next_row, post->strip_height);
+ 179:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 180:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Allow quantizer to scan new data.  No data is emitted, */
+ 181:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* but we advance out_row_ctr so outer loop can tell when we're done. */
+ 182:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (post->next_row > old_next_row) {
+ 372              		.loc 1 182 3 is_stmt 1 view .LVU90
+ 373              		.loc 1 182 11 is_stmt 0 view .LVU91
+ 374 0054 A669     		ldr	r6, [r4, #24]
+ 375              	.LVL31:
+ 376              		.loc 1 182 6 view .LVU92
+ 377 0056 4645     		cmp	r6, r8
+ 378 0058 10D9     		bls	.L20
+ 183:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     num_rows = post->next_row - old_next_row;
+ 379              		.loc 1 183 5 is_stmt 1 view .LVU93
+ 380              		.loc 1 183 14 is_stmt 0 view .LVU94
+ 381 005a A6EB0806 		sub	r6, r6, r8
+ 382              	.LVL32:
+ 184:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     (*cinfo->cquantize->color_quantize) (cinfo, post->buffer + old_next_row,
+ 383              		.loc 1 184 5 is_stmt 1 view .LVU95
+ 384              		.loc 1 184 12 is_stmt 0 view .LVU96
+ 385 005e D5F8E031 		ldr	r3, [r5, #480]
+ 386              		.loc 1 184 53 view .LVU97
+ 387 0062 E168     		ldr	r1, [r4, #12]
+ 388              		.loc 1 184 6 view .LVU98
+ 389 0064 5F68     		ldr	r7, [r3, #4]
+ 390              	.LVL33:
+ 391              		.loc 1 184 6 view .LVU99
+ 392 0066 3346     		mov	r3, r6
+ 393 0068 0022     		movs	r2, #0
+ 394 006a 01EB8801 		add	r1, r1, r8, lsl #2
+ 395 006e 2846     		mov	r0, r5
+ 396 0070 B847     		blx	r7
+ 397              	.LVL34:
+ 185:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 					 (JSAMPARRAY) NULL, (int) num_rows);
+ 186:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     *out_row_ctr += num_rows;
+ 398              		.loc 1 186 5 is_stmt 1 view .LVU100
+ 399              		.loc 1 186 18 is_stmt 0 view .LVU101
+ 400 0072 D9F80030 		ldr	r3, [r9]
+ 401 0076 3344     		add	r3, r3, r6
+ 402 0078 C9F80030 		str	r3, [r9]
+ 403              	.LVL35:
+ 404              	.L20:
+ 187:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 188:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 189:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Advance if we filled the strip. */
+ 190:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (post->next_row >= post->strip_height) {
+ 405              		.loc 1 190 3 is_stmt 1 view .LVU102
+ 406              		.loc 1 190 11 is_stmt 0 view .LVU103
+ 407 007c A269     		ldr	r2, [r4, #24]
+ARM GAS  /tmp/ccZmssoc.s 			page 12
+
+
+ 408              		.loc 1 190 29 view .LVU104
+ 409 007e 2369     		ldr	r3, [r4, #16]
+ 410              		.loc 1 190 6 view .LVU105
+ 411 0080 9A42     		cmp	r2, r3
+ 412 0082 04D3     		bcc	.L18
+ 191:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->starting_row += post->strip_height;
+ 413              		.loc 1 191 5 is_stmt 1 view .LVU106
+ 414              		.loc 1 191 24 is_stmt 0 view .LVU107
+ 415 0084 6269     		ldr	r2, [r4, #20]
+ 416 0086 1344     		add	r3, r3, r2
+ 417 0088 6361     		str	r3, [r4, #20]
+ 192:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->next_row = 0;
+ 418              		.loc 1 192 5 is_stmt 1 view .LVU108
+ 419              		.loc 1 192 20 is_stmt 0 view .LVU109
+ 420 008a 0023     		movs	r3, #0
+ 421 008c A361     		str	r3, [r4, #24]
+ 422              	.L18:
+ 193:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 194:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** }
+ 423              		.loc 1 194 1 view .LVU110
+ 424 008e 05B0     		add	sp, sp, #20
+ 425              	.LCFI9:
+ 426              		.cfi_def_cfa_offset 36
+ 427              		@ sp needed
+ 428 0090 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 429              		.loc 1 194 1 view .LVU111
+ 430              		.cfi_endproc
+ 431              	.LFE9:
+ 433              		.section	.text.post_process_2pass,"ax",%progbits
+ 434              		.align	1
+ 435              		.syntax unified
+ 436              		.thumb
+ 437              		.thumb_func
+ 438              		.fpu fpv4-sp-d16
+ 440              	post_process_2pass:
+ 441              	.LVL36:
+ 442              	.LFB10:
+ 195:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 196:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 197:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+ 198:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Process some data in the second pass of 2-pass quantization.
+ 199:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+ 200:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 201:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** METHODDEF(void)
+ 202:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** post_process_2pass (j_decompress_ptr cinfo,
+ 203:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
+ 204:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JDIMENSION in_row_groups_avail,
+ 205:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+ 206:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		    JDIMENSION out_rows_avail)
+ 207:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** {
+ 443              		.loc 1 207 1 is_stmt 1 view -0
+ 444              		.cfi_startproc
+ 445              		@ args = 12, pretend = 0, frame = 8
+ 446              		@ frame_needed = 0, uses_anonymous_args = 0
+ 447              		.loc 1 207 1 is_stmt 0 view .LVU113
+ 448 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 449              	.LCFI10:
+ARM GAS  /tmp/ccZmssoc.s 			page 13
+
+
+ 450              		.cfi_def_cfa_offset 24
+ 451              		.cfi_offset 4, -24
+ 452              		.cfi_offset 5, -20
+ 453              		.cfi_offset 6, -16
+ 454              		.cfi_offset 7, -12
+ 455              		.cfi_offset 8, -8
+ 456              		.cfi_offset 14, -4
+ 457 0004 84B0     		sub	sp, sp, #16
+ 458              	.LCFI11:
+ 459              		.cfi_def_cfa_offset 40
+ 460 0006 0646     		mov	r6, r0
+ 461 0008 0B9F     		ldr	r7, [sp, #44]
+ 208:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   my_post_ptr post = (my_post_ptr) cinfo->post;
+ 462              		.loc 1 208 3 is_stmt 1 view .LVU114
+ 463              		.loc 1 208 15 is_stmt 0 view .LVU115
+ 464 000a D0F8C441 		ldr	r4, [r0, #452]
+ 465              	.LVL37:
+ 209:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   JDIMENSION num_rows, max_rows;
+ 466              		.loc 1 209 3 is_stmt 1 view .LVU116
+ 210:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 211:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Reposition virtual buffer if at start of strip. */
+ 212:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (post->next_row == 0) {
+ 467              		.loc 1 212 3 view .LVU117
+ 468              		.loc 1 212 11 is_stmt 0 view .LVU118
+ 469 000e A369     		ldr	r3, [r4, #24]
+ 470              	.LVL38:
+ 471              		.loc 1 212 6 view .LVU119
+ 472 0010 4BB9     		cbnz	r3, .L24
+ 213:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->buffer = (*cinfo->mem->access_virt_sarray)
+ 473              		.loc 1 213 5 is_stmt 1 view .LVU120
+ 474              		.loc 1 213 27 is_stmt 0 view .LVU121
+ 475 0012 4068     		ldr	r0, [r0, #4]
+ 476              	.LVL39:
+ 477              		.loc 1 213 21 view .LVU122
+ 478 0014 2369     		ldr	r3, [r4, #16]
+ 479 0016 6269     		ldr	r2, [r4, #20]
+ 480              	.LVL40:
+ 481              		.loc 1 213 21 view .LVU123
+ 482 0018 A168     		ldr	r1, [r4, #8]
+ 483              	.LVL41:
+ 484              		.loc 1 213 21 view .LVU124
+ 485 001a 0025     		movs	r5, #0
+ 486 001c 0095     		str	r5, [sp]
+ 487 001e C569     		ldr	r5, [r0, #28]
+ 488 0020 3046     		mov	r0, r6
+ 489 0022 A847     		blx	r5
+ 490              	.LVL42:
+ 491              		.loc 1 213 18 view .LVU125
+ 492 0024 E060     		str	r0, [r4, #12]
+ 493              	.L24:
+ 214:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, post->whole_image,
+ 215:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 post->starting_row, post->strip_height, FALSE);
+ 216:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 217:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 218:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Determine number of rows to emit. */
+ 219:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   num_rows = post->strip_height - post->next_row; /* available in strip */
+ 494              		.loc 1 219 3 is_stmt 1 view .LVU126
+ARM GAS  /tmp/ccZmssoc.s 			page 14
+
+
+ 495              		.loc 1 219 18 is_stmt 0 view .LVU127
+ 496 0026 2069     		ldr	r0, [r4, #16]
+ 497              		.loc 1 219 39 view .LVU128
+ 498 0028 A169     		ldr	r1, [r4, #24]
+ 499              		.loc 1 219 12 view .LVU129
+ 500 002a 401A     		subs	r0, r0, r1
+ 501              	.LVL43:
+ 220:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   max_rows = out_rows_avail - *out_row_ctr; /* available in output area */
+ 502              		.loc 1 220 3 is_stmt 1 view .LVU130
+ 503              		.loc 1 220 31 is_stmt 0 view .LVU131
+ 504 002c 3A68     		ldr	r2, [r7]
+ 505              		.loc 1 220 12 view .LVU132
+ 506 002e 0C9B     		ldr	r3, [sp, #48]
+ 507 0030 9B1A     		subs	r3, r3, r2
+ 508              	.LVL44:
+ 221:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (num_rows > max_rows)
+ 509              		.loc 1 221 3 is_stmt 1 view .LVU133
+ 510              		.loc 1 221 6 is_stmt 0 view .LVU134
+ 511 0032 9842     		cmp	r0, r3
+ 512 0034 00D8     		bhi	.L25
+ 219:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   max_rows = out_rows_avail - *out_row_ctr; /* available in output area */
+ 513              		.loc 1 219 12 view .LVU135
+ 514 0036 0346     		mov	r3, r0
+ 515              	.LVL45:
+ 516              	.L25:
+ 222:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     num_rows = max_rows;
+ 223:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* We have to check bottom of image here, can't depend on upsampler. */
+ 224:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   max_rows = cinfo->output_height - post->starting_row;
+ 517              		.loc 1 224 3 is_stmt 1 view .LVU136
+ 518              		.loc 1 224 19 is_stmt 0 view .LVU137
+ 519 0038 756F     		ldr	r5, [r6, #116]
+ 520              		.loc 1 224 41 view .LVU138
+ 521 003a 6069     		ldr	r0, [r4, #20]
+ 522              		.loc 1 224 12 view .LVU139
+ 523 003c 2D1A     		subs	r5, r5, r0
+ 524              	.LVL46:
+ 225:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (num_rows > max_rows)
+ 525              		.loc 1 225 3 is_stmt 1 view .LVU140
+ 526              		.loc 1 225 6 is_stmt 0 view .LVU141
+ 527 003e AB42     		cmp	r3, r5
+ 528 0040 00D8     		bhi	.L26
+ 529 0042 1D46     		mov	r5, r3
+ 530              	.LVL47:
+ 531              	.L26:
+ 226:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     num_rows = max_rows;
+ 227:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 228:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Quantize and emit data. */
+ 229:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   (*cinfo->cquantize->color_quantize) (cinfo,
+ 532              		.loc 1 229 3 is_stmt 1 view .LVU142
+ 533              		.loc 1 229 10 is_stmt 0 view .LVU143
+ 534 0044 D6F8E031 		ldr	r3, [r6, #480]
+ 230:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer + post->next_row, output_buf + *out_row_ctr,
+ 535              		.loc 1 230 7 view .LVU144
+ 536 0048 E068     		ldr	r0, [r4, #12]
+ 537              	.LVL48:
+ 538              		.loc 1 230 7 view .LVU145
+ 539 004a 0390     		str	r0, [sp, #12]
+ARM GAS  /tmp/ccZmssoc.s 			page 15
+
+
+ 229:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		post->buffer + post->next_row, output_buf + *out_row_ctr,
+ 540              		.loc 1 229 4 view .LVU146
+ 541 004c D3F80480 		ldr	r8, [r3, #4]
+ 542 0050 2B46     		mov	r3, r5
+ 543 0052 0A98     		ldr	r0, [sp, #40]
+ 544 0054 00EB8202 		add	r2, r0, r2, lsl #2
+ 545 0058 0398     		ldr	r0, [sp, #12]
+ 546 005a 00EB8101 		add	r1, r0, r1, lsl #2
+ 547 005e 3046     		mov	r0, r6
+ 548 0060 C047     		blx	r8
+ 549              	.LVL49:
+ 231:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 		(int) num_rows);
+ 232:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   *out_row_ctr += num_rows;
+ 550              		.loc 1 232 3 is_stmt 1 view .LVU147
+ 551              		.loc 1 232 16 is_stmt 0 view .LVU148
+ 552 0062 3B68     		ldr	r3, [r7]
+ 553 0064 2B44     		add	r3, r3, r5
+ 554 0066 3B60     		str	r3, [r7]
+ 233:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 234:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Advance if we filled the strip. */
+ 235:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post->next_row += num_rows;
+ 555              		.loc 1 235 3 is_stmt 1 view .LVU149
+ 556              		.loc 1 235 18 is_stmt 0 view .LVU150
+ 557 0068 A369     		ldr	r3, [r4, #24]
+ 558 006a 1D44     		add	r5, r5, r3
+ 559              	.LVL50:
+ 560              		.loc 1 235 18 view .LVU151
+ 561 006c A561     		str	r5, [r4, #24]
+ 236:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (post->next_row >= post->strip_height) {
+ 562              		.loc 1 236 3 is_stmt 1 view .LVU152
+ 563              		.loc 1 236 29 is_stmt 0 view .LVU153
+ 564 006e 2369     		ldr	r3, [r4, #16]
+ 565              		.loc 1 236 6 view .LVU154
+ 566 0070 9D42     		cmp	r5, r3
+ 567 0072 04D3     		bcc	.L23
+ 237:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->starting_row += post->strip_height;
+ 568              		.loc 1 237 5 is_stmt 1 view .LVU155
+ 569              		.loc 1 237 24 is_stmt 0 view .LVU156
+ 570 0074 6269     		ldr	r2, [r4, #20]
+ 571 0076 1344     		add	r3, r3, r2
+ 572 0078 6361     		str	r3, [r4, #20]
+ 238:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->next_row = 0;
+ 573              		.loc 1 238 5 is_stmt 1 view .LVU157
+ 574              		.loc 1 238 20 is_stmt 0 view .LVU158
+ 575 007a 0023     		movs	r3, #0
+ 576 007c A361     		str	r3, [r4, #24]
+ 577              	.L23:
+ 239:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 240:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** }
+ 578              		.loc 1 240 1 view .LVU159
+ 579 007e 04B0     		add	sp, sp, #16
+ 580              	.LCFI12:
+ 581              		.cfi_def_cfa_offset 24
+ 582              		@ sp needed
+ 583 0080 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 584              		.loc 1 240 1 view .LVU160
+ 585              		.cfi_endproc
+ARM GAS  /tmp/ccZmssoc.s 			page 16
+
+
+ 586              	.LFE10:
+ 588              		.section	.text.jinit_d_post_controller,"ax",%progbits
+ 589              		.align	1
+ 590              		.global	jinit_d_post_controller
+ 591              		.syntax unified
+ 592              		.thumb
+ 593              		.thumb_func
+ 594              		.fpu fpv4-sp-d16
+ 596              	jinit_d_post_controller:
+ 597              	.LVL51:
+ 598              	.LFB11:
+ 241:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 242:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 243:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 244:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 245:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** /*
+ 246:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  * Initialize postprocessing controller.
+ 247:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****  */
+ 248:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 249:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** GLOBAL(void)
+ 250:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** jinit_d_post_controller (j_decompress_ptr cinfo, boolean need_full_buffer)
+ 251:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** {
+ 599              		.loc 1 251 1 is_stmt 1 view -0
+ 600              		.cfi_startproc
+ 601              		@ args = 0, pretend = 0, frame = 0
+ 602              		@ frame_needed = 0, uses_anonymous_args = 0
+ 603              		.loc 1 251 1 is_stmt 0 view .LVU162
+ 604 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 605              	.LCFI13:
+ 606              		.cfi_def_cfa_offset 20
+ 607              		.cfi_offset 4, -20
+ 608              		.cfi_offset 5, -16
+ 609              		.cfi_offset 6, -12
+ 610              		.cfi_offset 7, -8
+ 611              		.cfi_offset 14, -4
+ 612 0002 83B0     		sub	sp, sp, #12
+ 613              	.LCFI14:
+ 614              		.cfi_def_cfa_offset 32
+ 615 0004 0446     		mov	r4, r0
+ 616 0006 0E46     		mov	r6, r1
+ 252:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   my_post_ptr post;
+ 617              		.loc 1 252 3 is_stmt 1 view .LVU163
+ 253:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 254:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post = (my_post_ptr)
+ 618              		.loc 1 254 3 view .LVU164
+ 255:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 619              		.loc 1 255 12 is_stmt 0 view .LVU165
+ 620 0008 4368     		ldr	r3, [r0, #4]
+ 621              		.loc 1 255 6 view .LVU166
+ 622 000a 1B68     		ldr	r3, [r3]
+ 623 000c 1C22     		movs	r2, #28
+ 624 000e 0121     		movs	r1, #1
+ 625              	.LVL52:
+ 626              		.loc 1 255 6 view .LVU167
+ 627 0010 9847     		blx	r3
+ 628              	.LVL53:
+ 256:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 				SIZEOF(my_post_controller));
+ARM GAS  /tmp/ccZmssoc.s 			page 17
+
+
+ 257:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   cinfo->post = (struct jpeg_d_post_controller *) post;
+ 629              		.loc 1 257 3 is_stmt 1 view .LVU168
+ 630              		.loc 1 257 15 is_stmt 0 view .LVU169
+ 631 0012 C4F8C401 		str	r0, [r4, #452]
+ 258:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post->pub.start_pass = start_pass_dpost;
+ 632              		.loc 1 258 3 is_stmt 1 view .LVU170
+ 633              		.loc 1 258 24 is_stmt 0 view .LVU171
+ 634 0016 164B     		ldr	r3, .L34
+ 635 0018 0360     		str	r3, [r0]
+ 259:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post->whole_image = NULL;	/* flag for no virtual arrays */
+ 636              		.loc 1 259 3 is_stmt 1 view .LVU172
+ 637              		.loc 1 259 21 is_stmt 0 view .LVU173
+ 638 001a 0023     		movs	r3, #0
+ 639 001c 8360     		str	r3, [r0, #8]
+ 260:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   post->buffer = NULL;		/* flag for no strip buffer */
+ 640              		.loc 1 260 3 is_stmt 1 view .LVU174
+ 641              		.loc 1 260 16 is_stmt 0 view .LVU175
+ 642 001e C360     		str	r3, [r0, #12]
+ 261:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 
+ 262:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   /* Create the quantization buffer, if needed */
+ 263:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   if (cinfo->quantize_colors) {
+ 643              		.loc 1 263 3 is_stmt 1 view .LVU176
+ 644              		.loc 1 263 12 is_stmt 0 view .LVU177
+ 645 0020 636D     		ldr	r3, [r4, #84]
+ 646              		.loc 1 263 6 view .LVU178
+ 647 0022 73B1     		cbz	r3, .L29
+ 648 0024 0546     		mov	r5, r0
+ 264:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     /* The buffer strip height is max_v_samp_factor, which is typically
+ 265:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****      * an efficient number of rows for upsampling to return.
+ 266:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****      * (In the presence of output rescaling, we might want to be smarter?)
+ 267:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****      */
+ 268:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     post->strip_height = (JDIMENSION) cinfo->max_v_samp_factor;
+ 649              		.loc 1 268 5 is_stmt 1 view .LVU179
+ 650              		.loc 1 268 44 is_stmt 0 view .LVU180
+ 651 0026 D4F83C31 		ldr	r3, [r4, #316]
+ 652              		.loc 1 268 24 view .LVU181
+ 653 002a 0361     		str	r3, [r0, #16]
+ 269:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     if (need_full_buffer) {
+ 654              		.loc 1 269 5 is_stmt 1 view .LVU182
+ 655              		.loc 1 269 8 is_stmt 0 view .LVU183
+ 656 002c 5EB9     		cbnz	r6, .L33
+ 270:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* Two-pass color quantization: need full-image storage. */
+ 271:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* We round up the number of rows to a multiple of the strip height. */
+ 272:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       post->whole_image = (*cinfo->mem->request_virt_sarray)
+ 274:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 275:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 cinfo->output_width * cinfo->out_color_components,
+ 276:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 (JDIMENSION) jround_up((long) cinfo->output_height,
+ 277:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 				(long) post->strip_height),
+ 278:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 post->strip_height);
+ 279:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #else
+ 280:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 281:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 282:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     } else {
+ 283:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       /* One-pass color quantization: just make a strip buffer. */
+ 284:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****       post->buffer = (*cinfo->mem->alloc_sarray)
+ 657              		.loc 1 284 7 is_stmt 1 view .LVU184
+ARM GAS  /tmp/ccZmssoc.s 			page 18
+
+
+ 658              		.loc 1 284 29 is_stmt 0 view .LVU185
+ 659 002e 6068     		ldr	r0, [r4, #4]
+ 660              	.LVL54:
+ 285:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 286:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 cinfo->output_width * cinfo->out_color_components,
+ 661              		.loc 1 286 8 view .LVU186
+ 662 0030 226F     		ldr	r2, [r4, #112]
+ 663              		.loc 1 286 30 view .LVU187
+ 664 0032 A16F     		ldr	r1, [r4, #120]
+ 284:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 665              		.loc 1 284 23 view .LVU188
+ 666 0034 8668     		ldr	r6, [r0, #8]
+ 667              	.LVL55:
+ 284:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 668              		.loc 1 284 23 view .LVU189
+ 669 0036 01FB02F2 		mul	r2, r1, r2
+ 670 003a 0121     		movs	r1, #1
+ 671 003c 2046     		mov	r0, r4
+ 672 003e B047     		blx	r6
+ 673              	.LVL56:
+ 284:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 674              		.loc 1 284 20 view .LVU190
+ 675 0040 E860     		str	r0, [r5, #12]
+ 676              	.LVL57:
+ 677              	.L29:
+ 287:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 post->strip_height);
+ 288:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****     }
+ 289:Middlewares/Third_Party/LibJPEG/source/jdpostct.c ****   }
+ 290:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** }
+ 678              		.loc 1 290 1 view .LVU191
+ 679 0042 03B0     		add	sp, sp, #12
+ 680              	.LCFI15:
+ 681              		.cfi_remember_state
+ 682              		.cfi_def_cfa_offset 20
+ 683              		@ sp needed
+ 684 0044 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 685              	.LVL58:
+ 686              	.L33:
+ 687              	.LCFI16:
+ 688              		.cfi_restore_state
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 689              		.loc 1 273 7 is_stmt 1 view .LVU192
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 690              		.loc 1 273 34 is_stmt 0 view .LVU193
+ 691 0046 6268     		ldr	r2, [r4, #4]
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 692              		.loc 1 273 28 view .LVU194
+ 693 0048 1769     		ldr	r7, [r2, #16]
+ 275:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 (JDIMENSION) jround_up((long) cinfo->output_height,
+ 694              		.loc 1 275 8 view .LVU195
+ 695 004a 266F     		ldr	r6, [r4, #112]
+ 696              	.LVL59:
+ 275:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	 (JDIMENSION) jround_up((long) cinfo->output_height,
+ 697              		.loc 1 275 30 view .LVU196
+ 698 004c A26F     		ldr	r2, [r4, #120]
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 699              		.loc 1 273 28 view .LVU197
+ARM GAS  /tmp/ccZmssoc.s 			page 19
+
+
+ 700 004e 02FB06F6 		mul	r6, r2, r6
+ 276:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 				(long) post->strip_height),
+ 701              		.loc 1 276 16 view .LVU198
+ 702 0052 1946     		mov	r1, r3
+ 703 0054 606F     		ldr	r0, [r4, #116]
+ 704              	.LVL60:
+ 276:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 				(long) post->strip_height),
+ 705              		.loc 1 276 16 view .LVU199
+ 706 0056 FFF7FEFF 		bl	jround_up
+ 707              	.LVL61:
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 708              		.loc 1 273 28 view .LVU200
+ 709 005a 2B69     		ldr	r3, [r5, #16]
+ 710 005c 0193     		str	r3, [sp, #4]
+ 711 005e 0090     		str	r0, [sp]
+ 712 0060 3346     		mov	r3, r6
+ 713 0062 0022     		movs	r2, #0
+ 714 0064 0121     		movs	r1, #1
+ 715 0066 2046     		mov	r0, r4
+ 716 0068 B847     		blx	r7
+ 717              	.LVL62:
+ 273:Middlewares/Third_Party/LibJPEG/source/jdpostct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
+ 718              		.loc 1 273 25 view .LVU201
+ 719 006a A860     		str	r0, [r5, #8]
+ 720 006c E9E7     		b	.L29
+ 721              	.L35:
+ 722 006e 00BF     		.align	2
+ 723              	.L34:
+ 724 0070 00000000 		.word	start_pass_dpost
+ 725              		.cfi_endproc
+ 726              	.LFE11:
+ 728              		.text
+ 729              	.Letext0:
+ 730              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 731              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 732              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 733              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 734              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ARM GAS  /tmp/ccZmssoc.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jdpostct.c
+     /tmp/ccZmssoc.s:18     .text.start_pass_dpost:0000000000000000 $t
+     /tmp/ccZmssoc.s:25     .text.start_pass_dpost:0000000000000000 start_pass_dpost
+     /tmp/ccZmssoc.s:177    .text.start_pass_dpost:0000000000000084 $d
+     /tmp/ccZmssoc.s:190    .text.post_process_1pass:0000000000000000 post_process_1pass
+     /tmp/ccZmssoc.s:291    .text.post_process_prepass:0000000000000000 post_process_prepass
+     /tmp/ccZmssoc.s:440    .text.post_process_2pass:0000000000000000 post_process_2pass
+     /tmp/ccZmssoc.s:184    .text.post_process_1pass:0000000000000000 $t
+     /tmp/ccZmssoc.s:285    .text.post_process_prepass:0000000000000000 $t
+     /tmp/ccZmssoc.s:434    .text.post_process_2pass:0000000000000000 $t
+     /tmp/ccZmssoc.s:589    .text.jinit_d_post_controller:0000000000000000 $t
+     /tmp/ccZmssoc.s:596    .text.jinit_d_post_controller:0000000000000000 jinit_d_post_controller
+     /tmp/ccZmssoc.s:724    .text.jinit_d_post_controller:0000000000000070 $d
+
+UNDEFINED SYMBOLS
+jround_up

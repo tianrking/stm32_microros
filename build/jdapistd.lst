@@ -1,0 +1,1308 @@
+ARM GAS  /tmp/ccSsLztk.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jdapistd.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.output_pass_setup,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	output_pass_setup:
+  26              	.LVL0:
+  27              	.LFB8:
+  28              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdapistd.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * jdapistd.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Copyright (C) 1994-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * This file contains application interface code for the decompression half
+   9:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * of the JPEG library.  These are the "standard" API routines that are
+  10:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * used in the normal full-decompression case.  They are not used by a
+  11:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * transcoding-only application.  Note that if an application links in
+  12:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * jpeg_start_decompress, it will end up linking in the entire decompressor.
+  13:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * We thus must separate this file from jdapimin.c to avoid linking the
+  14:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * whole decompression library into a transcoder.
+  15:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+  16:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  17:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #define JPEG_INTERNALS
+  18:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #include "jinclude.h"
+  19:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #include "jpeglib.h"
+  20:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  21:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /* Forward declarations */
+  23:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** LOCAL(boolean) output_pass_setup JPP((j_decompress_ptr cinfo));
+  24:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  26:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+  27:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Decompression initialization.
+  28:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * jpeg_read_header must be completed before calling this.
+  29:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+  30:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * If a multipass operating mode was selected, this will do all but the
+ARM GAS  /tmp/ccSsLztk.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * last pass, and thus may take a great deal of time.
+  32:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+  33:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Returns FALSE if suspended.  The return value need be inspected only if
+  34:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * a suspending data source is used.
+  35:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+  36:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  37:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** GLOBAL(boolean)
+  38:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** jpeg_start_decompress (j_decompress_ptr cinfo)
+  39:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+  40:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state == DSTATE_READY) {
+  41:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* First call: initialize master control, select active modules */
+  42:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     jinit_master_decompress(cinfo);
+  43:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     if (cinfo->buffered_image) {
+  44:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* No more work here; expecting jpeg_start_output next */
+  45:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       cinfo->global_state = DSTATE_BUFIMAGE;
+  46:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       return TRUE;
+  47:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+  48:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_PRELOAD;
+  49:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+  50:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state == DSTATE_PRELOAD) {
+  51:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* If file has multiple scans, absorb them all into the coef buffer */
+  52:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     if (cinfo->inputctl->has_multiple_scans) {
+  53:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+  54:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       for (;;) {
+  55:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	int retcode;
+  56:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Call progress monitor hook if present */
+  57:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (cinfo->progress != NULL)
+  58:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+  59:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Absorb some more input */
+  60:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	retcode = (*cinfo->inputctl->consume_input) (cinfo);
+  61:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (retcode == JPEG_SUSPENDED)
+  62:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  return FALSE;
+  63:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (retcode == JPEG_REACHED_EOI)
+  64:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  break;
+  65:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Advance progress counter if appropriate */
+  66:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (cinfo->progress != NULL &&
+  67:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  if (++cinfo->progress->pass_counter >= cinfo->progress->pass_limit) {
+  69:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+  70:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    cinfo->progress->pass_limit += (long) cinfo->total_iMCU_rows;
+  71:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  }
+  72:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	}
+  73:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       }
+  74:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #else
+  75:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       ERREXIT(cinfo, JERR_NOT_COMPILED);
+  76:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #endif /* D_MULTISCAN_FILES_SUPPORTED */
+  77:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+  78:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->output_scan_number = cinfo->input_scan_number;
+  79:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_PRESCAN)
+  80:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+  81:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Perform any dummy output passes, and set up for the final pass */
+  82:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return output_pass_setup(cinfo);
+  83:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+  84:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  85:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  86:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+  87:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Set up for an output pass, and perform any dummy pass(es) needed.
+ARM GAS  /tmp/ccSsLztk.s 			page 3
+
+
+  88:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Common subroutine for jpeg_start_decompress and jpeg_start_output.
+  89:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Entry: global_state = DSTATE_PRESCAN only if previously suspended.
+  90:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Exit: If done, returns TRUE and sets global_state for proper output mode.
+  91:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *       If suspended, returns FALSE and sets global_state = DSTATE_PRESCAN.
+  92:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+  93:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+  94:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** LOCAL(boolean)
+  95:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** output_pass_setup (j_decompress_ptr cinfo)
+  96:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+  29              		.loc 1 96 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 96 1 is_stmt 0 view .LVU1
+  34 0000 70B5     		push	{r4, r5, r6, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 4, -16
+  38              		.cfi_offset 5, -12
+  39              		.cfi_offset 6, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0446     		mov	r4, r0
+  97:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state != DSTATE_PRESCAN) {
+  42              		.loc 1 97 3 is_stmt 1 view .LVU2
+  43              		.loc 1 97 12 is_stmt 0 view .LVU3
+  44 0004 4369     		ldr	r3, [r0, #20]
+  45              		.loc 1 97 6 view .LVU4
+  46 0006 CC2B     		cmp	r3, #204
+  47 0008 36D0     		beq	.L3
+  98:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* First call: do pass setup */
+  99:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->master->prepare_for_output_pass) (cinfo);
+  48              		.loc 1 99 5 is_stmt 1 view .LVU5
+  49              		.loc 1 99 12 is_stmt 0 view .LVU6
+  50 000a D0F8B831 		ldr	r3, [r0, #440]
+  51              		.loc 1 99 6 view .LVU7
+  52 000e 1B68     		ldr	r3, [r3]
+  53 0010 9847     		blx	r3
+  54              	.LVL1:
+ 100:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->output_scanline = 0;
+  55              		.loc 1 100 5 is_stmt 1 view .LVU8
+  56              		.loc 1 100 28 is_stmt 0 view .LVU9
+  57 0012 0023     		movs	r3, #0
+  58 0014 C4F88C30 		str	r3, [r4, #140]
+ 101:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_PRESCAN;
+  59              		.loc 1 101 5 is_stmt 1 view .LVU10
+  60              		.loc 1 101 25 is_stmt 0 view .LVU11
+  61 0018 CC23     		movs	r3, #204
+  62 001a 6361     		str	r3, [r4, #20]
+  63 001c 2CE0     		b	.L3
+  64              	.L4:
+  65              	.LBB2:
+ 102:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 103:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Loop over any required dummy passes */
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   while (cinfo->master->is_dummy_pass) {
+ 105:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 106:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* Crank through the dummy pass */
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     while (cinfo->output_scanline < cinfo->output_height) {
+ARM GAS  /tmp/ccSsLztk.s 			page 4
+
+
+ 108:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       JDIMENSION last_scanline;
+ 109:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* Call progress monitor hook if present */
+ 110:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       if (cinfo->progress != NULL) {
+ 111:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_limit = (long) cinfo->output_height;
+ 113:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 114:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       }
+ 115:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* Process some data */
+ 116:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       last_scanline = cinfo->output_scanline;
+  66              		.loc 1 116 7 is_stmt 1 view .LVU12
+  67              		.loc 1 116 21 is_stmt 0 view .LVU13
+  68 001e D4F88C50 		ldr	r5, [r4, #140]
+  69              	.LVL2:
+ 117:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       (*cinfo->main->process_data) (cinfo, (JSAMPARRAY) NULL,
+  70              		.loc 1 117 7 is_stmt 1 view .LVU14
+  71              		.loc 1 117 14 is_stmt 0 view .LVU15
+  72 0022 D4F8BC31 		ldr	r3, [r4, #444]
+  73              		.loc 1 117 8 view .LVU16
+  74 0026 5E68     		ldr	r6, [r3, #4]
+  75 0028 0023     		movs	r3, #0
+  76 002a 04F18C02 		add	r2, r4, #140
+  77 002e 1946     		mov	r1, r3
+  78 0030 2046     		mov	r0, r4
+  79 0032 B047     		blx	r6
+  80              	.LVL3:
+ 118:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 				    &cinfo->output_scanline, (JDIMENSION) 0);
+ 119:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       if (cinfo->output_scanline == last_scanline)
+  81              		.loc 1 119 7 is_stmt 1 view .LVU17
+  82              		.loc 1 119 16 is_stmt 0 view .LVU18
+  83 0034 D4F88C30 		ldr	r3, [r4, #140]
+  84              		.loc 1 119 10 view .LVU19
+  85 0038 AB42     		cmp	r3, r5
+  86 003a 2AD0     		beq	.L9
+  87              	.LVL4:
+  88              	.L7:
+  89              		.loc 1 119 10 view .LVU20
+  90              	.LBE2:
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       JDIMENSION last_scanline;
+  91              		.loc 1 107 11 is_stmt 1 view .LVU21
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       JDIMENSION last_scanline;
+  92              		.loc 1 107 17 is_stmt 0 view .LVU22
+  93 003c D4F88C30 		ldr	r3, [r4, #140]
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       JDIMENSION last_scanline;
+  94              		.loc 1 107 42 view .LVU23
+  95 0040 626F     		ldr	r2, [r4, #116]
+ 107:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       JDIMENSION last_scanline;
+  96              		.loc 1 107 11 view .LVU24
+  97 0042 9342     		cmp	r3, r2
+  98 0044 0BD2     		bcs	.L12
+  99              	.LBB3:
+ 108:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* Call progress monitor hook if present */
+ 100              		.loc 1 108 7 is_stmt 1 view .LVU25
+ 110:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 101              		.loc 1 110 7 view .LVU26
+ 110:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 102              		.loc 1 110 16 is_stmt 0 view .LVU27
+ 103 0046 A268     		ldr	r2, [r4, #8]
+ARM GAS  /tmp/ccSsLztk.s 			page 5
+
+
+ 110:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 104              		.loc 1 110 10 view .LVU28
+ 105 0048 002A     		cmp	r2, #0
+ 106 004a E8D0     		beq	.L4
+ 111:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_limit = (long) cinfo->output_height;
+ 107              		.loc 1 111 2 is_stmt 1 view .LVU29
+ 111:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	cinfo->progress->pass_limit = (long) cinfo->output_height;
+ 108              		.loc 1 111 32 is_stmt 0 view .LVU30
+ 109 004c 5360     		str	r3, [r2, #4]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 110              		.loc 1 112 2 is_stmt 1 view .LVU31
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 111              		.loc 1 112 44 is_stmt 0 view .LVU32
+ 112 004e 626F     		ldr	r2, [r4, #116]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 113              		.loc 1 112 7 view .LVU33
+ 114 0050 A368     		ldr	r3, [r4, #8]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	(*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 115              		.loc 1 112 30 view .LVU34
+ 116 0052 9A60     		str	r2, [r3, #8]
+ 113:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       }
+ 117              		.loc 1 113 2 is_stmt 1 view .LVU35
+ 113:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       }
+ 118              		.loc 1 113 9 is_stmt 0 view .LVU36
+ 119 0054 A368     		ldr	r3, [r4, #8]
+ 113:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       }
+ 120              		.loc 1 113 3 view .LVU37
+ 121 0056 1B68     		ldr	r3, [r3]
+ 122 0058 2046     		mov	r0, r4
+ 123 005a 9847     		blx	r3
+ 124              	.LVL5:
+ 125 005c DFE7     		b	.L4
+ 126              	.L12:
+ 127              	.LBE3:
+ 120:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	return FALSE;		/* No progress made, must suspend */
+ 121:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+ 122:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* Finish up dummy pass, and set up for another one */
+ 123:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->master->finish_output_pass) (cinfo);
+ 128              		.loc 1 123 5 is_stmt 1 view .LVU38
+ 129              		.loc 1 123 12 is_stmt 0 view .LVU39
+ 130 005e D4F8B831 		ldr	r3, [r4, #440]
+ 131              		.loc 1 123 6 view .LVU40
+ 132 0062 5B68     		ldr	r3, [r3, #4]
+ 133 0064 2046     		mov	r0, r4
+ 134 0066 9847     		blx	r3
+ 135              	.LVL6:
+ 124:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->master->prepare_for_output_pass) (cinfo);
+ 136              		.loc 1 124 5 is_stmt 1 view .LVU41
+ 137              		.loc 1 124 12 is_stmt 0 view .LVU42
+ 138 0068 D4F8B831 		ldr	r3, [r4, #440]
+ 139              		.loc 1 124 6 view .LVU43
+ 140 006c 1B68     		ldr	r3, [r3]
+ 141 006e 2046     		mov	r0, r4
+ 142 0070 9847     		blx	r3
+ 143              	.LVL7:
+ 125:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->output_scanline = 0;
+ 144              		.loc 1 125 5 is_stmt 1 view .LVU44
+ARM GAS  /tmp/ccSsLztk.s 			page 6
+
+
+ 145              		.loc 1 125 28 is_stmt 0 view .LVU45
+ 146 0072 0023     		movs	r3, #0
+ 147 0074 C4F88C30 		str	r3, [r4, #140]
+ 148              	.L3:
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 149              		.loc 1 104 9 is_stmt 1 view .LVU46
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 150              		.loc 1 104 15 is_stmt 0 view .LVU47
+ 151 0078 D4F8B831 		ldr	r3, [r4, #440]
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 152              		.loc 1 104 23 view .LVU48
+ 153 007c 9B68     		ldr	r3, [r3, #8]
+ 104:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 154              		.loc 1 104 9 view .LVU49
+ 155 007e 002B     		cmp	r3, #0
+ 156 0080 DCD1     		bne	.L7
+ 126:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #else
+ 127:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 128:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 129:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 130:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Ready for application to drive output pass through
+ 131:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****    * jpeg_read_scanlines or jpeg_read_raw_data.
+ 132:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****    */
+ 133:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   cinfo->global_state = cinfo->raw_data_out ? DSTATE_RAW_OK : DSTATE_SCANNING;
+ 157              		.loc 1 133 3 is_stmt 1 view .LVU50
+ 158              		.loc 1 133 30 is_stmt 0 view .LVU51
+ 159 0082 636C     		ldr	r3, [r4, #68]
+ 160              		.loc 1 133 61 view .LVU52
+ 161 0084 1BB1     		cbz	r3, .L10
+ 162 0086 CE23     		movs	r3, #206
+ 163              	.L8:
+ 164              		.loc 1 133 23 discriminator 4 view .LVU53
+ 165 0088 6361     		str	r3, [r4, #20]
+ 134:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return TRUE;
+ 166              		.loc 1 134 3 is_stmt 1 discriminator 4 view .LVU54
+ 167              		.loc 1 134 10 is_stmt 0 discriminator 4 view .LVU55
+ 168 008a 0120     		movs	r0, #1
+ 169 008c 02E0     		b	.L1
+ 170              	.L10:
+ 133:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return TRUE;
+ 171              		.loc 1 133 61 view .LVU56
+ 172 008e CD23     		movs	r3, #205
+ 173 0090 FAE7     		b	.L8
+ 174              	.LVL8:
+ 175              	.L9:
+ 176              	.LBB4:
+ 120:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+ 177              		.loc 1 120 9 view .LVU57
+ 178 0092 0020     		movs	r0, #0
+ 179              	.LVL9:
+ 180              	.L1:
+ 120:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+ 181              		.loc 1 120 9 view .LVU58
+ 182              	.LBE4:
+ 135:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 183              		.loc 1 135 1 view .LVU59
+ 184 0094 70BD     		pop	{r4, r5, r6, pc}
+ARM GAS  /tmp/ccSsLztk.s 			page 7
+
+
+ 185              		.loc 1 135 1 view .LVU60
+ 186              		.cfi_endproc
+ 187              	.LFE8:
+ 189              		.section	.text.jpeg_start_decompress,"ax",%progbits
+ 190              		.align	1
+ 191              		.global	jpeg_start_decompress
+ 192              		.syntax unified
+ 193              		.thumb
+ 194              		.thumb_func
+ 195              		.fpu fpv4-sp-d16
+ 197              	jpeg_start_decompress:
+ 198              	.LVL10:
+ 199              	.LFB7:
+  39:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state == DSTATE_READY) {
+ 200              		.loc 1 39 1 is_stmt 1 view -0
+ 201              		.cfi_startproc
+ 202              		@ args = 0, pretend = 0, frame = 0
+ 203              		@ frame_needed = 0, uses_anonymous_args = 0
+  39:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state == DSTATE_READY) {
+ 204              		.loc 1 39 1 is_stmt 0 view .LVU62
+ 205 0000 10B5     		push	{r4, lr}
+ 206              	.LCFI1:
+ 207              		.cfi_def_cfa_offset 8
+ 208              		.cfi_offset 4, -8
+ 209              		.cfi_offset 14, -4
+ 210 0002 0446     		mov	r4, r0
+  40:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* First call: initialize master control, select active modules */
+ 211              		.loc 1 40 3 is_stmt 1 view .LVU63
+  40:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* First call: initialize master control, select active modules */
+ 212              		.loc 1 40 12 is_stmt 0 view .LVU64
+ 213 0004 4369     		ldr	r3, [r0, #20]
+  40:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* First call: initialize master control, select active modules */
+ 214              		.loc 1 40 6 view .LVU65
+ 215 0006 CA2B     		cmp	r3, #202
+ 216 0008 14D0     		beq	.L25
+ 217              	.LVL11:
+ 218              	.L14:
+  50:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* If file has multiple scans, absorb them all into the coef buffer */
+ 219              		.loc 1 50 3 is_stmt 1 view .LVU66
+  50:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* If file has multiple scans, absorb them all into the coef buffer */
+ 220              		.loc 1 50 12 is_stmt 0 view .LVU67
+ 221 000a 6369     		ldr	r3, [r4, #20]
+  50:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* If file has multiple scans, absorb them all into the coef buffer */
+ 222              		.loc 1 50 6 view .LVU68
+ 223 000c CB2B     		cmp	r3, #203
+ 224 000e 1CD0     		beq	.L26
+  79:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 225              		.loc 1 79 10 is_stmt 1 view .LVU69
+  79:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 226              		.loc 1 79 13 is_stmt 0 view .LVU70
+ 227 0010 CC2B     		cmp	r3, #204
+ 228 0012 09D0     		beq	.L23
+  80:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Perform any dummy output passes, and set up for the final pass */
+ 229              		.loc 1 80 5 is_stmt 1 view .LVU71
+ 230 0014 2368     		ldr	r3, [r4]
+ 231 0016 1522     		movs	r2, #21
+ 232 0018 5A61     		str	r2, [r3, #20]
+ARM GAS  /tmp/ccSsLztk.s 			page 8
+
+
+ 233 001a 2368     		ldr	r3, [r4]
+ 234 001c 6269     		ldr	r2, [r4, #20]
+ 235 001e 9A61     		str	r2, [r3, #24]
+ 236 0020 2368     		ldr	r3, [r4]
+ 237 0022 1B68     		ldr	r3, [r3]
+ 238 0024 2046     		mov	r0, r4
+ 239 0026 9847     		blx	r3
+ 240              	.LVL12:
+ 241              	.L23:
+  82:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 242              		.loc 1 82 3 view .LVU72
+  82:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 243              		.loc 1 82 10 is_stmt 0 view .LVU73
+ 244 0028 2046     		mov	r0, r4
+ 245 002a FFF7FEFF 		bl	output_pass_setup
+ 246              	.LVL13:
+ 247 002e 0346     		mov	r3, r0
+ 248              	.L13:
+  83:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 249              		.loc 1 83 1 view .LVU74
+ 250 0030 1846     		mov	r0, r3
+ 251 0032 10BD     		pop	{r4, pc}
+ 252              	.LVL14:
+ 253              	.L25:
+  42:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     if (cinfo->buffered_image) {
+ 254              		.loc 1 42 5 is_stmt 1 view .LVU75
+ 255 0034 FFF7FEFF 		bl	jinit_master_decompress
+ 256              	.LVL15:
+  43:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* No more work here; expecting jpeg_start_output next */
+ 257              		.loc 1 43 5 view .LVU76
+  43:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* No more work here; expecting jpeg_start_output next */
+ 258              		.loc 1 43 14 is_stmt 0 view .LVU77
+ 259 0038 236C     		ldr	r3, [r4, #64]
+  43:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       /* No more work here; expecting jpeg_start_output next */
+ 260              		.loc 1 43 8 view .LVU78
+ 261 003a 13B9     		cbnz	r3, .L27
+  48:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 262              		.loc 1 48 5 is_stmt 1 view .LVU79
+  48:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 263              		.loc 1 48 25 is_stmt 0 view .LVU80
+ 264 003c CB23     		movs	r3, #203
+ 265 003e 6361     		str	r3, [r4, #20]
+ 266 0040 E3E7     		b	.L14
+ 267              	.L27:
+  45:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       return TRUE;
+ 268              		.loc 1 45 7 is_stmt 1 view .LVU81
+  45:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       return TRUE;
+ 269              		.loc 1 45 27 is_stmt 0 view .LVU82
+ 270 0042 CF23     		movs	r3, #207
+ 271 0044 6361     		str	r3, [r4, #20]
+  46:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+ 272              		.loc 1 46 7 is_stmt 1 view .LVU83
+  46:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     }
+ 273              		.loc 1 46 14 is_stmt 0 view .LVU84
+ 274 0046 0123     		movs	r3, #1
+ 275 0048 F2E7     		b	.L13
+ 276              	.L26:
+ARM GAS  /tmp/ccSsLztk.s 			page 9
+
+
+  52:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 277              		.loc 1 52 5 is_stmt 1 view .LVU85
+  52:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 278              		.loc 1 52 14 is_stmt 0 view .LVU86
+ 279 004a D4F8C831 		ldr	r3, [r4, #456]
+  52:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 280              		.loc 1 52 24 view .LVU87
+ 281 004e 1B69     		ldr	r3, [r3, #16]
+  52:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 282              		.loc 1 52 8 view .LVU88
+ 283 0050 7BB9     		cbnz	r3, .L18
+ 284              	.L19:
+  78:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_PRESCAN)
+ 285              		.loc 1 78 5 is_stmt 1 view .LVU89
+  78:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_PRESCAN)
+ 286              		.loc 1 78 38 is_stmt 0 view .LVU90
+ 287 0052 D4F89030 		ldr	r3, [r4, #144]
+  78:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_PRESCAN)
+ 288              		.loc 1 78 31 view .LVU91
+ 289 0056 C4F89830 		str	r3, [r4, #152]
+ 290 005a E5E7     		b	.L23
+ 291              	.LVL16:
+ 292              	.L22:
+ 293              	.LBB5:
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 294              		.loc 1 68 4 is_stmt 1 view .LVU92
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 295              		.loc 1 68 25 is_stmt 0 view .LVU93
+ 296 005c 5368     		ldr	r3, [r2, #4]
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 297              		.loc 1 68 8 view .LVU94
+ 298 005e 0133     		adds	r3, r3, #1
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 299              		.loc 1 68 7 view .LVU95
+ 300 0060 5360     		str	r3, [r2, #4]
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 301              		.loc 1 68 48 view .LVU96
+ 302 0062 A168     		ldr	r1, [r4, #8]
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 303              		.loc 1 68 58 view .LVU97
+ 304 0064 8A68     		ldr	r2, [r1, #8]
+  68:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    /* jdmaster underestimated number of scans; ratchet up one scan */
+ 305              		.loc 1 68 7 view .LVU98
+ 306 0066 9342     		cmp	r3, r2
+ 307 0068 03DB     		blt	.L18
+  70:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  }
+ 308              		.loc 1 70 6 is_stmt 1 view .LVU99
+  70:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  }
+ 309              		.loc 1 70 49 is_stmt 0 view .LVU100
+ 310 006a D4F84831 		ldr	r3, [r4, #328]
+  70:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  }
+ 311              		.loc 1 70 34 view .LVU101
+ 312 006e 1A44     		add	r2, r2, r3
+ 313 0070 8A60     		str	r2, [r1, #8]
+ 314              	.LVL17:
+ 315              	.L18:
+  70:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  }
+ARM GAS  /tmp/ccSsLztk.s 			page 10
+
+
+ 316              		.loc 1 70 34 view .LVU102
+ 317              	.LBE5:
+  54:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	int retcode;
+ 318              		.loc 1 54 7 is_stmt 1 view .LVU103
+ 319              	.LBB6:
+  55:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Call progress monitor hook if present */
+ 320              		.loc 1 55 2 view .LVU104
+  57:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 321              		.loc 1 57 2 view .LVU105
+  57:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 322              		.loc 1 57 11 is_stmt 0 view .LVU106
+ 323 0072 A368     		ldr	r3, [r4, #8]
+  57:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 324              		.loc 1 57 5 view .LVU107
+ 325 0074 13B1     		cbz	r3, .L20
+  58:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Absorb some more input */
+ 326              		.loc 1 58 4 is_stmt 1 view .LVU108
+  58:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	/* Absorb some more input */
+ 327              		.loc 1 58 5 is_stmt 0 view .LVU109
+ 328 0076 1B68     		ldr	r3, [r3]
+ 329 0078 2046     		mov	r0, r4
+ 330 007a 9847     		blx	r3
+ 331              	.LVL18:
+ 332              	.L20:
+  60:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (retcode == JPEG_SUSPENDED)
+ 333              		.loc 1 60 2 is_stmt 1 view .LVU110
+  60:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (retcode == JPEG_SUSPENDED)
+ 334              		.loc 1 60 19 is_stmt 0 view .LVU111
+ 335 007c D4F8C831 		ldr	r3, [r4, #456]
+  60:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	if (retcode == JPEG_SUSPENDED)
+ 336              		.loc 1 60 13 view .LVU112
+ 337 0080 1B68     		ldr	r3, [r3]
+ 338 0082 2046     		mov	r0, r4
+ 339 0084 9847     		blx	r3
+ 340              	.LVL19:
+  61:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  return FALSE;
+ 341              		.loc 1 61 2 is_stmt 1 view .LVU113
+  61:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  return FALSE;
+ 342              		.loc 1 61 5 is_stmt 0 view .LVU114
+ 343 0086 0346     		mov	r3, r0
+ 344 0088 0028     		cmp	r0, #0
+ 345 008a D1D0     		beq	.L13
+  63:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  break;
+ 346              		.loc 1 63 2 is_stmt 1 view .LVU115
+  63:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  break;
+ 347              		.loc 1 63 5 is_stmt 0 view .LVU116
+ 348 008c 0228     		cmp	r0, #2
+ 349 008e E0D0     		beq	.L19
+  66:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 350              		.loc 1 66 2 is_stmt 1 view .LVU117
+  66:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 351              		.loc 1 66 11 is_stmt 0 view .LVU118
+ 352 0090 A268     		ldr	r2, [r4, #8]
+  66:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 353              		.loc 1 66 5 view .LVU119
+ 354 0092 002A     		cmp	r2, #0
+ 355 0094 EDD0     		beq	.L18
+ARM GAS  /tmp/ccSsLztk.s 			page 11
+
+
+  66:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	    (retcode == JPEG_ROW_COMPLETED || retcode == JPEG_REACHED_SOS)) {
+ 356              		.loc 1 66 30 discriminator 1 view .LVU120
+ 357 0096 0328     		cmp	r0, #3
+ 358 0098 E0D0     		beq	.L22
+  67:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	  if (++cinfo->progress->pass_counter >= cinfo->progress->pass_limit) {
+ 359              		.loc 1 67 37 view .LVU121
+ 360 009a 0128     		cmp	r0, #1
+ 361 009c E9D1     		bne	.L18
+ 362 009e DDE7     		b	.L22
+ 363              	.LBE6:
+ 364              		.cfi_endproc
+ 365              	.LFE7:
+ 367              		.section	.text.jpeg_read_scanlines,"ax",%progbits
+ 368              		.align	1
+ 369              		.global	jpeg_read_scanlines
+ 370              		.syntax unified
+ 371              		.thumb
+ 372              		.thumb_func
+ 373              		.fpu fpv4-sp-d16
+ 375              	jpeg_read_scanlines:
+ 376              	.LVL20:
+ 377              	.LFB9:
+ 136:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 137:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 138:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+ 139:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Read some scanlines of data from the JPEG decompressor.
+ 140:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+ 141:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * The return value will be the number of lines actually read.
+ 142:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * This may be less than the number requested in several cases,
+ 143:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * including bottom of image, data source suspension, and operating
+ 144:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * modes that emit multiple scanlines at a time.
+ 145:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+ 146:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Note: we warn about excess calls to jpeg_read_scanlines() since
+ 147:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * this likely signals an application programmer error.  However,
+ 148:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * an oversize buffer (max_lines > scanlines remaining) is not an error.
+ 149:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+ 150:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 151:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** GLOBAL(JDIMENSION)
+ 152:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** jpeg_read_scanlines (j_decompress_ptr cinfo, JSAMPARRAY scanlines,
+ 153:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 		     JDIMENSION max_lines)
+ 154:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+ 378              		.loc 1 154 1 is_stmt 1 view -0
+ 379              		.cfi_startproc
+ 380              		@ args = 0, pretend = 0, frame = 8
+ 381              		@ frame_needed = 0, uses_anonymous_args = 0
+ 382              		.loc 1 154 1 is_stmt 0 view .LVU123
+ 383 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 384              	.LCFI2:
+ 385              		.cfi_def_cfa_offset 20
+ 386              		.cfi_offset 4, -20
+ 387              		.cfi_offset 5, -16
+ 388              		.cfi_offset 6, -12
+ 389              		.cfi_offset 7, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 83B0     		sub	sp, sp, #12
+ 392              	.LCFI3:
+ 393              		.cfi_def_cfa_offset 32
+ARM GAS  /tmp/ccSsLztk.s 			page 12
+
+
+ 394 0004 0446     		mov	r4, r0
+ 395 0006 0E46     		mov	r6, r1
+ 396 0008 1546     		mov	r5, r2
+ 155:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   JDIMENSION row_ctr;
+ 397              		.loc 1 155 3 is_stmt 1 view .LVU124
+ 156:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 157:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state != DSTATE_SCANNING)
+ 398              		.loc 1 157 3 view .LVU125
+ 399              		.loc 1 157 12 is_stmt 0 view .LVU126
+ 400 000a 4069     		ldr	r0, [r0, #20]
+ 401              	.LVL21:
+ 402              		.loc 1 157 6 view .LVU127
+ 403 000c CD28     		cmp	r0, #205
+ 404 000e 09D0     		beq	.L29
+ 158:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 405              		.loc 1 158 5 is_stmt 1 view .LVU128
+ 406 0010 2368     		ldr	r3, [r4]
+ 407 0012 1522     		movs	r2, #21
+ 408              	.LVL22:
+ 409              		.loc 1 158 5 is_stmt 0 view .LVU129
+ 410 0014 5A61     		str	r2, [r3, #20]
+ 411 0016 2368     		ldr	r3, [r4]
+ 412 0018 6269     		ldr	r2, [r4, #20]
+ 413 001a 9A61     		str	r2, [r3, #24]
+ 414 001c 2368     		ldr	r3, [r4]
+ 415 001e 1B68     		ldr	r3, [r3]
+ 416 0020 2046     		mov	r0, r4
+ 417 0022 9847     		blx	r3
+ 418              	.LVL23:
+ 419              	.L29:
+ 159:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->output_scanline >= cinfo->output_height) {
+ 420              		.loc 1 159 3 is_stmt 1 view .LVU130
+ 421              		.loc 1 159 12 is_stmt 0 view .LVU131
+ 422 0024 D4F88C00 		ldr	r0, [r4, #140]
+ 423              		.loc 1 159 6 view .LVU132
+ 424 0028 636F     		ldr	r3, [r4, #116]
+ 425 002a 9842     		cmp	r0, r3
+ 426 002c 1BD2     		bcs	.L34
+ 160:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     WARNMS(cinfo, JWRN_TOO_MUCH_DATA);
+ 161:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     return 0;
+ 162:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 163:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 164:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Call progress monitor hook if present */
+ 165:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->progress != NULL) {
+ 427              		.loc 1 165 3 is_stmt 1 view .LVU133
+ 428              		.loc 1 165 12 is_stmt 0 view .LVU134
+ 429 002e A368     		ldr	r3, [r4, #8]
+ 430              		.loc 1 165 6 view .LVU135
+ 431 0030 3BB1     		cbz	r3, .L32
+ 166:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 432              		.loc 1 166 5 is_stmt 1 view .LVU136
+ 433              		.loc 1 166 35 is_stmt 0 view .LVU137
+ 434 0032 5860     		str	r0, [r3, #4]
+ 167:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->progress->pass_limit = (long) cinfo->output_height;
+ 435              		.loc 1 167 5 is_stmt 1 view .LVU138
+ 436              		.loc 1 167 47 is_stmt 0 view .LVU139
+ 437 0034 626F     		ldr	r2, [r4, #116]
+ARM GAS  /tmp/ccSsLztk.s 			page 13
+
+
+ 438              		.loc 1 167 10 view .LVU140
+ 439 0036 A368     		ldr	r3, [r4, #8]
+ 440              		.loc 1 167 33 view .LVU141
+ 441 0038 9A60     		str	r2, [r3, #8]
+ 168:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ 442              		.loc 1 168 5 is_stmt 1 view .LVU142
+ 443              		.loc 1 168 12 is_stmt 0 view .LVU143
+ 444 003a A368     		ldr	r3, [r4, #8]
+ 445              		.loc 1 168 6 view .LVU144
+ 446 003c 1B68     		ldr	r3, [r3]
+ 447 003e 2046     		mov	r0, r4
+ 448 0040 9847     		blx	r3
+ 449              	.LVL24:
+ 450              	.L32:
+ 169:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 170:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 171:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Process some data */
+ 172:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   row_ctr = 0;
+ 451              		.loc 1 172 3 is_stmt 1 view .LVU145
+ 452              		.loc 1 172 11 is_stmt 0 view .LVU146
+ 453 0042 0023     		movs	r3, #0
+ 454 0044 0193     		str	r3, [sp, #4]
+ 173:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   (*cinfo->main->process_data) (cinfo, scanlines, &row_ctr, max_lines);
+ 455              		.loc 1 173 3 is_stmt 1 view .LVU147
+ 456              		.loc 1 173 10 is_stmt 0 view .LVU148
+ 457 0046 D4F8BC31 		ldr	r3, [r4, #444]
+ 458              		.loc 1 173 4 view .LVU149
+ 459 004a 5F68     		ldr	r7, [r3, #4]
+ 460 004c 2B46     		mov	r3, r5
+ 461 004e 01AA     		add	r2, sp, #4
+ 462 0050 3146     		mov	r1, r6
+ 463 0052 2046     		mov	r0, r4
+ 464 0054 B847     		blx	r7
+ 465              	.LVL25:
+ 174:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   cinfo->output_scanline += row_ctr;
+ 466              		.loc 1 174 3 is_stmt 1 view .LVU150
+ 467              		.loc 1 174 26 is_stmt 0 view .LVU151
+ 468 0056 0198     		ldr	r0, [sp, #4]
+ 469 0058 D4F88C30 		ldr	r3, [r4, #140]
+ 470 005c 0344     		add	r3, r3, r0
+ 471 005e C4F88C30 		str	r3, [r4, #140]
+ 175:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return row_ctr;
+ 472              		.loc 1 175 3 is_stmt 1 view .LVU152
+ 473              	.L28:
+ 176:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 474              		.loc 1 176 1 is_stmt 0 view .LVU153
+ 475 0062 03B0     		add	sp, sp, #12
+ 476              	.LCFI4:
+ 477              		.cfi_remember_state
+ 478              		.cfi_def_cfa_offset 20
+ 479              		@ sp needed
+ 480 0064 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 481              	.LVL26:
+ 482              	.L34:
+ 483              	.LCFI5:
+ 484              		.cfi_restore_state
+ 160:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     return 0;
+ARM GAS  /tmp/ccSsLztk.s 			page 14
+
+
+ 485              		.loc 1 160 5 is_stmt 1 view .LVU154
+ 486 0066 2368     		ldr	r3, [r4]
+ 487 0068 7E22     		movs	r2, #126
+ 488 006a 5A61     		str	r2, [r3, #20]
+ 489 006c 2368     		ldr	r3, [r4]
+ 490 006e 5B68     		ldr	r3, [r3, #4]
+ 491 0070 4FF0FF31 		mov	r1, #-1
+ 492 0074 2046     		mov	r0, r4
+ 493 0076 9847     		blx	r3
+ 494              	.LVL27:
+ 161:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 495              		.loc 1 161 5 view .LVU155
+ 161:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 496              		.loc 1 161 12 is_stmt 0 view .LVU156
+ 497 0078 0020     		movs	r0, #0
+ 498 007a F2E7     		b	.L28
+ 499              		.cfi_endproc
+ 500              	.LFE9:
+ 502              		.section	.text.jpeg_read_raw_data,"ax",%progbits
+ 503              		.align	1
+ 504              		.global	jpeg_read_raw_data
+ 505              		.syntax unified
+ 506              		.thumb
+ 507              		.thumb_func
+ 508              		.fpu fpv4-sp-d16
+ 510              	jpeg_read_raw_data:
+ 511              	.LVL28:
+ 512              	.LFB10:
+ 177:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 178:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 179:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+ 180:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Alternate entry point to read raw data.
+ 181:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Processes exactly one iMCU row per call, unless suspended.
+ 182:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+ 183:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 184:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** GLOBAL(JDIMENSION)
+ 185:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** jpeg_read_raw_data (j_decompress_ptr cinfo, JSAMPIMAGE data,
+ 186:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 		    JDIMENSION max_lines)
+ 187:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+ 513              		.loc 1 187 1 is_stmt 1 view -0
+ 514              		.cfi_startproc
+ 515              		@ args = 0, pretend = 0, frame = 0
+ 516              		@ frame_needed = 0, uses_anonymous_args = 0
+ 517              		.loc 1 187 1 is_stmt 0 view .LVU158
+ 518 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 519              	.LCFI6:
+ 520              		.cfi_def_cfa_offset 24
+ 521              		.cfi_offset 3, -24
+ 522              		.cfi_offset 4, -20
+ 523              		.cfi_offset 5, -16
+ 524              		.cfi_offset 6, -12
+ 525              		.cfi_offset 7, -8
+ 526              		.cfi_offset 14, -4
+ 527 0002 0446     		mov	r4, r0
+ 528 0004 0F46     		mov	r7, r1
+ 529 0006 1646     		mov	r6, r2
+ 188:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   JDIMENSION lines_per_iMCU_row;
+ARM GAS  /tmp/ccSsLztk.s 			page 15
+
+
+ 530              		.loc 1 188 3 is_stmt 1 view .LVU159
+ 189:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 190:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state != DSTATE_RAW_OK)
+ 531              		.loc 1 190 3 view .LVU160
+ 532              		.loc 1 190 12 is_stmt 0 view .LVU161
+ 533 0008 4369     		ldr	r3, [r0, #20]
+ 534              		.loc 1 190 6 view .LVU162
+ 535 000a CE2B     		cmp	r3, #206
+ 536 000c 08D0     		beq	.L36
+ 191:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 537              		.loc 1 191 5 is_stmt 1 view .LVU163
+ 538 000e 0368     		ldr	r3, [r0]
+ 539 0010 1522     		movs	r2, #21
+ 540              	.LVL29:
+ 541              		.loc 1 191 5 is_stmt 0 view .LVU164
+ 542 0012 5A61     		str	r2, [r3, #20]
+ 543 0014 0368     		ldr	r3, [r0]
+ 544 0016 4269     		ldr	r2, [r0, #20]
+ 545 0018 9A61     		str	r2, [r3, #24]
+ 546 001a 0368     		ldr	r3, [r0]
+ 547 001c 1B68     		ldr	r3, [r3]
+ 548 001e 9847     		blx	r3
+ 549              	.LVL30:
+ 550              	.L36:
+ 192:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->output_scanline >= cinfo->output_height) {
+ 551              		.loc 1 192 3 is_stmt 1 view .LVU165
+ 552              		.loc 1 192 12 is_stmt 0 view .LVU166
+ 553 0020 D4F88C30 		ldr	r3, [r4, #140]
+ 554              		.loc 1 192 38 view .LVU167
+ 555 0024 606F     		ldr	r0, [r4, #116]
+ 556              		.loc 1 192 6 view .LVU168
+ 557 0026 8342     		cmp	r3, r0
+ 558 0028 26D2     		bcs	.L43
+ 193:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     WARNMS(cinfo, JWRN_TOO_MUCH_DATA);
+ 194:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     return 0;
+ 195:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 196:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 197:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Call progress monitor hook if present */
+ 198:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->progress != NULL) {
+ 559              		.loc 1 198 3 is_stmt 1 view .LVU169
+ 560              		.loc 1 198 12 is_stmt 0 view .LVU170
+ 561 002a A268     		ldr	r2, [r4, #8]
+ 562              		.loc 1 198 6 view .LVU171
+ 563 002c 3AB1     		cbz	r2, .L39
+ 199:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->progress->pass_counter = (long) cinfo->output_scanline;
+ 564              		.loc 1 199 5 is_stmt 1 view .LVU172
+ 565              		.loc 1 199 35 is_stmt 0 view .LVU173
+ 566 002e 5360     		str	r3, [r2, #4]
+ 200:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->progress->pass_limit = (long) cinfo->output_height;
+ 567              		.loc 1 200 5 is_stmt 1 view .LVU174
+ 568              		.loc 1 200 47 is_stmt 0 view .LVU175
+ 569 0030 626F     		ldr	r2, [r4, #116]
+ 570              		.loc 1 200 10 view .LVU176
+ 571 0032 A368     		ldr	r3, [r4, #8]
+ 572              		.loc 1 200 33 view .LVU177
+ 573 0034 9A60     		str	r2, [r3, #8]
+ 201:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
+ARM GAS  /tmp/ccSsLztk.s 			page 16
+
+
+ 574              		.loc 1 201 5 is_stmt 1 view .LVU178
+ 575              		.loc 1 201 12 is_stmt 0 view .LVU179
+ 576 0036 A368     		ldr	r3, [r4, #8]
+ 577              		.loc 1 201 6 view .LVU180
+ 578 0038 1B68     		ldr	r3, [r3]
+ 579 003a 2046     		mov	r0, r4
+ 580 003c 9847     		blx	r3
+ 581              	.LVL31:
+ 582              	.L39:
+ 202:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 203:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 204:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Verify that at least one iMCU row can be returned. */
+ 205:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   lines_per_iMCU_row = cinfo->max_v_samp_factor * cinfo->min_DCT_v_scaled_size;
+ 583              		.loc 1 205 3 is_stmt 1 view .LVU181
+ 584              		.loc 1 205 29 is_stmt 0 view .LVU182
+ 585 003e D4F83C51 		ldr	r5, [r4, #316]
+ 586              		.loc 1 205 56 view .LVU183
+ 587 0042 D4F84431 		ldr	r3, [r4, #324]
+ 588              		.loc 1 205 49 view .LVU184
+ 589 0046 03FB05F5 		mul	r5, r3, r5
+ 590              	.LVL32:
+ 206:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (max_lines < lines_per_iMCU_row)
+ 591              		.loc 1 206 3 is_stmt 1 view .LVU185
+ 592              		.loc 1 206 6 is_stmt 0 view .LVU186
+ 593 004a B542     		cmp	r5, r6
+ 594 004c 06D9     		bls	.L40
+ 207:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT(cinfo, JERR_BUFFER_SIZE);
+ 595              		.loc 1 207 5 is_stmt 1 view .LVU187
+ 596 004e 2368     		ldr	r3, [r4]
+ 597 0050 1822     		movs	r2, #24
+ 598 0052 5A61     		str	r2, [r3, #20]
+ 599 0054 2368     		ldr	r3, [r4]
+ 600 0056 1B68     		ldr	r3, [r3]
+ 601 0058 2046     		mov	r0, r4
+ 602 005a 9847     		blx	r3
+ 603              	.LVL33:
+ 604              	.L40:
+ 208:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 209:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Decompress directly into user's buffer. */
+ 210:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (! (*cinfo->coef->decompress_data) (cinfo, data))
+ 605              		.loc 1 210 3 view .LVU188
+ 606              		.loc 1 210 16 is_stmt 0 view .LVU189
+ 607 005c D4F8C031 		ldr	r3, [r4, #448]
+ 608              		.loc 1 210 10 view .LVU190
+ 609 0060 DB68     		ldr	r3, [r3, #12]
+ 610 0062 3946     		mov	r1, r7
+ 611 0064 2046     		mov	r0, r4
+ 612 0066 9847     		blx	r3
+ 613              	.LVL34:
+ 614              		.loc 1 210 6 view .LVU191
+ 615 0068 88B1     		cbz	r0, .L41
+ 211:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     return 0;			/* suspension forced, can do nothing more */
+ 212:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 213:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* OK, we processed one iMCU row. */
+ 214:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   cinfo->output_scanline += lines_per_iMCU_row;
+ 616              		.loc 1 214 3 is_stmt 1 view .LVU192
+ 617              		.loc 1 214 26 is_stmt 0 view .LVU193
+ARM GAS  /tmp/ccSsLztk.s 			page 17
+
+
+ 618 006a D4F88C30 		ldr	r3, [r4, #140]
+ 619 006e 2B44     		add	r3, r3, r5
+ 620 0070 C4F88C30 		str	r3, [r4, #140]
+ 215:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return lines_per_iMCU_row;
+ 621              		.loc 1 215 3 is_stmt 1 view .LVU194
+ 622              	.LVL35:
+ 623              	.L35:
+ 216:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 624              		.loc 1 216 1 is_stmt 0 view .LVU195
+ 625 0074 2846     		mov	r0, r5
+ 626 0076 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 627              	.LVL36:
+ 628              	.L43:
+ 193:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     return 0;
+ 629              		.loc 1 193 5 is_stmt 1 view .LVU196
+ 630 0078 2368     		ldr	r3, [r4]
+ 631 007a 7E22     		movs	r2, #126
+ 632 007c 5A61     		str	r2, [r3, #20]
+ 633 007e 2368     		ldr	r3, [r4]
+ 634 0080 5B68     		ldr	r3, [r3, #4]
+ 635 0082 4FF0FF31 		mov	r1, #-1
+ 636 0086 2046     		mov	r0, r4
+ 637 0088 9847     		blx	r3
+ 638              	.LVL37:
+ 194:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 639              		.loc 1 194 5 view .LVU197
+ 194:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 640              		.loc 1 194 12 is_stmt 0 view .LVU198
+ 641 008a 0025     		movs	r5, #0
+ 642 008c F2E7     		b	.L35
+ 643              	.LVL38:
+ 644              	.L41:
+ 211:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 645              		.loc 1 211 12 view .LVU199
+ 646 008e 0025     		movs	r5, #0
+ 647              	.LVL39:
+ 211:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 648              		.loc 1 211 12 view .LVU200
+ 649 0090 F0E7     		b	.L35
+ 650              		.cfi_endproc
+ 651              	.LFE10:
+ 653              		.section	.text.jpeg_start_output,"ax",%progbits
+ 654              		.align	1
+ 655              		.global	jpeg_start_output
+ 656              		.syntax unified
+ 657              		.thumb
+ 658              		.thumb_func
+ 659              		.fpu fpv4-sp-d16
+ 661              	jpeg_start_output:
+ 662              	.LVL40:
+ 663              	.LFB11:
+ 217:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 218:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 219:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /* Additional entry points for buffered-image mode. */
+ 220:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 221:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 222:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ARM GAS  /tmp/ccSsLztk.s 			page 18
+
+
+ 223:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+ 224:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Initialize for an output pass in buffered-image mode.
+ 225:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+ 226:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 227:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** GLOBAL(boolean)
+ 228:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** jpeg_start_output (j_decompress_ptr cinfo, int scan_number)
+ 229:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+ 664              		.loc 1 229 1 is_stmt 1 view -0
+ 665              		.cfi_startproc
+ 666              		@ args = 0, pretend = 0, frame = 0
+ 667              		@ frame_needed = 0, uses_anonymous_args = 0
+ 668              		.loc 1 229 1 is_stmt 0 view .LVU202
+ 669 0000 38B5     		push	{r3, r4, r5, lr}
+ 670              	.LCFI7:
+ 671              		.cfi_def_cfa_offset 16
+ 672              		.cfi_offset 3, -16
+ 673              		.cfi_offset 4, -12
+ 674              		.cfi_offset 5, -8
+ 675              		.cfi_offset 14, -4
+ 676 0002 0446     		mov	r4, r0
+ 677 0004 0D46     		mov	r5, r1
+ 230:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->global_state != DSTATE_BUFIMAGE &&
+ 678              		.loc 1 230 3 is_stmt 1 view .LVU203
+ 679              		.loc 1 230 12 is_stmt 0 view .LVU204
+ 680 0006 4369     		ldr	r3, [r0, #20]
+ 681              		.loc 1 230 6 view .LVU205
+ 682 0008 CF2B     		cmp	r3, #207
+ 683 000a 0AD0     		beq	.L45
+ 684              		.loc 1 230 46 discriminator 1 view .LVU206
+ 685 000c CC2B     		cmp	r3, #204
+ 686 000e 08D0     		beq	.L45
+ 231:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       cinfo->global_state != DSTATE_PRESCAN)
+ 232:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 687              		.loc 1 232 5 is_stmt 1 view .LVU207
+ 688 0010 0368     		ldr	r3, [r0]
+ 689 0012 1522     		movs	r2, #21
+ 690 0014 5A61     		str	r2, [r3, #20]
+ 691 0016 0368     		ldr	r3, [r0]
+ 692 0018 4269     		ldr	r2, [r0, #20]
+ 693 001a 9A61     		str	r2, [r3, #24]
+ 694 001c 0368     		ldr	r3, [r0]
+ 695 001e 1B68     		ldr	r3, [r3]
+ 696 0020 9847     		blx	r3
+ 697              	.LVL41:
+ 698              	.L45:
+ 233:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Limit scan number to valid range */
+ 234:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (scan_number <= 0)
+ 699              		.loc 1 234 3 view .LVU208
+ 700              		.loc 1 234 6 is_stmt 0 view .LVU209
+ 701 0022 002D     		cmp	r5, #0
+ 702 0024 0EDD     		ble	.L51
+ 703              	.LVL42:
+ 704              	.L46:
+ 235:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     scan_number = 1;
+ 236:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->inputctl->eoi_reached &&
+ 705              		.loc 1 236 3 is_stmt 1 view .LVU210
+ 706              		.loc 1 236 12 is_stmt 0 view .LVU211
+ARM GAS  /tmp/ccSsLztk.s 			page 19
+
+
+ 707 0026 D4F8C831 		ldr	r3, [r4, #456]
+ 708              		.loc 1 236 22 view .LVU212
+ 709 002a 5B69     		ldr	r3, [r3, #20]
+ 710              		.loc 1 236 6 view .LVU213
+ 711 002c 23B1     		cbz	r3, .L47
+ 237:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       scan_number > cinfo->input_scan_number)
+ 712              		.loc 1 237 26 discriminator 1 view .LVU214
+ 713 002e D4F89030 		ldr	r3, [r4, #144]
+ 236:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       scan_number > cinfo->input_scan_number)
+ 714              		.loc 1 236 36 discriminator 1 view .LVU215
+ 715 0032 AB42     		cmp	r3, r5
+ 716 0034 00DA     		bge	.L47
+ 238:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     scan_number = cinfo->input_scan_number;
+ 717              		.loc 1 238 17 view .LVU216
+ 718 0036 1D46     		mov	r5, r3
+ 719              	.LVL43:
+ 720              	.L47:
+ 239:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   cinfo->output_scan_number = scan_number;
+ 721              		.loc 1 239 3 is_stmt 1 view .LVU217
+ 722              		.loc 1 239 29 is_stmt 0 view .LVU218
+ 723 0038 C4F89850 		str	r5, [r4, #152]
+ 240:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Perform any dummy output passes, and set up for the real pass */
+ 241:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return output_pass_setup(cinfo);
+ 724              		.loc 1 241 3 is_stmt 1 view .LVU219
+ 725              		.loc 1 241 10 is_stmt 0 view .LVU220
+ 726 003c 2046     		mov	r0, r4
+ 727 003e FFF7FEFF 		bl	output_pass_setup
+ 728              	.LVL44:
+ 242:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 729              		.loc 1 242 1 view .LVU221
+ 730 0042 38BD     		pop	{r3, r4, r5, pc}
+ 731              	.LVL45:
+ 732              	.L51:
+ 235:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->inputctl->eoi_reached &&
+ 733              		.loc 1 235 17 view .LVU222
+ 734 0044 0125     		movs	r5, #1
+ 735              	.LVL46:
+ 235:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if (cinfo->inputctl->eoi_reached &&
+ 736              		.loc 1 235 17 view .LVU223
+ 737 0046 EEE7     		b	.L46
+ 738              		.cfi_endproc
+ 739              	.LFE11:
+ 741              		.section	.text.jpeg_finish_output,"ax",%progbits
+ 742              		.align	1
+ 743              		.global	jpeg_finish_output
+ 744              		.syntax unified
+ 745              		.thumb
+ 746              		.thumb_func
+ 747              		.fpu fpv4-sp-d16
+ 749              	jpeg_finish_output:
+ 750              	.LVL47:
+ 751              	.LFB12:
+ 243:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 244:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 245:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** /*
+ 246:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Finish up after an output pass in buffered-image mode.
+ 247:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  *
+ARM GAS  /tmp/ccSsLztk.s 			page 20
+
+
+ 248:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * Returns FALSE if suspended.  The return value need be inspected only if
+ 249:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  * a suspending data source is used.
+ 250:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****  */
+ 251:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 
+ 252:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** GLOBAL(boolean)
+ 253:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** jpeg_finish_output (j_decompress_ptr cinfo)
+ 254:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** {
+ 752              		.loc 1 254 1 is_stmt 1 view -0
+ 753              		.cfi_startproc
+ 754              		@ args = 0, pretend = 0, frame = 0
+ 755              		@ frame_needed = 0, uses_anonymous_args = 0
+ 756              		.loc 1 254 1 is_stmt 0 view .LVU225
+ 757 0000 10B5     		push	{r4, lr}
+ 758              	.LCFI8:
+ 759              		.cfi_def_cfa_offset 8
+ 760              		.cfi_offset 4, -8
+ 761              		.cfi_offset 14, -4
+ 762 0002 0446     		mov	r4, r0
+ 255:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   if ((cinfo->global_state == DSTATE_SCANNING ||
+ 763              		.loc 1 255 3 is_stmt 1 view .LVU226
+ 764              		.loc 1 255 13 is_stmt 0 view .LVU227
+ 765 0004 4369     		ldr	r3, [r0, #20]
+ 766              		.loc 1 255 47 view .LVU228
+ 767 0006 A3F1CD02 		sub	r2, r3, #205
+ 768              		.loc 1 255 6 view .LVU229
+ 769 000a 012A     		cmp	r2, #1
+ 770 000c 1CD9     		bls	.L60
+ 771              	.L53:
+ 256:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****        cinfo->global_state == DSTATE_RAW_OK) && cinfo->buffered_image) {
+ 257:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* Terminate this pass. */
+ 258:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* We do not require the whole pass to have been completed. */
+ 259:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     (*cinfo->master->finish_output_pass) (cinfo);
+ 260:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_BUFPOST;
+ 261:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_BUFPOST) {
+ 772              		.loc 1 261 10 is_stmt 1 view .LVU230
+ 773              		.loc 1 261 13 is_stmt 0 view .LVU231
+ 774 000e D02B     		cmp	r3, #208
+ 775 0010 09D0     		beq	.L56
+ 262:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* BUFPOST = repeat call after a suspension, anything else is error */
+ 263:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 776              		.loc 1 263 5 is_stmt 1 view .LVU232
+ 777 0012 2368     		ldr	r3, [r4]
+ 778 0014 1522     		movs	r2, #21
+ 779 0016 5A61     		str	r2, [r3, #20]
+ 780 0018 2368     		ldr	r3, [r4]
+ 781 001a 6269     		ldr	r2, [r4, #20]
+ 782 001c 9A61     		str	r2, [r3, #24]
+ 783 001e 2368     		ldr	r3, [r4]
+ 784 0020 1B68     		ldr	r3, [r3]
+ 785 0022 2046     		mov	r0, r4
+ 786              	.LVL48:
+ 787              		.loc 1 263 5 is_stmt 0 view .LVU233
+ 788 0024 9847     		blx	r3
+ 789              	.LVL49:
+ 790              	.L56:
+ 264:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 265:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   /* Read markers looking for SOS or EOI */
+ARM GAS  /tmp/ccSsLztk.s 			page 21
+
+
+ 266:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   while (cinfo->input_scan_number <= cinfo->output_scan_number &&
+ 791              		.loc 1 266 9 is_stmt 1 view .LVU234
+ 792              		.loc 1 266 15 is_stmt 0 view .LVU235
+ 793 0026 D4F89020 		ldr	r2, [r4, #144]
+ 794              		.loc 1 266 43 view .LVU236
+ 795 002a D4F89830 		ldr	r3, [r4, #152]
+ 796              		.loc 1 266 9 view .LVU237
+ 797 002e 9A42     		cmp	r2, r3
+ 798 0030 14DC     		bgt	.L57
+ 267:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	 ! cinfo->inputctl->eoi_reached) {
+ 799              		.loc 1 267 10 discriminator 1 view .LVU238
+ 800 0032 D4F8C831 		ldr	r3, [r4, #456]
+ 801              		.loc 1 267 20 discriminator 1 view .LVU239
+ 802 0036 5A69     		ldr	r2, [r3, #20]
+ 266:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** 	 ! cinfo->inputctl->eoi_reached) {
+ 803              		.loc 1 266 64 discriminator 1 view .LVU240
+ 804 0038 82B9     		cbnz	r2, .L57
+ 268:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     if ((*cinfo->inputctl->consume_input) (cinfo) == JPEG_SUSPENDED)
+ 805              		.loc 1 268 5 is_stmt 1 view .LVU241
+ 806              		.loc 1 268 10 is_stmt 0 view .LVU242
+ 807 003a 1B68     		ldr	r3, [r3]
+ 808 003c 2046     		mov	r0, r4
+ 809 003e 9847     		blx	r3
+ 810              	.LVL50:
+ 811              		.loc 1 268 8 view .LVU243
+ 812 0040 0346     		mov	r3, r0
+ 813 0042 0028     		cmp	r0, #0
+ 814 0044 EFD1     		bne	.L56
+ 815 0046 0CE0     		b	.L52
+ 816              	.LVL51:
+ 817              	.L60:
+ 256:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* Terminate this pass. */
+ 818              		.loc 1 256 54 view .LVU244
+ 819 0048 026C     		ldr	r2, [r0, #64]
+ 256:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     /* Terminate this pass. */
+ 820              		.loc 1 256 46 view .LVU245
+ 821 004a 002A     		cmp	r2, #0
+ 822 004c DFD0     		beq	.L53
+ 259:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_BUFPOST;
+ 823              		.loc 1 259 5 is_stmt 1 view .LVU246
+ 259:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_BUFPOST;
+ 824              		.loc 1 259 12 is_stmt 0 view .LVU247
+ 825 004e D0F8B831 		ldr	r3, [r0, #440]
+ 259:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****     cinfo->global_state = DSTATE_BUFPOST;
+ 826              		.loc 1 259 6 view .LVU248
+ 827 0052 5B68     		ldr	r3, [r3, #4]
+ 828 0054 9847     		blx	r3
+ 829              	.LVL52:
+ 260:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_BUFPOST) {
+ 830              		.loc 1 260 5 is_stmt 1 view .LVU249
+ 260:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   } else if (cinfo->global_state != DSTATE_BUFPOST) {
+ 831              		.loc 1 260 25 is_stmt 0 view .LVU250
+ 832 0056 D023     		movs	r3, #208
+ 833 0058 6361     		str	r3, [r4, #20]
+ 834 005a E4E7     		b	.L56
+ 835              	.L57:
+ 269:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****       return FALSE;		/* Suspend, come back later */
+ARM GAS  /tmp/ccSsLztk.s 			page 22
+
+
+ 270:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   }
+ 271:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   cinfo->global_state = DSTATE_BUFIMAGE;
+ 836              		.loc 1 271 3 is_stmt 1 view .LVU251
+ 837              		.loc 1 271 23 is_stmt 0 view .LVU252
+ 838 005c CF23     		movs	r3, #207
+ 839 005e 6361     		str	r3, [r4, #20]
+ 272:Middlewares/Third_Party/LibJPEG/source/jdapistd.c ****   return TRUE;
+ 840              		.loc 1 272 3 is_stmt 1 view .LVU253
+ 841              		.loc 1 272 10 is_stmt 0 view .LVU254
+ 842 0060 0123     		movs	r3, #1
+ 843              	.L52:
+ 273:Middlewares/Third_Party/LibJPEG/source/jdapistd.c **** }
+ 844              		.loc 1 273 1 view .LVU255
+ 845 0062 1846     		mov	r0, r3
+ 846 0064 10BD     		pop	{r4, pc}
+ 847              		.loc 1 273 1 view .LVU256
+ 848              		.cfi_endproc
+ 849              	.LFE12:
+ 851              		.text
+ 852              	.Letext0:
+ 853              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 854              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 855              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 856              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 857              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ARM GAS  /tmp/ccSsLztk.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jdapistd.c
+     /tmp/ccSsLztk.s:18     .text.output_pass_setup:0000000000000000 $t
+     /tmp/ccSsLztk.s:25     .text.output_pass_setup:0000000000000000 output_pass_setup
+     /tmp/ccSsLztk.s:190    .text.jpeg_start_decompress:0000000000000000 $t
+     /tmp/ccSsLztk.s:197    .text.jpeg_start_decompress:0000000000000000 jpeg_start_decompress
+     /tmp/ccSsLztk.s:368    .text.jpeg_read_scanlines:0000000000000000 $t
+     /tmp/ccSsLztk.s:375    .text.jpeg_read_scanlines:0000000000000000 jpeg_read_scanlines
+     /tmp/ccSsLztk.s:503    .text.jpeg_read_raw_data:0000000000000000 $t
+     /tmp/ccSsLztk.s:510    .text.jpeg_read_raw_data:0000000000000000 jpeg_read_raw_data
+     /tmp/ccSsLztk.s:654    .text.jpeg_start_output:0000000000000000 $t
+     /tmp/ccSsLztk.s:661    .text.jpeg_start_output:0000000000000000 jpeg_start_output
+     /tmp/ccSsLztk.s:742    .text.jpeg_finish_output:0000000000000000 $t
+     /tmp/ccSsLztk.s:749    .text.jpeg_finish_output:0000000000000000 jpeg_finish_output
+
+UNDEFINED SYMBOLS
+jinit_master_decompress

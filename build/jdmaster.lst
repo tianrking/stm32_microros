@@ -1,0 +1,2578 @@
+ARM GAS  /tmp/ccW1rWnO.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jdmaster.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.use_merged_upsample,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	use_merged_upsample:
+  26              	.LVL0:
+  27              	.LFB7:
+  28              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jdmaster.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * jdmaster.c
+   3:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Copyright (C) 1991-1997, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Modified 2002-2011 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This file contains master control logic for the JPEG decompressor.
+  10:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * These routines are concerned with selecting the modules to be executed
+  11:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * and with determining the number of passes and the work to be done in each
+  12:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * pass.
+  13:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+  14:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  15:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #define JPEG_INTERNALS
+  16:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #include "jinclude.h"
+  17:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #include "jpeglib.h"
+  18:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  20:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /* Private state */
+  21:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** typedef struct {
+  23:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   struct jpeg_decomp_master pub; /* public fields */
+  24:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   int pass_number;		/* # of passes completed */
+  26:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  27:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   boolean using_merged_upsample; /* TRUE if using merged upsample/cconvert */
+  28:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  29:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Saved references to initialized quantizer modules,
+  30:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * in case we need to switch modes.
+ARM GAS  /tmp/ccW1rWnO.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    */
+  32:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   struct jpeg_color_quantizer * quantizer_1pass;
+  33:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   struct jpeg_color_quantizer * quantizer_2pass;
+  34:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** } my_decomp_master;
+  35:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  36:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** typedef my_decomp_master * my_master_ptr;
+  37:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  38:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  39:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+  40:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Determine whether merged upsample/color conversion should be used.
+  41:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * CRUCIAL: this must match the actual capabilities of jdmerge.c!
+  42:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+  43:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  44:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** LOCAL(boolean)
+  45:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** use_merged_upsample (j_decompress_ptr cinfo)
+  46:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+  29              		.loc 1 46 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  47:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+  48:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Merging is the equivalent of plain box-filter upsampling */
+  49:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->do_fancy_upsampling || cinfo->CCIR601_sampling)
+  34              		.loc 1 49 3 view .LVU1
+  35              		.loc 1 49 12 is_stmt 0 view .LVU2
+  36 0000 C26C     		ldr	r2, [r0, #76]
+  37              		.loc 1 49 6 view .LVU3
+  38 0002 002A     		cmp	r2, #0
+  39 0004 45D1     		bne	.L3
+  40 0006 0346     		mov	r3, r0
+  41              		.loc 1 49 42 discriminator 1 view .LVU4
+  42 0008 D0F83001 		ldr	r0, [r0, #304]
+  43              	.LVL1:
+  44              		.loc 1 49 34 discriminator 1 view .LVU5
+  45 000c 0028     		cmp	r0, #0
+  46 000e 42D1     		bne	.L4
+  50:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     return FALSE;
+  51:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* jdmerge.c only supports YCC=>RGB color conversion */
+  52:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->jpeg_color_space != JCS_YCbCr || cinfo->num_components != 3 ||
+  47              		.loc 1 52 3 is_stmt 1 view .LVU6
+  48              		.loc 1 52 12 is_stmt 0 view .LVU7
+  49 0010 93F82820 		ldrb	r2, [r3, #40]	@ zero_extendqisi2
+  50              		.loc 1 52 6 view .LVU8
+  51 0014 032A     		cmp	r2, #3
+  52 0016 40D1     		bne	.L6
+  53              		.loc 1 52 52 discriminator 1 view .LVU9
+  54 0018 5A6A     		ldr	r2, [r3, #36]
+  55              		.loc 1 52 44 discriminator 1 view .LVU10
+  56 001a 032A     		cmp	r2, #3
+  57 001c 3DD1     		bne	.L6
+  53:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->out_color_space != JCS_RGB ||
+  58              		.loc 1 53 12 discriminator 2 view .LVU11
+  59 001e 93F82920 		ldrb	r2, [r3, #41]	@ zero_extendqisi2
+  52:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->out_color_space != JCS_RGB ||
+  60              		.loc 1 52 74 discriminator 2 view .LVU12
+  61 0022 022A     		cmp	r2, #2
+ARM GAS  /tmp/ccW1rWnO.s 			page 3
+
+
+  62 0024 39D1     		bne	.L6
+  54:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->out_color_components != RGB_PIXELSIZE)
+  63              		.loc 1 54 12 view .LVU13
+  64 0026 9A6F     		ldr	r2, [r3, #120]
+  53:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->out_color_space != JCS_RGB ||
+  65              		.loc 1 53 41 view .LVU14
+  66 0028 032A     		cmp	r2, #3
+  67 002a 36D1     		bne	.L6
+  55:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     return FALSE;
+  56:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* and it only handles 2h1v or 2h2v sampling ratios */
+  57:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->comp_info[0].h_samp_factor != 2 ||
+  68              		.loc 1 57 3 is_stmt 1 view .LVU15
+  69              		.loc 1 57 12 is_stmt 0 view .LVU16
+  70 002c D3F8D820 		ldr	r2, [r3, #216]
+  71              		.loc 1 57 26 view .LVU17
+  72 0030 9168     		ldr	r1, [r2, #8]
+  73              		.loc 1 57 6 view .LVU18
+  74 0032 0229     		cmp	r1, #2
+  75 0034 31D1     		bne	.L6
+  58:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].h_samp_factor != 1 ||
+  76              		.loc 1 58 26 discriminator 1 view .LVU19
+  77 0036 116E     		ldr	r1, [r2, #96]
+  57:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].h_samp_factor != 1 ||
+  78              		.loc 1 57 46 discriminator 1 view .LVU20
+  79 0038 0129     		cmp	r1, #1
+  80 003a 2ED1     		bne	.L6
+  59:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].h_samp_factor != 1 ||
+  81              		.loc 1 59 26 view .LVU21
+  82 003c D2F8B810 		ldr	r1, [r2, #184]
+  58:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].h_samp_factor != 1 ||
+  83              		.loc 1 58 46 view .LVU22
+  84 0040 0129     		cmp	r1, #1
+  85 0042 2AD1     		bne	.L6
+  60:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[0].v_samp_factor >  2 ||
+  86              		.loc 1 60 26 view .LVU23
+  87 0044 D168     		ldr	r1, [r2, #12]
+  59:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].h_samp_factor != 1 ||
+  88              		.loc 1 59 46 view .LVU24
+  89 0046 0229     		cmp	r1, #2
+  90 0048 27DC     		bgt	.L6
+  61:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].v_samp_factor != 1 ||
+  91              		.loc 1 61 26 view .LVU25
+  92 004a 516E     		ldr	r1, [r2, #100]
+  60:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[0].v_samp_factor >  2 ||
+  93              		.loc 1 60 46 view .LVU26
+  94 004c 0129     		cmp	r1, #1
+  95 004e 24D1     		bne	.L6
+  46:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+  96              		.loc 1 46 1 view .LVU27
+  97 0050 30B4     		push	{r4, r5}
+  98              	.LCFI0:
+  99              		.cfi_def_cfa_offset 8
+ 100              		.cfi_offset 4, -8
+ 101              		.cfi_offset 5, -4
+  62:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].v_samp_factor != 1)
+ 102              		.loc 1 62 26 view .LVU28
+ 103 0052 D2F8BC40 		ldr	r4, [r2, #188]
+ARM GAS  /tmp/ccW1rWnO.s 			page 4
+
+
+  61:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].v_samp_factor != 1 ||
+ 104              		.loc 1 61 46 view .LVU29
+ 105 0056 012C     		cmp	r4, #1
+ 106 0058 19D1     		bne	.L1
+  63:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     return FALSE;
+  64:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* furthermore, it doesn't work if we've scaled the IDCTs differently */
+  65:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->comp_info[0].DCT_h_scaled_size != cinfo->min_DCT_h_scaled_size ||
+ 107              		.loc 1 65 3 is_stmt 1 view .LVU30
+ 108              		.loc 1 65 53 is_stmt 0 view .LVU31
+ 109 005a D3F84011 		ldr	r1, [r3, #320]
+ 110              		.loc 1 65 6 view .LVU32
+ 111 005e 556A     		ldr	r5, [r2, #36]
+ 112 0060 8D42     		cmp	r5, r1
+ 113 0062 14D1     		bne	.L1
+ 114              		.loc 1 65 77 discriminator 1 view .LVU33
+ 115 0064 D56F     		ldr	r5, [r2, #124]
+ 116 0066 A942     		cmp	r1, r5
+ 117 0068 11D1     		bne	.L1
+  66:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].DCT_h_scaled_size != cinfo->min_DCT_h_scaled_size ||
+ 118              		.loc 1 66 77 view .LVU34
+ 119 006a D2F8D450 		ldr	r5, [r2, #212]
+ 120 006e A942     		cmp	r1, r5
+ 121 0070 0DD1     		bne	.L1
+  67:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].DCT_h_scaled_size != cinfo->min_DCT_h_scaled_size ||
+  68:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[0].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size ||
+ 122              		.loc 1 68 26 view .LVU35
+ 123 0072 916A     		ldr	r1, [r2, #40]
+ 124              		.loc 1 68 53 view .LVU36
+ 125 0074 D3F84431 		ldr	r3, [r3, #324]
+ 126              	.LVL2:
+  67:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].DCT_h_scaled_size != cinfo->min_DCT_h_scaled_size ||
+ 127              		.loc 1 67 77 view .LVU37
+ 128 0078 9942     		cmp	r1, r3
+ 129 007a 08D1     		bne	.L1
+  69:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size ||
+ 130              		.loc 1 69 26 view .LVU38
+ 131 007c D2F88010 		ldr	r1, [r2, #128]
+  68:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size ||
+ 132              		.loc 1 68 77 view .LVU39
+ 133 0080 8B42     		cmp	r3, r1
+ 134 0082 04D1     		bne	.L1
+  70:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[2].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size)
+ 135              		.loc 1 70 26 view .LVU40
+ 136 0084 D2F8D820 		ldr	r2, [r2, #216]
+  69:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->comp_info[1].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size ||
+ 137              		.loc 1 69 77 view .LVU41
+ 138 0088 9342     		cmp	r3, r2
+ 139 008a 00D1     		bne	.L1
+  71:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     return FALSE;
+  72:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* ??? also need to test for upsample-time rescaling, when & if supported */
+  73:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   return TRUE;			/* by golly, it'll work... */
+ 140              		.loc 1 73 10 view .LVU42
+ 141 008c 2046     		mov	r0, r4
+ 142              	.L1:
+  74:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+  75:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   return FALSE;
+  76:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+ARM GAS  /tmp/ccW1rWnO.s 			page 5
+
+
+  77:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 143              		.loc 1 77 1 view .LVU43
+ 144 008e 30BC     		pop	{r4, r5}
+ 145              	.LCFI1:
+ 146              		.cfi_restore 5
+ 147              		.cfi_restore 4
+ 148              		.cfi_def_cfa_offset 0
+ 149 0090 7047     		bx	lr
+ 150              	.LVL3:
+ 151              	.L3:
+  50:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* jdmerge.c only supports YCC=>RGB color conversion */
+ 152              		.loc 1 50 12 view .LVU44
+ 153 0092 0020     		movs	r0, #0
+ 154              	.LVL4:
+  50:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* jdmerge.c only supports YCC=>RGB color conversion */
+ 155              		.loc 1 50 12 view .LVU45
+ 156 0094 7047     		bx	lr
+ 157              	.LVL5:
+ 158              	.L4:
+  50:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* jdmerge.c only supports YCC=>RGB color conversion */
+ 159              		.loc 1 50 12 view .LVU46
+ 160 0096 1046     		mov	r0, r2
+ 161 0098 7047     		bx	lr
+ 162              	.L6:
+ 163              		.loc 1 77 1 view .LVU47
+ 164 009a 7047     		bx	lr
+ 165              		.cfi_endproc
+ 166              	.LFE7:
+ 168              		.section	.text.prepare_for_output_pass,"ax",%progbits
+ 169              		.align	1
+ 170              		.syntax unified
+ 171              		.thumb
+ 172              		.thumb_func
+ 173              		.fpu fpv4-sp-d16
+ 175              	prepare_for_output_pass:
+ 176              	.LVL6:
+ 177              	.LFB11:
+  78:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  79:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  80:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+  81:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Compute output image dimensions and related values.
+  82:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * NOTE: this is exported for possible use by application.
+  83:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Hence it mustn't do anything that can't be done twice.
+  84:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Also note that it may be called before the master module is initialized!
+  85:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+  86:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+  87:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** GLOBAL(void)
+  88:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
+  89:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /* Do computations that are needed before master selection phase.
+  90:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This function is used for full decompression.
+  91:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+  92:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+  93:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef IDCT_SCALING_SUPPORTED
+  94:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   int ci;
+  95:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jpeg_component_info *compptr;
+  96:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+  97:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ARM GAS  /tmp/ccW1rWnO.s 			page 6
+
+
+  98:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Prevent application from calling me at wrong times */
+  99:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->global_state != DSTATE_READY)
+ 100:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 101:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 102:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Compute core output image dimensions and DCT scaling choices. */
+ 103:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jpeg_core_output_dimensions(cinfo);
+ 104:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 105:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef IDCT_SCALING_SUPPORTED
+ 106:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 107:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* In selecting the actual DCT scaling for each component, we try to
+ 108:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * scale up the chroma components via IDCT scaling rather than upsampling.
+ 109:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * This saves time if the upsampler gets to use 1:1 scaling.
+ 110:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * Note this code adapts subsampling ratios which are powers of 2.
+ 111:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    */
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 113:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 114:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int ssize = 1;
+ 115:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     while (cinfo->min_DCT_h_scaled_size * ssize <=
+ 116:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
+ 118:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 119:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 120:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->DCT_h_scaled_size = cinfo->min_DCT_h_scaled_size * ssize;
+ 121:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ssize = 1;
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     while (cinfo->min_DCT_v_scaled_size * ssize <=
+ 123:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
+ 125:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 126:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 127:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->DCT_v_scaled_size = cinfo->min_DCT_v_scaled_size * ssize;
+ 128:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 129:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* We don't support IDCT ratios larger than 2. */
+ 130:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (compptr->DCT_h_scaled_size > compptr->DCT_v_scaled_size * 2)
+ 131:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
+ 132:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     else if (compptr->DCT_v_scaled_size > compptr->DCT_h_scaled_size * 2)
+ 133:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
+ 134:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 135:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 136:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Recompute downsampled dimensions of components;
+ 137:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * application needs to know these if using raw downsampled data.
+ 138:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    */
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 140:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 141:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Size in samples, after IDCT scaling */
+ 142:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->downsampled_width = (JDIMENSION)
+ 143:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_width *
+ 144:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->h_samp_factor * compptr->DCT_h_scaled_size),
+ 145:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_h_samp_factor * cinfo->block_size));
+ 146:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->downsampled_height = (JDIMENSION)
+ 147:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_height *
+ 148:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->v_samp_factor * compptr->DCT_v_scaled_size),
+ 149:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_v_samp_factor * cinfo->block_size));
+ 150:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 151:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 152:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif /* IDCT_SCALING_SUPPORTED */
+ 153:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 154:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Report number of components in selected colorspace. */
+ARM GAS  /tmp/ccW1rWnO.s 			page 7
+
+
+ 155:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Probably this should be in the color conversion module... */
+ 156:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   switch (cinfo->out_color_space) {
+ 157:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_GRAYSCALE:
+ 158:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->out_color_components = 1;
+ 159:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 160:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_RGB:
+ 161:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->out_color_components = RGB_PIXELSIZE;
+ 162:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 163:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_YCbCr:
+ 164:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->out_color_components = 3;
+ 165:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 166:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_CMYK:
+ 167:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_YCCK:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->out_color_components = 4;
+ 169:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 170:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   default:			/* else must be same colorspace as in file */
+ 171:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->out_color_components = cinfo->num_components;
+ 172:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 173:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   cinfo->output_components = (cinfo->quantize_colors ? 1 :
+ 175:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 176:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 177:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* See if upsampler will want to emit more than one row at a time */
+ 178:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (use_merged_upsample(cinfo))
+ 179:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->rec_outbuf_height = cinfo->max_v_samp_factor;
+ 180:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else
+ 181:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->rec_outbuf_height = 1;
+ 182:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 183:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 184:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 185:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 186:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Several decompression processes need to range-limit values to the range
+ 187:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * 0..MAXJSAMPLE; the input value may fall somewhat outside this range
+ 188:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * due to noise introduced by quantization, roundoff error, etc.  These
+ 189:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * processes are inner loops and need to be as fast as possible.  On most
+ 190:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * machines, particularly CPUs with pipelines or instruction prefetch,
+ 191:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * a (subscript-check-less) C table lookup
+ 192:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *		x = sample_range_limit[x];
+ 193:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * is faster than explicit tests
+ 194:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *		if (x < 0)  x = 0;
+ 195:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *		else if (x > MAXJSAMPLE)  x = MAXJSAMPLE;
+ 196:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * These processes all use a common table prepared by the routine below.
+ 197:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+ 198:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * For most steps we can mathematically guarantee that the initial value
+ 199:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * of x is within MAXJSAMPLE+1 of the legal range, so a table running from
+ 200:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * -(MAXJSAMPLE+1) to 2*MAXJSAMPLE+1 is sufficient.  But for the initial
+ 201:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * limiting step (just after the IDCT), a wildly out-of-range value is 
+ 202:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * possible if the input data is corrupt.  To avoid any chance of indexing
+ 203:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * off the end of memory and getting a bad-pointer trap, we perform the
+ 204:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * post-IDCT limiting thus:
+ 205:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *		x = range_limit[x & MASK];
+ 206:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * where MASK is 2 bits wider than legal sample data, ie 10 bits for 8-bit
+ 207:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * samples.  Under normal circumstances this is more than enough range and
+ 208:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * a correct output will be generated; with bogus input data the mask will
+ 209:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * cause wraparound, and we will safely generate a bogus-but-in-range output.
+ 210:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * For the post-IDCT step, we want to convert the data from signed to unsigned
+ 211:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * representation by adding CENTERJSAMPLE at the same time that we limit it.
+ARM GAS  /tmp/ccW1rWnO.s 			page 8
+
+
+ 212:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * So the post-IDCT limiting table ends up looking like this:
+ 213:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   CENTERJSAMPLE,CENTERJSAMPLE+1,...,MAXJSAMPLE,
+ 214:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   MAXJSAMPLE (repeat 2*(MAXJSAMPLE+1)-CENTERJSAMPLE times),
+ 215:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   0          (repeat 2*(MAXJSAMPLE+1)-CENTERJSAMPLE times),
+ 216:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *   0,1,...,CENTERJSAMPLE-1
+ 217:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Negative inputs select values from the upper half of the table after
+ 218:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * masking.
+ 219:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+ 220:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * We can save some space by overlapping the start of the post-IDCT table
+ 221:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * with the simpler range limiting table.  The post-IDCT table begins at
+ 222:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * sample_range_limit + CENTERJSAMPLE.
+ 223:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+ 224:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Note that the table is allocated in near data space on PCs; it's small
+ 225:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * enough and used often enough to justify this.
+ 226:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 227:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 228:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** LOCAL(void)
+ 229:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** prepare_range_limit_table (j_decompress_ptr cinfo)
+ 230:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /* Allocate and fill in the sample_range_limit table */
+ 231:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 232:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   JSAMPLE * table;
+ 233:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   int i;
+ 234:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 235:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   table = (JSAMPLE *)
+ 236:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 237:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		(5 * (MAXJSAMPLE+1) + CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 238:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   table += (MAXJSAMPLE+1);	/* allow negative subscripts of simple table */
+ 239:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   cinfo->sample_range_limit = table;
+ 240:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* First segment of "simple" table: limit[x] = 0 for x < 0 */
+ 241:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   MEMZERO(table - (MAXJSAMPLE+1), (MAXJSAMPLE+1) * SIZEOF(JSAMPLE));
+ 242:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Main part of "simple" table: limit[x] = x */
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   for (i = 0; i <= MAXJSAMPLE; i++)
+ 244:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 245:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   table += CENTERJSAMPLE;	/* Point to where post-IDCT table starts */
+ 246:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* End of simple table, rest of first half of post-IDCT table */
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   for (i = CENTERJSAMPLE; i < 2*(MAXJSAMPLE+1); i++)
+ 248:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 249:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Second half of post-IDCT table */
+ 250:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   MEMZERO(table + (2 * (MAXJSAMPLE+1)),
+ 251:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	  (2 * (MAXJSAMPLE+1) - CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 252:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   MEMCOPY(table + (4 * (MAXJSAMPLE+1) - CENTERJSAMPLE),
+ 253:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	  cinfo->sample_range_limit, CENTERJSAMPLE * SIZEOF(JSAMPLE));
+ 254:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 255:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 256:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 257:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 258:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Master selection of decompression modules.
+ 259:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This is done once at jpeg_start_decompress time.  We determine
+ 260:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * which modules will be used and give them appropriate initialization calls.
+ 261:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * We also initialize the decompressor input side to begin consuming data.
+ 262:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  *
+ 263:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Since jpeg_read_header has finished, we know what is in the SOF
+ 264:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * and (first) SOS markers.  We also have all the application parameter
+ 265:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * settings.
+ 266:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 267:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 268:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** LOCAL(void)
+ARM GAS  /tmp/ccW1rWnO.s 			page 9
+
+
+ 269:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** master_selection (j_decompress_ptr cinfo)
+ 270:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 271:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 272:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   boolean use_c_buffer;
+ 273:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   long samplesperrow;
+ 274:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   JDIMENSION jd_samplesperrow;
+ 275:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 276:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Initialize dimensions and other stuff */
+ 277:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jpeg_calc_output_dimensions(cinfo);
+ 278:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   prepare_range_limit_table(cinfo);
+ 279:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 280:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Width of an output scanline must be representable as JDIMENSION. */
+ 281:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   samplesperrow = (long) cinfo->output_width * (long) cinfo->out_color_components;
+ 282:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jd_samplesperrow = (JDIMENSION) samplesperrow;
+ 283:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if ((long) jd_samplesperrow != samplesperrow)
+ 284:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
+ 285:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 286:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Initialize my private state */
+ 287:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->pass_number = 0;
+ 288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->using_merged_upsample = use_merged_upsample(cinfo);
+ 289:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 290:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Color quantizer selection */
+ 291:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->quantizer_1pass = NULL;
+ 292:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->quantizer_2pass = NULL;
+ 293:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* No mode changes if not using buffered-image mode. */
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (! cinfo->quantize_colors || ! cinfo->buffered_image) {
+ 295:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 296:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_external_quant = FALSE;
+ 297:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_2pass_quant = FALSE;
+ 298:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 299:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->quantize_colors) {
+ 300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->raw_data_out)
+ 301:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
+ 302:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* 2-pass quantizer only works in 3-component color space. */
+ 303:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->out_color_components != 3) {
+ 304:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_1pass_quant = TRUE;
+ 305:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = FALSE;
+ 306:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = FALSE;
+ 307:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->colormap = NULL;
+ 308:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->colormap != NULL) {
+ 309:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = TRUE;
+ 310:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->two_pass_quantize) {
+ 311:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = TRUE;
+ 312:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 313:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_1pass_quant = TRUE;
+ 314:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 315:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 316:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->enable_1pass_quant) {
+ 317:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_1PASS_SUPPORTED
+ 318:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_1pass_quantizer(cinfo);
+ 319:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       master->quantizer_1pass = cinfo->cquantize;
+ 320:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 321:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 322:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+ 323:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 324:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 325:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* We use the 2-pass code to map to external colormaps. */
+ARM GAS  /tmp/ccW1rWnO.s 			page 10
+
+
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->enable_2pass_quant || cinfo->enable_external_quant) {
+ 327:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 328:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_2pass_quantizer(cinfo);
+ 329:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       master->quantizer_2pass = cinfo->cquantize;
+ 330:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 331:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 332:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+ 333:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 334:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* If both quantizers are initialized, the 2-pass one is left active;
+ 335:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****      * this is necessary for starting with quantization to an external map.
+ 336:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****      */
+ 337:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 338:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 339:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Post-processing: in particular, color conversion first */
+ 340:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (! cinfo->raw_data_out) {
+ 341:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (master->using_merged_upsample) {
+ 342:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+ 343:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_merged_upsampler(cinfo); /* does color conversion too */
+ 344:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 345:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 346:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+ 347:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 348:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_color_deconverter(cinfo);
+ 349:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_upsampler(cinfo);
+ 350:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 351:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_d_post_controller(cinfo, cinfo->enable_2pass_quant);
+ 352:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 353:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Inverse DCT */
+ 354:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_inverse_dct(cinfo);
+ 355:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Entropy decoding: either Huffman or arithmetic coding. */
+ 356:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->arith_code)
+ 357:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_arith_decoder(cinfo);
+ 358:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else {
+ 359:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_huff_decoder(cinfo);
+ 360:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 361:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 362:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Initialize principal buffer controllers. */
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   use_c_buffer = cinfo->inputctl->has_multiple_scans || cinfo->buffered_image;
+ 364:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 365:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 366:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (! cinfo->raw_data_out)
+ 367:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_d_main_controller(cinfo, FALSE /* never need full buffer here */);
+ 368:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 369:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* We can now tell the memory manager to allocate virtual arrays. */
+ 370:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   (*cinfo->mem->realize_virt_arrays) ((j_common_ptr) cinfo);
+ 371:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 372:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Initialize input side of decompressor to consume first scan. */
+ 373:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   (*cinfo->inputctl->start_input_pass) (cinfo);
+ 374:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 375:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 376:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* If jpeg_start_decompress will read the whole file, initialize
+ 377:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * progress monitoring appropriately.  The input step is counted
+ 378:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    * as one pass.
+ 379:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****    */
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->progress != NULL && ! cinfo->buffered_image &&
+ 381:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 382:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int nscans;
+ARM GAS  /tmp/ccW1rWnO.s 			page 11
+
+
+ 383:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Estimate number of scans to set pass_limit. */
+ 384:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->progressive_mode) {
+ 385:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
+ 386:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       nscans = 2 + 3 * cinfo->num_components;
+ 387:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 388:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* For a nonprogressive multiscan file, estimate 1 scan per component. */
+ 389:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       nscans = cinfo->num_components;
+ 390:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 391:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->pass_counter = 0L;
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows * nscans;
+ 393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
+ 395:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 396:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     master->pass_number++;
+ 397:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 398:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif /* D_MULTISCAN_FILES_SUPPORTED */
+ 399:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 400:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 401:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 402:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 403:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Per-pass setup.
+ 404:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This is called at the beginning of each output pass.  We determine which
+ 405:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * modules will be active during this pass and give them appropriate
+ 406:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * start_pass calls.  We also set is_dummy_pass to indicate whether this
+ 407:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * is a "real" output pass or a dummy pass for color quantization.
+ 408:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * (In the latter case, jdapistd.c will crank the pass to completion.)
+ 409:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 410:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 411:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** METHODDEF(void)
+ 412:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** prepare_for_output_pass (j_decompress_ptr cinfo)
+ 413:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 178              		.loc 1 413 1 is_stmt 1 view -0
+ 179              		.cfi_startproc
+ 180              		@ args = 0, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182              		.loc 1 413 1 is_stmt 0 view .LVU49
+ 183 0000 38B5     		push	{r3, r4, r5, lr}
+ 184              	.LCFI2:
+ 185              		.cfi_def_cfa_offset 16
+ 186              		.cfi_offset 3, -16
+ 187              		.cfi_offset 4, -12
+ 188              		.cfi_offset 5, -8
+ 189              		.cfi_offset 14, -4
+ 190 0002 0446     		mov	r4, r0
+ 414:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 191              		.loc 1 414 3 is_stmt 1 view .LVU50
+ 192              		.loc 1 414 17 is_stmt 0 view .LVU51
+ 193 0004 D0F8B851 		ldr	r5, [r0, #440]
+ 194              	.LVL7:
+ 415:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 416:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (master->pub.is_dummy_pass) {
+ 195              		.loc 1 416 3 is_stmt 1 view .LVU52
+ 196              		.loc 1 416 18 is_stmt 0 view .LVU53
+ 197 0008 AB68     		ldr	r3, [r5, #8]
+ 198              		.loc 1 416 6 view .LVU54
+ 199 000a 002B     		cmp	r3, #0
+ 200 000c 2BD0     		beq	.L10
+ARM GAS  /tmp/ccW1rWnO.s 			page 12
+
+
+ 417:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 418:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Final pass of 2-pass quantization */
+ 419:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     master->pub.is_dummy_pass = FALSE;
+ 201              		.loc 1 419 5 is_stmt 1 view .LVU55
+ 202              		.loc 1 419 31 is_stmt 0 view .LVU56
+ 203 000e 0021     		movs	r1, #0
+ 204 0010 A960     		str	r1, [r5, #8]
+ 420:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->cquantize->start_pass) (cinfo, FALSE);
+ 205              		.loc 1 420 5 is_stmt 1 view .LVU57
+ 206              		.loc 1 420 12 is_stmt 0 view .LVU58
+ 207 0012 D0F8E031 		ldr	r3, [r0, #480]
+ 208              		.loc 1 420 6 view .LVU59
+ 209 0016 1B68     		ldr	r3, [r3]
+ 210 0018 9847     		blx	r3
+ 211              	.LVL8:
+ 421:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->post->start_pass) (cinfo, JBUF_CRANK_DEST);
+ 212              		.loc 1 421 5 is_stmt 1 view .LVU60
+ 213              		.loc 1 421 12 is_stmt 0 view .LVU61
+ 214 001a D4F8C431 		ldr	r3, [r4, #452]
+ 215              		.loc 1 421 6 view .LVU62
+ 216 001e 1B68     		ldr	r3, [r3]
+ 217 0020 0221     		movs	r1, #2
+ 218 0022 2046     		mov	r0, r4
+ 219 0024 9847     		blx	r3
+ 220              	.LVL9:
+ 422:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->main->start_pass) (cinfo, JBUF_CRANK_DEST);
+ 221              		.loc 1 422 5 is_stmt 1 view .LVU63
+ 222              		.loc 1 422 12 is_stmt 0 view .LVU64
+ 223 0026 D4F8BC31 		ldr	r3, [r4, #444]
+ 224              		.loc 1 422 6 view .LVU65
+ 225 002a 1B68     		ldr	r3, [r3]
+ 226 002c 0221     		movs	r1, #2
+ 227 002e 2046     		mov	r0, r4
+ 228 0030 9847     		blx	r3
+ 229              	.LVL10:
+ 230              	.L11:
+ 423:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 424:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 425:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif /* QUANT_2PASS_SUPPORTED */
+ 426:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   } else {
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->quantize_colors && cinfo->colormap == NULL) {
+ 428:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->two_pass_quantize && cinfo->enable_2pass_quant) {
+ 430:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 431:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	master->pub.is_dummy_pass = TRUE;
+ 432:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else if (cinfo->enable_1pass_quant) {
+ 433:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_1pass;
+ 434:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else {
+ 435:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	ERREXIT(cinfo, JERR_MODE_CHANGE);
+ 436:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       }
+ 437:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 438:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->idct->start_pass) (cinfo);
+ 439:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->coef->start_output_pass) (cinfo);
+ 440:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (! cinfo->raw_data_out) {
+ 441:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (! master->using_merged_upsample)
+ 442:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cconvert->start_pass) (cinfo);
+ 443:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->upsample->start_pass) (cinfo);
+ARM GAS  /tmp/ccW1rWnO.s 			page 13
+
+
+ 444:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->quantize_colors)
+ 445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
+ 447:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 448:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->main->start_pass) (cinfo, JBUF_PASS_THRU);
+ 449:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 450:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 451:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 452:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Set up progress monitor's pass info if present */
+ 453:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->progress != NULL) {
+ 231              		.loc 1 453 3 is_stmt 1 view .LVU66
+ 232              		.loc 1 453 12 is_stmt 0 view .LVU67
+ 233 0032 A268     		ldr	r2, [r4, #8]
+ 234              		.loc 1 453 6 view .LVU68
+ 235 0034 B2B1     		cbz	r2, .L9
+ 454:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = master->pass_number;
+ 236              		.loc 1 454 5 is_stmt 1 view .LVU69
+ 237              		.loc 1 454 47 is_stmt 0 view .LVU70
+ 238 0036 EB68     		ldr	r3, [r5, #12]
+ 239              		.loc 1 454 39 view .LVU71
+ 240 0038 D360     		str	r3, [r2, #12]
+ 455:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = master->pass_number +
+ 241              		.loc 1 455 5 is_stmt 1 view .LVU72
+ 456:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 				    (master->pub.is_dummy_pass ? 2 : 1);
+ 242              		.loc 1 456 21 is_stmt 0 view .LVU73
+ 243 003a AA68     		ldr	r2, [r5, #8]
+ 244              		.loc 1 456 40 view .LVU74
+ 245 003c 002A     		cmp	r2, #0
+ 246 003e 62D0     		beq	.L22
+ 247 0040 0221     		movs	r1, #2
+ 248              	.L19:
+ 455:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = master->pass_number +
+ 249              		.loc 1 455 10 view .LVU75
+ 250 0042 A268     		ldr	r2, [r4, #8]
+ 455:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = master->pass_number +
+ 251              		.loc 1 455 57 view .LVU76
+ 252 0044 0B44     		add	r3, r3, r1
+ 455:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = master->pass_number +
+ 253              		.loc 1 455 35 view .LVU77
+ 254 0046 1361     		str	r3, [r2, #16]
+ 457:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* In buffered-image mode, we assume one more output pass if EOI not
+ 458:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****      * yet reached, but no more passes if EOI has been reached.
+ 459:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****      */
+ 460:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->buffered_image && ! cinfo->inputctl->eoi_reached) {
+ 255              		.loc 1 460 5 is_stmt 1 view .LVU78
+ 256              		.loc 1 460 14 is_stmt 0 view .LVU79
+ 257 0048 236C     		ldr	r3, [r4, #64]
+ 258              		.loc 1 460 8 view .LVU80
+ 259 004a 5BB1     		cbz	r3, .L9
+ 260              		.loc 1 460 41 discriminator 1 view .LVU81
+ 261 004c D4F8C831 		ldr	r3, [r4, #456]
+ 262              		.loc 1 460 51 discriminator 1 view .LVU82
+ 263 0050 5B69     		ldr	r3, [r3, #20]
+ 264              		.loc 1 460 31 discriminator 1 view .LVU83
+ 265 0052 3BB9     		cbnz	r3, .L9
+ 461:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->progress->total_passes += (cinfo->enable_2pass_quant ? 2 : 1);
+ 266              		.loc 1 461 7 is_stmt 1 view .LVU84
+ARM GAS  /tmp/ccW1rWnO.s 			page 14
+
+
+ 267              		.loc 1 461 12 is_stmt 0 view .LVU85
+ 268 0054 A268     		ldr	r2, [r4, #8]
+ 269              		.loc 1 461 37 view .LVU86
+ 270 0056 1369     		ldr	r3, [r2, #16]
+ 271              		.loc 1 461 46 view .LVU87
+ 272 0058 E16E     		ldr	r1, [r4, #108]
+ 273              		.loc 1 461 71 view .LVU88
+ 274 005a 0029     		cmp	r1, #0
+ 275 005c 55D0     		beq	.L23
+ 276 005e 0221     		movs	r1, #2
+ 277              	.L20:
+ 278              		.loc 1 461 37 discriminator 4 view .LVU89
+ 279 0060 0B44     		add	r3, r3, r1
+ 280 0062 1361     		str	r3, [r2, #16]
+ 281              	.L9:
+ 462:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 463:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 464:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 282              		.loc 1 464 1 view .LVU90
+ 283 0064 38BD     		pop	{r3, r4, r5, pc}
+ 284              	.LVL11:
+ 285              	.L10:
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 286              		.loc 1 427 5 is_stmt 1 view .LVU91
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 287              		.loc 1 427 14 is_stmt 0 view .LVU92
+ 288 0066 436D     		ldr	r3, [r0, #84]
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 289              		.loc 1 427 8 view .LVU93
+ 290 0068 1BB1     		cbz	r3, .L12
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 291              		.loc 1 427 40 discriminator 1 view .LVU94
+ 292 006a D0F88830 		ldr	r3, [r0, #136]
+ 427:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Select new quantization method */
+ 293              		.loc 1 427 32 discriminator 1 view .LVU95
+ 294 006e 002B     		cmp	r3, #0
+ 295 0070 2FD0     		beq	.L25
+ 296              	.LVL12:
+ 297              	.L12:
+ 438:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->coef->start_output_pass) (cinfo);
+ 298              		.loc 1 438 5 is_stmt 1 view .LVU96
+ 438:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->coef->start_output_pass) (cinfo);
+ 299              		.loc 1 438 12 is_stmt 0 view .LVU97
+ 300 0072 D4F8D431 		ldr	r3, [r4, #468]
+ 438:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->coef->start_output_pass) (cinfo);
+ 301              		.loc 1 438 6 view .LVU98
+ 302 0076 1B68     		ldr	r3, [r3]
+ 303 0078 2046     		mov	r0, r4
+ 304 007a 9847     		blx	r3
+ 305              	.LVL13:
+ 439:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (! cinfo->raw_data_out) {
+ 306              		.loc 1 439 5 is_stmt 1 view .LVU99
+ 439:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (! cinfo->raw_data_out) {
+ 307              		.loc 1 439 12 is_stmt 0 view .LVU100
+ 308 007c D4F8C031 		ldr	r3, [r4, #448]
+ 439:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (! cinfo->raw_data_out) {
+ 309              		.loc 1 439 6 view .LVU101
+ARM GAS  /tmp/ccW1rWnO.s 			page 15
+
+
+ 310 0080 9B68     		ldr	r3, [r3, #8]
+ 311 0082 2046     		mov	r0, r4
+ 312 0084 9847     		blx	r3
+ 313              	.LVL14:
+ 440:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (! master->using_merged_upsample)
+ 314              		.loc 1 440 5 is_stmt 1 view .LVU102
+ 440:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (! master->using_merged_upsample)
+ 315              		.loc 1 440 16 is_stmt 0 view .LVU103
+ 316 0086 636C     		ldr	r3, [r4, #68]
+ 440:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (! master->using_merged_upsample)
+ 317              		.loc 1 440 8 view .LVU104
+ 318 0088 002B     		cmp	r3, #0
+ 319 008a D2D1     		bne	.L11
+ 441:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cconvert->start_pass) (cinfo);
+ 320              		.loc 1 441 7 is_stmt 1 view .LVU105
+ 441:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cconvert->start_pass) (cinfo);
+ 321              		.loc 1 441 19 is_stmt 0 view .LVU106
+ 322 008c 2B69     		ldr	r3, [r5, #16]
+ 441:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cconvert->start_pass) (cinfo);
+ 323              		.loc 1 441 10 view .LVU107
+ 324 008e 23B9     		cbnz	r3, .L15
+ 442:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->upsample->start_pass) (cinfo);
+ 325              		.loc 1 442 2 is_stmt 1 view .LVU108
+ 442:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->upsample->start_pass) (cinfo);
+ 326              		.loc 1 442 9 is_stmt 0 view .LVU109
+ 327 0090 D4F8DC31 		ldr	r3, [r4, #476]
+ 442:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->upsample->start_pass) (cinfo);
+ 328              		.loc 1 442 3 view .LVU110
+ 329 0094 1B68     		ldr	r3, [r3]
+ 330 0096 2046     		mov	r0, r4
+ 331 0098 9847     		blx	r3
+ 332              	.LVL15:
+ 333              	.L15:
+ 443:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->quantize_colors)
+ 334              		.loc 1 443 7 is_stmt 1 view .LVU111
+ 443:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->quantize_colors)
+ 335              		.loc 1 443 14 is_stmt 0 view .LVU112
+ 336 009a D4F8D831 		ldr	r3, [r4, #472]
+ 443:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       if (cinfo->quantize_colors)
+ 337              		.loc 1 443 8 view .LVU113
+ 338 009e 1B68     		ldr	r3, [r3]
+ 339 00a0 2046     		mov	r0, r4
+ 340 00a2 9847     		blx	r3
+ 341              	.LVL16:
+ 444:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
+ 342              		.loc 1 444 7 is_stmt 1 view .LVU114
+ 444:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
+ 343              		.loc 1 444 16 is_stmt 0 view .LVU115
+ 344 00a4 636D     		ldr	r3, [r4, #84]
+ 444:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
+ 345              		.loc 1 444 10 view .LVU116
+ 346 00a6 2BB1     		cbz	r3, .L16
+ 445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
+ 347              		.loc 1 445 2 is_stmt 1 view .LVU117
+ 445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
+ 348              		.loc 1 445 9 is_stmt 0 view .LVU118
+ 349 00a8 D4F8E031 		ldr	r3, [r4, #480]
+ARM GAS  /tmp/ccW1rWnO.s 			page 16
+
+
+ 445:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->post->start_pass) (cinfo,
+ 350              		.loc 1 445 3 view .LVU119
+ 351 00ac 1B68     		ldr	r3, [r3]
+ 352 00ae A968     		ldr	r1, [r5, #8]
+ 353 00b0 2046     		mov	r0, r4
+ 354 00b2 9847     		blx	r3
+ 355              	.LVL17:
+ 356              	.L16:
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 357              		.loc 1 446 7 is_stmt 1 view .LVU120
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 358              		.loc 1 446 14 is_stmt 0 view .LVU121
+ 359 00b4 D4F8C431 		ldr	r3, [r4, #452]
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 360              		.loc 1 446 8 view .LVU122
+ 361 00b8 1B68     		ldr	r3, [r3]
+ 447:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->main->start_pass) (cinfo, JBUF_PASS_THRU);
+ 362              		.loc 1 447 18 view .LVU123
+ 363 00ba AA68     		ldr	r2, [r5, #8]
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 364              		.loc 1 446 8 view .LVU124
+ 365 00bc 0AB3     		cbz	r2, .L21
+ 366 00be 0321     		movs	r1, #3
+ 367              	.L17:
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 368              		.loc 1 446 8 discriminator 4 view .LVU125
+ 369 00c0 2046     		mov	r0, r4
+ 370 00c2 9847     		blx	r3
+ 371              	.LVL18:
+ 448:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 372              		.loc 1 448 7 is_stmt 1 discriminator 4 view .LVU126
+ 448:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 373              		.loc 1 448 14 is_stmt 0 discriminator 4 view .LVU127
+ 374 00c4 D4F8BC31 		ldr	r3, [r4, #444]
+ 448:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 375              		.loc 1 448 8 discriminator 4 view .LVU128
+ 376 00c8 1B68     		ldr	r3, [r3]
+ 377 00ca 0021     		movs	r1, #0
+ 378 00cc 2046     		mov	r0, r4
+ 379 00ce 9847     		blx	r3
+ 380              	.LVL19:
+ 381 00d0 AFE7     		b	.L11
+ 382              	.LVL20:
+ 383              	.L25:
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 384              		.loc 1 429 7 is_stmt 1 view .LVU129
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 385              		.loc 1 429 16 is_stmt 0 view .LVU130
+ 386 00d2 C36D     		ldr	r3, [r0, #92]
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 387              		.loc 1 429 10 view .LVU131
+ 388 00d4 3BB1     		cbz	r3, .L13
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 389              		.loc 1 429 44 discriminator 1 view .LVU132
+ 390 00d6 C36E     		ldr	r3, [r0, #108]
+ 429:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_2pass;
+ 391              		.loc 1 429 36 discriminator 1 view .LVU133
+ARM GAS  /tmp/ccW1rWnO.s 			page 17
+
+
+ 392 00d8 2BB1     		cbz	r3, .L13
+ 430:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	master->pub.is_dummy_pass = TRUE;
+ 393              		.loc 1 430 2 is_stmt 1 view .LVU134
+ 430:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	master->pub.is_dummy_pass = TRUE;
+ 394              		.loc 1 430 27 is_stmt 0 view .LVU135
+ 395 00da AB69     		ldr	r3, [r5, #24]
+ 430:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	master->pub.is_dummy_pass = TRUE;
+ 396              		.loc 1 430 19 view .LVU136
+ 397 00dc C0F8E031 		str	r3, [r0, #480]
+ 431:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else if (cinfo->enable_1pass_quant) {
+ 398              		.loc 1 431 2 is_stmt 1 view .LVU137
+ 431:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else if (cinfo->enable_1pass_quant) {
+ 399              		.loc 1 431 28 is_stmt 0 view .LVU138
+ 400 00e0 0123     		movs	r3, #1
+ 401 00e2 AB60     		str	r3, [r5, #8]
+ 402 00e4 C5E7     		b	.L12
+ 403              	.L13:
+ 432:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_1pass;
+ 404              		.loc 1 432 14 is_stmt 1 view .LVU139
+ 432:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_1pass;
+ 405              		.loc 1 432 23 is_stmt 0 view .LVU140
+ 406 00e6 636E     		ldr	r3, [r4, #100]
+ 432:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	cinfo->cquantize = master->quantizer_1pass;
+ 407              		.loc 1 432 17 view .LVU141
+ 408 00e8 1BB1     		cbz	r3, .L14
+ 433:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else {
+ 409              		.loc 1 433 2 is_stmt 1 view .LVU142
+ 433:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else {
+ 410              		.loc 1 433 27 is_stmt 0 view .LVU143
+ 411 00ea 6B69     		ldr	r3, [r5, #20]
+ 433:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       } else {
+ 412              		.loc 1 433 19 view .LVU144
+ 413 00ec C4F8E031 		str	r3, [r4, #480]
+ 414 00f0 BFE7     		b	.L12
+ 415              	.L14:
+ 435:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       }
+ 416              		.loc 1 435 2 is_stmt 1 view .LVU145
+ 417 00f2 2368     		ldr	r3, [r4]
+ 418 00f4 2F22     		movs	r2, #47
+ 419 00f6 5A61     		str	r2, [r3, #20]
+ 420 00f8 2368     		ldr	r3, [r4]
+ 421 00fa 1B68     		ldr	r3, [r3]
+ 422 00fc 2046     		mov	r0, r4
+ 423              	.LVL21:
+ 435:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       }
+ 424              		.loc 1 435 2 is_stmt 0 view .LVU146
+ 425 00fe 9847     		blx	r3
+ 426              	.LVL22:
+ 427 0100 B7E7     		b	.L12
+ 428              	.L21:
+ 446:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+ 429              		.loc 1 446 8 view .LVU147
+ 430 0102 0021     		movs	r1, #0
+ 431 0104 DCE7     		b	.L17
+ 432              	.L22:
+ 456:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* In buffered-image mode, we assume one more output pass if EOI not
+ 433              		.loc 1 456 40 view .LVU148
+ARM GAS  /tmp/ccW1rWnO.s 			page 18
+
+
+ 434 0106 0121     		movs	r1, #1
+ 435 0108 9BE7     		b	.L19
+ 436              	.L23:
+ 461:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 437              		.loc 1 461 71 view .LVU149
+ 438 010a 0121     		movs	r1, #1
+ 439 010c A8E7     		b	.L20
+ 440              		.cfi_endproc
+ 441              	.LFE11:
+ 443              		.section	.text.finish_output_pass,"ax",%progbits
+ 444              		.align	1
+ 445              		.syntax unified
+ 446              		.thumb
+ 447              		.thumb_func
+ 448              		.fpu fpv4-sp-d16
+ 450              	finish_output_pass:
+ 451              	.LVL23:
+ 452              	.LFB12:
+ 465:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 466:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 467:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 468:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Finish up at end of an output pass.
+ 469:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 470:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 471:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** METHODDEF(void)
+ 472:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** finish_output_pass (j_decompress_ptr cinfo)
+ 473:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 453              		.loc 1 473 1 is_stmt 1 view -0
+ 454              		.cfi_startproc
+ 455              		@ args = 0, pretend = 0, frame = 0
+ 456              		@ frame_needed = 0, uses_anonymous_args = 0
+ 457              		.loc 1 473 1 is_stmt 0 view .LVU151
+ 458 0000 10B5     		push	{r4, lr}
+ 459              	.LCFI3:
+ 460              		.cfi_def_cfa_offset 8
+ 461              		.cfi_offset 4, -8
+ 462              		.cfi_offset 14, -4
+ 474:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 463              		.loc 1 474 3 is_stmt 1 view .LVU152
+ 464              		.loc 1 474 17 is_stmt 0 view .LVU153
+ 465 0002 D0F8B841 		ldr	r4, [r0, #440]
+ 466              	.LVL24:
+ 475:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 476:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->quantize_colors)
+ 467              		.loc 1 476 3 is_stmt 1 view .LVU154
+ 468              		.loc 1 476 12 is_stmt 0 view .LVU155
+ 469 0006 436D     		ldr	r3, [r0, #84]
+ 470              		.loc 1 476 6 view .LVU156
+ 471 0008 1BB1     		cbz	r3, .L27
+ 477:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->cquantize->finish_pass) (cinfo);
+ 472              		.loc 1 477 5 is_stmt 1 view .LVU157
+ 473              		.loc 1 477 12 is_stmt 0 view .LVU158
+ 474 000a D0F8E031 		ldr	r3, [r0, #480]
+ 475              		.loc 1 477 6 view .LVU159
+ 476 000e 9B68     		ldr	r3, [r3, #8]
+ 477 0010 9847     		blx	r3
+ 478              	.LVL25:
+ARM GAS  /tmp/ccW1rWnO.s 			page 19
+
+
+ 479              	.L27:
+ 478:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->pass_number++;
+ 480              		.loc 1 478 3 is_stmt 1 view .LVU160
+ 481              		.loc 1 478 9 is_stmt 0 view .LVU161
+ 482 0012 E368     		ldr	r3, [r4, #12]
+ 483              		.loc 1 478 22 view .LVU162
+ 484 0014 0133     		adds	r3, r3, #1
+ 485 0016 E360     		str	r3, [r4, #12]
+ 479:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 486              		.loc 1 479 1 view .LVU163
+ 487 0018 10BD     		pop	{r4, pc}
+ 488              		.loc 1 479 1 view .LVU164
+ 489              		.cfi_endproc
+ 490              	.LFE12:
+ 492              		.section	.text.prepare_range_limit_table,"ax",%progbits
+ 493              		.align	1
+ 494              		.syntax unified
+ 495              		.thumb
+ 496              		.thumb_func
+ 497              		.fpu fpv4-sp-d16
+ 499              	prepare_range_limit_table:
+ 500              	.LVL26:
+ 501              	.LFB9:
+ 231:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   JSAMPLE * table;
+ 502              		.loc 1 231 1 is_stmt 1 view -0
+ 503              		.cfi_startproc
+ 504              		@ args = 0, pretend = 0, frame = 0
+ 505              		@ frame_needed = 0, uses_anonymous_args = 0
+ 231:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   JSAMPLE * table;
+ 506              		.loc 1 231 1 is_stmt 0 view .LVU166
+ 507 0000 70B5     		push	{r4, r5, r6, lr}
+ 508              	.LCFI4:
+ 509              		.cfi_def_cfa_offset 16
+ 510              		.cfi_offset 4, -16
+ 511              		.cfi_offset 5, -12
+ 512              		.cfi_offset 6, -8
+ 513              		.cfi_offset 14, -4
+ 514 0002 0646     		mov	r6, r0
+ 232:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   int i;
+ 515              		.loc 1 232 3 is_stmt 1 view .LVU167
+ 233:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 516              		.loc 1 233 3 view .LVU168
+ 235:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 517              		.loc 1 235 3 view .LVU169
+ 236:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		(5 * (MAXJSAMPLE+1) + CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 518              		.loc 1 236 12 is_stmt 0 view .LVU170
+ 519 0004 4368     		ldr	r3, [r0, #4]
+ 236:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		(5 * (MAXJSAMPLE+1) + CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 520              		.loc 1 236 6 view .LVU171
+ 521 0006 1B68     		ldr	r3, [r3]
+ 522 0008 4FF4B062 		mov	r2, #1408
+ 523 000c 0121     		movs	r1, #1
+ 524 000e 9847     		blx	r3
+ 525              	.LVL27:
+ 236:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		(5 * (MAXJSAMPLE+1) + CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 526              		.loc 1 236 6 view .LVU172
+ 527 0010 0546     		mov	r5, r0
+ARM GAS  /tmp/ccW1rWnO.s 			page 20
+
+
+ 528              	.LVL28:
+ 238:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   cinfo->sample_range_limit = table;
+ 529              		.loc 1 238 3 is_stmt 1 view .LVU173
+ 238:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   cinfo->sample_range_limit = table;
+ 530              		.loc 1 238 9 is_stmt 0 view .LVU174
+ 531 0012 00F58074 		add	r4, r0, #256
+ 532              	.LVL29:
+ 239:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* First segment of "simple" table: limit[x] = 0 for x < 0 */
+ 533              		.loc 1 239 3 is_stmt 1 view .LVU175
+ 239:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* First segment of "simple" table: limit[x] = 0 for x < 0 */
+ 534              		.loc 1 239 29 is_stmt 0 view .LVU176
+ 535 0016 C6F84C41 		str	r4, [r6, #332]
+ 241:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Main part of "simple" table: limit[x] = x */
+ 536              		.loc 1 241 3 is_stmt 1 view .LVU177
+ 537 001a 4FF48072 		mov	r2, #256
+ 538 001e 0021     		movs	r1, #0
+ 539 0020 FFF7FEFF 		bl	memset
+ 540              	.LVL30:
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 541              		.loc 1 243 3 view .LVU178
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 542              		.loc 1 243 10 is_stmt 0 view .LVU179
+ 543 0024 0023     		movs	r3, #0
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 544              		.loc 1 243 3 view .LVU180
+ 545 0026 01E0     		b	.L30
+ 546              	.LVL31:
+ 547              	.L31:
+ 244:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   table += CENTERJSAMPLE;	/* Point to where post-IDCT table starts */
+ 548              		.loc 1 244 5 is_stmt 1 discriminator 3 view .LVU181
+ 244:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   table += CENTERJSAMPLE;	/* Point to where post-IDCT table starts */
+ 549              		.loc 1 244 14 is_stmt 0 discriminator 3 view .LVU182
+ 550 0028 E354     		strb	r3, [r4, r3]
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 551              		.loc 1 243 32 is_stmt 1 discriminator 3 view .LVU183
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 552              		.loc 1 243 33 is_stmt 0 discriminator 3 view .LVU184
+ 553 002a 0133     		adds	r3, r3, #1
+ 554              	.LVL32:
+ 555              	.L30:
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 556              		.loc 1 243 15 is_stmt 1 discriminator 1 view .LVU185
+ 243:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = (JSAMPLE) i;
+ 557              		.loc 1 243 3 is_stmt 0 discriminator 1 view .LVU186
+ 558 002c FF2B     		cmp	r3, #255
+ 559 002e FBDD     		ble	.L31
+ 245:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* End of simple table, rest of first half of post-IDCT table */
+ 560              		.loc 1 245 3 is_stmt 1 view .LVU187
+ 245:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* End of simple table, rest of first half of post-IDCT table */
+ 561              		.loc 1 245 9 is_stmt 0 view .LVU188
+ 562 0030 05F5C071 		add	r1, r5, #384
+ 563              	.LVL33:
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 564              		.loc 1 247 3 is_stmt 1 view .LVU189
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 565              		.loc 1 247 10 is_stmt 0 view .LVU190
+ 566 0034 8023     		movs	r3, #128
+ARM GAS  /tmp/ccW1rWnO.s 			page 21
+
+
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 567              		.loc 1 247 3 view .LVU191
+ 568 0036 02E0     		b	.L32
+ 569              	.LVL34:
+ 570              	.L33:
+ 248:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Second half of post-IDCT table */
+ 571              		.loc 1 248 5 is_stmt 1 discriminator 3 view .LVU192
+ 248:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Second half of post-IDCT table */
+ 572              		.loc 1 248 14 is_stmt 0 discriminator 3 view .LVU193
+ 573 0038 FF22     		movs	r2, #255
+ 574 003a CA54     		strb	r2, [r1, r3]
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 575              		.loc 1 247 49 is_stmt 1 discriminator 3 view .LVU194
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 576              		.loc 1 247 50 is_stmt 0 discriminator 3 view .LVU195
+ 577 003c 0133     		adds	r3, r3, #1
+ 578              	.LVL35:
+ 579              	.L32:
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 580              		.loc 1 247 27 is_stmt 1 discriminator 1 view .LVU196
+ 247:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     table[i] = MAXJSAMPLE;
+ 581              		.loc 1 247 3 is_stmt 0 discriminator 1 view .LVU197
+ 582 003e B3F5007F 		cmp	r3, #512
+ 583 0042 F9DB     		blt	.L33
+ 250:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	  (2 * (MAXJSAMPLE+1) - CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 584              		.loc 1 250 3 is_stmt 1 view .LVU198
+ 585 0044 4FF4C072 		mov	r2, #384
+ 586 0048 0021     		movs	r1, #0
+ 587              	.LVL36:
+ 250:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	  (2 * (MAXJSAMPLE+1) - CENTERJSAMPLE) * SIZEOF(JSAMPLE));
+ 588              		.loc 1 250 3 is_stmt 0 view .LVU199
+ 589 004a 05F56070 		add	r0, r5, #896
+ 590 004e FFF7FEFF 		bl	memset
+ 591              	.LVL37:
+ 252:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	  cinfo->sample_range_limit, CENTERJSAMPLE * SIZEOF(JSAMPLE));
+ 592              		.loc 1 252 3 is_stmt 1 view .LVU200
+ 593 0052 8022     		movs	r2, #128
+ 594 0054 D6F84C11 		ldr	r1, [r6, #332]
+ 595 0058 05F5A060 		add	r0, r5, #1280
+ 596 005c FFF7FEFF 		bl	memcpy
+ 597              	.LVL38:
+ 254:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 598              		.loc 1 254 1 is_stmt 0 view .LVU201
+ 599 0060 70BD     		pop	{r4, r5, r6, pc}
+ 254:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 600              		.loc 1 254 1 view .LVU202
+ 601              		.cfi_endproc
+ 602              	.LFE9:
+ 604              		.section	.text.jpeg_calc_output_dimensions,"ax",%progbits
+ 605              		.align	1
+ 606              		.global	jpeg_calc_output_dimensions
+ 607              		.syntax unified
+ 608              		.thumb
+ 609              		.thumb_func
+ 610              		.fpu fpv4-sp-d16
+ 612              	jpeg_calc_output_dimensions:
+ 613              	.LVL39:
+ARM GAS  /tmp/ccW1rWnO.s 			page 22
+
+
+ 614              	.LFB8:
+  92:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef IDCT_SCALING_SUPPORTED
+ 615              		.loc 1 92 1 is_stmt 1 view -0
+ 616              		.cfi_startproc
+ 617              		@ args = 0, pretend = 0, frame = 0
+ 618              		@ frame_needed = 0, uses_anonymous_args = 0
+  92:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef IDCT_SCALING_SUPPORTED
+ 619              		.loc 1 92 1 is_stmt 0 view .LVU204
+ 620 0000 70B5     		push	{r4, r5, r6, lr}
+ 621              	.LCFI5:
+ 622              		.cfi_def_cfa_offset 16
+ 623              		.cfi_offset 4, -16
+ 624              		.cfi_offset 5, -12
+ 625              		.cfi_offset 6, -8
+ 626              		.cfi_offset 14, -4
+ 627 0002 0446     		mov	r4, r0
+  94:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jpeg_component_info *compptr;
+ 628              		.loc 1 94 3 is_stmt 1 view .LVU205
+  95:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif
+ 629              		.loc 1 95 3 view .LVU206
+  99:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 630              		.loc 1 99 3 view .LVU207
+  99:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 631              		.loc 1 99 12 is_stmt 0 view .LVU208
+ 632 0004 4369     		ldr	r3, [r0, #20]
+  99:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 633              		.loc 1 99 6 view .LVU209
+ 634 0006 CA2B     		cmp	r3, #202
+ 635 0008 08D0     		beq	.L36
+ 100:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 636              		.loc 1 100 5 is_stmt 1 view .LVU210
+ 637 000a 0368     		ldr	r3, [r0]
+ 638 000c 1522     		movs	r2, #21
+ 639 000e 5A61     		str	r2, [r3, #20]
+ 640 0010 0368     		ldr	r3, [r0]
+ 641 0012 4269     		ldr	r2, [r0, #20]
+ 642 0014 9A61     		str	r2, [r3, #24]
+ 643 0016 0368     		ldr	r3, [r0]
+ 644 0018 1B68     		ldr	r3, [r3]
+ 645 001a 9847     		blx	r3
+ 646              	.LVL40:
+ 647              	.L36:
+ 103:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 648              		.loc 1 103 3 view .LVU211
+ 649 001c 2046     		mov	r0, r4
+ 650 001e FFF7FEFF 		bl	jpeg_core_output_dimensions
+ 651              	.LVL41:
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 652              		.loc 1 112 3 view .LVU212
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 653              		.loc 1 112 24 is_stmt 0 view .LVU213
+ 654 0022 D4F8D800 		ldr	r0, [r4, #216]
+ 655              	.LVL42:
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 656              		.loc 1 112 11 view .LVU214
+ 657 0026 4FF0000C 		mov	ip, #0
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ARM GAS  /tmp/ccW1rWnO.s 			page 23
+
+
+ 658              		.loc 1 112 3 view .LVU215
+ 659 002a 3DE0     		b	.L37
+ 660              	.LVL43:
+ 661              	.L60:
+ 662              	.LBB2:
+ 116:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
+ 663              		.loc 1 116 43 view .LVU216
+ 664 002c 0423     		movs	r3, #4
+ 665              	.L38:
+ 115:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 666              		.loc 1 115 11 view .LVU217
+ 667 002e 9942     		cmp	r1, r3
+ 668 0030 14DC     		bgt	.L39
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 669              		.loc 1 117 11 view .LVU218
+ 670 0032 D4F83821 		ldr	r2, [r4, #312]
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 671              		.loc 1 117 41 view .LVU219
+ 672 0036 8368     		ldr	r3, [r0, #8]
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 673              		.loc 1 117 57 view .LVU220
+ 674 0038 05FB03F3 		mul	r3, r5, r3
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 675              		.loc 1 117 65 view .LVU221
+ 676 003c 5B00     		lsls	r3, r3, #1
+ 117:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 677              		.loc 1 117 31 view .LVU222
+ 678 003e 92FBF3F6 		sdiv	r6, r2, r3
+ 679 0042 03FB1623 		mls	r3, r3, r6, r2
+ 116:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
+ 680              		.loc 1 116 58 view .LVU223
+ 681 0046 4BB9     		cbnz	r3, .L39
+ 118:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 682              		.loc 1 118 7 is_stmt 1 view .LVU224
+ 118:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 683              		.loc 1 118 13 is_stmt 0 view .LVU225
+ 684 0048 6D00     		lsls	r5, r5, #1
+ 685              	.LVL44:
+ 686              	.L47:
+ 115:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 687              		.loc 1 115 11 is_stmt 1 view .LVU226
+ 115:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 688              		.loc 1 115 17 is_stmt 0 view .LVU227
+ 689 004a D4F84011 		ldr	r1, [r4, #320]
+ 115:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 690              		.loc 1 115 41 view .LVU228
+ 691 004e 05FB01F1 		mul	r1, r5, r1
+ 116:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
+ 692              		.loc 1 116 11 view .LVU229
+ 693 0052 E36C     		ldr	r3, [r4, #76]
+ 116:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
+ 694              		.loc 1 116 43 view .LVU230
+ 695 0054 002B     		cmp	r3, #0
+ 696 0056 E9D0     		beq	.L60
+ 697 0058 0823     		movs	r3, #8
+ 698 005a E8E7     		b	.L38
+ 699              	.L39:
+ARM GAS  /tmp/ccW1rWnO.s 			page 24
+
+
+ 120:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ssize = 1;
+ 700              		.loc 1 120 5 is_stmt 1 view .LVU231
+ 120:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ssize = 1;
+ 701              		.loc 1 120 32 is_stmt 0 view .LVU232
+ 702 005c 4162     		str	r1, [r0, #36]
+ 121:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     while (cinfo->min_DCT_v_scaled_size * ssize <=
+ 703              		.loc 1 121 5 is_stmt 1 view .LVU233
+ 704              	.LVL45:
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 705              		.loc 1 122 5 view .LVU234
+ 121:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     while (cinfo->min_DCT_v_scaled_size * ssize <=
+ 706              		.loc 1 121 11 is_stmt 0 view .LVU235
+ 707 005e 4FF0010E 		mov	lr, #1
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 708              		.loc 1 122 11 view .LVU236
+ 709 0062 0FE0     		b	.L41
+ 710              	.LVL46:
+ 711              	.L61:
+ 123:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
+ 712              		.loc 1 123 43 view .LVU237
+ 713 0064 0423     		movs	r3, #4
+ 714              	.L42:
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 715              		.loc 1 122 11 view .LVU238
+ 716 0066 9D42     		cmp	r5, r3
+ 717 0068 15DC     		bgt	.L43
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 718              		.loc 1 124 11 view .LVU239
+ 719 006a D4F83C21 		ldr	r2, [r4, #316]
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 720              		.loc 1 124 41 view .LVU240
+ 721 006e C368     		ldr	r3, [r0, #12]
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 722              		.loc 1 124 57 view .LVU241
+ 723 0070 0EFB03F3 		mul	r3, lr, r3
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 724              		.loc 1 124 65 view .LVU242
+ 725 0074 5B00     		lsls	r3, r3, #1
+ 124:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ssize = ssize * 2;
+ 726              		.loc 1 124 31 view .LVU243
+ 727 0076 92FBF3F6 		sdiv	r6, r2, r3
+ 728 007a 03FB1623 		mls	r3, r3, r6, r2
+ 123:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
+ 729              		.loc 1 123 58 view .LVU244
+ 730 007e 53B9     		cbnz	r3, .L43
+ 125:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 731              		.loc 1 125 7 is_stmt 1 view .LVU245
+ 125:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 732              		.loc 1 125 13 is_stmt 0 view .LVU246
+ 733 0080 4FEA4E0E 		lsl	lr, lr, #1
+ 734              	.LVL47:
+ 735              	.L41:
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 736              		.loc 1 122 11 is_stmt 1 view .LVU247
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 737              		.loc 1 122 17 is_stmt 0 view .LVU248
+ 738 0084 D4F84451 		ldr	r5, [r4, #324]
+ARM GAS  /tmp/ccW1rWnO.s 			page 25
+
+
+ 122:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+ 739              		.loc 1 122 41 view .LVU249
+ 740 0088 0EFB05F5 		mul	r5, lr, r5
+ 123:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
+ 741              		.loc 1 123 11 view .LVU250
+ 742 008c E36C     		ldr	r3, [r4, #76]
+ 123:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	   (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
+ 743              		.loc 1 123 43 view .LVU251
+ 744 008e 002B     		cmp	r3, #0
+ 745 0090 E8D0     		beq	.L61
+ 746 0092 0823     		movs	r3, #8
+ 747 0094 E7E7     		b	.L42
+ 748              	.L43:
+ 127:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 749              		.loc 1 127 5 is_stmt 1 view .LVU252
+ 127:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 750              		.loc 1 127 32 is_stmt 0 view .LVU253
+ 751 0096 8562     		str	r5, [r0, #40]
+ 130:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
+ 752              		.loc 1 130 5 is_stmt 1 view .LVU254
+ 130:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
+ 753              		.loc 1 130 65 is_stmt 0 view .LVU255
+ 754 0098 6B00     		lsls	r3, r5, #1
+ 130:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
+ 755              		.loc 1 130 8 view .LVU256
+ 756 009a B1EB450F 		cmp	r1, r5, lsl #1
+ 757 009e 08DD     		ble	.L45
+ 131:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     else if (compptr->DCT_v_scaled_size > compptr->DCT_h_scaled_size * 2)
+ 758              		.loc 1 131 2 is_stmt 1 view .LVU257
+ 131:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     else if (compptr->DCT_v_scaled_size > compptr->DCT_h_scaled_size * 2)
+ 759              		.loc 1 131 29 is_stmt 0 view .LVU258
+ 760 00a0 4362     		str	r3, [r0, #36]
+ 761              	.L46:
+ 762              	.LBE2:
+ 113:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int ssize = 1;
+ 763              		.loc 1 113 8 is_stmt 1 view .LVU259
+ 113:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int ssize = 1;
+ 764              		.loc 1 113 10 is_stmt 0 view .LVU260
+ 765 00a2 0CF1010C 		add	ip, ip, #1
+ 766              	.LVL48:
+ 113:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int ssize = 1;
+ 767              		.loc 1 113 21 view .LVU261
+ 768 00a6 5830     		adds	r0, r0, #88
+ 769              	.LVL49:
+ 770              	.L37:
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 771              		.loc 1 112 44 is_stmt 1 discriminator 1 view .LVU262
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 772              		.loc 1 112 54 is_stmt 0 discriminator 1 view .LVU263
+ 773 00a8 636A     		ldr	r3, [r4, #36]
+ 112:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 774              		.loc 1 112 3 discriminator 1 view .LVU264
+ 775 00aa 6345     		cmp	r3, ip
+ 776 00ac 07DD     		ble	.L65
+ 777              	.LBB3:
+ 114:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     while (cinfo->min_DCT_h_scaled_size * ssize <=
+ 778              		.loc 1 114 9 view .LVU265
+ARM GAS  /tmp/ccW1rWnO.s 			page 26
+
+
+ 779 00ae 0125     		movs	r5, #1
+ 780 00b0 CBE7     		b	.L47
+ 781              	.LVL50:
+ 782              	.L45:
+ 132:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
+ 783              		.loc 1 132 10 is_stmt 1 view .LVU266
+ 132:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
+ 784              		.loc 1 132 70 is_stmt 0 view .LVU267
+ 785 00b2 4B00     		lsls	r3, r1, #1
+ 132:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
+ 786              		.loc 1 132 13 view .LVU268
+ 787 00b4 B5EB410F 		cmp	r5, r1, lsl #1
+ 788 00b8 F3DD     		ble	.L46
+ 133:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 789              		.loc 1 133 2 is_stmt 1 view .LVU269
+ 133:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 790              		.loc 1 133 29 is_stmt 0 view .LVU270
+ 791 00ba 8362     		str	r3, [r0, #40]
+ 792 00bc F1E7     		b	.L46
+ 793              	.LVL51:
+ 794              	.L65:
+ 133:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 795              		.loc 1 133 29 view .LVU271
+ 796              	.LBE3:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 797              		.loc 1 139 3 is_stmt 1 view .LVU272
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 798              		.loc 1 139 24 is_stmt 0 view .LVU273
+ 799 00be D4F8D850 		ldr	r5, [r4, #216]
+ 800              	.LVL52:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 801              		.loc 1 139 11 view .LVU274
+ 802 00c2 0026     		movs	r6, #0
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 803              		.loc 1 139 3 view .LVU275
+ 804 00c4 21E0     		b	.L48
+ 805              	.LVL53:
+ 806              	.L49:
+ 142:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_width *
+ 807              		.loc 1 142 5 is_stmt 1 view .LVU276
+ 143:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->h_samp_factor * compptr->DCT_h_scaled_size),
+ 808              		.loc 1 143 33 is_stmt 0 view .LVU277
+ 809 00c6 E069     		ldr	r0, [r4, #28]
+ 144:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_h_samp_factor * cinfo->block_size));
+ 810              		.loc 1 144 22 view .LVU278
+ 811 00c8 AB68     		ldr	r3, [r5, #8]
+ 144:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_h_samp_factor * cinfo->block_size));
+ 812              		.loc 1 144 47 view .LVU279
+ 813 00ca 6A6A     		ldr	r2, [r5, #36]
+ 144:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_h_samp_factor * cinfo->block_size));
+ 814              		.loc 1 144 38 view .LVU280
+ 815 00cc 02FB03F3 		mul	r3, r2, r3
+ 145:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->downsampled_height = (JDIMENSION)
+ 816              		.loc 1 145 20 view .LVU281
+ 817 00d0 D4F83821 		ldr	r2, [r4, #312]
+ 145:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     compptr->downsampled_height = (JDIMENSION)
+ 818              		.loc 1 145 47 view .LVU282
+ARM GAS  /tmp/ccW1rWnO.s 			page 27
+
+
+ 819 00d4 D4F8A811 		ldr	r1, [r4, #424]
+ 143:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->h_samp_factor * compptr->DCT_h_scaled_size),
+ 820              		.loc 1 143 7 view .LVU283
+ 821 00d8 02FB01F1 		mul	r1, r2, r1
+ 822 00dc 03FB00F0 		mul	r0, r3, r0
+ 823 00e0 FFF7FEFF 		bl	jdiv_round_up
+ 824              	.LVL54:
+ 142:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_width *
+ 825              		.loc 1 142 32 view .LVU284
+ 826 00e4 E862     		str	r0, [r5, #44]
+ 146:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_height *
+ 827              		.loc 1 146 5 is_stmt 1 view .LVU285
+ 147:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->v_samp_factor * compptr->DCT_v_scaled_size),
+ 828              		.loc 1 147 33 is_stmt 0 view .LVU286
+ 829 00e6 206A     		ldr	r0, [r4, #32]
+ 148:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_v_samp_factor * cinfo->block_size));
+ 830              		.loc 1 148 22 view .LVU287
+ 831 00e8 EB68     		ldr	r3, [r5, #12]
+ 148:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_v_samp_factor * cinfo->block_size));
+ 832              		.loc 1 148 47 view .LVU288
+ 833 00ea AA6A     		ldr	r2, [r5, #40]
+ 148:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (cinfo->max_v_samp_factor * cinfo->block_size));
+ 834              		.loc 1 148 38 view .LVU289
+ 835 00ec 02FB03F3 		mul	r3, r2, r3
+ 149:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 836              		.loc 1 149 20 view .LVU290
+ 837 00f0 D4F83C21 		ldr	r2, [r4, #316]
+ 149:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 838              		.loc 1 149 47 view .LVU291
+ 839 00f4 D4F8A811 		ldr	r1, [r4, #424]
+ 147:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 		    (long) (compptr->v_samp_factor * compptr->DCT_v_scaled_size),
+ 840              		.loc 1 147 7 view .LVU292
+ 841 00f8 02FB01F1 		mul	r1, r2, r1
+ 842 00fc 03FB00F0 		mul	r0, r3, r0
+ 843 0100 FFF7FEFF 		bl	jdiv_round_up
+ 844              	.LVL55:
+ 146:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jdiv_round_up((long) cinfo->image_height *
+ 845              		.loc 1 146 33 view .LVU293
+ 846 0104 2863     		str	r0, [r5, #48]
+ 140:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Size in samples, after IDCT scaling */
+ 847              		.loc 1 140 8 is_stmt 1 view .LVU294
+ 140:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Size in samples, after IDCT scaling */
+ 848              		.loc 1 140 10 is_stmt 0 view .LVU295
+ 849 0106 0136     		adds	r6, r6, #1
+ 850              	.LVL56:
+ 140:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Size in samples, after IDCT scaling */
+ 851              		.loc 1 140 21 view .LVU296
+ 852 0108 5835     		adds	r5, r5, #88
+ 853              	.LVL57:
+ 854              	.L48:
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 855              		.loc 1 139 44 is_stmt 1 discriminator 1 view .LVU297
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 856              		.loc 1 139 54 is_stmt 0 discriminator 1 view .LVU298
+ 857 010a 636A     		ldr	r3, [r4, #36]
+ 139:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****        ci++, compptr++) {
+ 858              		.loc 1 139 3 discriminator 1 view .LVU299
+ARM GAS  /tmp/ccW1rWnO.s 			page 28
+
+
+ 859 010c B342     		cmp	r3, r6
+ 860 010e DADC     		bgt	.L49
+ 156:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_GRAYSCALE:
+ 861              		.loc 1 156 3 is_stmt 1 view .LVU300
+ 156:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_GRAYSCALE:
+ 862              		.loc 1 156 16 is_stmt 0 view .LVU301
+ 863 0110 94F82920 		ldrb	r2, [r4, #41]	@ zero_extendqisi2
+ 156:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_GRAYSCALE:
+ 864              		.loc 1 156 3 view .LVU302
+ 865 0114 013A     		subs	r2, r2, #1
+ 866 0116 042A     		cmp	r2, #4
+ 867 0118 1CD8     		bhi	.L50
+ 868 011a DFE802F0 		tbb	[pc, r2]
+ 869              	.L52:
+ 870 011e 03       		.byte	(.L55-.L52)/2
+ 871 011f 12       		.byte	(.L54-.L52)/2
+ 872 0120 15       		.byte	(.L53-.L52)/2
+ 873 0121 18       		.byte	(.L51-.L52)/2
+ 874 0122 18       		.byte	(.L51-.L52)/2
+ 875 0123 00       		.p2align 1
+ 876              	.L55:
+ 158:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 877              		.loc 1 158 5 is_stmt 1 view .LVU303
+ 158:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 878              		.loc 1 158 33 is_stmt 0 view .LVU304
+ 879 0124 0123     		movs	r3, #1
+ 880 0126 A367     		str	r3, [r4, #120]
+ 159:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_RGB:
+ 881              		.loc 1 159 5 is_stmt 1 view .LVU305
+ 882              	.L56:
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 883              		.loc 1 174 3 view .LVU306
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 884              		.loc 1 174 36 is_stmt 0 view .LVU307
+ 885 0128 636D     		ldr	r3, [r4, #84]
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 886              		.loc 1 174 58 view .LVU308
+ 887 012a ABB9     		cbnz	r3, .L63
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 888              		.loc 1 174 58 discriminator 1 view .LVU309
+ 889 012c A36F     		ldr	r3, [r4, #120]
+ 890              	.L57:
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 891              		.loc 1 174 28 discriminator 4 view .LVU310
+ 892 012e E367     		str	r3, [r4, #124]
+ 178:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->rec_outbuf_height = cinfo->max_v_samp_factor;
+ 893              		.loc 1 178 3 is_stmt 1 discriminator 4 view .LVU311
+ 178:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->rec_outbuf_height = cinfo->max_v_samp_factor;
+ 894              		.loc 1 178 7 is_stmt 0 discriminator 4 view .LVU312
+ 895 0130 2046     		mov	r0, r4
+ 896 0132 FFF7FEFF 		bl	use_merged_upsample
+ 897              	.LVL58:
+ 178:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->rec_outbuf_height = cinfo->max_v_samp_factor;
+ 898              		.loc 1 178 6 discriminator 4 view .LVU313
+ 899 0136 88B1     		cbz	r0, .L58
+ 179:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else
+ 900              		.loc 1 179 5 is_stmt 1 view .LVU314
+ARM GAS  /tmp/ccW1rWnO.s 			page 29
+
+
+ 179:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else
+ 901              		.loc 1 179 37 is_stmt 0 view .LVU315
+ 902 0138 D4F83C31 		ldr	r3, [r4, #316]
+ 179:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else
+ 903              		.loc 1 179 30 view .LVU316
+ 904 013c C4F88030 		str	r3, [r4, #128]
+ 905              	.L35:
+ 182:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 906              		.loc 1 182 1 view .LVU317
+ 907 0140 70BD     		pop	{r4, r5, r6, pc}
+ 908              	.LVL59:
+ 909              	.L54:
+ 161:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 910              		.loc 1 161 5 is_stmt 1 view .LVU318
+ 161:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 911              		.loc 1 161 33 is_stmt 0 view .LVU319
+ 912 0142 0323     		movs	r3, #3
+ 913 0144 A367     		str	r3, [r4, #120]
+ 162:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_YCbCr:
+ 914              		.loc 1 162 5 is_stmt 1 view .LVU320
+ 915 0146 EFE7     		b	.L56
+ 916              	.L53:
+ 164:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 917              		.loc 1 164 5 view .LVU321
+ 164:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 918              		.loc 1 164 33 is_stmt 0 view .LVU322
+ 919 0148 0323     		movs	r3, #3
+ 920 014a A367     		str	r3, [r4, #120]
+ 165:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   case JCS_CMYK:
+ 921              		.loc 1 165 5 is_stmt 1 view .LVU323
+ 922 014c ECE7     		b	.L56
+ 923              	.L51:
+ 168:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 924              		.loc 1 168 5 view .LVU324
+ 168:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 925              		.loc 1 168 33 is_stmt 0 view .LVU325
+ 926 014e 0423     		movs	r3, #4
+ 927 0150 A367     		str	r3, [r4, #120]
+ 169:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   default:			/* else must be same colorspace as in file */
+ 928              		.loc 1 169 5 is_stmt 1 view .LVU326
+ 929 0152 E9E7     		b	.L56
+ 930              	.L50:
+ 171:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 931              		.loc 1 171 5 view .LVU327
+ 171:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     break;
+ 932              		.loc 1 171 33 is_stmt 0 view .LVU328
+ 933 0154 A367     		str	r3, [r4, #120]
+ 172:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 934              		.loc 1 172 5 is_stmt 1 view .LVU329
+ 935 0156 E7E7     		b	.L56
+ 936              	.L63:
+ 174:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 			      cinfo->out_color_components);
+ 937              		.loc 1 174 58 is_stmt 0 view .LVU330
+ 938 0158 0123     		movs	r3, #1
+ 939 015a E8E7     		b	.L57
+ 940              	.L58:
+ 181:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ARM GAS  /tmp/ccW1rWnO.s 			page 30
+
+
+ 941              		.loc 1 181 5 is_stmt 1 view .LVU331
+ 181:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 942              		.loc 1 181 30 is_stmt 0 view .LVU332
+ 943 015c 0123     		movs	r3, #1
+ 944 015e C4F88030 		str	r3, [r4, #128]
+ 182:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 945              		.loc 1 182 1 view .LVU333
+ 946 0162 EDE7     		b	.L35
+ 947              		.cfi_endproc
+ 948              	.LFE8:
+ 950              		.section	.text.master_selection,"ax",%progbits
+ 951              		.align	1
+ 952              		.syntax unified
+ 953              		.thumb
+ 954              		.thumb_func
+ 955              		.fpu fpv4-sp-d16
+ 957              	master_selection:
+ 958              	.LVL60:
+ 959              	.LFB10:
+ 270:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 960              		.loc 1 270 1 is_stmt 1 view -0
+ 961              		.cfi_startproc
+ 962              		@ args = 0, pretend = 0, frame = 0
+ 963              		@ frame_needed = 0, uses_anonymous_args = 0
+ 270:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 964              		.loc 1 270 1 is_stmt 0 view .LVU335
+ 965 0000 70B5     		push	{r4, r5, r6, lr}
+ 966              	.LCFI6:
+ 967              		.cfi_def_cfa_offset 16
+ 968              		.cfi_offset 4, -16
+ 969              		.cfi_offset 5, -12
+ 970              		.cfi_offset 6, -8
+ 971              		.cfi_offset 14, -4
+ 972 0002 0446     		mov	r4, r0
+ 271:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   boolean use_c_buffer;
+ 973              		.loc 1 271 3 is_stmt 1 view .LVU336
+ 271:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   boolean use_c_buffer;
+ 974              		.loc 1 271 17 is_stmt 0 view .LVU337
+ 975 0004 D0F8B851 		ldr	r5, [r0, #440]
+ 976              	.LVL61:
+ 272:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   long samplesperrow;
+ 977              		.loc 1 272 3 is_stmt 1 view .LVU338
+ 273:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   JDIMENSION jd_samplesperrow;
+ 978              		.loc 1 273 3 view .LVU339
+ 274:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 979              		.loc 1 274 3 view .LVU340
+ 277:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   prepare_range_limit_table(cinfo);
+ 980              		.loc 1 277 3 view .LVU341
+ 981 0008 FFF7FEFF 		bl	jpeg_calc_output_dimensions
+ 982              	.LVL62:
+ 278:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 983              		.loc 1 278 3 view .LVU342
+ 984 000c 2046     		mov	r0, r4
+ 985 000e FFF7FEFF 		bl	prepare_range_limit_table
+ 986              	.LVL63:
+ 281:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jd_samplesperrow = (JDIMENSION) samplesperrow;
+ 987              		.loc 1 281 3 view .LVU343
+ARM GAS  /tmp/ccW1rWnO.s 			page 31
+
+
+ 282:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if ((long) jd_samplesperrow != samplesperrow)
+ 988              		.loc 1 282 3 view .LVU344
+ 283:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
+ 989              		.loc 1 283 3 view .LVU345
+ 287:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->using_merged_upsample = use_merged_upsample(cinfo);
+ 990              		.loc 1 287 3 view .LVU346
+ 287:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->using_merged_upsample = use_merged_upsample(cinfo);
+ 991              		.loc 1 287 23 is_stmt 0 view .LVU347
+ 992 0012 0026     		movs	r6, #0
+ 993 0014 EE60     		str	r6, [r5, #12]
+ 994              	.LVL64:
+ 288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 995              		.loc 1 288 3 is_stmt 1 view .LVU348
+ 288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 996              		.loc 1 288 35 is_stmt 0 view .LVU349
+ 997 0016 2046     		mov	r0, r4
+ 998 0018 FFF7FEFF 		bl	use_merged_upsample
+ 999              	.LVL65:
+ 288:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1000              		.loc 1 288 33 view .LVU350
+ 1001 001c 2861     		str	r0, [r5, #16]
+ 291:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->quantizer_2pass = NULL;
+ 1002              		.loc 1 291 3 is_stmt 1 view .LVU351
+ 291:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->quantizer_2pass = NULL;
+ 1003              		.loc 1 291 27 is_stmt 0 view .LVU352
+ 1004 001e 6E61     		str	r6, [r5, #20]
+ 292:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* No mode changes if not using buffered-image mode. */
+ 1005              		.loc 1 292 3 is_stmt 1 view .LVU353
+ 292:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* No mode changes if not using buffered-image mode. */
+ 1006              		.loc 1 292 27 is_stmt 0 view .LVU354
+ 1007 0020 AE61     		str	r6, [r5, #24]
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 1008              		.loc 1 294 3 is_stmt 1 view .LVU355
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 1009              		.loc 1 294 14 is_stmt 0 view .LVU356
+ 1010 0022 636D     		ldr	r3, [r4, #84]
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 1011              		.loc 1 294 6 view .LVU357
+ 1012 0024 0BB1     		cbz	r3, .L67
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 1013              		.loc 1 294 42 discriminator 1 view .LVU358
+ 1014 0026 226C     		ldr	r2, [r4, #64]
+ 294:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_1pass_quant = FALSE;
+ 1015              		.loc 1 294 32 discriminator 1 view .LVU359
+ 1016 0028 1AB9     		cbnz	r2, .L68
+ 1017              	.L67:
+ 295:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_external_quant = FALSE;
+ 1018              		.loc 1 295 5 is_stmt 1 view .LVU360
+ 295:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_external_quant = FALSE;
+ 1019              		.loc 1 295 31 is_stmt 0 view .LVU361
+ 1020 002a 0022     		movs	r2, #0
+ 1021 002c 6266     		str	r2, [r4, #100]
+ 296:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_2pass_quant = FALSE;
+ 1022              		.loc 1 296 5 is_stmt 1 view .LVU362
+ 296:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->enable_2pass_quant = FALSE;
+ 1023              		.loc 1 296 34 is_stmt 0 view .LVU363
+ 1024 002e A266     		str	r2, [r4, #104]
+ARM GAS  /tmp/ccW1rWnO.s 			page 32
+
+
+ 297:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1025              		.loc 1 297 5 is_stmt 1 view .LVU364
+ 297:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1026              		.loc 1 297 31 is_stmt 0 view .LVU365
+ 1027 0030 E266     		str	r2, [r4, #108]
+ 1028              	.L68:
+ 299:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->raw_data_out)
+ 1029              		.loc 1 299 3 is_stmt 1 view .LVU366
+ 299:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (cinfo->raw_data_out)
+ 1030              		.loc 1 299 6 is_stmt 0 view .LVU367
+ 1031 0032 F3B1     		cbz	r3, .L69
+ 300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
+ 1032              		.loc 1 300 5 is_stmt 1 view .LVU368
+ 300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
+ 1033              		.loc 1 300 14 is_stmt 0 view .LVU369
+ 1034 0034 636C     		ldr	r3, [r4, #68]
+ 300:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       ERREXIT(cinfo, JERR_NOTIMPL);
+ 1035              		.loc 1 300 8 view .LVU370
+ 1036 0036 33B1     		cbz	r3, .L70
+ 301:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* 2-pass quantizer only works in 3-component color space. */
+ 1037              		.loc 1 301 7 is_stmt 1 view .LVU371
+ 1038 0038 2368     		ldr	r3, [r4]
+ 1039 003a 3022     		movs	r2, #48
+ 1040 003c 5A61     		str	r2, [r3, #20]
+ 1041 003e 2368     		ldr	r3, [r4]
+ 1042 0040 1B68     		ldr	r3, [r3]
+ 1043 0042 2046     		mov	r0, r4
+ 1044 0044 9847     		blx	r3
+ 1045              	.LVL66:
+ 1046              	.L70:
+ 303:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_1pass_quant = TRUE;
+ 1047              		.loc 1 303 5 view .LVU372
+ 303:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_1pass_quant = TRUE;
+ 1048              		.loc 1 303 14 is_stmt 0 view .LVU373
+ 1049 0046 A36F     		ldr	r3, [r4, #120]
+ 303:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_1pass_quant = TRUE;
+ 1050              		.loc 1 303 8 view .LVU374
+ 1051 0048 032B     		cmp	r3, #3
+ 1052 004a 2ED0     		beq	.L71
+ 304:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = FALSE;
+ 1053              		.loc 1 304 7 is_stmt 1 view .LVU375
+ 304:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = FALSE;
+ 1054              		.loc 1 304 33 is_stmt 0 view .LVU376
+ 1055 004c 0123     		movs	r3, #1
+ 1056 004e 6366     		str	r3, [r4, #100]
+ 305:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = FALSE;
+ 1057              		.loc 1 305 7 is_stmt 1 view .LVU377
+ 305:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = FALSE;
+ 1058              		.loc 1 305 36 is_stmt 0 view .LVU378
+ 1059 0050 0023     		movs	r3, #0
+ 1060 0052 A366     		str	r3, [r4, #104]
+ 306:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->colormap = NULL;
+ 1061              		.loc 1 306 7 is_stmt 1 view .LVU379
+ 306:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->colormap = NULL;
+ 1062              		.loc 1 306 33 is_stmt 0 view .LVU380
+ 1063 0054 E366     		str	r3, [r4, #108]
+ 307:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->colormap != NULL) {
+ARM GAS  /tmp/ccW1rWnO.s 			page 33
+
+
+ 1064              		.loc 1 307 7 is_stmt 1 view .LVU381
+ 307:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->colormap != NULL) {
+ 1065              		.loc 1 307 23 is_stmt 0 view .LVU382
+ 1066 0056 C4F88830 		str	r3, [r4, #136]
+ 1067              	.L72:
+ 316:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_1PASS_SUPPORTED
+ 1068              		.loc 1 316 5 is_stmt 1 view .LVU383
+ 316:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_1PASS_SUPPORTED
+ 1069              		.loc 1 316 14 is_stmt 0 view .LVU384
+ 1070 005a 636E     		ldr	r3, [r4, #100]
+ 316:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_1PASS_SUPPORTED
+ 1071              		.loc 1 316 8 view .LVU385
+ 1072 005c 9BBB     		cbnz	r3, .L91
+ 1073              	.L75:
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 1074              		.loc 1 326 5 is_stmt 1 view .LVU386
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 1075              		.loc 1 326 14 is_stmt 0 view .LVU387
+ 1076 005e E36E     		ldr	r3, [r4, #108]
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 1077              		.loc 1 326 8 view .LVU388
+ 1078 0060 0BB9     		cbnz	r3, .L76
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 1079              		.loc 1 326 43 discriminator 1 view .LVU389
+ 1080 0062 A36E     		ldr	r3, [r4, #104]
+ 326:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef QUANT_2PASS_SUPPORTED
+ 1081              		.loc 1 326 35 discriminator 1 view .LVU390
+ 1082 0064 2BB1     		cbz	r3, .L69
+ 1083              	.L76:
+ 328:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       master->quantizer_2pass = cinfo->cquantize;
+ 1084              		.loc 1 328 7 is_stmt 1 view .LVU391
+ 1085 0066 2046     		mov	r0, r4
+ 1086 0068 FFF7FEFF 		bl	jinit_2pass_quantizer
+ 1087              	.LVL67:
+ 329:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1088              		.loc 1 329 7 view .LVU392
+ 329:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1089              		.loc 1 329 38 is_stmt 0 view .LVU393
+ 1090 006c D4F8E031 		ldr	r3, [r4, #480]
+ 329:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1091              		.loc 1 329 31 view .LVU394
+ 1092 0070 AB61     		str	r3, [r5, #24]
+ 1093              	.L69:
+ 340:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (master->using_merged_upsample) {
+ 1094              		.loc 1 340 3 is_stmt 1 view .LVU395
+ 340:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (master->using_merged_upsample) {
+ 1095              		.loc 1 340 14 is_stmt 0 view .LVU396
+ 1096 0072 636C     		ldr	r3, [r4, #68]
+ 340:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     if (master->using_merged_upsample) {
+ 1097              		.loc 1 340 6 view .LVU397
+ 1098 0074 43B9     		cbnz	r3, .L77
+ 341:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+ 1099              		.loc 1 341 5 is_stmt 1 view .LVU398
+ 341:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+ 1100              		.loc 1 341 15 is_stmt 0 view .LVU399
+ 1101 0076 2B69     		ldr	r3, [r5, #16]
+ 341:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef UPSAMPLE_MERGING_SUPPORTED
+ARM GAS  /tmp/ccW1rWnO.s 			page 34
+
+
+ 1102              		.loc 1 341 8 view .LVU400
+ 1103 0078 63B3     		cbz	r3, .L78
+ 343:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1104              		.loc 1 343 7 is_stmt 1 view .LVU401
+ 1105 007a 2046     		mov	r0, r4
+ 1106 007c FFF7FEFF 		bl	jinit_merged_upsampler
+ 1107              	.LVL68:
+ 1108              	.L79:
+ 351:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1109              		.loc 1 351 5 view .LVU402
+ 1110 0080 E16E     		ldr	r1, [r4, #108]
+ 1111 0082 2046     		mov	r0, r4
+ 1112 0084 FFF7FEFF 		bl	jinit_d_post_controller
+ 1113              	.LVL69:
+ 1114              	.L77:
+ 354:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Entropy decoding: either Huffman or arithmetic coding. */
+ 1115              		.loc 1 354 3 view .LVU403
+ 1116 0088 2046     		mov	r0, r4
+ 1117 008a FFF7FEFF 		bl	jinit_inverse_dct
+ 1118              	.LVL70:
+ 356:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_arith_decoder(cinfo);
+ 1119              		.loc 1 356 3 view .LVU404
+ 356:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_arith_decoder(cinfo);
+ 1120              		.loc 1 356 12 is_stmt 0 view .LVU405
+ 1121 008e D4F8E430 		ldr	r3, [r4, #228]
+ 356:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_arith_decoder(cinfo);
+ 1122              		.loc 1 356 6 view .LVU406
+ 1123 0092 33B3     		cbz	r3, .L80
+ 357:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   else {
+ 1124              		.loc 1 357 5 is_stmt 1 view .LVU407
+ 1125 0094 2046     		mov	r0, r4
+ 1126 0096 FFF7FEFF 		bl	jinit_arith_decoder
+ 1127              	.LVL71:
+ 1128              	.L81:
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1129              		.loc 1 363 3 view .LVU408
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1130              		.loc 1 363 23 is_stmt 0 view .LVU409
+ 1131 009a D4F8C831 		ldr	r3, [r4, #456]
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1132              		.loc 1 363 33 view .LVU410
+ 1133 009e 1B69     		ldr	r3, [r3, #16]
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1134              		.loc 1 363 54 view .LVU411
+ 1135 00a0 1BBB     		cbnz	r3, .L88
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1136              		.loc 1 363 62 discriminator 2 view .LVU412
+ 1137 00a2 216C     		ldr	r1, [r4, #64]
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1138              		.loc 1 363 54 discriminator 2 view .LVU413
+ 1139 00a4 11B3     		cbz	r1, .L82
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1140              		.loc 1 363 54 view .LVU414
+ 1141 00a6 0121     		movs	r1, #1
+ 1142 00a8 20E0     		b	.L82
+ 1143              	.L71:
+ 308:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = TRUE;
+ARM GAS  /tmp/ccW1rWnO.s 			page 35
+
+
+ 1144              		.loc 1 308 12 is_stmt 1 view .LVU415
+ 308:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = TRUE;
+ 1145              		.loc 1 308 21 is_stmt 0 view .LVU416
+ 1146 00aa D4F88830 		ldr	r3, [r4, #136]
+ 308:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_external_quant = TRUE;
+ 1147              		.loc 1 308 15 view .LVU417
+ 1148 00ae 13B1     		cbz	r3, .L73
+ 309:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->two_pass_quantize) {
+ 1149              		.loc 1 309 7 is_stmt 1 view .LVU418
+ 309:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else if (cinfo->two_pass_quantize) {
+ 1150              		.loc 1 309 36 is_stmt 0 view .LVU419
+ 1151 00b0 0123     		movs	r3, #1
+ 1152 00b2 A366     		str	r3, [r4, #104]
+ 1153 00b4 D1E7     		b	.L72
+ 1154              	.L73:
+ 310:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = TRUE;
+ 1155              		.loc 1 310 12 is_stmt 1 view .LVU420
+ 310:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = TRUE;
+ 1156              		.loc 1 310 21 is_stmt 0 view .LVU421
+ 1157 00b6 E36D     		ldr	r3, [r4, #92]
+ 310:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->enable_2pass_quant = TRUE;
+ 1158              		.loc 1 310 15 view .LVU422
+ 1159 00b8 13B1     		cbz	r3, .L74
+ 311:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1160              		.loc 1 311 7 is_stmt 1 view .LVU423
+ 311:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1161              		.loc 1 311 33 is_stmt 0 view .LVU424
+ 1162 00ba 0123     		movs	r3, #1
+ 1163 00bc E366     		str	r3, [r4, #108]
+ 1164 00be CCE7     		b	.L72
+ 1165              	.L74:
+ 313:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1166              		.loc 1 313 7 is_stmt 1 view .LVU425
+ 313:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1167              		.loc 1 313 33 is_stmt 0 view .LVU426
+ 1168 00c0 0123     		movs	r3, #1
+ 1169 00c2 6366     		str	r3, [r4, #100]
+ 1170 00c4 C9E7     		b	.L72
+ 1171              	.L91:
+ 318:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       master->quantizer_1pass = cinfo->cquantize;
+ 1172              		.loc 1 318 7 is_stmt 1 view .LVU427
+ 1173 00c6 2046     		mov	r0, r4
+ 1174 00c8 FFF7FEFF 		bl	jinit_1pass_quantizer
+ 1175              	.LVL72:
+ 319:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1176              		.loc 1 319 7 view .LVU428
+ 319:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1177              		.loc 1 319 38 is_stmt 0 view .LVU429
+ 1178 00cc D4F8E031 		ldr	r3, [r4, #480]
+ 319:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #else
+ 1179              		.loc 1 319 31 view .LVU430
+ 1180 00d0 6B61     		str	r3, [r5, #20]
+ 1181 00d2 C4E7     		b	.L75
+ 1182              	.L78:
+ 348:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       jinit_upsampler(cinfo);
+ 1183              		.loc 1 348 7 is_stmt 1 view .LVU431
+ 1184 00d4 2046     		mov	r0, r4
+ARM GAS  /tmp/ccW1rWnO.s 			page 36
+
+
+ 1185 00d6 FFF7FEFF 		bl	jinit_color_deconverter
+ 1186              	.LVL73:
+ 349:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1187              		.loc 1 349 7 view .LVU432
+ 1188 00da 2046     		mov	r0, r4
+ 1189 00dc FFF7FEFF 		bl	jinit_upsampler
+ 1190              	.LVL74:
+ 1191 00e0 CEE7     		b	.L79
+ 1192              	.L80:
+ 359:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1193              		.loc 1 359 5 view .LVU433
+ 1194 00e2 2046     		mov	r0, r4
+ 1195 00e4 FFF7FEFF 		bl	jinit_huff_decoder
+ 1196              	.LVL75:
+ 1197 00e8 D7E7     		b	.L81
+ 1198              	.L88:
+ 363:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   jinit_d_coef_controller(cinfo, use_c_buffer);
+ 1199              		.loc 1 363 54 is_stmt 0 view .LVU434
+ 1200 00ea 0121     		movs	r1, #1
+ 1201              	.L82:
+ 1202              	.LVL76:
+ 364:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1203              		.loc 1 364 3 is_stmt 1 discriminator 6 view .LVU435
+ 1204 00ec 2046     		mov	r0, r4
+ 1205 00ee FFF7FEFF 		bl	jinit_d_coef_controller
+ 1206              	.LVL77:
+ 366:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_d_main_controller(cinfo, FALSE /* never need full buffer here */);
+ 1207              		.loc 1 366 3 discriminator 6 view .LVU436
+ 366:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_d_main_controller(cinfo, FALSE /* never need full buffer here */);
+ 1208              		.loc 1 366 14 is_stmt 0 discriminator 6 view .LVU437
+ 1209 00f2 636C     		ldr	r3, [r4, #68]
+ 366:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     jinit_d_main_controller(cinfo, FALSE /* never need full buffer here */);
+ 1210              		.loc 1 366 6 discriminator 6 view .LVU438
+ 1211 00f4 53B3     		cbz	r3, .L92
+ 1212              	.L83:
+ 370:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1213              		.loc 1 370 3 is_stmt 1 view .LVU439
+ 370:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1214              		.loc 1 370 10 is_stmt 0 view .LVU440
+ 1215 00f6 6368     		ldr	r3, [r4, #4]
+ 370:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1216              		.loc 1 370 4 view .LVU441
+ 1217 00f8 9B69     		ldr	r3, [r3, #24]
+ 1218 00fa 2046     		mov	r0, r4
+ 1219 00fc 9847     		blx	r3
+ 1220              	.LVL78:
+ 373:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1221              		.loc 1 373 3 is_stmt 1 view .LVU442
+ 373:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1222              		.loc 1 373 10 is_stmt 0 view .LVU443
+ 1223 00fe D4F8C831 		ldr	r3, [r4, #456]
+ 373:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1224              		.loc 1 373 4 view .LVU444
+ 1225 0102 9B68     		ldr	r3, [r3, #8]
+ 1226 0104 2046     		mov	r0, r4
+ 1227 0106 9847     		blx	r3
+ 1228              	.LVL79:
+ARM GAS  /tmp/ccW1rWnO.s 			page 37
+
+
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1229              		.loc 1 380 3 is_stmt 1 view .LVU445
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1230              		.loc 1 380 12 is_stmt 0 view .LVU446
+ 1231 0108 A368     		ldr	r3, [r4, #8]
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1232              		.loc 1 380 6 view .LVU447
+ 1233 010a F3B1     		cbz	r3, .L66
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1234              		.loc 1 380 41 discriminator 1 view .LVU448
+ 1235 010c 226C     		ldr	r2, [r4, #64]
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1236              		.loc 1 380 31 discriminator 1 view .LVU449
+ 1237 010e E2B9     		cbnz	r2, .L66
+ 381:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int nscans;
+ 1238              		.loc 1 381 12 discriminator 2 view .LVU450
+ 1239 0110 D4F8C821 		ldr	r2, [r4, #456]
+ 381:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     int nscans;
+ 1240              		.loc 1 381 22 discriminator 2 view .LVU451
+ 1241 0114 1269     		ldr	r2, [r2, #16]
+ 380:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->inputctl->has_multiple_scans) {
+ 1242              		.loc 1 380 58 discriminator 2 view .LVU452
+ 1243 0116 C2B1     		cbz	r2, .L66
+ 1244              	.LBB4:
+ 382:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Estimate number of scans to set pass_limit. */
+ 1245              		.loc 1 382 5 is_stmt 1 view .LVU453
+ 384:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
+ 1246              		.loc 1 384 5 view .LVU454
+ 384:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
+ 1247              		.loc 1 384 14 is_stmt 0 view .LVU455
+ 1248 0118 D4F8E020 		ldr	r2, [r4, #224]
+ 384:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       /* Arbitrarily estimate 2 interleaved DC scans + 3 AC scans/component. */
+ 1249              		.loc 1 384 8 view .LVU456
+ 1250 011c DAB1     		cbz	r2, .L85
+ 386:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1251              		.loc 1 386 7 is_stmt 1 view .LVU457
+ 386:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1252              		.loc 1 386 29 is_stmt 0 view .LVU458
+ 1253 011e 626A     		ldr	r2, [r4, #36]
+ 386:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1254              		.loc 1 386 22 view .LVU459
+ 1255 0120 02EB4202 		add	r2, r2, r2, lsl #1
+ 386:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     } else {
+ 1256              		.loc 1 386 14 view .LVU460
+ 1257 0124 0232     		adds	r2, r2, #2
+ 1258              	.LVL80:
+ 1259              	.L86:
+ 391:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows * nscans;
+ 1260              		.loc 1 391 5 is_stmt 1 view .LVU461
+ 391:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows * nscans;
+ 1261              		.loc 1 391 35 is_stmt 0 view .LVU462
+ 1262 0126 0021     		movs	r1, #0
+ 1263 0128 5960     		str	r1, [r3, #4]
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 1264              		.loc 1 392 5 is_stmt 1 view .LVU463
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 1265              		.loc 1 392 47 is_stmt 0 view .LVU464
+ARM GAS  /tmp/ccW1rWnO.s 			page 38
+
+
+ 1266 012a D4F84831 		ldr	r3, [r4, #328]
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 1267              		.loc 1 392 10 view .LVU465
+ 1268 012e A068     		ldr	r0, [r4, #8]
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 1269              		.loc 1 392 65 view .LVU466
+ 1270 0130 02FB03F3 		mul	r3, r2, r3
+ 392:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->completed_passes = 0;
+ 1271              		.loc 1 392 33 view .LVU467
+ 1272 0134 8360     		str	r3, [r0, #8]
+ 393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
+ 1273              		.loc 1 393 5 is_stmt 1 view .LVU468
+ 393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
+ 1274              		.loc 1 393 10 is_stmt 0 view .LVU469
+ 1275 0136 A368     		ldr	r3, [r4, #8]
+ 393:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
+ 1276              		.loc 1 393 39 view .LVU470
+ 1277 0138 D960     		str	r1, [r3, #12]
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1278              		.loc 1 394 5 is_stmt 1 view .LVU471
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1279              		.loc 1 394 43 is_stmt 0 view .LVU472
+ 1280 013a E36E     		ldr	r3, [r4, #108]
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1281              		.loc 1 394 68 view .LVU473
+ 1282 013c 6BB1     		cbz	r3, .L89
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1283              		.loc 1 394 68 view .LVU474
+ 1284 013e 0322     		movs	r2, #3
+ 1285              	.LVL81:
+ 1286              	.L87:
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1287              		.loc 1 394 10 discriminator 4 view .LVU475
+ 1288 0140 A368     		ldr	r3, [r4, #8]
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1289              		.loc 1 394 35 discriminator 4 view .LVU476
+ 1290 0142 1A61     		str	r2, [r3, #16]
+ 396:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1291              		.loc 1 396 5 is_stmt 1 discriminator 4 view .LVU477
+ 396:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1292              		.loc 1 396 11 is_stmt 0 discriminator 4 view .LVU478
+ 1293 0144 EB68     		ldr	r3, [r5, #12]
+ 396:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1294              		.loc 1 396 24 discriminator 4 view .LVU479
+ 1295 0146 0133     		adds	r3, r3, #1
+ 1296 0148 EB60     		str	r3, [r5, #12]
+ 1297              	.L66:
+ 396:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   }
+ 1298              		.loc 1 396 24 discriminator 4 view .LVU480
+ 1299              	.LBE4:
+ 399:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1300              		.loc 1 399 1 view .LVU481
+ 1301 014a 70BD     		pop	{r4, r5, r6, pc}
+ 1302              	.LVL82:
+ 1303              	.L92:
+ 367:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 1304              		.loc 1 367 5 is_stmt 1 view .LVU482
+ARM GAS  /tmp/ccW1rWnO.s 			page 39
+
+
+ 1305 014c 0021     		movs	r1, #0
+ 1306 014e 2046     		mov	r0, r4
+ 1307 0150 FFF7FEFF 		bl	jinit_d_main_controller
+ 1308              	.LVL83:
+ 1309 0154 CFE7     		b	.L83
+ 1310              	.L85:
+ 1311              	.LBB5:
+ 389:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1312              		.loc 1 389 7 view .LVU483
+ 389:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1313              		.loc 1 389 14 is_stmt 0 view .LVU484
+ 1314 0156 626A     		ldr	r2, [r4, #36]
+ 1315              	.LVL84:
+ 389:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     }
+ 1316              		.loc 1 389 14 view .LVU485
+ 1317 0158 E5E7     		b	.L86
+ 1318              	.L89:
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1319              		.loc 1 394 68 view .LVU486
+ 1320 015a 0222     		movs	r2, #2
+ 1321              	.LVL85:
+ 394:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Count the input pass as done */
+ 1322              		.loc 1 394 68 view .LVU487
+ 1323 015c F0E7     		b	.L87
+ 1324              	.LBE5:
+ 1325              		.cfi_endproc
+ 1326              	.LFE10:
+ 1328              		.section	.text.jpeg_new_colormap,"ax",%progbits
+ 1329              		.align	1
+ 1330              		.global	jpeg_new_colormap
+ 1331              		.syntax unified
+ 1332              		.thumb
+ 1333              		.thumb_func
+ 1334              		.fpu fpv4-sp-d16
+ 1336              	jpeg_new_colormap:
+ 1337              	.LVL86:
+ 1338              	.LFB13:
+ 480:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 481:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 482:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #ifdef D_MULTISCAN_FILES_SUPPORTED
+ 483:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 484:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 485:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Switch to a new external colormap between output passes.
+ 486:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 487:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 488:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** GLOBAL(void)
+ 489:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** jpeg_new_colormap (j_decompress_ptr cinfo)
+ 490:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 1339              		.loc 1 490 1 is_stmt 1 view -0
+ 1340              		.cfi_startproc
+ 1341              		@ args = 0, pretend = 0, frame = 0
+ 1342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1343              		.loc 1 490 1 is_stmt 0 view .LVU489
+ 1344 0000 38B5     		push	{r3, r4, r5, lr}
+ 1345              	.LCFI7:
+ 1346              		.cfi_def_cfa_offset 16
+ 1347              		.cfi_offset 3, -16
+ARM GAS  /tmp/ccW1rWnO.s 			page 40
+
+
+ 1348              		.cfi_offset 4, -12
+ 1349              		.cfi_offset 5, -8
+ 1350              		.cfi_offset 14, -4
+ 1351 0002 0446     		mov	r4, r0
+ 491:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master = (my_master_ptr) cinfo->master;
+ 1352              		.loc 1 491 3 is_stmt 1 view .LVU490
+ 1353              		.loc 1 491 17 is_stmt 0 view .LVU491
+ 1354 0004 D0F8B851 		ldr	r5, [r0, #440]
+ 1355              	.LVL87:
+ 492:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 493:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   /* Prevent application from calling me at wrong times */
+ 494:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->global_state != DSTATE_BUFIMAGE)
+ 1356              		.loc 1 494 3 is_stmt 1 view .LVU492
+ 1357              		.loc 1 494 12 is_stmt 0 view .LVU493
+ 1358 0008 4369     		ldr	r3, [r0, #20]
+ 1359              		.loc 1 494 6 view .LVU494
+ 1360 000a CF2B     		cmp	r3, #207
+ 1361 000c 08D0     		beq	.L94
+ 495:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
+ 1362              		.loc 1 495 5 is_stmt 1 view .LVU495
+ 1363 000e 0368     		ldr	r3, [r0]
+ 1364 0010 1522     		movs	r2, #21
+ 1365 0012 5A61     		str	r2, [r3, #20]
+ 1366 0014 0368     		ldr	r3, [r0]
+ 1367 0016 4269     		ldr	r2, [r0, #20]
+ 1368 0018 9A61     		str	r2, [r3, #24]
+ 1369 001a 0368     		ldr	r3, [r0]
+ 1370 001c 1B68     		ldr	r3, [r3]
+ 1371 001e 9847     		blx	r3
+ 1372              	.LVL88:
+ 1373              	.L94:
+ 496:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 497:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   if (cinfo->quantize_colors && cinfo->enable_external_quant &&
+ 1374              		.loc 1 497 3 view .LVU496
+ 1375              		.loc 1 497 12 is_stmt 0 view .LVU497
+ 1376 0020 636D     		ldr	r3, [r4, #84]
+ 1377              		.loc 1 497 6 view .LVU498
+ 1378 0022 6BB1     		cbz	r3, .L95
+ 1379              		.loc 1 497 38 discriminator 1 view .LVU499
+ 1380 0024 A36E     		ldr	r3, [r4, #104]
+ 1381              		.loc 1 497 30 discriminator 1 view .LVU500
+ 1382 0026 5BB1     		cbz	r3, .L95
+ 498:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->colormap != NULL) {
+ 1383              		.loc 1 498 12 discriminator 2 view .LVU501
+ 1384 0028 D4F88830 		ldr	r3, [r4, #136]
+ 497:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       cinfo->colormap != NULL) {
+ 1385              		.loc 1 497 62 discriminator 2 view .LVU502
+ 1386 002c 43B1     		cbz	r3, .L95
+ 499:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Select 2-pass quantizer for external colormap use */
+ 500:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     cinfo->cquantize = master->quantizer_2pass;
+ 1387              		.loc 1 500 5 is_stmt 1 view .LVU503
+ 1388              		.loc 1 500 30 is_stmt 0 view .LVU504
+ 1389 002e AB69     		ldr	r3, [r5, #24]
+ 1390              		.loc 1 500 22 view .LVU505
+ 1391 0030 C4F8E031 		str	r3, [r4, #480]
+ 501:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     /* Notify quantizer of colormap change */
+ 502:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     (*cinfo->cquantize->new_color_map) (cinfo);
+ARM GAS  /tmp/ccW1rWnO.s 			page 41
+
+
+ 1392              		.loc 1 502 5 is_stmt 1 view .LVU506
+ 1393              		.loc 1 502 6 is_stmt 0 view .LVU507
+ 1394 0034 DB68     		ldr	r3, [r3, #12]
+ 1395 0036 2046     		mov	r0, r4
+ 1396 0038 9847     		blx	r3
+ 1397              	.LVL89:
+ 503:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     master->pub.is_dummy_pass = FALSE; /* just in case */
+ 1398              		.loc 1 503 5 is_stmt 1 view .LVU508
+ 1399              		.loc 1 503 31 is_stmt 0 view .LVU509
+ 1400 003a 0023     		movs	r3, #0
+ 1401 003c AB60     		str	r3, [r5, #8]
+ 1402 003e 06E0     		b	.L93
+ 1403              	.L95:
+ 504:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   } else
+ 505:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****     ERREXIT(cinfo, JERR_MODE_CHANGE);
+ 1404              		.loc 1 505 5 is_stmt 1 view .LVU510
+ 1405 0040 2368     		ldr	r3, [r4]
+ 1406 0042 2F22     		movs	r2, #47
+ 1407 0044 5A61     		str	r2, [r3, #20]
+ 1408 0046 2368     		ldr	r3, [r4]
+ 1409 0048 1B68     		ldr	r3, [r3]
+ 1410 004a 2046     		mov	r0, r4
+ 1411 004c 9847     		blx	r3
+ 1412              	.LVL90:
+ 1413              	.L93:
+ 506:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 1414              		.loc 1 506 1 is_stmt 0 view .LVU511
+ 1415 004e 38BD     		pop	{r3, r4, r5, pc}
+ 1416              		.loc 1 506 1 view .LVU512
+ 1417              		.cfi_endproc
+ 1418              	.LFE13:
+ 1420              		.section	.text.jinit_master_decompress,"ax",%progbits
+ 1421              		.align	1
+ 1422              		.global	jinit_master_decompress
+ 1423              		.syntax unified
+ 1424              		.thumb
+ 1425              		.thumb_func
+ 1426              		.fpu fpv4-sp-d16
+ 1428              	jinit_master_decompress:
+ 1429              	.LVL91:
+ 1430              	.LFB14:
+ 507:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 508:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** #endif /* D_MULTISCAN_FILES_SUPPORTED */
+ 509:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 510:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 511:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** /*
+ 512:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * Initialize master decompression control and select active modules.
+ 513:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  * This is performed at the start of jpeg_start_decompress.
+ 514:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****  */
+ 515:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 516:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** GLOBAL(void)
+ 517:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** jinit_master_decompress (j_decompress_ptr cinfo)
+ 518:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** {
+ 1431              		.loc 1 518 1 is_stmt 1 view -0
+ 1432              		.cfi_startproc
+ 1433              		@ args = 0, pretend = 0, frame = 0
+ 1434              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccW1rWnO.s 			page 42
+
+
+ 1435              		.loc 1 518 1 is_stmt 0 view .LVU514
+ 1436 0000 10B5     		push	{r4, lr}
+ 1437              	.LCFI8:
+ 1438              		.cfi_def_cfa_offset 8
+ 1439              		.cfi_offset 4, -8
+ 1440              		.cfi_offset 14, -4
+ 1441 0002 0446     		mov	r4, r0
+ 519:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   my_master_ptr master;
+ 1442              		.loc 1 519 3 is_stmt 1 view .LVU515
+ 520:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 521:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master = (my_master_ptr)
+ 1443              		.loc 1 521 3 view .LVU516
+ 522:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1444              		.loc 1 522 14 is_stmt 0 view .LVU517
+ 1445 0004 4368     		ldr	r3, [r0, #4]
+ 1446              		.loc 1 522 8 view .LVU518
+ 1447 0006 1B68     		ldr	r3, [r3]
+ 1448 0008 1C22     		movs	r2, #28
+ 1449 000a 0121     		movs	r1, #1
+ 1450 000c 9847     		blx	r3
+ 1451              	.LVL92:
+ 523:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 				  SIZEOF(my_decomp_master));
+ 524:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   cinfo->master = (struct jpeg_decomp_master *) master;
+ 1452              		.loc 1 524 3 is_stmt 1 view .LVU519
+ 1453              		.loc 1 524 17 is_stmt 0 view .LVU520
+ 1454 000e C4F8B801 		str	r0, [r4, #440]
+ 525:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->pub.prepare_for_output_pass = prepare_for_output_pass;
+ 1455              		.loc 1 525 3 is_stmt 1 view .LVU521
+ 1456              		.loc 1 525 39 is_stmt 0 view .LVU522
+ 1457 0012 054B     		ldr	r3, .L100
+ 1458 0014 0360     		str	r3, [r0]
+ 526:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->pub.finish_output_pass = finish_output_pass;
+ 1459              		.loc 1 526 3 is_stmt 1 view .LVU523
+ 1460              		.loc 1 526 34 is_stmt 0 view .LVU524
+ 1461 0016 054B     		ldr	r3, .L100+4
+ 1462 0018 4360     		str	r3, [r0, #4]
+ 527:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 528:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master->pub.is_dummy_pass = FALSE;
+ 1463              		.loc 1 528 3 is_stmt 1 view .LVU525
+ 1464              		.loc 1 528 29 is_stmt 0 view .LVU526
+ 1465 001a 0023     		movs	r3, #0
+ 1466 001c 8360     		str	r3, [r0, #8]
+ 529:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** 
+ 530:Middlewares/Third_Party/LibJPEG/source/jdmaster.c ****   master_selection(cinfo);
+ 1467              		.loc 1 530 3 is_stmt 1 view .LVU527
+ 1468 001e 2046     		mov	r0, r4
+ 1469              	.LVL93:
+ 1470              		.loc 1 530 3 is_stmt 0 view .LVU528
+ 1471 0020 FFF7FEFF 		bl	master_selection
+ 1472              	.LVL94:
+ 531:Middlewares/Third_Party/LibJPEG/source/jdmaster.c **** }
+ 1473              		.loc 1 531 1 view .LVU529
+ 1474 0024 10BD     		pop	{r4, pc}
+ 1475              	.LVL95:
+ 1476              	.L101:
+ 1477              		.loc 1 531 1 view .LVU530
+ 1478 0026 00BF     		.align	2
+ARM GAS  /tmp/ccW1rWnO.s 			page 43
+
+
+ 1479              	.L100:
+ 1480 0028 00000000 		.word	prepare_for_output_pass
+ 1481 002c 00000000 		.word	finish_output_pass
+ 1482              		.cfi_endproc
+ 1483              	.LFE14:
+ 1485              		.text
+ 1486              	.Letext0:
+ 1487              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 1488              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 1489              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 1490              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 1491              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 1492              		.file 7 "<built-in>"
+ARM GAS  /tmp/ccW1rWnO.s 			page 44
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jdmaster.c
+     /tmp/ccW1rWnO.s:18     .text.use_merged_upsample:0000000000000000 $t
+     /tmp/ccW1rWnO.s:25     .text.use_merged_upsample:0000000000000000 use_merged_upsample
+     /tmp/ccW1rWnO.s:169    .text.prepare_for_output_pass:0000000000000000 $t
+     /tmp/ccW1rWnO.s:175    .text.prepare_for_output_pass:0000000000000000 prepare_for_output_pass
+     /tmp/ccW1rWnO.s:444    .text.finish_output_pass:0000000000000000 $t
+     /tmp/ccW1rWnO.s:450    .text.finish_output_pass:0000000000000000 finish_output_pass
+     /tmp/ccW1rWnO.s:493    .text.prepare_range_limit_table:0000000000000000 $t
+     /tmp/ccW1rWnO.s:499    .text.prepare_range_limit_table:0000000000000000 prepare_range_limit_table
+     /tmp/ccW1rWnO.s:605    .text.jpeg_calc_output_dimensions:0000000000000000 $t
+     /tmp/ccW1rWnO.s:612    .text.jpeg_calc_output_dimensions:0000000000000000 jpeg_calc_output_dimensions
+     /tmp/ccW1rWnO.s:870    .text.jpeg_calc_output_dimensions:000000000000011e $d
+     /tmp/ccW1rWnO.s:951    .text.master_selection:0000000000000000 $t
+     /tmp/ccW1rWnO.s:957    .text.master_selection:0000000000000000 master_selection
+     /tmp/ccW1rWnO.s:1329   .text.jpeg_new_colormap:0000000000000000 $t
+     /tmp/ccW1rWnO.s:1336   .text.jpeg_new_colormap:0000000000000000 jpeg_new_colormap
+     /tmp/ccW1rWnO.s:1421   .text.jinit_master_decompress:0000000000000000 $t
+     /tmp/ccW1rWnO.s:1428   .text.jinit_master_decompress:0000000000000000 jinit_master_decompress
+     /tmp/ccW1rWnO.s:1480   .text.jinit_master_decompress:0000000000000028 $d
+     /tmp/ccW1rWnO.s:875    .text.jpeg_calc_output_dimensions:0000000000000123 $d
+     /tmp/ccW1rWnO.s:875    .text.jpeg_calc_output_dimensions:0000000000000124 $t
+
+UNDEFINED SYMBOLS
+memset
+memcpy
+jpeg_core_output_dimensions
+jdiv_round_up
+jinit_2pass_quantizer
+jinit_merged_upsampler
+jinit_d_post_controller
+jinit_inverse_dct
+jinit_arith_decoder
+jinit_1pass_quantizer
+jinit_color_deconverter
+jinit_upsampler
+jinit_huff_decoder
+jinit_d_coef_controller
+jinit_d_main_controller

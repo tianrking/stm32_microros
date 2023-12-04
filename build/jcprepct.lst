@@ -1,0 +1,1658 @@
+ARM GAS  /tmp/ccnT7xKv.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jcprepct.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.start_pass_prep,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	start_pass_prep:
+  26              	.LVL0:
+  27              	.LFB7:
+  28              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jcprepct.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * jcprepct.c
+   3:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Copyright (C) 1994-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * This file is part of the Independent JPEG Group's software.
+   6:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * For conditions of distribution and use, see the accompanying README file.
+   7:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  *
+   8:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * This file contains the compression preprocessing controller.
+   9:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * This controller manages the color conversion, downsampling,
+  10:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * and edge expansion steps.
+  11:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  *
+  12:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Most of the complexity here is associated with buffering input rows
+  13:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * as required by the downsampler.  See the comments at the head of
+  14:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * jcsample.c for the downsampler's needs.
+  15:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+  16:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  17:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #define JPEG_INTERNALS
+  18:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #include "jinclude.h"
+  19:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #include "jpeglib.h"
+  20:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  21:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  22:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /* At present, jcsample.c can request context rows only for smoothing.
+  23:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * In the future, we might also need context rows for CCIR601 sampling
+  24:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * or other more-complex downsampling procedures.  The code to support
+  25:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * context rows should be compiled only if needed.
+  26:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+  27:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #ifdef INPUT_SMOOTHING_SUPPORTED
+  28:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #define CONTEXT_ROWS_SUPPORTED
+  29:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #endif
+  30:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ARM GAS  /tmp/ccnT7xKv.s 			page 2
+
+
+  31:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  32:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+  33:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * For the simple (no-context-row) case, we just need to buffer one
+  34:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * row group's worth of pixels for the downsampling step.  At the bottom of
+  35:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * the image, we pad to a full row group by replicating the last pixel row.
+  36:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * The downsampler's last output row is then replicated if needed to pad
+  37:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * out to a full iMCU row.
+  38:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  *
+  39:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * When providing context rows, we must buffer three row groups' worth of
+  40:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * pixels.  Three row groups are physically allocated, but the row pointer
+  41:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * arrays are made five row groups high, with the extra pointers above and
+  42:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * below "wrapping around" to point to the last and first real row groups.
+  43:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * This allows the downsampler to access the proper context rows.
+  44:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * At the top and bottom of the image, we create dummy context rows by
+  45:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * copying the first or last real pixel row.  This copying could be avoided
+  46:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * by pointer hacking as is done in jdmainct.c, but it doesn't seem worth the
+  47:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * trouble on the compression side.
+  48:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+  49:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  50:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  51:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /* Private buffer controller object */
+  52:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  53:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** typedef struct {
+  54:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   struct jpeg_c_prep_controller pub; /* public fields */
+  55:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  56:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Downsampling input buffer.  This buffer holds color-converted data
+  57:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    * until we have enough to do a downsample step.
+  58:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    */
+  59:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   JSAMPARRAY color_buf[MAX_COMPONENTS];
+  60:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  61:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   JDIMENSION rows_to_go;	/* counts rows remaining in source image */
+  62:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int next_buf_row;		/* index of next row to store in color_buf */
+  63:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  64:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #ifdef CONTEXT_ROWS_SUPPORTED	/* only needed for context case */
+  65:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int this_row_group;		/* starting row index of group to process */
+  66:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int next_buf_stop;		/* downsample when we reach this index */
+  67:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #endif
+  68:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** } my_prep_controller;
+  69:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  70:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** typedef my_prep_controller * my_prep_ptr;
+  71:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  72:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  73:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+  74:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Initialize for a processing pass.
+  75:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+  76:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  77:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** METHODDEF(void)
+  78:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** start_pass_prep (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
+  79:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+  29              		.loc 1 79 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 79 1 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+ARM GAS  /tmp/ccnT7xKv.s 			page 3
+
+
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0446     		mov	r4, r0
+  80:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
+  42              		.loc 1 80 3 is_stmt 1 view .LVU2
+  43              		.loc 1 80 15 is_stmt 0 view .LVU3
+  44 0004 D0F88C51 		ldr	r5, [r0, #396]
+  45              	.LVL1:
+  81:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  82:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   if (pass_mode != JBUF_PASS_THRU)
+  46              		.loc 1 82 3 is_stmt 1 view .LVU4
+  47              		.loc 1 82 6 is_stmt 0 view .LVU5
+  48 0008 29B1     		cbz	r1, .L2
+  83:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+  49              		.loc 1 83 5 is_stmt 1 view .LVU6
+  50 000a 0368     		ldr	r3, [r0]
+  51 000c 0322     		movs	r2, #3
+  52 000e 5A61     		str	r2, [r3, #20]
+  53 0010 0368     		ldr	r3, [r0]
+  54 0012 1B68     		ldr	r3, [r3]
+  55 0014 9847     		blx	r3
+  56              	.LVL2:
+  57              	.L2:
+  84:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  85:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Initialize total-height counter for detecting bottom of image */
+  86:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep->rows_to_go = cinfo->image_height;
+  58              		.loc 1 86 3 view .LVU7
+  59              		.loc 1 86 27 is_stmt 0 view .LVU8
+  60 0016 236A     		ldr	r3, [r4, #32]
+  61              		.loc 1 86 20 view .LVU9
+  62 0018 2B63     		str	r3, [r5, #48]
+  87:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Mark the conversion buffer empty */
+  88:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep->next_buf_row = 0;
+  63              		.loc 1 88 3 is_stmt 1 view .LVU10
+  64              		.loc 1 88 22 is_stmt 0 view .LVU11
+  65 001a 0023     		movs	r3, #0
+  66 001c 6B63     		str	r3, [r5, #52]
+  89:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #ifdef CONTEXT_ROWS_SUPPORTED
+  90:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Preset additional state variables for context mode.
+  91:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    * These aren't used in non-context mode, so we needn't test which mode.
+  92:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    */
+  93:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep->this_row_group = 0;
+  67              		.loc 1 93 3 is_stmt 1 view .LVU12
+  68              		.loc 1 93 24 is_stmt 0 view .LVU13
+  69 001e AB63     		str	r3, [r5, #56]
+  94:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Set next_buf_stop to stop after two row groups have been read in. */
+  95:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep->next_buf_stop = 2 * cinfo->max_v_samp_factor;
+  70              		.loc 1 95 3 is_stmt 1 view .LVU14
+  71              		.loc 1 95 34 is_stmt 0 view .LVU15
+  72 0020 D4F81031 		ldr	r3, [r4, #272]
+  73              		.loc 1 95 27 view .LVU16
+  74 0024 5B00     		lsls	r3, r3, #1
+  75              		.loc 1 95 23 view .LVU17
+  76 0026 EB63     		str	r3, [r5, #60]
+  96:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #endif
+ARM GAS  /tmp/ccnT7xKv.s 			page 4
+
+
+  97:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+  77              		.loc 1 97 1 view .LVU18
+  78 0028 38BD     		pop	{r3, r4, r5, pc}
+  79              		.loc 1 97 1 view .LVU19
+  80              		.cfi_endproc
+  81              	.LFE7:
+  83              		.section	.text.expand_bottom_edge,"ax",%progbits
+  84              		.align	1
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  88              		.fpu fpv4-sp-d16
+  90              	expand_bottom_edge:
+  91              	.LVL3:
+  92              	.LFB8:
+  98:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+  99:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 100:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+ 101:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Expand an image vertically from height input_rows to height output_rows,
+ 102:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * by duplicating the bottom row.
+ 103:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+ 104:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 105:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** LOCAL(void)
+ 106:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** expand_bottom_edge (JSAMPARRAY image_data, JDIMENSION num_cols,
+ 107:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		    int input_rows, int output_rows)
+ 108:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+  93              		.loc 1 108 1 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		.loc 1 108 1 is_stmt 0 view .LVU21
+  98 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  99              	.LCFI1:
+ 100              		.cfi_def_cfa_offset 24
+ 101              		.cfi_offset 4, -24
+ 102              		.cfi_offset 5, -20
+ 103              		.cfi_offset 6, -16
+ 104              		.cfi_offset 7, -12
+ 105              		.cfi_offset 8, -8
+ 106              		.cfi_offset 14, -4
+ 107 0004 82B0     		sub	sp, sp, #8
+ 108              	.LCFI2:
+ 109              		.cfi_def_cfa_offset 32
+ 110 0006 0546     		mov	r5, r0
+ 111 0008 8846     		mov	r8, r1
+ 112 000a 1646     		mov	r6, r2
+ 113 000c 1F46     		mov	r7, r3
+ 109:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   register int row;
+ 114              		.loc 1 109 3 is_stmt 1 view .LVU22
+ 110:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 111:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   for (row = input_rows; row < output_rows; row++) {
+ 115              		.loc 1 111 3 view .LVU23
+ 116              	.LVL4:
+ 117              		.loc 1 111 12 is_stmt 0 view .LVU24
+ 118 000e 1446     		mov	r4, r2
+ 119              		.loc 1 111 3 view .LVU25
+ 120 0010 0AE0     		b	.L5
+ARM GAS  /tmp/ccnT7xKv.s 			page 5
+
+
+ 121              	.LVL5:
+ 122              	.L6:
+ 112:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     jcopy_sample_rows(image_data, input_rows-1, image_data, row,
+ 123              		.loc 1 112 5 is_stmt 1 discriminator 3 view .LVU26
+ 124 0012 CDF80480 		str	r8, [sp, #4]
+ 125 0016 0120     		movs	r0, #1
+ 126 0018 0090     		str	r0, [sp]
+ 127 001a 2346     		mov	r3, r4
+ 128 001c 2A46     		mov	r2, r5
+ 129 001e 711E     		subs	r1, r6, #1
+ 130 0020 2846     		mov	r0, r5
+ 131 0022 FFF7FEFF 		bl	jcopy_sample_rows
+ 132              	.LVL6:
+ 111:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     jcopy_sample_rows(image_data, input_rows-1, image_data, row,
+ 133              		.loc 1 111 45 discriminator 3 view .LVU27
+ 111:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     jcopy_sample_rows(image_data, input_rows-1, image_data, row,
+ 134              		.loc 1 111 48 is_stmt 0 discriminator 3 view .LVU28
+ 135 0026 0134     		adds	r4, r4, #1
+ 136              	.LVL7:
+ 137              	.L5:
+ 111:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     jcopy_sample_rows(image_data, input_rows-1, image_data, row,
+ 138              		.loc 1 111 26 is_stmt 1 discriminator 1 view .LVU29
+ 111:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     jcopy_sample_rows(image_data, input_rows-1, image_data, row,
+ 139              		.loc 1 111 3 is_stmt 0 discriminator 1 view .LVU30
+ 140 0028 BC42     		cmp	r4, r7
+ 141 002a F2DB     		blt	.L6
+ 113:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      1, num_cols);
+ 114:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   }
+ 115:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+ 142              		.loc 1 115 1 view .LVU31
+ 143 002c 02B0     		add	sp, sp, #8
+ 144              	.LCFI3:
+ 145              		.cfi_def_cfa_offset 24
+ 146              		@ sp needed
+ 147 002e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 148              		.loc 1 115 1 view .LVU32
+ 149              		.cfi_endproc
+ 150              	.LFE8:
+ 152              		.section	.text.pre_process_data,"ax",%progbits
+ 153              		.align	1
+ 154              		.syntax unified
+ 155              		.thumb
+ 156              		.thumb_func
+ 157              		.fpu fpv4-sp-d16
+ 159              	pre_process_data:
+ 160              	.LVL8:
+ 161              	.LFB9:
+ 116:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 117:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 118:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+ 119:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Process some data in the simple no-context case.
+ 120:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  *
+ 121:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Preprocessor output data is counted in "row groups".  A row group
+ 122:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * is defined to be v_samp_factor sample rows of each component.
+ 123:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Downsampling will produce this much data from each max_v_samp_factor
+ 124:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * input rows.
+ 125:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+ARM GAS  /tmp/ccnT7xKv.s 			page 6
+
+
+ 126:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 127:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** METHODDEF(void)
+ 128:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** pre_process_data (j_compress_ptr cinfo,
+ 129:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  JSAMPARRAY input_buf, JDIMENSION *in_row_ctr,
+ 130:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  JDIMENSION in_rows_avail,
+ 131:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  JSAMPIMAGE output_buf, JDIMENSION *out_row_group_ctr,
+ 132:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  JDIMENSION out_row_groups_avail)
+ 133:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+ 162              		.loc 1 133 1 is_stmt 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ args = 12, pretend = 0, frame = 8
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              		.loc 1 133 1 is_stmt 0 view .LVU34
+ 167 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 168              	.LCFI4:
+ 169              		.cfi_def_cfa_offset 36
+ 170              		.cfi_offset 4, -36
+ 171              		.cfi_offset 5, -32
+ 172              		.cfi_offset 6, -28
+ 173              		.cfi_offset 7, -24
+ 174              		.cfi_offset 8, -20
+ 175              		.cfi_offset 9, -16
+ 176              		.cfi_offset 10, -12
+ 177              		.cfi_offset 11, -8
+ 178              		.cfi_offset 14, -4
+ 179 0004 85B0     		sub	sp, sp, #20
+ 180              	.LCFI5:
+ 181              		.cfi_def_cfa_offset 56
+ 182 0006 0546     		mov	r5, r0
+ 183 0008 0391     		str	r1, [sp, #12]
+ 184 000a 1746     		mov	r7, r2
+ 185 000c 9946     		mov	r9, r3
+ 186 000e DDF83C80 		ldr	r8, [sp, #60]
+ 134:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
+ 187              		.loc 1 134 3 is_stmt 1 view .LVU35
+ 188              		.loc 1 134 15 is_stmt 0 view .LVU36
+ 189 0012 D0F88C41 		ldr	r4, [r0, #396]
+ 190              	.LVL9:
+ 135:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int numrows, ci;
+ 191              		.loc 1 135 3 is_stmt 1 view .LVU37
+ 136:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   JDIMENSION inrows;
+ 192              		.loc 1 136 3 view .LVU38
+ 137:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   jpeg_component_info * compptr;
+ 193              		.loc 1 137 3 view .LVU39
+ 138:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 139:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   while (*in_row_ctr < in_rows_avail &&
+ 194              		.loc 1 139 3 view .LVU40
+ 195              		.loc 1 139 9 is_stmt 0 view .LVU41
+ 196 0016 1BE0     		b	.L9
+ 197              	.LVL10:
+ 198              	.L12:
+ 140:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 *out_row_group_ctr < out_row_groups_avail) {
+ 141:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Do color conversion to fill the conversion buffer. */
+ 142:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     inrows = in_rows_avail - *in_row_ctr;
+ 143:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = cinfo->max_v_samp_factor - prep->next_buf_row;
+ 144:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ARM GAS  /tmp/ccnT7xKv.s 			page 7
+
+
+ 146:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 147:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       (JDIMENSION) prep->next_buf_row,
+ 148:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       numrows);
+ 149:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     *in_row_ctr += numrows;
+ 150:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->next_buf_row += numrows;
+ 151:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->rows_to_go -= numrows;
+ 152:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If at bottom of image, pad to fill the conversion buffer. */
+ 153:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (prep->rows_to_go == 0 &&
+ 154:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row < cinfo->max_v_samp_factor) {
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       for (ci = 0; ci < cinfo->num_components; ci++) {
+ 156:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 199              		.loc 1 156 2 is_stmt 1 discriminator 3 view .LVU42
+ 200 0018 B01C     		adds	r0, r6, #2
+ 201 001a D5F81031 		ldr	r3, [r5, #272]
+ 202 001e 626B     		ldr	r2, [r4, #52]
+ 203 0020 E969     		ldr	r1, [r5, #28]
+ 204 0022 54F82000 		ldr	r0, [r4, r0, lsl #2]
+ 205 0026 FFF7FEFF 		bl	expand_bottom_edge
+ 206              	.LVL11:
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 207              		.loc 1 155 48 discriminator 3 view .LVU43
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 208              		.loc 1 155 50 is_stmt 0 discriminator 3 view .LVU44
+ 209 002a 0136     		adds	r6, r6, #1
+ 210              	.LVL12:
+ 211              	.L11:
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 212              		.loc 1 155 20 is_stmt 1 discriminator 1 view .LVU45
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 213              		.loc 1 155 30 is_stmt 0 discriminator 1 view .LVU46
+ 214 002c EB6C     		ldr	r3, [r5, #76]
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 215              		.loc 1 155 7 discriminator 1 view .LVU47
+ 216 002e B342     		cmp	r3, r6
+ 217 0030 F2DC     		bgt	.L12
+ 157:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			   prep->next_buf_row, cinfo->max_v_samp_factor);
+ 158:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 159:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->next_buf_row = cinfo->max_v_samp_factor;
+ 218              		.loc 1 159 7 is_stmt 1 view .LVU48
+ 219              		.loc 1 159 33 is_stmt 0 view .LVU49
+ 220 0032 D5F81031 		ldr	r3, [r5, #272]
+ 221              		.loc 1 159 26 view .LVU50
+ 222 0036 6363     		str	r3, [r4, #52]
+ 223              	.LVL13:
+ 224              	.L10:
+ 160:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 161:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If we've filled the conversion buffer, empty it. */
+ 162:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (prep->next_buf_row == cinfo->max_v_samp_factor) {
+ 225              		.loc 1 162 5 is_stmt 1 view .LVU51
+ 226              		.loc 1 162 13 is_stmt 0 view .LVU52
+ 227 0038 626B     		ldr	r2, [r4, #52]
+ 228              		.loc 1 162 36 view .LVU53
+ 229 003a D5F81031 		ldr	r3, [r5, #272]
+ 230              		.loc 1 162 8 view .LVU54
+ 231 003e 9A42     		cmp	r2, r3
+ 232 0040 35D0     		beq	.L20
+ 233              	.L13:
+ARM GAS  /tmp/ccnT7xKv.s 			page 8
+
+
+ 163:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->downsample->downsample) (cinfo,
+ 164:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					prep->color_buf, (JDIMENSION) 0,
+ 165:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					output_buf, *out_row_group_ctr);
+ 166:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->next_buf_row = 0;
+ 167:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*out_row_group_ctr)++;
+ 168:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 169:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If at bottom of image, pad the output to a full iMCU height.
+ 170:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****      * Note we assume the caller is providing a one-iMCU-height output buffer!
+ 171:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****      */
+ 172:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (prep->rows_to_go == 0 &&
+ 234              		.loc 1 172 5 is_stmt 1 view .LVU55
+ 235              		.loc 1 172 13 is_stmt 0 view .LVU56
+ 236 0042 236B     		ldr	r3, [r4, #48]
+ 237              		.loc 1 172 8 view .LVU57
+ 238 0044 23B9     		cbnz	r3, .L9
+ 173:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	*out_row_group_ctr < out_row_groups_avail) {
+ 239              		.loc 1 173 2 discriminator 1 view .LVU58
+ 240 0046 D8F80030 		ldr	r3, [r8]
+ 172:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	*out_row_group_ctr < out_row_groups_avail) {
+ 241              		.loc 1 172 31 discriminator 1 view .LVU59
+ 242 004a 109A     		ldr	r2, [sp, #64]
+ 243 004c 9342     		cmp	r3, r2
+ 244 004e 41D3     		bcc	.L21
+ 245              	.L9:
+ 139:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 *out_row_group_ctr < out_row_groups_avail) {
+ 246              		.loc 1 139 9 is_stmt 1 view .LVU60
+ 139:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 *out_row_group_ctr < out_row_groups_avail) {
+ 247              		.loc 1 139 10 is_stmt 0 view .LVU61
+ 248 0050 3968     		ldr	r1, [r7]
+ 139:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 *out_row_group_ctr < out_row_groups_avail) {
+ 249              		.loc 1 139 9 view .LVU62
+ 250 0052 4945     		cmp	r1, r9
+ 251 0054 63D2     		bcs	.L8
+ 140:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Do color conversion to fill the conversion buffer. */
+ 252              		.loc 1 140 3 discriminator 1 view .LVU63
+ 253 0056 D8F80030 		ldr	r3, [r8]
+ 139:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 *out_row_group_ctr < out_row_groups_avail) {
+ 254              		.loc 1 139 38 discriminator 1 view .LVU64
+ 255 005a 109A     		ldr	r2, [sp, #64]
+ 256 005c 9342     		cmp	r3, r2
+ 257 005e 5ED2     		bcs	.L8
+ 142:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = cinfo->max_v_samp_factor - prep->next_buf_row;
+ 258              		.loc 1 142 5 is_stmt 1 view .LVU65
+ 142:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = cinfo->max_v_samp_factor - prep->next_buf_row;
+ 259              		.loc 1 142 12 is_stmt 0 view .LVU66
+ 260 0060 A9EB0100 		sub	r0, r9, r1
+ 261              	.LVL14:
+ 143:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 262              		.loc 1 143 5 is_stmt 1 view .LVU67
+ 143:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 263              		.loc 1 143 20 is_stmt 0 view .LVU68
+ 264 0064 D5F81021 		ldr	r2, [r5, #272]
+ 143:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 265              		.loc 1 143 46 view .LVU69
+ 266 0068 636B     		ldr	r3, [r4, #52]
+ 143:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 267              		.loc 1 143 13 view .LVU70
+ARM GAS  /tmp/ccnT7xKv.s 			page 9
+
+
+ 268 006a D61A     		subs	r6, r2, r3
+ 269              	.LVL15:
+ 144:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ 270              		.loc 1 144 5 is_stmt 1 view .LVU71
+ 144:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ 271              		.loc 1 144 15 is_stmt 0 view .LVU72
+ 272 006c 8642     		cmp	r6, r0
+ 273 006e 28BF     		it	cs
+ 274 0070 0646     		movcs	r6, r0
+ 275              	.LVL16:
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 276              		.loc 1 145 5 is_stmt 1 view .LVU73
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 277              		.loc 1 145 12 is_stmt 0 view .LVU74
+ 278 0072 D5F89821 		ldr	r2, [r5, #408]
+ 146:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       (JDIMENSION) prep->next_buf_row,
+ 279              		.loc 1 146 16 view .LVU75
+ 280 0076 04F1080A 		add	r10, r4, #8
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 281              		.loc 1 145 6 view .LVU76
+ 282 007a 0096     		str	r6, [sp]
+ 283 007c D2F804B0 		ldr	fp, [r2, #4]
+ 284 0080 5246     		mov	r2, r10
+ 285 0082 0398     		ldr	r0, [sp, #12]
+ 286              	.LVL17:
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 287              		.loc 1 145 6 view .LVU77
+ 288 0084 00EB8101 		add	r1, r0, r1, lsl #2
+ 289              	.LVL18:
+ 145:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				       prep->color_buf,
+ 290              		.loc 1 145 6 view .LVU78
+ 291 0088 2846     		mov	r0, r5
+ 292 008a D847     		blx	fp
+ 293              	.LVL19:
+ 149:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->next_buf_row += numrows;
+ 294              		.loc 1 149 5 is_stmt 1 view .LVU79
+ 149:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->next_buf_row += numrows;
+ 295              		.loc 1 149 17 is_stmt 0 view .LVU80
+ 296 008c 3B68     		ldr	r3, [r7]
+ 297 008e 3344     		add	r3, r3, r6
+ 298 0090 3B60     		str	r3, [r7]
+ 150:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->rows_to_go -= numrows;
+ 299              		.loc 1 150 5 is_stmt 1 view .LVU81
+ 150:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->rows_to_go -= numrows;
+ 300              		.loc 1 150 24 is_stmt 0 view .LVU82
+ 301 0092 626B     		ldr	r2, [r4, #52]
+ 302 0094 3244     		add	r2, r2, r6
+ 303 0096 6263     		str	r2, [r4, #52]
+ 151:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If at bottom of image, pad to fill the conversion buffer. */
+ 304              		.loc 1 151 5 is_stmt 1 view .LVU83
+ 151:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If at bottom of image, pad to fill the conversion buffer. */
+ 305              		.loc 1 151 22 is_stmt 0 view .LVU84
+ 306 0098 236B     		ldr	r3, [r4, #48]
+ 307 009a 9E1B     		subs	r6, r3, r6
+ 308              	.LVL20:
+ 151:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If at bottom of image, pad to fill the conversion buffer. */
+ 309              		.loc 1 151 22 view .LVU85
+ARM GAS  /tmp/ccnT7xKv.s 			page 10
+
+
+ 310 009c 2663     		str	r6, [r4, #48]
+ 153:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row < cinfo->max_v_samp_factor) {
+ 311              		.loc 1 153 5 is_stmt 1 view .LVU86
+ 153:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row < cinfo->max_v_samp_factor) {
+ 312              		.loc 1 153 8 is_stmt 0 view .LVU87
+ 313 009e 002E     		cmp	r6, #0
+ 314 00a0 CAD1     		bne	.L10
+ 154:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       for (ci = 0; ci < cinfo->num_components; ci++) {
+ 315              		.loc 1 154 28 discriminator 1 view .LVU88
+ 316 00a2 D5F81031 		ldr	r3, [r5, #272]
+ 153:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row < cinfo->max_v_samp_factor) {
+ 317              		.loc 1 153 31 discriminator 1 view .LVU89
+ 318 00a6 9A42     		cmp	r2, r3
+ 319 00a8 C6DA     		bge	.L10
+ 155:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 320              		.loc 1 155 15 view .LVU90
+ 321 00aa 0026     		movs	r6, #0
+ 322 00ac BEE7     		b	.L11
+ 323              	.L20:
+ 163:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					prep->color_buf, (JDIMENSION) 0,
+ 324              		.loc 1 163 7 is_stmt 1 view .LVU91
+ 163:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					prep->color_buf, (JDIMENSION) 0,
+ 325              		.loc 1 163 14 is_stmt 0 view .LVU92
+ 326 00ae D5F89C31 		ldr	r3, [r5, #412]
+ 163:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					prep->color_buf, (JDIMENSION) 0,
+ 327              		.loc 1 163 8 view .LVU93
+ 328 00b2 D8F80020 		ldr	r2, [r8]
+ 329 00b6 0092     		str	r2, [sp]
+ 330 00b8 5E68     		ldr	r6, [r3, #4]
+ 331 00ba 0E9B     		ldr	r3, [sp, #56]
+ 332 00bc 0022     		movs	r2, #0
+ 333 00be 5146     		mov	r1, r10
+ 334 00c0 2846     		mov	r0, r5
+ 335 00c2 B047     		blx	r6
+ 336              	.LVL21:
+ 166:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*out_row_group_ctr)++;
+ 337              		.loc 1 166 7 is_stmt 1 view .LVU94
+ 166:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*out_row_group_ctr)++;
+ 338              		.loc 1 166 26 is_stmt 0 view .LVU95
+ 339 00c4 0023     		movs	r3, #0
+ 340 00c6 6363     		str	r3, [r4, #52]
+ 167:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 341              		.loc 1 167 7 is_stmt 1 view .LVU96
+ 167:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 342              		.loc 1 167 8 is_stmt 0 view .LVU97
+ 343 00c8 D8F80030 		ldr	r3, [r8]
+ 167:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 344              		.loc 1 167 27 view .LVU98
+ 345 00cc 0133     		adds	r3, r3, #1
+ 346 00ce C8F80030 		str	r3, [r8]
+ 347 00d2 B6E7     		b	.L13
+ 348              	.L21:
+ 174:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 349              		.loc 1 174 7 is_stmt 1 view .LVU99
+ 350              	.LVL22:
+ 351              		.loc 1 174 28 is_stmt 0 view .LVU100
+ 352 00d4 6C6D     		ldr	r4, [r5, #84]
+ARM GAS  /tmp/ccnT7xKv.s 			page 11
+
+
+ 353              	.LVL23:
+ 354              		.loc 1 174 15 view .LVU101
+ 355 00d6 0026     		movs	r6, #0
+ 356 00d8 0E9F     		ldr	r7, [sp, #56]
+ 357              	.LVL24:
+ 358              		.loc 1 174 15 view .LVU102
+ 359 00da 9146     		mov	r9, r2
+ 360              	.LVL25:
+ 361              		.loc 1 174 7 view .LVU103
+ 362 00dc 19E0     		b	.L14
+ 363              	.LVL26:
+ 364              	.L15:
+ 175:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	   ci++, compptr++) {
+ 176:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	numrows = (compptr->v_samp_factor * compptr->DCT_v_scaled_size) /
+ 365              		.loc 1 176 2 is_stmt 1 view .LVU104
+ 366              		.loc 1 176 20 is_stmt 0 view .LVU105
+ 367 00de E268     		ldr	r2, [r4, #12]
+ 368              		.loc 1 176 45 view .LVU106
+ 369 00e0 A36A     		ldr	r3, [r4, #40]
+ 370              		.loc 1 176 36 view .LVU107
+ 371 00e2 03FB02F2 		mul	r2, r3, r2
+ 177:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  cinfo->min_DCT_v_scaled_size;
+ 372              		.loc 1 177 10 view .LVU108
+ 373 00e6 D5F81831 		ldr	r3, [r5, #280]
+ 176:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		  cinfo->min_DCT_v_scaled_size;
+ 374              		.loc 1 176 10 view .LVU109
+ 375 00ea 92FBF3F2 		sdiv	r2, r2, r3
+ 376              	.LVL27:
+ 178:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(output_buf[ci],
+ 377              		.loc 1 178 2 is_stmt 1 view .LVU110
+ 179:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			   compptr->width_in_blocks * compptr->DCT_h_scaled_size,
+ 378              		.loc 1 179 14 is_stmt 0 view .LVU111
+ 379 00ee E169     		ldr	r1, [r4, #28]
+ 380 00f0 0391     		str	r1, [sp, #12]
+ 381              		.loc 1 179 41 view .LVU112
+ 382 00f2 606A     		ldr	r0, [r4, #36]
+ 178:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(output_buf[ci],
+ 383              		.loc 1 178 2 view .LVU113
+ 384 00f4 09FB02F3 		mul	r3, r9, r2
+ 385 00f8 D8F80010 		ldr	r1, [r8]
+ 386 00fc 01FB02F2 		mul	r2, r1, r2
+ 387              	.LVL28:
+ 178:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	expand_bottom_edge(output_buf[ci],
+ 388              		.loc 1 178 2 view .LVU114
+ 389 0100 0399     		ldr	r1, [sp, #12]
+ 390 0102 00FB01F1 		mul	r1, r0, r1
+ 391 0106 57F82600 		ldr	r0, [r7, r6, lsl #2]
+ 392 010a FFF7FEFF 		bl	expand_bottom_edge
+ 393              	.LVL29:
+ 175:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	numrows = (compptr->v_samp_factor * compptr->DCT_v_scaled_size) /
+ 394              		.loc 1 175 5 is_stmt 1 view .LVU115
+ 175:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	numrows = (compptr->v_samp_factor * compptr->DCT_v_scaled_size) /
+ 395              		.loc 1 175 7 is_stmt 0 view .LVU116
+ 396 010e 0136     		adds	r6, r6, #1
+ 397              	.LVL30:
+ 175:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	numrows = (compptr->v_samp_factor * compptr->DCT_v_scaled_size) /
+ 398              		.loc 1 175 18 view .LVU117
+ARM GAS  /tmp/ccnT7xKv.s 			page 12
+
+
+ 399 0110 5834     		adds	r4, r4, #88
+ 400              	.LVL31:
+ 401              	.L14:
+ 174:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	   ci++, compptr++) {
+ 402              		.loc 1 174 48 is_stmt 1 discriminator 1 view .LVU118
+ 174:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	   ci++, compptr++) {
+ 403              		.loc 1 174 58 is_stmt 0 discriminator 1 view .LVU119
+ 404 0112 EB6C     		ldr	r3, [r5, #76]
+ 174:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	   ci++, compptr++) {
+ 405              		.loc 1 174 7 discriminator 1 view .LVU120
+ 406 0114 B342     		cmp	r3, r6
+ 407 0116 E2DC     		bgt	.L15
+ 180:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			   (int) (*out_row_group_ctr * numrows),
+ 181:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			   (int) (out_row_groups_avail * numrows));
+ 182:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 183:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       *out_row_group_ctr = out_row_groups_avail;
+ 408              		.loc 1 183 7 is_stmt 1 view .LVU121
+ 409              		.loc 1 183 26 is_stmt 0 view .LVU122
+ 410 0118 109B     		ldr	r3, [sp, #64]
+ 411 011a C8F80030 		str	r3, [r8]
+ 184:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       break;			/* can exit outer loop without test */
+ 412              		.loc 1 184 7 is_stmt 1 view .LVU123
+ 413              	.LVL32:
+ 414              	.L8:
+ 185:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 186:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   }
+ 187:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+ 415              		.loc 1 187 1 is_stmt 0 view .LVU124
+ 416 011e 05B0     		add	sp, sp, #20
+ 417              	.LCFI6:
+ 418              		.cfi_def_cfa_offset 36
+ 419              		@ sp needed
+ 420 0120 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 421              		.loc 1 187 1 view .LVU125
+ 422              		.cfi_endproc
+ 423              	.LFE9:
+ 425              		.section	.text.pre_process_context,"ax",%progbits
+ 426              		.align	1
+ 427              		.syntax unified
+ 428              		.thumb
+ 429              		.thumb_func
+ 430              		.fpu fpv4-sp-d16
+ 432              	pre_process_context:
+ 433              	.LVL33:
+ 434              	.LFB10:
+ 188:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 189:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 190:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #ifdef CONTEXT_ROWS_SUPPORTED
+ 191:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 192:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+ 193:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Process some data in the context case.
+ 194:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+ 195:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 196:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** METHODDEF(void)
+ 197:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** pre_process_context (j_compress_ptr cinfo,
+ 198:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		     JSAMPARRAY input_buf, JDIMENSION *in_row_ctr,
+ 199:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		     JDIMENSION in_rows_avail,
+ARM GAS  /tmp/ccnT7xKv.s 			page 13
+
+
+ 200:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		     JSAMPIMAGE output_buf, JDIMENSION *out_row_group_ctr,
+ 201:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		     JDIMENSION out_row_groups_avail)
+ 202:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+ 435              		.loc 1 202 1 is_stmt 1 view -0
+ 436              		.cfi_startproc
+ 437              		@ args = 12, pretend = 0, frame = 8
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 439              		.loc 1 202 1 is_stmt 0 view .LVU127
+ 440 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 441              	.LCFI7:
+ 442              		.cfi_def_cfa_offset 36
+ 443              		.cfi_offset 4, -36
+ 444              		.cfi_offset 5, -32
+ 445              		.cfi_offset 6, -28
+ 446              		.cfi_offset 7, -24
+ 447              		.cfi_offset 8, -20
+ 448              		.cfi_offset 9, -16
+ 449              		.cfi_offset 10, -12
+ 450              		.cfi_offset 11, -8
+ 451              		.cfi_offset 14, -4
+ 452 0004 85B0     		sub	sp, sp, #20
+ 453              	.LCFI8:
+ 454              		.cfi_def_cfa_offset 56
+ 455 0006 0646     		mov	r6, r0
+ 456 0008 0291     		str	r1, [sp, #8]
+ 457 000a 9146     		mov	r9, r2
+ 458 000c 9A46     		mov	r10, r3
+ 459 000e DDF83CB0 		ldr	fp, [sp, #60]
+ 203:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
+ 460              		.loc 1 203 3 is_stmt 1 view .LVU128
+ 461              		.loc 1 203 15 is_stmt 0 view .LVU129
+ 462 0012 D0F88C51 		ldr	r5, [r0, #396]
+ 463              	.LVL34:
+ 204:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int numrows, ci;
+ 464              		.loc 1 204 3 is_stmt 1 view .LVU130
+ 205:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int buf_height = cinfo->max_v_samp_factor * 3;
+ 465              		.loc 1 205 3 view .LVU131
+ 466              		.loc 1 205 25 is_stmt 0 view .LVU132
+ 467 0016 D0F81031 		ldr	r3, [r0, #272]
+ 468              	.LVL35:
+ 469              		.loc 1 205 7 view .LVU133
+ 470 001a 03EB4303 		add	r3, r3, r3, lsl #1
+ 471 001e 0393     		str	r3, [sp, #12]
+ 472              	.LVL36:
+ 206:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   JDIMENSION inrows;
+ 473              		.loc 1 206 3 is_stmt 1 view .LVU134
+ 207:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 208:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   while (*out_row_group_ctr < out_row_groups_avail) {
+ 474              		.loc 1 208 3 view .LVU135
+ 475              		.loc 1 208 9 is_stmt 0 view .LVU136
+ 476 0020 26E0     		b	.L33
+ 477              	.LVL37:
+ 478              	.L27:
+ 479              	.LBB2:
+ 209:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (*in_row_ctr < in_rows_avail) {
+ 210:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Do color conversion to fill the conversion buffer. */
+ 211:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       inrows = in_rows_avail - *in_row_ctr;
+ARM GAS  /tmp/ccnT7xKv.s 			page 14
+
+
+ 212:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = prep->next_buf_stop - prep->next_buf_row;
+ 213:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ 215:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 216:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 (JDIMENSION) prep->next_buf_row,
+ 217:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 numrows);
+ 218:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Pad at top of image, if first time through */
+ 219:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       if (prep->rows_to_go == cinfo->image_height) {
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 221:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  for (row = 1; row <= cinfo->max_v_samp_factor; row++) {
+ 223:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 480              		.loc 1 223 6 is_stmt 1 discriminator 3 view .LVU137
+ 481 0022 BB1C     		adds	r3, r7, #2
+ 482 0024 55F82300 		ldr	r0, [r5, r3, lsl #2]
+ 483 0028 F369     		ldr	r3, [r6, #28]
+ 484 002a 0193     		str	r3, [sp, #4]
+ 485 002c 0123     		movs	r3, #1
+ 486 002e 0093     		str	r3, [sp]
+ 487 0030 6342     		rsbs	r3, r4, #0
+ 488 0032 0246     		mov	r2, r0
+ 489 0034 0021     		movs	r1, #0
+ 490 0036 FFF7FEFF 		bl	jcopy_sample_rows
+ 491              	.LVL38:
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 492              		.loc 1 222 51 discriminator 3 view .LVU138
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 493              		.loc 1 222 54 is_stmt 0 discriminator 3 view .LVU139
+ 494 003a 0134     		adds	r4, r4, #1
+ 495              	.LVL39:
+ 496              	.L28:
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 497              		.loc 1 222 18 is_stmt 1 discriminator 1 view .LVU140
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 498              		.loc 1 222 30 is_stmt 0 discriminator 1 view .LVU141
+ 499 003c D6F81031 		ldr	r3, [r6, #272]
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 500              		.loc 1 222 4 discriminator 1 view .LVU142
+ 501 0040 A342     		cmp	r3, r4
+ 502 0042 EEDA     		bge	.L27
+ 503              	.LBE2:
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 504              		.loc 1 220 43 is_stmt 1 discriminator 2 view .LVU143
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 505              		.loc 1 220 45 is_stmt 0 discriminator 2 view .LVU144
+ 506 0044 0137     		adds	r7, r7, #1
+ 507              	.LVL40:
+ 508              	.L25:
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 509              		.loc 1 220 15 is_stmt 1 discriminator 1 view .LVU145
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 510              		.loc 1 220 25 is_stmt 0 discriminator 1 view .LVU146
+ 511 0046 F36C     		ldr	r3, [r6, #76]
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 512              		.loc 1 220 2 discriminator 1 view .LVU147
+ 513 0048 BB42     		cmp	r3, r7
+ 514 004a 01DD     		ble	.L26
+ARM GAS  /tmp/ccnT7xKv.s 			page 15
+
+
+ 515              	.LBB3:
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 516              		.loc 1 222 13 view .LVU148
+ 517 004c 0124     		movs	r4, #1
+ 518 004e F5E7     		b	.L28
+ 519              	.LVL41:
+ 520              	.L26:
+ 222:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    jcopy_sample_rows(prep->color_buf[ci], 0,
+ 521              		.loc 1 222 13 view .LVU149
+ 522              	.LBE3:
+ 224:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			      prep->color_buf[ci], -row,
+ 225:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			      1, cinfo->image_width);
+ 226:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  }
+ 227:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	}
+ 228:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 229:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       *in_row_ctr += numrows;
+ 523              		.loc 1 229 7 is_stmt 1 view .LVU150
+ 524              		.loc 1 229 19 is_stmt 0 view .LVU151
+ 525 0050 D9F80030 		ldr	r3, [r9]
+ 526 0054 4344     		add	r3, r3, r8
+ 527 0056 C9F80030 		str	r3, [r9]
+ 230:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->next_buf_row += numrows;
+ 528              		.loc 1 230 7 is_stmt 1 view .LVU152
+ 529              		.loc 1 230 26 is_stmt 0 view .LVU153
+ 530 005a 6B6B     		ldr	r3, [r5, #52]
+ 531 005c 4344     		add	r3, r3, r8
+ 532 005e 6B63     		str	r3, [r5, #52]
+ 231:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->rows_to_go -= numrows;
+ 533              		.loc 1 231 7 is_stmt 1 view .LVU154
+ 534              		.loc 1 231 24 is_stmt 0 view .LVU155
+ 535 0060 2B6B     		ldr	r3, [r5, #48]
+ 536 0062 A3EB0803 		sub	r3, r3, r8
+ 537 0066 2B63     		str	r3, [r5, #48]
+ 538              	.LVL42:
+ 539              	.L29:
+ 232:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     } else {
+ 233:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Return for more data, unless we are at the bottom of the image. */
+ 234:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       if (prep->rows_to_go != 0)
+ 235:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	break;
+ 236:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* When at bottom of image, pad to fill the conversion buffer. */
+ 237:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       if (prep->next_buf_row < prep->next_buf_stop) {
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 239:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 240:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			     prep->next_buf_row, prep->next_buf_stop);
+ 241:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	}
+ 242:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row = prep->next_buf_stop;
+ 243:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 244:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 245:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* If we've gotten enough data, downsample a row group. */
+ 246:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (prep->next_buf_row == prep->next_buf_stop) {
+ 540              		.loc 1 246 5 is_stmt 1 view .LVU156
+ 541              		.loc 1 246 13 is_stmt 0 view .LVU157
+ 542 0068 6A6B     		ldr	r2, [r5, #52]
+ 543              		.loc 1 246 35 view .LVU158
+ 544 006a EB6B     		ldr	r3, [r5, #60]
+ 545              		.loc 1 246 8 view .LVU159
+ 546 006c 9A42     		cmp	r2, r3
+ARM GAS  /tmp/ccnT7xKv.s 			page 16
+
+
+ 547 006e 3BD0     		beq	.L41
+ 548              	.L33:
+ 208:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (*in_row_ctr < in_rows_avail) {
+ 549              		.loc 1 208 9 is_stmt 1 view .LVU160
+ 208:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (*in_row_ctr < in_rows_avail) {
+ 550              		.loc 1 208 10 is_stmt 0 view .LVU161
+ 551 0070 DBF80030 		ldr	r3, [fp]
+ 208:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     if (*in_row_ctr < in_rows_avail) {
+ 552              		.loc 1 208 9 view .LVU162
+ 553 0074 109A     		ldr	r2, [sp, #64]
+ 554 0076 9342     		cmp	r3, r2
+ 555 0078 5DD2     		bcs	.L22
+ 209:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Do color conversion to fill the conversion buffer. */
+ 556              		.loc 1 209 5 is_stmt 1 view .LVU163
+ 209:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Do color conversion to fill the conversion buffer. */
+ 557              		.loc 1 209 9 is_stmt 0 view .LVU164
+ 558 007a D9F80010 		ldr	r1, [r9]
+ 209:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Do color conversion to fill the conversion buffer. */
+ 559              		.loc 1 209 8 view .LVU165
+ 560 007e 5145     		cmp	r1, r10
+ 561 0080 1AD2     		bcs	.L24
+ 211:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = prep->next_buf_stop - prep->next_buf_row;
+ 562              		.loc 1 211 7 is_stmt 1 view .LVU166
+ 211:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = prep->next_buf_stop - prep->next_buf_row;
+ 563              		.loc 1 211 14 is_stmt 0 view .LVU167
+ 564 0082 AAEB0100 		sub	r0, r10, r1
+ 565              	.LVL43:
+ 212:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 566              		.loc 1 212 7 is_stmt 1 view .LVU168
+ 212:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 567              		.loc 1 212 21 is_stmt 0 view .LVU169
+ 568 0086 EA6B     		ldr	r2, [r5, #60]
+ 212:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 569              		.loc 1 212 43 view .LVU170
+ 570 0088 6B6B     		ldr	r3, [r5, #52]
+ 212:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       numrows = (int) MIN((JDIMENSION) numrows, inrows);
+ 571              		.loc 1 212 15 view .LVU171
+ 572 008a A2EB0308 		sub	r8, r2, r3
+ 573              	.LVL44:
+ 213:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ 574              		.loc 1 213 7 is_stmt 1 view .LVU172
+ 213:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->cconvert->color_convert) (cinfo, input_buf + *in_row_ctr,
+ 575              		.loc 1 213 17 is_stmt 0 view .LVU173
+ 576 008e 8045     		cmp	r8, r0
+ 577 0090 28BF     		it	cs
+ 578 0092 8046     		movcs	r8, r0
+ 579              	.LVL45:
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 580              		.loc 1 214 7 is_stmt 1 view .LVU174
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 581              		.loc 1 214 14 is_stmt 0 view .LVU175
+ 582 0094 D6F89821 		ldr	r2, [r6, #408]
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 583              		.loc 1 214 8 view .LVU176
+ 584 0098 CDF80080 		str	r8, [sp]
+ 585 009c 5468     		ldr	r4, [r2, #4]
+ 586 009e 05F10802 		add	r2, r5, #8
+ARM GAS  /tmp/ccnT7xKv.s 			page 17
+
+
+ 587 00a2 0298     		ldr	r0, [sp, #8]
+ 588              	.LVL46:
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 589              		.loc 1 214 8 view .LVU177
+ 590 00a4 00EB8101 		add	r1, r0, r1, lsl #2
+ 591              	.LVL47:
+ 214:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					 prep->color_buf,
+ 592              		.loc 1 214 8 view .LVU178
+ 593 00a8 3046     		mov	r0, r6
+ 594 00aa A047     		blx	r4
+ 595              	.LVL48:
+ 219:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 596              		.loc 1 219 7 is_stmt 1 view .LVU179
+ 219:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 597              		.loc 1 219 15 is_stmt 0 view .LVU180
+ 598 00ac 2A6B     		ldr	r2, [r5, #48]
+ 219:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 599              		.loc 1 219 36 view .LVU181
+ 600 00ae 336A     		ldr	r3, [r6, #32]
+ 219:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 601              		.loc 1 219 10 view .LVU182
+ 602 00b0 9A42     		cmp	r2, r3
+ 603 00b2 CDD1     		bne	.L26
+ 220:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  int row;
+ 604              		.loc 1 220 10 view .LVU183
+ 605 00b4 0027     		movs	r7, #0
+ 606 00b6 C6E7     		b	.L25
+ 607              	.LVL49:
+ 608              	.L24:
+ 234:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	break;
+ 609              		.loc 1 234 7 is_stmt 1 view .LVU184
+ 234:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	break;
+ 610              		.loc 1 234 15 is_stmt 0 view .LVU185
+ 611 00b8 2B6B     		ldr	r3, [r5, #48]
+ 234:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	break;
+ 612              		.loc 1 234 10 view .LVU186
+ 613 00ba 002B     		cmp	r3, #0
+ 614 00bc 3BD1     		bne	.L22
+ 237:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 615              		.loc 1 237 7 is_stmt 1 view .LVU187
+ 237:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 616              		.loc 1 237 15 is_stmt 0 view .LVU188
+ 617 00be 6A6B     		ldr	r2, [r5, #52]
+ 237:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 618              		.loc 1 237 36 view .LVU189
+ 619 00c0 EB6B     		ldr	r3, [r5, #60]
+ 237:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	for (ci = 0; ci < cinfo->num_components; ci++) {
+ 620              		.loc 1 237 10 view .LVU190
+ 621 00c2 9A42     		cmp	r2, r3
+ 622 00c4 D0DA     		bge	.L29
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 623              		.loc 1 238 10 view .LVU191
+ 624 00c6 0024     		movs	r4, #0
+ 625 00c8 08E0     		b	.L31
+ 626              	.LVL50:
+ 627              	.L32:
+ 239:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			     prep->next_buf_row, prep->next_buf_stop);
+ARM GAS  /tmp/ccnT7xKv.s 			page 18
+
+
+ 628              		.loc 1 239 4 is_stmt 1 discriminator 3 view .LVU192
+ 629 00ca A01C     		adds	r0, r4, #2
+ 630 00cc EB6B     		ldr	r3, [r5, #60]
+ 631 00ce 6A6B     		ldr	r2, [r5, #52]
+ 632 00d0 F169     		ldr	r1, [r6, #28]
+ 633 00d2 55F82000 		ldr	r0, [r5, r0, lsl #2]
+ 634 00d6 FFF7FEFF 		bl	expand_bottom_edge
+ 635              	.LVL51:
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 636              		.loc 1 238 43 discriminator 3 view .LVU193
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 637              		.loc 1 238 45 is_stmt 0 discriminator 3 view .LVU194
+ 638 00da 0134     		adds	r4, r4, #1
+ 639              	.LVL52:
+ 640              	.L31:
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 641              		.loc 1 238 15 is_stmt 1 discriminator 1 view .LVU195
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 642              		.loc 1 238 25 is_stmt 0 discriminator 1 view .LVU196
+ 643 00dc F36C     		ldr	r3, [r6, #76]
+ 238:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	  expand_bottom_edge(prep->color_buf[ci], cinfo->image_width,
+ 644              		.loc 1 238 2 discriminator 1 view .LVU197
+ 645 00de A342     		cmp	r3, r4
+ 646 00e0 F3DC     		bgt	.L32
+ 242:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 647              		.loc 1 242 2 is_stmt 1 view .LVU198
+ 242:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 648              		.loc 1 242 27 is_stmt 0 view .LVU199
+ 649 00e2 EB6B     		ldr	r3, [r5, #60]
+ 242:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       }
+ 650              		.loc 1 242 21 view .LVU200
+ 651 00e4 6B63     		str	r3, [r5, #52]
+ 652 00e6 BFE7     		b	.L29
+ 653              	.LVL53:
+ 654              	.L41:
+ 247:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->downsample->downsample) (cinfo,
+ 655              		.loc 1 247 7 is_stmt 1 view .LVU201
+ 656              		.loc 1 247 14 is_stmt 0 view .LVU202
+ 657 00e8 D6F89C31 		ldr	r3, [r6, #412]
+ 248:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					prep->color_buf,
+ 249:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					(JDIMENSION) prep->this_row_group,
+ 658              		.loc 1 249 23 view .LVU203
+ 659 00ec AA6B     		ldr	r2, [r5, #56]
+ 247:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*cinfo->downsample->downsample) (cinfo,
+ 660              		.loc 1 247 8 view .LVU204
+ 661 00ee DBF80010 		ldr	r1, [fp]
+ 662 00f2 0091     		str	r1, [sp]
+ 663 00f4 5C68     		ldr	r4, [r3, #4]
+ 664 00f6 0E9B     		ldr	r3, [sp, #56]
+ 665 00f8 05F10801 		add	r1, r5, #8
+ 666 00fc 3046     		mov	r0, r6
+ 667 00fe A047     		blx	r4
+ 668              	.LVL54:
+ 250:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 					output_buf, *out_row_group_ctr);
+ 251:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       (*out_row_group_ctr)++;
+ 669              		.loc 1 251 7 is_stmt 1 view .LVU205
+ 670              		.loc 1 251 8 is_stmt 0 view .LVU206
+ARM GAS  /tmp/ccnT7xKv.s 			page 19
+
+
+ 671 0100 DBF80030 		ldr	r3, [fp]
+ 672              		.loc 1 251 27 view .LVU207
+ 673 0104 0133     		adds	r3, r3, #1
+ 674 0106 CBF80030 		str	r3, [fp]
+ 252:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       /* Advance pointers with wraparound as necessary. */
+ 253:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->this_row_group += cinfo->max_v_samp_factor;
+ 675              		.loc 1 253 7 is_stmt 1 view .LVU208
+ 676              		.loc 1 253 36 is_stmt 0 view .LVU209
+ 677 010a D6F81031 		ldr	r3, [r6, #272]
+ 678              		.loc 1 253 28 view .LVU210
+ 679 010e AA6B     		ldr	r2, [r5, #56]
+ 680 0110 1344     		add	r3, r3, r2
+ 681 0112 AB63     		str	r3, [r5, #56]
+ 254:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       if (prep->this_row_group >= buf_height)
+ 682              		.loc 1 254 7 is_stmt 1 view .LVU211
+ 683              		.loc 1 254 10 is_stmt 0 view .LVU212
+ 684 0114 039A     		ldr	r2, [sp, #12]
+ 685 0116 9342     		cmp	r3, r2
+ 686 0118 01DB     		blt	.L34
+ 255:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->this_row_group = 0;
+ 687              		.loc 1 255 2 is_stmt 1 view .LVU213
+ 688              		.loc 1 255 23 is_stmt 0 view .LVU214
+ 689 011a 0023     		movs	r3, #0
+ 690 011c AB63     		str	r3, [r5, #56]
+ 691              	.L34:
+ 256:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       if (prep->next_buf_row >= buf_height)
+ 692              		.loc 1 256 7 is_stmt 1 view .LVU215
+ 693              		.loc 1 256 15 is_stmt 0 view .LVU216
+ 694 011e 6B6B     		ldr	r3, [r5, #52]
+ 695              		.loc 1 256 10 view .LVU217
+ 696 0120 039A     		ldr	r2, [sp, #12]
+ 697 0122 9342     		cmp	r3, r2
+ 698 0124 01DB     		blt	.L35
+ 257:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	prep->next_buf_row = 0;
+ 699              		.loc 1 257 2 is_stmt 1 view .LVU218
+ 700              		.loc 1 257 21 is_stmt 0 view .LVU219
+ 701 0126 0023     		movs	r3, #0
+ 702 0128 6B63     		str	r3, [r5, #52]
+ 703              	.L35:
+ 258:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->next_buf_stop = prep->next_buf_row + cinfo->max_v_samp_factor;
+ 704              		.loc 1 258 7 is_stmt 1 view .LVU220
+ 705              		.loc 1 258 33 is_stmt 0 view .LVU221
+ 706 012a 6B6B     		ldr	r3, [r5, #52]
+ 707              		.loc 1 258 55 view .LVU222
+ 708 012c D6F81021 		ldr	r2, [r6, #272]
+ 709              		.loc 1 258 48 view .LVU223
+ 710 0130 1344     		add	r3, r3, r2
+ 711              		.loc 1 258 27 view .LVU224
+ 712 0132 EB63     		str	r3, [r5, #60]
+ 713 0134 9CE7     		b	.L33
+ 714              	.L22:
+ 259:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 260:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   }
+ 261:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+ 715              		.loc 1 261 1 view .LVU225
+ 716 0136 05B0     		add	sp, sp, #20
+ 717              	.LCFI9:
+ARM GAS  /tmp/ccnT7xKv.s 			page 20
+
+
+ 718              		.cfi_def_cfa_offset 36
+ 719              		@ sp needed
+ 720 0138 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 721              		.loc 1 261 1 view .LVU226
+ 722              		.cfi_endproc
+ 723              	.LFE10:
+ 725              		.section	.text.create_context_buffer,"ax",%progbits
+ 726              		.align	1
+ 727              		.syntax unified
+ 728              		.thumb
+ 729              		.thumb_func
+ 730              		.fpu fpv4-sp-d16
+ 732              	create_context_buffer:
+ 733              	.LVL55:
+ 734              	.LFB11:
+ 262:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 263:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 264:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+ 265:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Create the wrapped-around downsampling input buffer needed for context mode.
+ 266:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+ 267:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 268:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** LOCAL(void)
+ 269:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** create_context_buffer (j_compress_ptr cinfo)
+ 270:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+ 735              		.loc 1 270 1 is_stmt 1 view -0
+ 736              		.cfi_startproc
+ 737              		@ args = 0, pretend = 0, frame = 8
+ 738              		@ frame_needed = 0, uses_anonymous_args = 0
+ 739              		.loc 1 270 1 is_stmt 0 view .LVU228
+ 740 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 741              	.LCFI10:
+ 742              		.cfi_def_cfa_offset 36
+ 743              		.cfi_offset 4, -36
+ 744              		.cfi_offset 5, -32
+ 745              		.cfi_offset 6, -28
+ 746              		.cfi_offset 7, -24
+ 747              		.cfi_offset 8, -20
+ 748              		.cfi_offset 9, -16
+ 749              		.cfi_offset 10, -12
+ 750              		.cfi_offset 11, -8
+ 751              		.cfi_offset 14, -4
+ 752 0004 83B0     		sub	sp, sp, #12
+ 753              	.LCFI11:
+ 754              		.cfi_def_cfa_offset 48
+ 755 0006 0746     		mov	r7, r0
+ 271:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
+ 756              		.loc 1 271 3 is_stmt 1 view .LVU229
+ 757              		.loc 1 271 15 is_stmt 0 view .LVU230
+ 758 0008 D0F88C31 		ldr	r3, [r0, #396]
+ 759 000c 0193     		str	r3, [sp, #4]
+ 760              	.LVL56:
+ 272:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int rgroup_height = cinfo->max_v_samp_factor;
+ 761              		.loc 1 272 3 is_stmt 1 view .LVU231
+ 762              		.loc 1 272 7 is_stmt 0 view .LVU232
+ 763 000e D0F81041 		ldr	r4, [r0, #272]
+ 764              	.LVL57:
+ 273:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int ci, i;
+ARM GAS  /tmp/ccnT7xKv.s 			page 21
+
+
+ 765              		.loc 1 273 3 is_stmt 1 view .LVU233
+ 274:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   jpeg_component_info * compptr;
+ 766              		.loc 1 274 3 view .LVU234
+ 275:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   JSAMPARRAY true_buffer, fake_buffer;
+ 767              		.loc 1 275 3 view .LVU235
+ 276:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 277:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Grab enough space for fake row pointers for all the components;
+ 278:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    * we need five row groups' worth of pointers for each component.
+ 279:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    */
+ 280:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   fake_buffer = (JSAMPARRAY)
+ 768              		.loc 1 280 3 view .LVU236
+ 281:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 769              		.loc 1 281 12 is_stmt 0 view .LVU237
+ 770 0012 4368     		ldr	r3, [r0, #4]
+ 771              	.LVL58:
+ 282:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				(cinfo->num_components * 5 * rgroup_height) *
+ 772              		.loc 1 282 11 view .LVU238
+ 773 0014 C26C     		ldr	r2, [r0, #76]
+ 774              		.loc 1 282 32 view .LVU239
+ 775 0016 04FB02F2 		mul	r2, r4, r2
+ 281:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 776              		.loc 1 281 6 view .LVU240
+ 777 001a 02EB8202 		add	r2, r2, r2, lsl #2
+ 778 001e 1B68     		ldr	r3, [r3]
+ 779 0020 9200     		lsls	r2, r2, #2
+ 780 0022 0121     		movs	r1, #1
+ 781 0024 9847     		blx	r3
+ 782              	.LVL59:
+ 281:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 783              		.loc 1 281 6 view .LVU241
+ 784 0026 0646     		mov	r6, r0
+ 785              	.LVL60:
+ 283:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				SIZEOF(JSAMPROW));
+ 284:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 285:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 786              		.loc 1 285 3 is_stmt 1 view .LVU242
+ 787              		.loc 1 285 24 is_stmt 0 view .LVU243
+ 788 0028 D7F854A0 		ldr	r10, [r7, #84]
+ 789              	.LVL61:
+ 790              		.loc 1 285 11 view .LVU244
+ 791 002c 4FF00009 		mov	r9, #0
+ 792              		.loc 1 285 3 view .LVU245
+ 793 0030 1BE0     		b	.L43
+ 794              	.LVL62:
+ 795              	.L45:
+ 286:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        ci++, compptr++) {
+ 287:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Allocate the actual buffer space (3 row groups) for this component.
+ 288:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****      * We make the buffer wide enough to allow the downsampler to edge-expand
+ 289:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****      * horizontally within the buffer, if it so chooses.
+ 290:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****      */
+ 291:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     true_buffer = (*cinfo->mem->alloc_sarray)
+ 292:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 293:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        (JDIMENSION) (((long) compptr->width_in_blocks *
+ 294:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->min_DCT_h_scaled_size *
+ 295:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->max_h_samp_factor) / compptr->h_samp_factor),
+ 296:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        (JDIMENSION) (3 * rgroup_height));
+ 297:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Copy true buffer row pointers into the middle of the fake row array */
+ARM GAS  /tmp/ccnT7xKv.s 			page 22
+
+
+ 298:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     MEMCOPY(fake_buffer + rgroup_height, true_buffer,
+ 299:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    3 * rgroup_height * SIZEOF(JSAMPROW));
+ 300:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Fill in the above and below wraparound pointers */
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     for (i = 0; i < rgroup_height; i++) {
+ 302:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 796              		.loc 1 302 7 is_stmt 1 discriminator 3 view .LVU246
+ 797              		.loc 1 302 54 is_stmt 0 discriminator 3 view .LVU247
+ 798 0032 03EB4402 		add	r2, r3, r4, lsl #1
+ 799              		.loc 1 302 35 discriminator 3 view .LVU248
+ 800 0036 55F82220 		ldr	r2, [r5, r2, lsl #2]
+ 801              		.loc 1 302 22 discriminator 3 view .LVU249
+ 802 003a 46F82320 		str	r2, [r6, r3, lsl #2]
+ 303:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[4 * rgroup_height + i] = true_buffer[i];
+ 803              		.loc 1 303 7 is_stmt 1 discriminator 3 view .LVU250
+ 804              		.loc 1 303 37 is_stmt 0 discriminator 3 view .LVU251
+ 805 003e 03EB8402 		add	r2, r3, r4, lsl #2
+ 806              		.loc 1 303 55 discriminator 3 view .LVU252
+ 807 0042 55F82310 		ldr	r1, [r5, r3, lsl #2]
+ 808              		.loc 1 303 42 discriminator 3 view .LVU253
+ 809 0046 46F82210 		str	r1, [r6, r2, lsl #2]
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 810              		.loc 1 301 36 is_stmt 1 discriminator 3 view .LVU254
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 811              		.loc 1 301 37 is_stmt 0 discriminator 3 view .LVU255
+ 812 004a 0133     		adds	r3, r3, #1
+ 813              	.LVL63:
+ 814              	.L44:
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 815              		.loc 1 301 17 is_stmt 1 discriminator 1 view .LVU256
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 816              		.loc 1 301 5 is_stmt 0 discriminator 1 view .LVU257
+ 817 004c A342     		cmp	r3, r4
+ 818 004e F0DB     		blt	.L45
+ 304:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 305:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->color_buf[ci] = fake_buffer + rgroup_height;
+ 819              		.loc 1 305 5 is_stmt 1 view .LVU258
+ 820              		.loc 1 305 25 is_stmt 0 view .LVU259
+ 821 0050 09F10203 		add	r3, r9, #2
+ 822              	.LVL64:
+ 823              		.loc 1 305 25 view .LVU260
+ 824 0054 019A     		ldr	r2, [sp, #4]
+ 825 0056 42F823B0 		str	fp, [r2, r3, lsl #2]
+ 306:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     fake_buffer += 5 * rgroup_height; /* point to space for next component */
+ 826              		.loc 1 306 5 is_stmt 1 view .LVU261
+ 827              		.loc 1 306 17 is_stmt 0 view .LVU262
+ 828 005a 04EB8403 		add	r3, r4, r4, lsl #2
+ 829 005e 06EB8306 		add	r6, r6, r3, lsl #2
+ 830              	.LVL65:
+ 286:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Allocate the actual buffer space (3 row groups) for this component.
+ 831              		.loc 1 286 8 is_stmt 1 view .LVU263
+ 286:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Allocate the actual buffer space (3 row groups) for this component.
+ 832              		.loc 1 286 10 is_stmt 0 view .LVU264
+ 833 0062 09F10109 		add	r9, r9, #1
+ 834              	.LVL66:
+ 286:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Allocate the actual buffer space (3 row groups) for this component.
+ 835              		.loc 1 286 21 view .LVU265
+ 836 0066 0AF1580A 		add	r10, r10, #88
+ARM GAS  /tmp/ccnT7xKv.s 			page 23
+
+
+ 837              	.LVL67:
+ 838              	.L43:
+ 285:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        ci++, compptr++) {
+ 839              		.loc 1 285 44 is_stmt 1 discriminator 1 view .LVU266
+ 285:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        ci++, compptr++) {
+ 840              		.loc 1 285 54 is_stmt 0 discriminator 1 view .LVU267
+ 841 006a FB6C     		ldr	r3, [r7, #76]
+ 285:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        ci++, compptr++) {
+ 842              		.loc 1 285 3 discriminator 1 view .LVU268
+ 843 006c 4B45     		cmp	r3, r9
+ 844 006e 20DD     		ble	.L48
+ 291:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 845              		.loc 1 291 5 is_stmt 1 view .LVU269
+ 291:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 846              		.loc 1 291 26 is_stmt 0 view .LVU270
+ 847 0070 7B68     		ldr	r3, [r7, #4]
+ 293:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->min_DCT_h_scaled_size *
+ 848              		.loc 1 293 37 view .LVU271
+ 849 0072 DAF81C20 		ldr	r2, [r10, #28]
+ 294:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->max_h_samp_factor) / compptr->h_samp_factor),
+ 850              		.loc 1 294 14 view .LVU272
+ 851 0076 D7F81411 		ldr	r1, [r7, #276]
+ 293:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->min_DCT_h_scaled_size *
+ 852              		.loc 1 293 55 view .LVU273
+ 853 007a 01FB02F2 		mul	r2, r1, r2
+ 295:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        (JDIMENSION) (3 * rgroup_height));
+ 854              		.loc 1 295 14 view .LVU274
+ 855 007e D7F80C11 		ldr	r1, [r7, #268]
+ 294:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 		      cinfo->max_h_samp_factor) / compptr->h_samp_factor),
+ 856              		.loc 1 294 38 view .LVU275
+ 857 0082 01FB02F2 		mul	r2, r1, r2
+ 295:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****        (JDIMENSION) (3 * rgroup_height));
+ 858              		.loc 1 295 44 view .LVU276
+ 859 0086 DAF80810 		ldr	r1, [r10, #8]
+ 296:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Copy true buffer row pointers into the middle of the fake row array */
+ 860              		.loc 1 296 24 view .LVU277
+ 861 008a 04EB4408 		add	r8, r4, r4, lsl #1
+ 291:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 862              		.loc 1 291 20 view .LVU278
+ 863 008e 9D68     		ldr	r5, [r3, #8]
+ 864 0090 4346     		mov	r3, r8
+ 865 0092 92FBF1F2 		sdiv	r2, r2, r1
+ 866 0096 0121     		movs	r1, #1
+ 867 0098 3846     		mov	r0, r7
+ 868 009a A847     		blx	r5
+ 869              	.LVL68:
+ 870 009c 0546     		mov	r5, r0
+ 871              	.LVL69:
+ 298:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    3 * rgroup_height * SIZEOF(JSAMPROW));
+ 872              		.loc 1 298 5 is_stmt 1 view .LVU279
+ 873 009e 06EB840B 		add	fp, r6, r4, lsl #2
+ 874 00a2 4FEA8802 		lsl	r2, r8, #2
+ 875 00a6 0146     		mov	r1, r0
+ 876 00a8 5846     		mov	r0, fp
+ 877              	.LVL70:
+ 298:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	    3 * rgroup_height * SIZEOF(JSAMPROW));
+ 878              		.loc 1 298 5 is_stmt 0 view .LVU280
+ARM GAS  /tmp/ccnT7xKv.s 			page 24
+
+
+ 879 00aa FFF7FEFF 		bl	memcpy
+ 880              	.LVL71:
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 881              		.loc 1 301 5 is_stmt 1 view .LVU281
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 882              		.loc 1 301 12 is_stmt 0 view .LVU282
+ 883 00ae 0023     		movs	r3, #0
+ 301:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       fake_buffer[i] = true_buffer[2 * rgroup_height + i];
+ 884              		.loc 1 301 5 view .LVU283
+ 885 00b0 CCE7     		b	.L44
+ 886              	.LVL72:
+ 887              	.L48:
+ 307:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   }
+ 308:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+ 888              		.loc 1 308 1 view .LVU284
+ 889 00b2 03B0     		add	sp, sp, #12
+ 890              	.LCFI12:
+ 891              		.cfi_def_cfa_offset 36
+ 892              		@ sp needed
+ 893 00b4 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 894              		.loc 1 308 1 view .LVU285
+ 895              		.cfi_endproc
+ 896              	.LFE11:
+ 898              		.section	.text.jinit_c_prep_controller,"ax",%progbits
+ 899              		.align	1
+ 900              		.global	jinit_c_prep_controller
+ 901              		.syntax unified
+ 902              		.thumb
+ 903              		.thumb_func
+ 904              		.fpu fpv4-sp-d16
+ 906              	jinit_c_prep_controller:
+ 907              	.LVL73:
+ 908              	.LFB12:
+ 309:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 310:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #endif /* CONTEXT_ROWS_SUPPORTED */
+ 311:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 312:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 313:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** /*
+ 314:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  * Initialize preprocessing controller.
+ 315:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****  */
+ 316:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 317:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** GLOBAL(void)
+ 318:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** jinit_c_prep_controller (j_compress_ptr cinfo, boolean need_full_buffer)
+ 319:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** {
+ 909              		.loc 1 319 1 is_stmt 1 view -0
+ 910              		.cfi_startproc
+ 911              		@ args = 0, pretend = 0, frame = 0
+ 912              		@ frame_needed = 0, uses_anonymous_args = 0
+ 913              		.loc 1 319 1 is_stmt 0 view .LVU287
+ 914 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 915              	.LCFI13:
+ 916              		.cfi_def_cfa_offset 24
+ 917              		.cfi_offset 4, -24
+ 918              		.cfi_offset 5, -20
+ 919              		.cfi_offset 6, -16
+ 920              		.cfi_offset 7, -12
+ 921              		.cfi_offset 8, -8
+ARM GAS  /tmp/ccnT7xKv.s 			page 25
+
+
+ 922              		.cfi_offset 14, -4
+ 923 0004 0446     		mov	r4, r0
+ 320:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   my_prep_ptr prep;
+ 924              		.loc 1 320 3 is_stmt 1 view .LVU288
+ 321:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   int ci;
+ 925              		.loc 1 321 3 view .LVU289
+ 322:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   jpeg_component_info * compptr;
+ 926              		.loc 1 322 3 view .LVU290
+ 323:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 324:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   if (need_full_buffer)		/* safety check */
+ 927              		.loc 1 324 3 view .LVU291
+ 928              		.loc 1 324 6 is_stmt 0 view .LVU292
+ 929 0006 29B1     		cbz	r1, .L50
+ 325:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
+ 930              		.loc 1 325 5 is_stmt 1 view .LVU293
+ 931 0008 0368     		ldr	r3, [r0]
+ 932 000a 0322     		movs	r2, #3
+ 933 000c 5A61     		str	r2, [r3, #20]
+ 934 000e 0368     		ldr	r3, [r0]
+ 935 0010 1B68     		ldr	r3, [r3]
+ 936 0012 9847     		blx	r3
+ 937              	.LVL74:
+ 938              	.L50:
+ 326:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 327:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep = (my_prep_ptr)
+ 939              		.loc 1 327 3 view .LVU294
+ 328:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 940              		.loc 1 328 12 is_stmt 0 view .LVU295
+ 941 0014 6368     		ldr	r3, [r4, #4]
+ 942              		.loc 1 328 6 view .LVU296
+ 943 0016 1B68     		ldr	r3, [r3]
+ 944 0018 4022     		movs	r2, #64
+ 945 001a 0121     		movs	r1, #1
+ 946 001c 2046     		mov	r0, r4
+ 947 001e 9847     		blx	r3
+ 948              	.LVL75:
+ 949 0020 0746     		mov	r7, r0
+ 950              	.LVL76:
+ 329:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 				SIZEOF(my_prep_controller));
+ 330:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   cinfo->prep = (struct jpeg_c_prep_controller *) prep;
+ 951              		.loc 1 330 3 is_stmt 1 view .LVU297
+ 952              		.loc 1 330 15 is_stmt 0 view .LVU298
+ 953 0022 C4F88C01 		str	r0, [r4, #396]
+ 331:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   prep->pub.start_pass = start_pass_prep;
+ 954              		.loc 1 331 3 is_stmt 1 view .LVU299
+ 955              		.loc 1 331 24 is_stmt 0 view .LVU300
+ 956 0026 174B     		ldr	r3, .L57
+ 957 0028 0360     		str	r3, [r0]
+ 332:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 
+ 333:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   /* Allocate the color conversion buffer.
+ 334:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    * We make the buffer wide enough to allow the downsampler to edge-expand
+ 335:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    * horizontally within the buffer, if it so chooses.
+ 336:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****    */
+ 337:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   if (cinfo->downsample->need_context_rows) {
+ 958              		.loc 1 337 3 is_stmt 1 view .LVU301
+ 959              		.loc 1 337 12 is_stmt 0 view .LVU302
+ 960 002a D4F89C31 		ldr	r3, [r4, #412]
+ARM GAS  /tmp/ccnT7xKv.s 			page 26
+
+
+ 961              		.loc 1 337 24 view .LVU303
+ 962 002e 9D68     		ldr	r5, [r3, #8]
+ 963              		.loc 1 337 6 view .LVU304
+ 964 0030 1DB9     		cbnz	r5, .L56
+ 338:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* Set up to provide context rows */
+ 339:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #ifdef CONTEXT_ROWS_SUPPORTED
+ 340:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->pub.pre_process_data = pre_process_context;
+ 341:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     create_context_buffer(cinfo);
+ 342:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #else
+ 343:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     ERREXIT(cinfo, JERR_NOT_COMPILED);
+ 344:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #endif
+ 345:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   } else {
+ 346:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     /* No context, just make it tall enough for one row group */
+ 347:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     prep->pub.pre_process_data = pre_process_data;
+ 965              		.loc 1 347 5 is_stmt 1 view .LVU305
+ 966              		.loc 1 347 32 is_stmt 0 view .LVU306
+ 967 0032 154B     		ldr	r3, .L57+4
+ 968 0034 4360     		str	r3, [r0, #4]
+ 348:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+ 969              		.loc 1 348 5 is_stmt 1 view .LVU307
+ 970              	.LVL77:
+ 971              		.loc 1 348 26 is_stmt 0 view .LVU308
+ 972 0036 666D     		ldr	r6, [r4, #84]
+ 973              	.LVL78:
+ 974              		.loc 1 348 5 view .LVU309
+ 975 0038 1EE0     		b	.L53
+ 976              	.LVL79:
+ 977              	.L56:
+ 340:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     create_context_buffer(cinfo);
+ 978              		.loc 1 340 5 is_stmt 1 view .LVU310
+ 340:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     create_context_buffer(cinfo);
+ 979              		.loc 1 340 32 is_stmt 0 view .LVU311
+ 980 003a 144B     		ldr	r3, .L57+8
+ 981 003c 4360     		str	r3, [r0, #4]
+ 341:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #else
+ 982              		.loc 1 341 5 is_stmt 1 view .LVU312
+ 983 003e 2046     		mov	r0, r4
+ 984              	.LVL80:
+ 341:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** #else
+ 985              		.loc 1 341 5 is_stmt 0 view .LVU313
+ 986 0040 FFF7FEFF 		bl	create_context_buffer
+ 987              	.LVL81:
+ 988 0044 1BE0     		b	.L49
+ 989              	.LVL82:
+ 990              	.L54:
+ 349:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 ci++, compptr++) {
+ 350:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->color_buf[ci] = (*cinfo->mem->alloc_sarray)
+ 991              		.loc 1 350 7 is_stmt 1 view .LVU314
+ 992              		.loc 1 350 36 is_stmt 0 view .LVU315
+ 993 0046 6368     		ldr	r3, [r4, #4]
+ 351:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 352:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 (JDIMENSION) (((long) compptr->width_in_blocks *
+ 994              		.loc 1 352 32 view .LVU316
+ 995 0048 F269     		ldr	r2, [r6, #28]
+ 353:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			cinfo->min_DCT_h_scaled_size *
+ 996              		.loc 1 353 9 view .LVU317
+ 997 004a D4F81411 		ldr	r1, [r4, #276]
+ARM GAS  /tmp/ccnT7xKv.s 			page 27
+
+
+ 352:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			cinfo->min_DCT_h_scaled_size *
+ 998              		.loc 1 352 50 view .LVU318
+ 999 004e 01FB02F2 		mul	r2, r1, r2
+ 354:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			cinfo->max_h_samp_factor) / compptr->h_samp_factor),
+ 1000              		.loc 1 354 9 view .LVU319
+ 1001 0052 D4F80C11 		ldr	r1, [r4, #268]
+ 353:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 			cinfo->min_DCT_h_scaled_size *
+ 1002              		.loc 1 353 33 view .LVU320
+ 1003 0056 01FB02F2 		mul	r2, r1, r2
+ 1004              		.loc 1 354 39 view .LVU321
+ 1005 005a B168     		ldr	r1, [r6, #8]
+ 350:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1006              		.loc 1 350 30 view .LVU322
+ 1007 005c D3F80880 		ldr	r8, [r3, #8]
+ 1008 0060 D4F81031 		ldr	r3, [r4, #272]
+ 1009 0064 92FBF1F2 		sdiv	r2, r2, r1
+ 1010 0068 0121     		movs	r1, #1
+ 1011 006a 2046     		mov	r0, r4
+ 1012 006c C047     		blx	r8
+ 1013              	.LVL83:
+ 350:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	((j_common_ptr) cinfo, JPOOL_IMAGE,
+ 1014              		.loc 1 350 27 view .LVU323
+ 1015 006e AB1C     		adds	r3, r5, #2
+ 1016 0070 47F82300 		str	r0, [r7, r3, lsl #2]
+ 349:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->color_buf[ci] = (*cinfo->mem->alloc_sarray)
+ 1017              		.loc 1 349 3 is_stmt 1 view .LVU324
+ 349:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->color_buf[ci] = (*cinfo->mem->alloc_sarray)
+ 1018              		.loc 1 349 5 is_stmt 0 view .LVU325
+ 1019 0074 0135     		adds	r5, r5, #1
+ 1020              	.LVL84:
+ 349:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****       prep->color_buf[ci] = (*cinfo->mem->alloc_sarray)
+ 1021              		.loc 1 349 16 view .LVU326
+ 1022 0076 5836     		adds	r6, r6, #88
+ 1023              	.LVL85:
+ 1024              	.L53:
+ 348:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 ci++, compptr++) {
+ 1025              		.loc 1 348 46 is_stmt 1 discriminator 1 view .LVU327
+ 348:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 ci++, compptr++) {
+ 1026              		.loc 1 348 56 is_stmt 0 discriminator 1 view .LVU328
+ 1027 0078 E36C     		ldr	r3, [r4, #76]
+ 348:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 ci++, compptr++) {
+ 1028              		.loc 1 348 5 discriminator 1 view .LVU329
+ 1029 007a AB42     		cmp	r3, r5
+ 1030 007c E3DC     		bgt	.L54
+ 1031              	.LVL86:
+ 1032              	.L49:
+ 355:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** 	 (JDIMENSION) cinfo->max_v_samp_factor);
+ 356:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****     }
+ 357:Middlewares/Third_Party/LibJPEG/source/jcprepct.c ****   }
+ 358:Middlewares/Third_Party/LibJPEG/source/jcprepct.c **** }
+ 1033              		.loc 1 358 1 view .LVU330
+ 1034 007e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1035              	.LVL87:
+ 1036              	.L58:
+ 1037              		.loc 1 358 1 view .LVU331
+ 1038 0082 00BF     		.align	2
+ 1039              	.L57:
+ARM GAS  /tmp/ccnT7xKv.s 			page 28
+
+
+ 1040 0084 00000000 		.word	start_pass_prep
+ 1041 0088 00000000 		.word	pre_process_data
+ 1042 008c 00000000 		.word	pre_process_context
+ 1043              		.cfi_endproc
+ 1044              	.LFE12:
+ 1046              		.text
+ 1047              	.Letext0:
+ 1048              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 1049              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 1050              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 1051              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 1052              		.file 6 "Middlewares/Third_Party/LibJPEG/include/jerror.h"
+ 1053              		.file 7 "<built-in>"
+ARM GAS  /tmp/ccnT7xKv.s 			page 29
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jcprepct.c
+     /tmp/ccnT7xKv.s:18     .text.start_pass_prep:0000000000000000 $t
+     /tmp/ccnT7xKv.s:25     .text.start_pass_prep:0000000000000000 start_pass_prep
+     /tmp/ccnT7xKv.s:84     .text.expand_bottom_edge:0000000000000000 $t
+     /tmp/ccnT7xKv.s:90     .text.expand_bottom_edge:0000000000000000 expand_bottom_edge
+     /tmp/ccnT7xKv.s:153    .text.pre_process_data:0000000000000000 $t
+     /tmp/ccnT7xKv.s:159    .text.pre_process_data:0000000000000000 pre_process_data
+     /tmp/ccnT7xKv.s:426    .text.pre_process_context:0000000000000000 $t
+     /tmp/ccnT7xKv.s:432    .text.pre_process_context:0000000000000000 pre_process_context
+     /tmp/ccnT7xKv.s:726    .text.create_context_buffer:0000000000000000 $t
+     /tmp/ccnT7xKv.s:732    .text.create_context_buffer:0000000000000000 create_context_buffer
+     /tmp/ccnT7xKv.s:899    .text.jinit_c_prep_controller:0000000000000000 $t
+     /tmp/ccnT7xKv.s:906    .text.jinit_c_prep_controller:0000000000000000 jinit_c_prep_controller
+     /tmp/ccnT7xKv.s:1040   .text.jinit_c_prep_controller:0000000000000084 $d
+
+UNDEFINED SYMBOLS
+jcopy_sample_rows
+memcpy

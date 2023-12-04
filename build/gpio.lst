@@ -1,0 +1,275 @@
+ARM GAS  /tmp/cc3EPhIR.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"gpio.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.MX_GPIO_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	MX_GPIO_Init
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	MX_GPIO_Init:
+  27              	.LFB235:
+  28              		.file 1 "Core/Src/gpio.c"
+   1:Core/Src/gpio.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/gpio.c **** /**
+   3:Core/Src/gpio.c ****   ******************************************************************************
+   4:Core/Src/gpio.c ****   * @file    gpio.c
+   5:Core/Src/gpio.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/gpio.c ****   *          of all used GPIO pins.
+   7:Core/Src/gpio.c ****   ******************************************************************************
+   8:Core/Src/gpio.c ****   * @attention
+   9:Core/Src/gpio.c ****   *
+  10:Core/Src/gpio.c ****   * Copyright (c) 2023 STMicroelectronics.
+  11:Core/Src/gpio.c ****   * All rights reserved.
+  12:Core/Src/gpio.c ****   *
+  13:Core/Src/gpio.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/gpio.c ****   * in the root directory of this software component.
+  15:Core/Src/gpio.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/gpio.c ****   *
+  17:Core/Src/gpio.c ****   ******************************************************************************
+  18:Core/Src/gpio.c ****   */
+  19:Core/Src/gpio.c **** /* USER CODE END Header */
+  20:Core/Src/gpio.c **** 
+  21:Core/Src/gpio.c **** /* Includes ------------------------------------------------------------------*/
+  22:Core/Src/gpio.c **** #include "gpio.h"
+  23:Core/Src/gpio.c **** 
+  24:Core/Src/gpio.c **** /* USER CODE BEGIN 0 */
+  25:Core/Src/gpio.c **** 
+  26:Core/Src/gpio.c **** /* USER CODE END 0 */
+  27:Core/Src/gpio.c **** 
+  28:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
+  29:Core/Src/gpio.c **** /* Configure GPIO                                                             */
+  30:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
+ARM GAS  /tmp/cc3EPhIR.s 			page 2
+
+
+  31:Core/Src/gpio.c **** /* USER CODE BEGIN 1 */
+  32:Core/Src/gpio.c **** 
+  33:Core/Src/gpio.c **** /* USER CODE END 1 */
+  34:Core/Src/gpio.c **** 
+  35:Core/Src/gpio.c **** /** Configure pins as
+  36:Core/Src/gpio.c ****         * Analog
+  37:Core/Src/gpio.c ****         * Input
+  38:Core/Src/gpio.c ****         * Output
+  39:Core/Src/gpio.c ****         * EVENT_OUT
+  40:Core/Src/gpio.c ****         * EXTI
+  41:Core/Src/gpio.c ****      PA10   ------> USB_OTG_FS_ID
+  42:Core/Src/gpio.c ****      PA11   ------> USB_OTG_FS_DM
+  43:Core/Src/gpio.c ****      PA12   ------> USB_OTG_FS_DP
+  44:Core/Src/gpio.c **** */
+  45:Core/Src/gpio.c **** void MX_GPIO_Init(void)
+  46:Core/Src/gpio.c **** {
+  29              		.loc 1 46 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 48
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 8DB0     		sub	sp, sp, #52
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 56
+  47:Core/Src/gpio.c **** 
+  48:Core/Src/gpio.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  40              		.loc 1 48 3 view .LVU1
+  41              		.loc 1 48 20 is_stmt 0 view .LVU2
+  42 0004 0022     		movs	r2, #0
+  43 0006 0792     		str	r2, [sp, #28]
+  44 0008 0892     		str	r2, [sp, #32]
+  45 000a 0992     		str	r2, [sp, #36]
+  46 000c 0A92     		str	r2, [sp, #40]
+  47 000e 0B92     		str	r2, [sp, #44]
+  49:Core/Src/gpio.c **** 
+  50:Core/Src/gpio.c ****   /* GPIO Ports Clock Enable */
+  51:Core/Src/gpio.c ****   __HAL_RCC_GPIOC_CLK_ENABLE();
+  48              		.loc 1 51 3 is_stmt 1 view .LVU3
+  49              	.LBB2:
+  50              		.loc 1 51 3 view .LVU4
+  51 0010 0192     		str	r2, [sp, #4]
+  52              		.loc 1 51 3 view .LVU5
+  53 0012 264B     		ldr	r3, .L3
+  54 0014 196B     		ldr	r1, [r3, #48]
+  55 0016 41F00401 		orr	r1, r1, #4
+  56 001a 1963     		str	r1, [r3, #48]
+  57              		.loc 1 51 3 view .LVU6
+  58 001c 196B     		ldr	r1, [r3, #48]
+  59 001e 01F00401 		and	r1, r1, #4
+  60 0022 0191     		str	r1, [sp, #4]
+  61              		.loc 1 51 3 view .LVU7
+  62 0024 0199     		ldr	r1, [sp, #4]
+  63              	.LBE2:
+  64              		.loc 1 51 3 view .LVU8
+ARM GAS  /tmp/cc3EPhIR.s 			page 3
+
+
+  52:Core/Src/gpio.c ****   __HAL_RCC_GPIOH_CLK_ENABLE();
+  65              		.loc 1 52 3 view .LVU9
+  66              	.LBB3:
+  67              		.loc 1 52 3 view .LVU10
+  68 0026 0292     		str	r2, [sp, #8]
+  69              		.loc 1 52 3 view .LVU11
+  70 0028 196B     		ldr	r1, [r3, #48]
+  71 002a 41F08001 		orr	r1, r1, #128
+  72 002e 1963     		str	r1, [r3, #48]
+  73              		.loc 1 52 3 view .LVU12
+  74 0030 196B     		ldr	r1, [r3, #48]
+  75 0032 01F08001 		and	r1, r1, #128
+  76 0036 0291     		str	r1, [sp, #8]
+  77              		.loc 1 52 3 view .LVU13
+  78 0038 0299     		ldr	r1, [sp, #8]
+  79              	.LBE3:
+  80              		.loc 1 52 3 view .LVU14
+  53:Core/Src/gpio.c ****   __HAL_RCC_GPIOA_CLK_ENABLE();
+  81              		.loc 1 53 3 view .LVU15
+  82              	.LBB4:
+  83              		.loc 1 53 3 view .LVU16
+  84 003a 0392     		str	r2, [sp, #12]
+  85              		.loc 1 53 3 view .LVU17
+  86 003c 196B     		ldr	r1, [r3, #48]
+  87 003e 41F00101 		orr	r1, r1, #1
+  88 0042 1963     		str	r1, [r3, #48]
+  89              		.loc 1 53 3 view .LVU18
+  90 0044 196B     		ldr	r1, [r3, #48]
+  91 0046 01F00101 		and	r1, r1, #1
+  92 004a 0391     		str	r1, [sp, #12]
+  93              		.loc 1 53 3 view .LVU19
+  94 004c 0399     		ldr	r1, [sp, #12]
+  95              	.LBE4:
+  96              		.loc 1 53 3 view .LVU20
+  54:Core/Src/gpio.c ****   __HAL_RCC_GPIOE_CLK_ENABLE();
+  97              		.loc 1 54 3 view .LVU21
+  98              	.LBB5:
+  99              		.loc 1 54 3 view .LVU22
+ 100 004e 0492     		str	r2, [sp, #16]
+ 101              		.loc 1 54 3 view .LVU23
+ 102 0050 196B     		ldr	r1, [r3, #48]
+ 103 0052 41F01001 		orr	r1, r1, #16
+ 104 0056 1963     		str	r1, [r3, #48]
+ 105              		.loc 1 54 3 view .LVU24
+ 106 0058 196B     		ldr	r1, [r3, #48]
+ 107 005a 01F01001 		and	r1, r1, #16
+ 108 005e 0491     		str	r1, [sp, #16]
+ 109              		.loc 1 54 3 view .LVU25
+ 110 0060 0499     		ldr	r1, [sp, #16]
+ 111              	.LBE5:
+ 112              		.loc 1 54 3 view .LVU26
+  55:Core/Src/gpio.c ****   __HAL_RCC_GPIOB_CLK_ENABLE();
+ 113              		.loc 1 55 3 view .LVU27
+ 114              	.LBB6:
+ 115              		.loc 1 55 3 view .LVU28
+ 116 0062 0592     		str	r2, [sp, #20]
+ 117              		.loc 1 55 3 view .LVU29
+ARM GAS  /tmp/cc3EPhIR.s 			page 4
+
+
+ 118 0064 196B     		ldr	r1, [r3, #48]
+ 119 0066 41F00201 		orr	r1, r1, #2
+ 120 006a 1963     		str	r1, [r3, #48]
+ 121              		.loc 1 55 3 view .LVU30
+ 122 006c 196B     		ldr	r1, [r3, #48]
+ 123 006e 01F00201 		and	r1, r1, #2
+ 124 0072 0591     		str	r1, [sp, #20]
+ 125              		.loc 1 55 3 view .LVU31
+ 126 0074 0599     		ldr	r1, [sp, #20]
+ 127              	.LBE6:
+ 128              		.loc 1 55 3 view .LVU32
+  56:Core/Src/gpio.c ****   __HAL_RCC_GPIOD_CLK_ENABLE();
+ 129              		.loc 1 56 3 view .LVU33
+ 130              	.LBB7:
+ 131              		.loc 1 56 3 view .LVU34
+ 132 0076 0692     		str	r2, [sp, #24]
+ 133              		.loc 1 56 3 view .LVU35
+ 134 0078 1A6B     		ldr	r2, [r3, #48]
+ 135 007a 42F00802 		orr	r2, r2, #8
+ 136 007e 1A63     		str	r2, [r3, #48]
+ 137              		.loc 1 56 3 view .LVU36
+ 138 0080 1B6B     		ldr	r3, [r3, #48]
+ 139 0082 03F00803 		and	r3, r3, #8
+ 140 0086 0693     		str	r3, [sp, #24]
+ 141              		.loc 1 56 3 view .LVU37
+ 142 0088 069B     		ldr	r3, [sp, #24]
+ 143              	.LBE7:
+ 144              		.loc 1 56 3 view .LVU38
+  57:Core/Src/gpio.c **** 
+  58:Core/Src/gpio.c ****   /*Configure GPIO pins : PA10 PA11 PA12 */
+  59:Core/Src/gpio.c ****   GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
+ 145              		.loc 1 59 3 view .LVU39
+ 146              		.loc 1 59 23 is_stmt 0 view .LVU40
+ 147 008a 4FF4E053 		mov	r3, #7168
+ 148 008e 0793     		str	r3, [sp, #28]
+  60:Core/Src/gpio.c ****   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 149              		.loc 1 60 3 is_stmt 1 view .LVU41
+ 150              		.loc 1 60 24 is_stmt 0 view .LVU42
+ 151 0090 0223     		movs	r3, #2
+ 152 0092 0893     		str	r3, [sp, #32]
+  61:Core/Src/gpio.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 153              		.loc 1 61 3 is_stmt 1 view .LVU43
+  62:Core/Src/gpio.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 154              		.loc 1 62 3 view .LVU44
+ 155              		.loc 1 62 25 is_stmt 0 view .LVU45
+ 156 0094 0323     		movs	r3, #3
+ 157 0096 0A93     		str	r3, [sp, #40]
+  63:Core/Src/gpio.c ****   GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+ 158              		.loc 1 63 3 is_stmt 1 view .LVU46
+ 159              		.loc 1 63 29 is_stmt 0 view .LVU47
+ 160 0098 0A23     		movs	r3, #10
+ 161 009a 0B93     		str	r3, [sp, #44]
+  64:Core/Src/gpio.c ****   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 162              		.loc 1 64 3 is_stmt 1 view .LVU48
+ 163 009c 07A9     		add	r1, sp, #28
+ 164 009e 0448     		ldr	r0, .L3+4
+ 165 00a0 FFF7FEFF 		bl	HAL_GPIO_Init
+ARM GAS  /tmp/cc3EPhIR.s 			page 5
+
+
+ 166              	.LVL0:
+  65:Core/Src/gpio.c **** 
+  66:Core/Src/gpio.c **** }
+ 167              		.loc 1 66 1 is_stmt 0 view .LVU49
+ 168 00a4 0DB0     		add	sp, sp, #52
+ 169              	.LCFI2:
+ 170              		.cfi_def_cfa_offset 4
+ 171              		@ sp needed
+ 172 00a6 5DF804FB 		ldr	pc, [sp], #4
+ 173              	.L4:
+ 174 00aa 00BF     		.align	2
+ 175              	.L3:
+ 176 00ac 00380240 		.word	1073887232
+ 177 00b0 00000240 		.word	1073872896
+ 178              		.cfi_endproc
+ 179              	.LFE235:
+ 181              		.text
+ 182              	.Letext0:
+ 183              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 184              		.file 3 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 185              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ARM GAS  /tmp/cc3EPhIR.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 gpio.c
+     /tmp/cc3EPhIR.s:18     .text.MX_GPIO_Init:0000000000000000 $t
+     /tmp/cc3EPhIR.s:26     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
+     /tmp/cc3EPhIR.s:176    .text.MX_GPIO_Init:00000000000000ac $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init

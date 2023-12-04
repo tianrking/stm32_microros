@@ -1,0 +1,836 @@
+ARM GAS  /tmp/ccpUCfB2.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"jutils.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.jdiv_round_up,"ax",%progbits
+  18              		.align	1
+  19              		.global	jdiv_round_up
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	jdiv_round_up:
+  27              	.LVL0:
+  28              	.LFB7:
+  29              		.file 1 "Middlewares/Third_Party/LibJPEG/source/jutils.c"
+   1:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /*
+   2:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * jutils.c
+   3:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  *
+   4:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Copyright (C) 1991-1996, Thomas G. Lane.
+   5:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Modified 2009-2011 by Guido Vollbeding.
+   6:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * This file is part of the Independent JPEG Group's software.
+   7:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * For conditions of distribution and use, see the accompanying README file.
+   8:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  *
+   9:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * This file contains tables and miscellaneous utility routines needed
+  10:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * for both compression and decompression.
+  11:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Note we prefix all global names with "j" to minimize conflicts with
+  12:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * a surrounding application.
+  13:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+  14:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  15:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #define JPEG_INTERNALS
+  16:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #include "jinclude.h"
+  17:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #include "jpeglib.h"
+  18:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  19:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  20:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /*
+  21:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * jpeg_zigzag_order[i] is the zigzag-order position of the i'th element
+  22:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * of a DCT block read in natural order (left to right, top to bottom).
+  23:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+  24:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  25:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #if 0				/* This table is not actually needed in v6a */
+  26:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  27:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_zigzag_order[DCTSIZE2] = {
+  28:Middlewares/Third_Party/LibJPEG/source/jutils.c ****    0,  1,  5,  6, 14, 15, 27, 28,
+  29:Middlewares/Third_Party/LibJPEG/source/jutils.c ****    2,  4,  7, 13, 16, 26, 29, 42,
+ARM GAS  /tmp/ccpUCfB2.s 			page 2
+
+
+  30:Middlewares/Third_Party/LibJPEG/source/jutils.c ****    3,  8, 12, 17, 25, 30, 41, 43,
+  31:Middlewares/Third_Party/LibJPEG/source/jutils.c ****    9, 11, 18, 24, 31, 40, 44, 53,
+  32:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   10, 19, 23, 32, 39, 45, 52, 54,
+  33:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   20, 22, 33, 38, 46, 51, 55, 60,
+  34:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   21, 34, 37, 47, 50, 56, 59, 61,
+  35:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   35, 36, 48, 49, 57, 58, 62, 63
+  36:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+  37:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  38:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+  39:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  40:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /*
+  41:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * jpeg_natural_order[i] is the natural-order position of the i'th element
+  42:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * of zigzag order.
+  43:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  *
+  44:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * When reading corrupted data, the Huffman decoders could attempt
+  45:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * to reference an entry beyond the end of this array (if the decoded
+  46:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * zero run length reaches past the end of the block).  To prevent
+  47:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * wild stores without adding an inner-loop test, we put some extra
+  48:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * "63"s after the real entries.  This will cause the extra coefficient
+  49:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * to be stored in location 63 of the block, not somewhere random.
+  50:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * The worst case would be a run-length of 15, which means we need 16
+  51:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * fake entries.
+  52:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+  53:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  54:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order[DCTSIZE2+16] = {
+  55:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2,  3, 10,
+  56:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  17, 24, 32, 25, 18, 11,  4,  5,
+  57:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  12, 19, 26, 33, 40, 48, 41, 34,
+  58:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  27, 20, 13,  6,  7, 14, 21, 28,
+  59:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  35, 42, 49, 56, 57, 50, 43, 36,
+  60:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  29, 22, 15, 23, 30, 37, 44, 51,
+  61:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  58, 59, 52, 45, 38, 31, 39, 46,
+  62:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  53, 60, 61, 54, 47, 55, 62, 63,
+  63:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+  64:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+  65:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+  66:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  67:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order7[7*7+16] = {
+  68:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2,  3, 10,
+  69:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  17, 24, 32, 25, 18, 11,  4,  5,
+  70:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  12, 19, 26, 33, 40, 48, 41, 34,
+  71:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  27, 20, 13,  6, 14, 21, 28, 35,
+  72:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  42, 49, 50, 43, 36, 29, 22, 30,
+  73:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  37, 44, 51, 52, 45, 38, 46, 53,
+  74:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  54,
+  75:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+  76:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+  77:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+  78:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  79:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order6[6*6+16] = {
+  80:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2,  3, 10,
+  81:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  17, 24, 32, 25, 18, 11,  4,  5,
+  82:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  12, 19, 26, 33, 40, 41, 34, 27,
+  83:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  20, 13, 21, 28, 35, 42, 43, 36,
+  84:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  29, 37, 44, 45,
+  85:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+  86:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+ARM GAS  /tmp/ccpUCfB2.s 			page 3
+
+
+  87:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+  88:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  89:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order5[5*5+16] = {
+  90:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2,  3, 10,
+  91:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  17, 24, 32, 25, 18, 11,  4, 12,
+  92:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  19, 26, 33, 34, 27, 20, 28, 35,
+  93:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  36,
+  94:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+  95:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+  96:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+  97:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+  98:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order4[4*4+16] = {
+  99:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2,  3, 10,
+ 100:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  17, 24, 25, 18, 11, 19, 26, 27,
+ 101:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 102:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+ 103:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+ 104:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 105:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order3[3*3+16] = {
+ 106:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8, 16,  9,  2, 10, 17,
+ 107:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  18,
+ 108:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 109:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+ 110:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+ 111:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 112:Middlewares/Third_Party/LibJPEG/source/jutils.c **** const int jpeg_natural_order2[2*2+16] = {
+ 113:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   0,  1,  8,  9,
+ 114:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 115:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  63, 63, 63, 63, 63, 63, 63, 63
+ 116:Middlewares/Third_Party/LibJPEG/source/jutils.c **** };
+ 117:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 118:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 119:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /*
+ 120:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Arithmetic utilities
+ 121:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+ 122:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 123:Middlewares/Third_Party/LibJPEG/source/jutils.c **** GLOBAL(long)
+ 124:Middlewares/Third_Party/LibJPEG/source/jutils.c **** jdiv_round_up (long a, long b)
+ 125:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Compute a/b rounded up to next integer, ie, ceil(a/b) */
+ 126:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Assumes a >= 0, b > 0 */
+ 127:Middlewares/Third_Party/LibJPEG/source/jutils.c **** {
+  30              		.loc 1 127 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+ 128:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   return (a + b - 1L) / b;
+  35              		.loc 1 128 3 view .LVU1
+  36              		.loc 1 128 13 is_stmt 0 view .LVU2
+  37 0000 0844     		add	r0, r0, r1
+  38              	.LVL1:
+  39              		.loc 1 128 17 view .LVU3
+  40 0002 0138     		subs	r0, r0, #1
+ 129:Middlewares/Third_Party/LibJPEG/source/jutils.c **** }
+  41              		.loc 1 129 1 view .LVU4
+  42 0004 90FBF1F0 		sdiv	r0, r0, r1
+  43 0008 7047     		bx	lr
+ARM GAS  /tmp/ccpUCfB2.s 			page 4
+
+
+  44              		.cfi_endproc
+  45              	.LFE7:
+  47              		.section	.text.jround_up,"ax",%progbits
+  48              		.align	1
+  49              		.global	jround_up
+  50              		.syntax unified
+  51              		.thumb
+  52              		.thumb_func
+  53              		.fpu fpv4-sp-d16
+  55              	jround_up:
+  56              	.LVL2:
+  57              	.LFB8:
+ 130:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 131:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 132:Middlewares/Third_Party/LibJPEG/source/jutils.c **** GLOBAL(long)
+ 133:Middlewares/Third_Party/LibJPEG/source/jutils.c **** jround_up (long a, long b)
+ 134:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Compute a rounded up to next multiple of b, ie, ceil(a/b)*b */
+ 135:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Assumes a >= 0, b > 0 */
+ 136:Middlewares/Third_Party/LibJPEG/source/jutils.c **** {
+  58              		.loc 1 136 1 is_stmt 1 view -0
+  59              		.cfi_startproc
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62              		@ link register save eliminated.
+ 137:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   a += b - 1L;
+  63              		.loc 1 137 3 view .LVU6
+  64              		.loc 1 137 10 is_stmt 0 view .LVU7
+  65 0000 4B1E     		subs	r3, r1, #1
+  66              		.loc 1 137 5 view .LVU8
+  67 0002 1844     		add	r0, r0, r3
+  68              	.LVL3:
+ 138:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   return a - (a % b);
+  69              		.loc 1 138 3 is_stmt 1 view .LVU9
+  70              		.loc 1 138 17 is_stmt 0 view .LVU10
+  71 0004 90FBF1F3 		sdiv	r3, r0, r1
+  72 0008 01FB1301 		mls	r1, r1, r3, r0
+  73              	.LVL4:
+ 139:Middlewares/Third_Party/LibJPEG/source/jutils.c **** }
+  74              		.loc 1 139 1 view .LVU11
+  75 000c 401A     		subs	r0, r0, r1
+  76              	.LVL5:
+  77              		.loc 1 139 1 view .LVU12
+  78 000e 7047     		bx	lr
+  79              		.cfi_endproc
+  80              	.LFE8:
+  82              		.section	.text.jcopy_sample_rows,"ax",%progbits
+  83              		.align	1
+  84              		.global	jcopy_sample_rows
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  88              		.fpu fpv4-sp-d16
+  90              	jcopy_sample_rows:
+  91              	.LVL6:
+  92              	.LFB9:
+ 140:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 141:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ARM GAS  /tmp/ccpUCfB2.s 			page 5
+
+
+ 142:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* On normal machines we can apply MEMCOPY() and MEMZERO() to sample arrays
+ 143:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * and coefficient-block arrays.  This won't work on 80x86 because the arrays
+ 144:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * are FAR and we're assuming a small-pointer memory model.  However, some
+ 145:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * DOS compilers provide far-pointer versions of memcpy() and memset() even
+ 146:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * in the small-model libraries.  These will be used if USE_FMEM is defined.
+ 147:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Otherwise, the routines below do it the hard way.  (The performance cost
+ 148:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * is not all that great, because these routines aren't very heavily used.)
+ 149:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+ 150:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 151:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #ifndef NEED_FAR_POINTERS	/* normal case, same as regular macro */
+ 152:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #define FMEMCOPY(dest,src,size)	MEMCOPY(dest,src,size)
+ 153:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #else				/* 80x86 case, define if we can */
+ 154:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #ifdef USE_FMEM
+ 155:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #define FMEMCOPY(dest,src,size)	_fmemcpy((void FAR *)(dest), (const void FAR *)(src), (size_t)(size
+ 156:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #else
+ 157:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* This function is for use by the FMEMZERO macro defined in jpegint.h.
+ 158:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * Do not call this function directly, use the FMEMZERO macro instead.
+ 159:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+ 160:Middlewares/Third_Party/LibJPEG/source/jutils.c **** GLOBAL(void)
+ 161:Middlewares/Third_Party/LibJPEG/source/jutils.c **** jzero_far (void FAR * target, size_t bytestozero)
+ 162:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Zero out a chunk of FAR memory. */
+ 163:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* This might be sample-array data, block-array data, or alloc_large data. */
+ 164:Middlewares/Third_Party/LibJPEG/source/jutils.c **** {
+ 165:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register char FAR * ptr = (char FAR *) target;
+ 166:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register size_t count;
+ 167:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 168:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   for (count = bytestozero; count > 0; count--) {
+ 169:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     *ptr++ = 0;
+ 170:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   }
+ 171:Middlewares/Third_Party/LibJPEG/source/jutils.c **** }
+ 172:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+ 173:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+ 174:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 175:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 176:Middlewares/Third_Party/LibJPEG/source/jutils.c **** GLOBAL(void)
+ 177:Middlewares/Third_Party/LibJPEG/source/jutils.c **** jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
+ 178:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 		   JSAMPARRAY output_array, int dest_row,
+ 179:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 		   int num_rows, JDIMENSION num_cols)
+ 180:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Copy some rows of samples from one place to another.
+ 181:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * num_rows rows are copied from input_array[source_row++]
+ 182:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * to output_array[dest_row++]; these areas may overlap for duplication.
+ 183:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  * The source and destination arrays must be at least as wide as num_cols.
+ 184:Middlewares/Third_Party/LibJPEG/source/jutils.c ****  */
+ 185:Middlewares/Third_Party/LibJPEG/source/jutils.c **** {
+  93              		.loc 1 185 1 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 8, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		.loc 1 185 1 is_stmt 0 view .LVU14
+  98 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  99              	.LCFI0:
+ 100              		.cfi_def_cfa_offset 24
+ 101              		.cfi_offset 3, -24
+ 102              		.cfi_offset 4, -20
+ 103              		.cfi_offset 5, -16
+ 104              		.cfi_offset 6, -12
+ 105              		.cfi_offset 7, -8
+ARM GAS  /tmp/ccpUCfB2.s 			page 6
+
+
+ 106              		.cfi_offset 14, -4
+ 107 0002 069E     		ldr	r6, [sp, #24]
+ 108 0004 079F     		ldr	r7, [sp, #28]
+ 186:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register JSAMPROW inptr, outptr;
+ 109              		.loc 1 186 3 is_stmt 1 view .LVU15
+ 187:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #ifdef FMEMCOPY
+ 188:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register size_t count = (size_t) (num_cols * SIZEOF(JSAMPLE));
+ 110              		.loc 1 188 3 view .LVU16
+ 111              	.LVL7:
+ 189:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #else
+ 190:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register JDIMENSION count;
+ 191:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+ 192:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register int row;
+ 112              		.loc 1 192 3 view .LVU17
+ 193:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 194:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   input_array += source_row;
+ 113              		.loc 1 194 3 view .LVU18
+ 114              		.loc 1 194 15 is_stmt 0 view .LVU19
+ 115 0006 00EB8105 		add	r5, r0, r1, lsl #2
+ 116              	.LVL8:
+ 195:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   output_array += dest_row;
+ 117              		.loc 1 195 3 is_stmt 1 view .LVU20
+ 118              		.loc 1 195 16 is_stmt 0 view .LVU21
+ 119 000a 02EB8304 		add	r4, r2, r3, lsl #2
+ 120              	.LVL9:
+ 196:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 197:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   for (row = num_rows; row > 0; row--) {
+ 121              		.loc 1 197 3 is_stmt 1 view .LVU22
+ 122              		.loc 1 197 3 is_stmt 0 view .LVU23
+ 123 000e 07E0     		b	.L4
+ 124              	.LVL10:
+ 125              	.L5:
+ 198:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     inptr = *input_array++;
+ 126              		.loc 1 198 5 is_stmt 1 discriminator 3 view .LVU24
+ 199:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     outptr = *output_array++;
+ 127              		.loc 1 199 5 discriminator 3 view .LVU25
+ 200:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #ifdef FMEMCOPY
+ 201:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     FMEMCOPY(outptr, inptr, count);
+ 128              		.loc 1 201 5 discriminator 3 view .LVU26
+ 129 0010 3A46     		mov	r2, r7
+ 130 0012 55F8041B 		ldr	r1, [r5], #4
+ 131              	.LVL11:
+ 132              		.loc 1 201 5 is_stmt 0 discriminator 3 view .LVU27
+ 133 0016 54F8040B 		ldr	r0, [r4], #4
+ 134              	.LVL12:
+ 135              		.loc 1 201 5 discriminator 3 view .LVU28
+ 136 001a FFF7FEFF 		bl	memcpy
+ 137              	.LVL13:
+ 197:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     inptr = *input_array++;
+ 138              		.loc 1 197 33 is_stmt 1 discriminator 3 view .LVU29
+ 197:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     inptr = *input_array++;
+ 139              		.loc 1 197 36 is_stmt 0 discriminator 3 view .LVU30
+ 140 001e 013E     		subs	r6, r6, #1
+ 141              	.LVL14:
+ 142              	.L4:
+ 197:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     inptr = *input_array++;
+ 143              		.loc 1 197 24 is_stmt 1 discriminator 1 view .LVU31
+ARM GAS  /tmp/ccpUCfB2.s 			page 7
+
+
+ 197:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     inptr = *input_array++;
+ 144              		.loc 1 197 3 is_stmt 0 discriminator 1 view .LVU32
+ 145 0020 002E     		cmp	r6, #0
+ 146 0022 F5DC     		bgt	.L5
+ 202:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #else
+ 203:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     for (count = num_cols; count > 0; count--)
+ 204:Middlewares/Third_Party/LibJPEG/source/jutils.c ****       *outptr++ = *inptr++;	/* needn't bother with GETJSAMPLE() here */
+ 205:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+ 206:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   }
+ 207:Middlewares/Third_Party/LibJPEG/source/jutils.c **** }
+ 147              		.loc 1 207 1 view .LVU33
+ 148 0024 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 149              		.loc 1 207 1 view .LVU34
+ 150              		.cfi_endproc
+ 151              	.LFE9:
+ 153              		.section	.text.jcopy_block_row,"ax",%progbits
+ 154              		.align	1
+ 155              		.global	jcopy_block_row
+ 156              		.syntax unified
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.fpu fpv4-sp-d16
+ 161              	jcopy_block_row:
+ 162              	.LVL15:
+ 163              	.LFB10:
+ 208:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 209:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 210:Middlewares/Third_Party/LibJPEG/source/jutils.c **** GLOBAL(void)
+ 211:Middlewares/Third_Party/LibJPEG/source/jutils.c **** jcopy_block_row (JBLOCKROW input_row, JBLOCKROW output_row,
+ 212:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 		 JDIMENSION num_blocks)
+ 213:Middlewares/Third_Party/LibJPEG/source/jutils.c **** /* Copy a row of coefficient blocks from one place to another. */
+ 214:Middlewares/Third_Party/LibJPEG/source/jutils.c **** {
+ 164              		.loc 1 214 1 is_stmt 1 view -0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168              		.loc 1 214 1 is_stmt 0 view .LVU36
+ 169 0000 08B5     		push	{r3, lr}
+ 170              	.LCFI1:
+ 171              		.cfi_def_cfa_offset 8
+ 172              		.cfi_offset 3, -8
+ 173              		.cfi_offset 14, -4
+ 174 0002 0B46     		mov	r3, r1
+ 215:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #ifdef FMEMCOPY
+ 216:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   FMEMCOPY(output_row, input_row, num_blocks * (DCTSIZE2 * SIZEOF(JCOEF)));
+ 175              		.loc 1 216 3 is_stmt 1 view .LVU37
+ 176 0004 D201     		lsls	r2, r2, #7
+ 177              	.LVL16:
+ 178              		.loc 1 216 3 is_stmt 0 view .LVU38
+ 179 0006 0146     		mov	r1, r0
+ 180              	.LVL17:
+ 181              		.loc 1 216 3 view .LVU39
+ 182 0008 1846     		mov	r0, r3
+ 183              	.LVL18:
+ 184              		.loc 1 216 3 view .LVU40
+ 185 000a FFF7FEFF 		bl	memcpy
+ 186              	.LVL19:
+ARM GAS  /tmp/ccpUCfB2.s 			page 8
+
+
+ 217:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #else
+ 218:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register JCOEFPTR inptr, outptr;
+ 219:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   register long count;
+ 220:Middlewares/Third_Party/LibJPEG/source/jutils.c **** 
+ 221:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   inptr = (JCOEFPTR) input_row;
+ 222:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   outptr = (JCOEFPTR) output_row;
+ 223:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   for (count = (long) num_blocks * DCTSIZE2; count > 0; count--) {
+ 224:Middlewares/Third_Party/LibJPEG/source/jutils.c ****     *outptr++ = *inptr++;
+ 225:Middlewares/Third_Party/LibJPEG/source/jutils.c ****   }
+ 226:Middlewares/Third_Party/LibJPEG/source/jutils.c **** #endif
+ 227:Middlewares/Third_Party/LibJPEG/source/jutils.c **** }
+ 187              		.loc 1 227 1 view .LVU41
+ 188 000e 08BD     		pop	{r3, pc}
+ 189              		.cfi_endproc
+ 190              	.LFE10:
+ 192              		.global	jpeg_natural_order2
+ 193              		.global	jpeg_natural_order3
+ 194              		.global	jpeg_natural_order4
+ 195              		.global	jpeg_natural_order5
+ 196              		.global	jpeg_natural_order6
+ 197              		.global	jpeg_natural_order7
+ 198              		.global	jpeg_natural_order
+ 199              		.section	.rodata.jpeg_natural_order,"a"
+ 200              		.align	2
+ 203              	jpeg_natural_order:
+ 204 0000 00000000 		.word	0
+ 205 0004 01000000 		.word	1
+ 206 0008 08000000 		.word	8
+ 207 000c 10000000 		.word	16
+ 208 0010 09000000 		.word	9
+ 209 0014 02000000 		.word	2
+ 210 0018 03000000 		.word	3
+ 211 001c 0A000000 		.word	10
+ 212 0020 11000000 		.word	17
+ 213 0024 18000000 		.word	24
+ 214 0028 20000000 		.word	32
+ 215 002c 19000000 		.word	25
+ 216 0030 12000000 		.word	18
+ 217 0034 0B000000 		.word	11
+ 218 0038 04000000 		.word	4
+ 219 003c 05000000 		.word	5
+ 220 0040 0C000000 		.word	12
+ 221 0044 13000000 		.word	19
+ 222 0048 1A000000 		.word	26
+ 223 004c 21000000 		.word	33
+ 224 0050 28000000 		.word	40
+ 225 0054 30000000 		.word	48
+ 226 0058 29000000 		.word	41
+ 227 005c 22000000 		.word	34
+ 228 0060 1B000000 		.word	27
+ 229 0064 14000000 		.word	20
+ 230 0068 0D000000 		.word	13
+ 231 006c 06000000 		.word	6
+ 232 0070 07000000 		.word	7
+ 233 0074 0E000000 		.word	14
+ 234 0078 15000000 		.word	21
+ 235 007c 1C000000 		.word	28
+ARM GAS  /tmp/ccpUCfB2.s 			page 9
+
+
+ 236 0080 23000000 		.word	35
+ 237 0084 2A000000 		.word	42
+ 238 0088 31000000 		.word	49
+ 239 008c 38000000 		.word	56
+ 240 0090 39000000 		.word	57
+ 241 0094 32000000 		.word	50
+ 242 0098 2B000000 		.word	43
+ 243 009c 24000000 		.word	36
+ 244 00a0 1D000000 		.word	29
+ 245 00a4 16000000 		.word	22
+ 246 00a8 0F000000 		.word	15
+ 247 00ac 17000000 		.word	23
+ 248 00b0 1E000000 		.word	30
+ 249 00b4 25000000 		.word	37
+ 250 00b8 2C000000 		.word	44
+ 251 00bc 33000000 		.word	51
+ 252 00c0 3A000000 		.word	58
+ 253 00c4 3B000000 		.word	59
+ 254 00c8 34000000 		.word	52
+ 255 00cc 2D000000 		.word	45
+ 256 00d0 26000000 		.word	38
+ 257 00d4 1F000000 		.word	31
+ 258 00d8 27000000 		.word	39
+ 259 00dc 2E000000 		.word	46
+ 260 00e0 35000000 		.word	53
+ 261 00e4 3C000000 		.word	60
+ 262 00e8 3D000000 		.word	61
+ 263 00ec 36000000 		.word	54
+ 264 00f0 2F000000 		.word	47
+ 265 00f4 37000000 		.word	55
+ 266 00f8 3E000000 		.word	62
+ 267 00fc 3F000000 		.word	63
+ 268 0100 3F000000 		.word	63
+ 269 0104 3F000000 		.word	63
+ 270 0108 3F000000 		.word	63
+ 271 010c 3F000000 		.word	63
+ 272 0110 3F000000 		.word	63
+ 273 0114 3F000000 		.word	63
+ 274 0118 3F000000 		.word	63
+ 275 011c 3F000000 		.word	63
+ 276 0120 3F000000 		.word	63
+ 277 0124 3F000000 		.word	63
+ 278 0128 3F000000 		.word	63
+ 279 012c 3F000000 		.word	63
+ 280 0130 3F000000 		.word	63
+ 281 0134 3F000000 		.word	63
+ 282 0138 3F000000 		.word	63
+ 283 013c 3F000000 		.word	63
+ 284              		.section	.rodata.jpeg_natural_order2,"a"
+ 285              		.align	2
+ 288              	jpeg_natural_order2:
+ 289 0000 00000000 		.word	0
+ 290 0004 01000000 		.word	1
+ 291 0008 08000000 		.word	8
+ 292 000c 09000000 		.word	9
+ 293 0010 3F000000 		.word	63
+ 294 0014 3F000000 		.word	63
+ARM GAS  /tmp/ccpUCfB2.s 			page 10
+
+
+ 295 0018 3F000000 		.word	63
+ 296 001c 3F000000 		.word	63
+ 297 0020 3F000000 		.word	63
+ 298 0024 3F000000 		.word	63
+ 299 0028 3F000000 		.word	63
+ 300 002c 3F000000 		.word	63
+ 301 0030 3F000000 		.word	63
+ 302 0034 3F000000 		.word	63
+ 303 0038 3F000000 		.word	63
+ 304 003c 3F000000 		.word	63
+ 305 0040 3F000000 		.word	63
+ 306 0044 3F000000 		.word	63
+ 307 0048 3F000000 		.word	63
+ 308 004c 3F000000 		.word	63
+ 309              		.section	.rodata.jpeg_natural_order3,"a"
+ 310              		.align	2
+ 313              	jpeg_natural_order3:
+ 314 0000 00000000 		.word	0
+ 315 0004 01000000 		.word	1
+ 316 0008 08000000 		.word	8
+ 317 000c 10000000 		.word	16
+ 318 0010 09000000 		.word	9
+ 319 0014 02000000 		.word	2
+ 320 0018 0A000000 		.word	10
+ 321 001c 11000000 		.word	17
+ 322 0020 12000000 		.word	18
+ 323 0024 3F000000 		.word	63
+ 324 0028 3F000000 		.word	63
+ 325 002c 3F000000 		.word	63
+ 326 0030 3F000000 		.word	63
+ 327 0034 3F000000 		.word	63
+ 328 0038 3F000000 		.word	63
+ 329 003c 3F000000 		.word	63
+ 330 0040 3F000000 		.word	63
+ 331 0044 3F000000 		.word	63
+ 332 0048 3F000000 		.word	63
+ 333 004c 3F000000 		.word	63
+ 334 0050 3F000000 		.word	63
+ 335 0054 3F000000 		.word	63
+ 336 0058 3F000000 		.word	63
+ 337 005c 3F000000 		.word	63
+ 338 0060 3F000000 		.word	63
+ 339              		.section	.rodata.jpeg_natural_order4,"a"
+ 340              		.align	2
+ 343              	jpeg_natural_order4:
+ 344 0000 00000000 		.word	0
+ 345 0004 01000000 		.word	1
+ 346 0008 08000000 		.word	8
+ 347 000c 10000000 		.word	16
+ 348 0010 09000000 		.word	9
+ 349 0014 02000000 		.word	2
+ 350 0018 03000000 		.word	3
+ 351 001c 0A000000 		.word	10
+ 352 0020 11000000 		.word	17
+ 353 0024 18000000 		.word	24
+ 354 0028 19000000 		.word	25
+ 355 002c 12000000 		.word	18
+ARM GAS  /tmp/ccpUCfB2.s 			page 11
+
+
+ 356 0030 0B000000 		.word	11
+ 357 0034 13000000 		.word	19
+ 358 0038 1A000000 		.word	26
+ 359 003c 1B000000 		.word	27
+ 360 0040 3F000000 		.word	63
+ 361 0044 3F000000 		.word	63
+ 362 0048 3F000000 		.word	63
+ 363 004c 3F000000 		.word	63
+ 364 0050 3F000000 		.word	63
+ 365 0054 3F000000 		.word	63
+ 366 0058 3F000000 		.word	63
+ 367 005c 3F000000 		.word	63
+ 368 0060 3F000000 		.word	63
+ 369 0064 3F000000 		.word	63
+ 370 0068 3F000000 		.word	63
+ 371 006c 3F000000 		.word	63
+ 372 0070 3F000000 		.word	63
+ 373 0074 3F000000 		.word	63
+ 374 0078 3F000000 		.word	63
+ 375 007c 3F000000 		.word	63
+ 376              		.section	.rodata.jpeg_natural_order5,"a"
+ 377              		.align	2
+ 380              	jpeg_natural_order5:
+ 381 0000 00000000 		.word	0
+ 382 0004 01000000 		.word	1
+ 383 0008 08000000 		.word	8
+ 384 000c 10000000 		.word	16
+ 385 0010 09000000 		.word	9
+ 386 0014 02000000 		.word	2
+ 387 0018 03000000 		.word	3
+ 388 001c 0A000000 		.word	10
+ 389 0020 11000000 		.word	17
+ 390 0024 18000000 		.word	24
+ 391 0028 20000000 		.word	32
+ 392 002c 19000000 		.word	25
+ 393 0030 12000000 		.word	18
+ 394 0034 0B000000 		.word	11
+ 395 0038 04000000 		.word	4
+ 396 003c 0C000000 		.word	12
+ 397 0040 13000000 		.word	19
+ 398 0044 1A000000 		.word	26
+ 399 0048 21000000 		.word	33
+ 400 004c 22000000 		.word	34
+ 401 0050 1B000000 		.word	27
+ 402 0054 14000000 		.word	20
+ 403 0058 1C000000 		.word	28
+ 404 005c 23000000 		.word	35
+ 405 0060 24000000 		.word	36
+ 406 0064 3F000000 		.word	63
+ 407 0068 3F000000 		.word	63
+ 408 006c 3F000000 		.word	63
+ 409 0070 3F000000 		.word	63
+ 410 0074 3F000000 		.word	63
+ 411 0078 3F000000 		.word	63
+ 412 007c 3F000000 		.word	63
+ 413 0080 3F000000 		.word	63
+ 414 0084 3F000000 		.word	63
+ARM GAS  /tmp/ccpUCfB2.s 			page 12
+
+
+ 415 0088 3F000000 		.word	63
+ 416 008c 3F000000 		.word	63
+ 417 0090 3F000000 		.word	63
+ 418 0094 3F000000 		.word	63
+ 419 0098 3F000000 		.word	63
+ 420 009c 3F000000 		.word	63
+ 421 00a0 3F000000 		.word	63
+ 422              		.section	.rodata.jpeg_natural_order6,"a"
+ 423              		.align	2
+ 426              	jpeg_natural_order6:
+ 427 0000 00000000 		.word	0
+ 428 0004 01000000 		.word	1
+ 429 0008 08000000 		.word	8
+ 430 000c 10000000 		.word	16
+ 431 0010 09000000 		.word	9
+ 432 0014 02000000 		.word	2
+ 433 0018 03000000 		.word	3
+ 434 001c 0A000000 		.word	10
+ 435 0020 11000000 		.word	17
+ 436 0024 18000000 		.word	24
+ 437 0028 20000000 		.word	32
+ 438 002c 19000000 		.word	25
+ 439 0030 12000000 		.word	18
+ 440 0034 0B000000 		.word	11
+ 441 0038 04000000 		.word	4
+ 442 003c 05000000 		.word	5
+ 443 0040 0C000000 		.word	12
+ 444 0044 13000000 		.word	19
+ 445 0048 1A000000 		.word	26
+ 446 004c 21000000 		.word	33
+ 447 0050 28000000 		.word	40
+ 448 0054 29000000 		.word	41
+ 449 0058 22000000 		.word	34
+ 450 005c 1B000000 		.word	27
+ 451 0060 14000000 		.word	20
+ 452 0064 0D000000 		.word	13
+ 453 0068 15000000 		.word	21
+ 454 006c 1C000000 		.word	28
+ 455 0070 23000000 		.word	35
+ 456 0074 2A000000 		.word	42
+ 457 0078 2B000000 		.word	43
+ 458 007c 24000000 		.word	36
+ 459 0080 1D000000 		.word	29
+ 460 0084 25000000 		.word	37
+ 461 0088 2C000000 		.word	44
+ 462 008c 2D000000 		.word	45
+ 463 0090 3F000000 		.word	63
+ 464 0094 3F000000 		.word	63
+ 465 0098 3F000000 		.word	63
+ 466 009c 3F000000 		.word	63
+ 467 00a0 3F000000 		.word	63
+ 468 00a4 3F000000 		.word	63
+ 469 00a8 3F000000 		.word	63
+ 470 00ac 3F000000 		.word	63
+ 471 00b0 3F000000 		.word	63
+ 472 00b4 3F000000 		.word	63
+ 473 00b8 3F000000 		.word	63
+ARM GAS  /tmp/ccpUCfB2.s 			page 13
+
+
+ 474 00bc 3F000000 		.word	63
+ 475 00c0 3F000000 		.word	63
+ 476 00c4 3F000000 		.word	63
+ 477 00c8 3F000000 		.word	63
+ 478 00cc 3F000000 		.word	63
+ 479              		.section	.rodata.jpeg_natural_order7,"a"
+ 480              		.align	2
+ 483              	jpeg_natural_order7:
+ 484 0000 00000000 		.word	0
+ 485 0004 01000000 		.word	1
+ 486 0008 08000000 		.word	8
+ 487 000c 10000000 		.word	16
+ 488 0010 09000000 		.word	9
+ 489 0014 02000000 		.word	2
+ 490 0018 03000000 		.word	3
+ 491 001c 0A000000 		.word	10
+ 492 0020 11000000 		.word	17
+ 493 0024 18000000 		.word	24
+ 494 0028 20000000 		.word	32
+ 495 002c 19000000 		.word	25
+ 496 0030 12000000 		.word	18
+ 497 0034 0B000000 		.word	11
+ 498 0038 04000000 		.word	4
+ 499 003c 05000000 		.word	5
+ 500 0040 0C000000 		.word	12
+ 501 0044 13000000 		.word	19
+ 502 0048 1A000000 		.word	26
+ 503 004c 21000000 		.word	33
+ 504 0050 28000000 		.word	40
+ 505 0054 30000000 		.word	48
+ 506 0058 29000000 		.word	41
+ 507 005c 22000000 		.word	34
+ 508 0060 1B000000 		.word	27
+ 509 0064 14000000 		.word	20
+ 510 0068 0D000000 		.word	13
+ 511 006c 06000000 		.word	6
+ 512 0070 0E000000 		.word	14
+ 513 0074 15000000 		.word	21
+ 514 0078 1C000000 		.word	28
+ 515 007c 23000000 		.word	35
+ 516 0080 2A000000 		.word	42
+ 517 0084 31000000 		.word	49
+ 518 0088 32000000 		.word	50
+ 519 008c 2B000000 		.word	43
+ 520 0090 24000000 		.word	36
+ 521 0094 1D000000 		.word	29
+ 522 0098 16000000 		.word	22
+ 523 009c 1E000000 		.word	30
+ 524 00a0 25000000 		.word	37
+ 525 00a4 2C000000 		.word	44
+ 526 00a8 33000000 		.word	51
+ 527 00ac 34000000 		.word	52
+ 528 00b0 2D000000 		.word	45
+ 529 00b4 26000000 		.word	38
+ 530 00b8 2E000000 		.word	46
+ 531 00bc 35000000 		.word	53
+ 532 00c0 36000000 		.word	54
+ARM GAS  /tmp/ccpUCfB2.s 			page 14
+
+
+ 533 00c4 3F000000 		.word	63
+ 534 00c8 3F000000 		.word	63
+ 535 00cc 3F000000 		.word	63
+ 536 00d0 3F000000 		.word	63
+ 537 00d4 3F000000 		.word	63
+ 538 00d8 3F000000 		.word	63
+ 539 00dc 3F000000 		.word	63
+ 540 00e0 3F000000 		.word	63
+ 541 00e4 3F000000 		.word	63
+ 542 00e8 3F000000 		.word	63
+ 543 00ec 3F000000 		.word	63
+ 544 00f0 3F000000 		.word	63
+ 545 00f4 3F000000 		.word	63
+ 546 00f8 3F000000 		.word	63
+ 547 00fc 3F000000 		.word	63
+ 548 0100 3F000000 		.word	63
+ 549              		.text
+ 550              	.Letext0:
+ 551              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 552              		.file 3 "LIBJPEG/Target/jmorecfg.h"
+ 553              		.file 4 "Middlewares/Third_Party/LibJPEG/include/jpeglib.h"
+ 554              		.file 5 "Middlewares/Third_Party/LibJPEG/include/jpegint.h"
+ 555              		.file 6 "<built-in>"
+ARM GAS  /tmp/ccpUCfB2.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 jutils.c
+     /tmp/ccpUCfB2.s:18     .text.jdiv_round_up:0000000000000000 $t
+     /tmp/ccpUCfB2.s:26     .text.jdiv_round_up:0000000000000000 jdiv_round_up
+     /tmp/ccpUCfB2.s:48     .text.jround_up:0000000000000000 $t
+     /tmp/ccpUCfB2.s:55     .text.jround_up:0000000000000000 jround_up
+     /tmp/ccpUCfB2.s:83     .text.jcopy_sample_rows:0000000000000000 $t
+     /tmp/ccpUCfB2.s:90     .text.jcopy_sample_rows:0000000000000000 jcopy_sample_rows
+     /tmp/ccpUCfB2.s:154    .text.jcopy_block_row:0000000000000000 $t
+     /tmp/ccpUCfB2.s:161    .text.jcopy_block_row:0000000000000000 jcopy_block_row
+     /tmp/ccpUCfB2.s:288    .rodata.jpeg_natural_order2:0000000000000000 jpeg_natural_order2
+     /tmp/ccpUCfB2.s:313    .rodata.jpeg_natural_order3:0000000000000000 jpeg_natural_order3
+     /tmp/ccpUCfB2.s:343    .rodata.jpeg_natural_order4:0000000000000000 jpeg_natural_order4
+     /tmp/ccpUCfB2.s:380    .rodata.jpeg_natural_order5:0000000000000000 jpeg_natural_order5
+     /tmp/ccpUCfB2.s:426    .rodata.jpeg_natural_order6:0000000000000000 jpeg_natural_order6
+     /tmp/ccpUCfB2.s:483    .rodata.jpeg_natural_order7:0000000000000000 jpeg_natural_order7
+     /tmp/ccpUCfB2.s:203    .rodata.jpeg_natural_order:0000000000000000 jpeg_natural_order
+     /tmp/ccpUCfB2.s:200    .rodata.jpeg_natural_order:0000000000000000 $d
+     /tmp/ccpUCfB2.s:285    .rodata.jpeg_natural_order2:0000000000000000 $d
+     /tmp/ccpUCfB2.s:310    .rodata.jpeg_natural_order3:0000000000000000 $d
+     /tmp/ccpUCfB2.s:340    .rodata.jpeg_natural_order4:0000000000000000 $d
+     /tmp/ccpUCfB2.s:377    .rodata.jpeg_natural_order5:0000000000000000 $d
+     /tmp/ccpUCfB2.s:423    .rodata.jpeg_natural_order6:0000000000000000 $d
+     /tmp/ccpUCfB2.s:480    .rodata.jpeg_natural_order7:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+memcpy
