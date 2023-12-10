@@ -71,7 +71,8 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
 Core/Src/dma.c \
 Core/Src/usart.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
-Core/Src/tim.c
+Core/Src/tim.c \
+Core/Src/syscalls.c
 
 # ASM sources
 ASM_SOURCES =  \

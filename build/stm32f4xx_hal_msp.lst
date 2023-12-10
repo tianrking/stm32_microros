@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccdUiQSu.s 			page 1
+ARM GAS  /tmp/ccDwunMu.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -20,13 +20,14 @@ ARM GAS  /tmp/ccdUiQSu.s 			page 1
   17              		.section	.text.HAL_MspInit,"ax",%progbits
   18              		.align	1
   19              		.global	HAL_MspInit
-  20              		.syntax unified
-  21              		.thumb
-  22              		.thumb_func
-  23              		.fpu fpv4-sp-d16
-  25              	HAL_MspInit:
-  26              	.LFB130:
-  27              		.file 1 "Core/Src/stm32f4xx_hal_msp.c"
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	HAL_MspInit:
+  27              	.LFB130:
+  28              		.file 1 "Core/Src/stm32f4xx_hal_msp.c"
    1:Core/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Header */
    2:Core/Src/stm32f4xx_hal_msp.c **** /**
    3:Core/Src/stm32f4xx_hal_msp.c ****   ******************************************************************************
@@ -57,10 +58,10 @@ ARM GAS  /tmp/ccdUiQSu.s 			page 1
   28:Core/Src/stm32f4xx_hal_msp.c **** /* Private typedef -----------------------------------------------------------*/
   29:Core/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN TD */
   30:Core/Src/stm32f4xx_hal_msp.c **** 
+ARM GAS  /tmp/ccDwunMu.s 			page 2
+
+
   31:Core/Src/stm32f4xx_hal_msp.c **** /* USER CODE END TD */
-ARM GAS  /tmp/ccdUiQSu.s 			page 2
-
-
   32:Core/Src/stm32f4xx_hal_msp.c **** 
   33:Core/Src/stm32f4xx_hal_msp.c **** /* Private define ------------------------------------------------------------*/
   34:Core/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Define */
@@ -95,94 +96,102 @@ ARM GAS  /tmp/ccdUiQSu.s 			page 1
   63:Core/Src/stm32f4xx_hal_msp.c ****   */
   64:Core/Src/stm32f4xx_hal_msp.c **** void HAL_MspInit(void)
   65:Core/Src/stm32f4xx_hal_msp.c **** {
-  28              		.loc 1 65 0
-  29              		.cfi_startproc
-  30              		@ args = 0, pretend = 0, frame = 8
-  31              		@ frame_needed = 0, uses_anonymous_args = 0
-  32 0000 00B5     		push	{lr}
-  33              	.LCFI0:
-  34              		.cfi_def_cfa_offset 4
-  35              		.cfi_offset 14, -4
-  36 0002 83B0     		sub	sp, sp, #12
-  37              	.LCFI1:
-  38              		.cfi_def_cfa_offset 16
-  39              	.LBB2:
+  29              		.loc 1 65 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 83B0     		sub	sp, sp, #12
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 16
   66:Core/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 0 */
   67:Core/Src/stm32f4xx_hal_msp.c **** 
   68:Core/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END MspInit 0 */
   69:Core/Src/stm32f4xx_hal_msp.c **** 
   70:Core/Src/stm32f4xx_hal_msp.c ****   __HAL_RCC_SYSCFG_CLK_ENABLE();
-  40              		.loc 1 70 0
-  41 0004 0022     		movs	r2, #0
-  42 0006 0092     		str	r2, [sp]
-  43 0008 0D4B     		ldr	r3, .L3
-  44 000a 596C     		ldr	r1, [r3, #68]
-  45 000c 41F48041 		orr	r1, r1, #16384
-ARM GAS  /tmp/ccdUiQSu.s 			page 3
+  40              		.loc 1 70 3 view .LVU1
+  41              	.LBB2:
+  42              		.loc 1 70 3 view .LVU2
+  43 0004 0022     		movs	r2, #0
+  44 0006 0092     		str	r2, [sp]
+  45              		.loc 1 70 3 view .LVU3
+ARM GAS  /tmp/ccDwunMu.s 			page 3
 
 
-  46 0010 5964     		str	r1, [r3, #68]
-  47 0012 596C     		ldr	r1, [r3, #68]
-  48 0014 01F48041 		and	r1, r1, #16384
-  49 0018 0091     		str	r1, [sp]
-  50 001a 0099     		ldr	r1, [sp]
-  51              	.LBE2:
-  52              	.LBB3:
+  46 0008 0D4B     		ldr	r3, .L3
+  47 000a 596C     		ldr	r1, [r3, #68]
+  48 000c 41F48041 		orr	r1, r1, #16384
+  49 0010 5964     		str	r1, [r3, #68]
+  50              		.loc 1 70 3 view .LVU4
+  51 0012 596C     		ldr	r1, [r3, #68]
+  52 0014 01F48041 		and	r1, r1, #16384
+  53 0018 0091     		str	r1, [sp]
+  54              		.loc 1 70 3 view .LVU5
+  55 001a 0099     		ldr	r1, [sp]
+  56              	.LBE2:
+  57              		.loc 1 70 3 view .LVU6
   71:Core/Src/stm32f4xx_hal_msp.c ****   __HAL_RCC_PWR_CLK_ENABLE();
-  53              		.loc 1 71 0
-  54 001c 0192     		str	r2, [sp, #4]
-  55 001e 196C     		ldr	r1, [r3, #64]
-  56 0020 41F08051 		orr	r1, r1, #268435456
-  57 0024 1964     		str	r1, [r3, #64]
-  58 0026 1B6C     		ldr	r3, [r3, #64]
-  59 0028 03F08053 		and	r3, r3, #268435456
-  60 002c 0193     		str	r3, [sp, #4]
-  61 002e 019B     		ldr	r3, [sp, #4]
-  62              	.LBE3:
+  58              		.loc 1 71 3 view .LVU7
+  59              	.LBB3:
+  60              		.loc 1 71 3 view .LVU8
+  61 001c 0192     		str	r2, [sp, #4]
+  62              		.loc 1 71 3 view .LVU9
+  63 001e 196C     		ldr	r1, [r3, #64]
+  64 0020 41F08051 		orr	r1, r1, #268435456
+  65 0024 1964     		str	r1, [r3, #64]
+  66              		.loc 1 71 3 view .LVU10
+  67 0026 1B6C     		ldr	r3, [r3, #64]
+  68 0028 03F08053 		and	r3, r3, #268435456
+  69 002c 0193     		str	r3, [sp, #4]
+  70              		.loc 1 71 3 view .LVU11
+  71 002e 019B     		ldr	r3, [sp, #4]
+  72              	.LBE3:
+  73              		.loc 1 71 3 view .LVU12
   72:Core/Src/stm32f4xx_hal_msp.c **** 
   73:Core/Src/stm32f4xx_hal_msp.c ****   /* System interrupt init*/
   74:Core/Src/stm32f4xx_hal_msp.c ****   /* PendSV_IRQn interrupt configuration */
   75:Core/Src/stm32f4xx_hal_msp.c ****   HAL_NVIC_SetPriority(PendSV_IRQn, 15, 0);
-  63              		.loc 1 75 0
-  64 0030 0F21     		movs	r1, #15
-  65 0032 6FF00100 		mvn	r0, #1
-  66 0036 FFF7FEFF 		bl	HAL_NVIC_SetPriority
-  67              	.LVL0:
+  74              		.loc 1 75 3 view .LVU13
+  75 0030 0F21     		movs	r1, #15
+  76 0032 6FF00100 		mvn	r0, #1
+  77 0036 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+  78              	.LVL0:
   76:Core/Src/stm32f4xx_hal_msp.c **** 
   77:Core/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 1 */
   78:Core/Src/stm32f4xx_hal_msp.c **** 
   79:Core/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END MspInit 1 */
   80:Core/Src/stm32f4xx_hal_msp.c **** }
-  68              		.loc 1 80 0
-  69 003a 03B0     		add	sp, sp, #12
-  70              	.LCFI2:
-  71              		.cfi_def_cfa_offset 4
-  72              		@ sp needed
-  73 003c 5DF804FB 		ldr	pc, [sp], #4
-  74              	.L4:
-  75              		.align	2
-  76              	.L3:
-  77 0040 00380240 		.word	1073887232
-  78              		.cfi_endproc
-  79              	.LFE130:
-  81              		.text
-  82              	.Letext0:
-  83              		.file 2 "/usr/include/newlib/machine/_default_types.h"
-  84              		.file 3 "/usr/include/newlib/sys/_stdint.h"
-  85              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
-  86              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
-  87              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
-  88              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
-  89              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
-ARM GAS  /tmp/ccdUiQSu.s 			page 4
+  79              		.loc 1 80 1 is_stmt 0 view .LVU14
+  80 003a 03B0     		add	sp, sp, #12
+  81              	.LCFI2:
+  82              		.cfi_def_cfa_offset 4
+  83              		@ sp needed
+  84 003c 5DF804FB 		ldr	pc, [sp], #4
+  85              	.L4:
+  86              		.align	2
+  87              	.L3:
+  88 0040 00380240 		.word	1073887232
+  89              		.cfi_endproc
+  90              	.LFE130:
+  92              		.text
+  93              	.Letext0:
+ARM GAS  /tmp/ccDwunMu.s 			page 4
+
+
+  94              		.file 2 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+  95              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+  96              		.file 4 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
+ARM GAS  /tmp/ccDwunMu.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 stm32f4xx_hal_msp.c
-     /tmp/ccdUiQSu.s:18     .text.HAL_MspInit:0000000000000000 $t
-     /tmp/ccdUiQSu.s:25     .text.HAL_MspInit:0000000000000000 HAL_MspInit
-     /tmp/ccdUiQSu.s:77     .text.HAL_MspInit:0000000000000040 $d
-                     .debug_frame:0000000000000010 $d
+     /tmp/ccDwunMu.s:18     .text.HAL_MspInit:0000000000000000 $t
+     /tmp/ccDwunMu.s:26     .text.HAL_MspInit:0000000000000000 HAL_MspInit
+     /tmp/ccDwunMu.s:88     .text.HAL_MspInit:0000000000000040 $d
 
 UNDEFINED SYMBOLS
 HAL_NVIC_SetPriority
