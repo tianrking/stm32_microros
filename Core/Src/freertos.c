@@ -27,12 +27,13 @@
 /* USER CODE BEGIN Includes */
 #include "gpio.h"
 #include "usart.h"
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE BEGIN PTD */
-
+void Configure_TIM4_PWM_Frequency(uint32_t input);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -77,6 +78,18 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = sizeof(defaultTaskBuffer),
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for PWM_Task */
+osThreadId_t PWM_TaskHandle;
+uint32_t pwmcontroltaskBuffer[ 3000 ];
+osStaticThreadDef_t pwmcontroltaskControlBlock;
+const osThreadAttr_t PWM_Task_attributes = {
+  .name = "PWM_Task",
+  .cb_mem = &pwmcontroltaskControlBlock,
+  .cb_size = sizeof(pwmcontroltaskControlBlock),
+  .stack_mem = &pwmcontroltaskBuffer[0],
+  .stack_size = sizeof(pwmcontroltaskBuffer),
+  .priority = (osPriority_t) osPriorityLow,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -84,6 +97,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
+void StartTask02(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -116,6 +130,9 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of PWM_Task */
+  PWM_TaskHandle = osThreadNew(StartTask02, NULL, &PWM_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -199,8 +216,87 @@ HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
   /* USER CODE END StartDefaultTask */
 }
 
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the PWM_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+void StartTask02(void *argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
+
+
+  TIM4->CCR1 = 100;  //PD12
+  TIM4->CCR2 = 400;  //PD13
+  TIM4->CCR3 = 600;  //PD14
+  TIM4->CCR4 = 800;  //PD15
+static int pre = 84;
+static delayTime = 2000;
+  /* Infinite loop */
+  for(;;)
+  {
+    
+
+    
+          // 逐渐增加频率
+        for(int value = 0; value <= 50; value++)
+        {
+            Configure_TIM4_PWM_Frequency(value); 
+            osDelay(100); 
+        }
+
+        // 逐渐减少频率
+        for(int value = 50; value > 0; value--)
+        {
+            Configure_TIM4_PWM_Frequency(value); 
+            osDelay(100); 
+        }
+
+    
+  }
+  /* USER CODE END StartTask02 */
+}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void Configure_TIM4_PWM_Frequency(uint32_t input)
+{
+    uint32_t prescaler = 1;  // Prescaler is 1
+    uint32_t max_frequency = 13000; // 13kHz
+    uint32_t min_frequency = 0; // 0Hz
+    uint32_t clock_frequency = 84000000; // Assuming 84MHz Timer Clock frequency
+
+    // Map input 0-100 to 0-13kHz
+    uint32_t target_frequency = ((max_frequency - min_frequency) * input / 100) + min_frequency;
+
+    // Calculate period based on the target frequency
+    uint32_t period = (clock_frequency / ((prescaler + 1) * target_frequency)) - 1;
+
+    /* Stop TIM4 to set the new configuration */
+    HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_ALL);
+
+    /* Set the new prescaler and period values */
+    htim4.Init.Prescaler = prescaler - 1;  // Prescaler value in register is 1 less than actual value
+    htim4.Init.Period = period;
+
+    /* Re-initialize TIM4 with new settings */
+    if(HAL_TIM_PWM_Init(&htim4) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+    /* Start TIM4 with the new frequency settings */
+    HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+}
 
 /* USER CODE END Application */
 

@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccZj6Psx.s 			page 1
+ARM GAS  /tmp/ccks3GC7.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
   42              	StartDefaultTask:
   43              	.LVL0:
   44              	.LFB244:
-ARM GAS  /tmp/ccZj6Psx.s 			page 2
+ARM GAS  /tmp/ccks3GC7.s 			page 2
 
 
   45              		.file 1 "Core/Src/freertos.c"
@@ -91,126 +91,143 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
   27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
   28:Core/Src/freertos.c **** #include "gpio.h"
   29:Core/Src/freertos.c **** #include "usart.h"
-  30:Core/Src/freertos.c **** /* USER CODE END Includes */
-  31:Core/Src/freertos.c **** 
-  32:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
-  33:Core/Src/freertos.c **** typedef StaticTask_t osStaticThreadDef_t;
-  34:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
-  35:Core/Src/freertos.c **** 
-  36:Core/Src/freertos.c **** /* USER CODE END PTD */
-  37:Core/Src/freertos.c **** 
-  38:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
-  39:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
-  40:Core/Src/freertos.c **** #include <rcl/rcl.h>
-  41:Core/Src/freertos.c **** #include <rcl/error_handling.h>
-  42:Core/Src/freertos.c **** #include <rclc/rclc.h>
-  43:Core/Src/freertos.c **** #include <rclc/executor.h>
-  44:Core/Src/freertos.c **** #include <uxr/client/transport.h>
-  45:Core/Src/freertos.c **** #include <rmw_microxrcedds_c/config.h>
-  46:Core/Src/freertos.c **** #include <rmw_microros/rmw_microros.h>
-  47:Core/Src/freertos.c **** 
-  48:Core/Src/freertos.c **** #include <std_msgs/msg/int32.h>
-  49:Core/Src/freertos.c **** /* USER CODE END PD */
-  50:Core/Src/freertos.c **** 
-  51:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
-  52:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
-  53:Core/Src/freertos.c **** bool cubemx_transport_open(struct uxrCustomTransport * transport);
-  54:Core/Src/freertos.c **** bool cubemx_transport_close(struct uxrCustomTransport * transport);
-  55:Core/Src/freertos.c **** size_t cubemx_transport_write(struct uxrCustomTransport* transport, const uint8_t * buf, size_t len
-  56:Core/Src/freertos.c **** size_t cubemx_transport_read(struct uxrCustomTransport* transport, uint8_t* buf, size_t len, int ti
-ARM GAS  /tmp/ccZj6Psx.s 			page 3
+  30:Core/Src/freertos.c **** #include "tim.h"
+  31:Core/Src/freertos.c **** /* USER CODE END Includes */
+  32:Core/Src/freertos.c **** 
+  33:Core/Src/freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  34:Core/Src/freertos.c **** typedef StaticTask_t osStaticThreadDef_t;
+  35:Core/Src/freertos.c **** /* USER CODE BEGIN PTD */
+  36:Core/Src/freertos.c **** void Configure_TIM4_PWM_Frequency(uint32_t input);
+  37:Core/Src/freertos.c **** /* USER CODE END PTD */
+  38:Core/Src/freertos.c **** 
+  39:Core/Src/freertos.c **** /* Private define ------------------------------------------------------------*/
+  40:Core/Src/freertos.c **** /* USER CODE BEGIN PD */
+  41:Core/Src/freertos.c **** #include <rcl/rcl.h>
+  42:Core/Src/freertos.c **** #include <rcl/error_handling.h>
+  43:Core/Src/freertos.c **** #include <rclc/rclc.h>
+  44:Core/Src/freertos.c **** #include <rclc/executor.h>
+  45:Core/Src/freertos.c **** #include <uxr/client/transport.h>
+  46:Core/Src/freertos.c **** #include <rmw_microxrcedds_c/config.h>
+  47:Core/Src/freertos.c **** #include <rmw_microros/rmw_microros.h>
+  48:Core/Src/freertos.c **** 
+  49:Core/Src/freertos.c **** #include <std_msgs/msg/int32.h>
+  50:Core/Src/freertos.c **** /* USER CODE END PD */
+  51:Core/Src/freertos.c **** 
+  52:Core/Src/freertos.c **** /* Private macro -------------------------------------------------------------*/
+  53:Core/Src/freertos.c **** /* USER CODE BEGIN PM */
+  54:Core/Src/freertos.c **** bool cubemx_transport_open(struct uxrCustomTransport * transport);
+  55:Core/Src/freertos.c **** bool cubemx_transport_close(struct uxrCustomTransport * transport);
+  56:Core/Src/freertos.c **** size_t cubemx_transport_write(struct uxrCustomTransport* transport, const uint8_t * buf, size_t len
+ARM GAS  /tmp/ccks3GC7.s 			page 3
 
 
-  57:Core/Src/freertos.c **** 
-  58:Core/Src/freertos.c **** void * microros_allocate(size_t size, void * state);
-  59:Core/Src/freertos.c **** void microros_deallocate(void * pointer, void * state);
-  60:Core/Src/freertos.c **** void * microros_reallocate(void * pointer, size_t size, void * state);
-  61:Core/Src/freertos.c **** void * microros_zero_allocate(size_t number_of_elements, size_t size_of_element, void * state);
-  62:Core/Src/freertos.c **** /* USER CODE END PM */
-  63:Core/Src/freertos.c **** 
-  64:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
-  65:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
-  66:Core/Src/freertos.c **** 
-  67:Core/Src/freertos.c **** /* USER CODE END Variables */
-  68:Core/Src/freertos.c **** /* Definitions for defaultTask */
-  69:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
-  70:Core/Src/freertos.c **** uint32_t defaultTaskBuffer[ 3000 ];
-  71:Core/Src/freertos.c **** osStaticThreadDef_t defaultTaskControlBlock;
-  72:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
-  73:Core/Src/freertos.c ****   .name = "defaultTask",
-  74:Core/Src/freertos.c ****   .cb_mem = &defaultTaskControlBlock,
-  75:Core/Src/freertos.c ****   .cb_size = sizeof(defaultTaskControlBlock),
-  76:Core/Src/freertos.c ****   .stack_mem = &defaultTaskBuffer[0],
-  77:Core/Src/freertos.c ****   .stack_size = sizeof(defaultTaskBuffer),
-  78:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
-  79:Core/Src/freertos.c **** };
-  80:Core/Src/freertos.c **** 
-  81:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
-  82:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
-  83:Core/Src/freertos.c **** 
-  84:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
-  85:Core/Src/freertos.c **** 
-  86:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
-  87:Core/Src/freertos.c **** 
-  88:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
-  89:Core/Src/freertos.c **** 
-  90:Core/Src/freertos.c **** /**
-  91:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
-  92:Core/Src/freertos.c ****   * @param  None
-  93:Core/Src/freertos.c ****   * @retval None
-  94:Core/Src/freertos.c ****   */
-  95:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
-  96:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
-  97:Core/Src/freertos.c **** 
-  98:Core/Src/freertos.c ****   /* USER CODE END Init */
-  99:Core/Src/freertos.c **** 
- 100:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
- 101:Core/Src/freertos.c ****   /* add mutexes, ... */
- 102:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+  57:Core/Src/freertos.c **** size_t cubemx_transport_read(struct uxrCustomTransport* transport, uint8_t* buf, size_t len, int ti
+  58:Core/Src/freertos.c **** 
+  59:Core/Src/freertos.c **** void * microros_allocate(size_t size, void * state);
+  60:Core/Src/freertos.c **** void microros_deallocate(void * pointer, void * state);
+  61:Core/Src/freertos.c **** void * microros_reallocate(void * pointer, size_t size, void * state);
+  62:Core/Src/freertos.c **** void * microros_zero_allocate(size_t number_of_elements, size_t size_of_element, void * state);
+  63:Core/Src/freertos.c **** /* USER CODE END PM */
+  64:Core/Src/freertos.c **** 
+  65:Core/Src/freertos.c **** /* Private variables ---------------------------------------------------------*/
+  66:Core/Src/freertos.c **** /* USER CODE BEGIN Variables */
+  67:Core/Src/freertos.c **** 
+  68:Core/Src/freertos.c **** /* USER CODE END Variables */
+  69:Core/Src/freertos.c **** /* Definitions for defaultTask */
+  70:Core/Src/freertos.c **** osThreadId_t defaultTaskHandle;
+  71:Core/Src/freertos.c **** uint32_t defaultTaskBuffer[ 3000 ];
+  72:Core/Src/freertos.c **** osStaticThreadDef_t defaultTaskControlBlock;
+  73:Core/Src/freertos.c **** const osThreadAttr_t defaultTask_attributes = {
+  74:Core/Src/freertos.c ****   .name = "defaultTask",
+  75:Core/Src/freertos.c ****   .cb_mem = &defaultTaskControlBlock,
+  76:Core/Src/freertos.c ****   .cb_size = sizeof(defaultTaskControlBlock),
+  77:Core/Src/freertos.c ****   .stack_mem = &defaultTaskBuffer[0],
+  78:Core/Src/freertos.c ****   .stack_size = sizeof(defaultTaskBuffer),
+  79:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityNormal,
+  80:Core/Src/freertos.c **** };
+  81:Core/Src/freertos.c **** /* Definitions for PWM_Task */
+  82:Core/Src/freertos.c **** osThreadId_t PWM_TaskHandle;
+  83:Core/Src/freertos.c **** uint32_t pwmcontroltaskBuffer[ 3000 ];
+  84:Core/Src/freertos.c **** osStaticThreadDef_t pwmcontroltaskControlBlock;
+  85:Core/Src/freertos.c **** const osThreadAttr_t PWM_Task_attributes = {
+  86:Core/Src/freertos.c ****   .name = "PWM_Task",
+  87:Core/Src/freertos.c ****   .cb_mem = &pwmcontroltaskControlBlock,
+  88:Core/Src/freertos.c ****   .cb_size = sizeof(pwmcontroltaskControlBlock),
+  89:Core/Src/freertos.c ****   .stack_mem = &pwmcontroltaskBuffer[0],
+  90:Core/Src/freertos.c ****   .stack_size = sizeof(pwmcontroltaskBuffer),
+  91:Core/Src/freertos.c ****   .priority = (osPriority_t) osPriorityLow,
+  92:Core/Src/freertos.c **** };
+  93:Core/Src/freertos.c **** 
+  94:Core/Src/freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  95:Core/Src/freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  96:Core/Src/freertos.c **** 
+  97:Core/Src/freertos.c **** /* USER CODE END FunctionPrototypes */
+  98:Core/Src/freertos.c **** 
+  99:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
+ 100:Core/Src/freertos.c **** void StartTask02(void *argument);
+ 101:Core/Src/freertos.c **** 
+ 102:Core/Src/freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
  103:Core/Src/freertos.c **** 
- 104:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
- 105:Core/Src/freertos.c ****   /* add semaphores, ... */
- 106:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
- 107:Core/Src/freertos.c **** 
- 108:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
- 109:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
- 110:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 104:Core/Src/freertos.c **** /**
+ 105:Core/Src/freertos.c ****   * @brief  FreeRTOS initialization
+ 106:Core/Src/freertos.c ****   * @param  None
+ 107:Core/Src/freertos.c ****   * @retval None
+ 108:Core/Src/freertos.c ****   */
+ 109:Core/Src/freertos.c **** void MX_FREERTOS_Init(void) {
+ 110:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
  111:Core/Src/freertos.c **** 
- 112:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
- 113:Core/Src/freertos.c ****   /* add queues, ... */
-ARM GAS  /tmp/ccZj6Psx.s 			page 4
+ 112:Core/Src/freertos.c ****   /* USER CODE END Init */
+ 113:Core/Src/freertos.c **** 
+ARM GAS  /tmp/ccks3GC7.s 			page 4
 
 
- 114:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
- 115:Core/Src/freertos.c **** 
- 116:Core/Src/freertos.c ****   /* Create the thread(s) */
- 117:Core/Src/freertos.c ****   /* creation of defaultTask */
- 118:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
- 119:Core/Src/freertos.c **** 
- 120:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
- 121:Core/Src/freertos.c ****   /* add threads, ... */
- 122:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
- 123:Core/Src/freertos.c **** 
- 124:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
- 125:Core/Src/freertos.c ****   /* add events, ... */
- 126:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
- 127:Core/Src/freertos.c **** 
- 128:Core/Src/freertos.c **** }
+ 114:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 115:Core/Src/freertos.c ****   /* add mutexes, ... */
+ 116:Core/Src/freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 117:Core/Src/freertos.c **** 
+ 118:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 119:Core/Src/freertos.c ****   /* add semaphores, ... */
+ 120:Core/Src/freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 121:Core/Src/freertos.c **** 
+ 122:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 123:Core/Src/freertos.c ****   /* start timers, add new ones, ... */
+ 124:Core/Src/freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 125:Core/Src/freertos.c **** 
+ 126:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 127:Core/Src/freertos.c ****   /* add queues, ... */
+ 128:Core/Src/freertos.c ****   /* USER CODE END RTOS_QUEUES */
  129:Core/Src/freertos.c **** 
- 130:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
- 131:Core/Src/freertos.c **** /**
- 132:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
- 133:Core/Src/freertos.c ****   * @param  argument: Not used
- 134:Core/Src/freertos.c ****   * @retval None
- 135:Core/Src/freertos.c ****   */
- 136:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
- 137:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
- 138:Core/Src/freertos.c **** {
-  46              		.loc 1 138 1 view -0
+ 130:Core/Src/freertos.c ****   /* Create the thread(s) */
+ 131:Core/Src/freertos.c ****   /* creation of defaultTask */
+ 132:Core/Src/freertos.c ****   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+ 133:Core/Src/freertos.c **** 
+ 134:Core/Src/freertos.c ****   /* creation of PWM_Task */
+ 135:Core/Src/freertos.c ****   PWM_TaskHandle = osThreadNew(StartTask02, NULL, &PWM_Task_attributes);
+ 136:Core/Src/freertos.c **** 
+ 137:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 138:Core/Src/freertos.c ****   /* add threads, ... */
+ 139:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 140:Core/Src/freertos.c **** 
+ 141:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 142:Core/Src/freertos.c ****   /* add events, ... */
+ 143:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 144:Core/Src/freertos.c **** 
+ 145:Core/Src/freertos.c **** }
+ 146:Core/Src/freertos.c **** 
+ 147:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 148:Core/Src/freertos.c **** /**
+ 149:Core/Src/freertos.c ****   * @brief  Function implementing the defaultTask thread.
+ 150:Core/Src/freertos.c ****   * @param  argument: Not used
+ 151:Core/Src/freertos.c ****   * @retval None
+ 152:Core/Src/freertos.c ****   */
+ 153:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 154:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
+ 155:Core/Src/freertos.c **** {
+  46              		.loc 1 155 1 view -0
   47              		.cfi_startproc
   48              		@ args = 0, pretend = 0, frame = 136
   49              		@ frame_needed = 0, uses_anonymous_args = 0
-  50              		.loc 1 138 1 is_stmt 0 view .LVU1
+  50              		.loc 1 155 1 is_stmt 0 view .LVU1
   51 0000 30B5     		push	{r4, r5, lr}
   52              	.LCFI0:
   53              		.cfi_def_cfa_offset 12
@@ -220,9 +237,12 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
   57 0002 A5B0     		sub	sp, sp, #148
   58              	.LCFI1:
   59              		.cfi_def_cfa_offset 160
- 139:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
- 140:Core/Src/freertos.c **** rmw_uros_set_custom_transport(
-  60              		.loc 1 140 1 is_stmt 1 view .LVU2
+ 156:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ARM GAS  /tmp/ccks3GC7.s 			page 5
+
+
+ 157:Core/Src/freertos.c **** rmw_uros_set_custom_transport(
+  60              		.loc 1 157 1 is_stmt 1 view .LVU2
   61 0004 354B     		ldr	r3, .L8
   62 0006 0193     		str	r3, [sp, #4]
   63 0008 354B     		ldr	r3, .L8+4
@@ -232,77 +252,74 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
   67 0010 3649     		ldr	r1, .L8+16
   68 0012 0120     		movs	r0, #1
   69              	.LVL1:
-  70              		.loc 1 140 1 is_stmt 0 view .LVU3
+  70              		.loc 1 157 1 is_stmt 0 view .LVU3
   71 0014 FFF7FEFF 		bl	rmw_uros_set_custom_transport
   72              	.LVL2:
- 141:Core/Src/freertos.c ****       true,
- 142:Core/Src/freertos.c ****       (void *) &huart1,
- 143:Core/Src/freertos.c ****       cubemx_transport_open,
-ARM GAS  /tmp/ccZj6Psx.s 			page 5
-
-
- 144:Core/Src/freertos.c ****       cubemx_transport_close,
- 145:Core/Src/freertos.c ****       cubemx_transport_write,
- 146:Core/Src/freertos.c ****       cubemx_transport_read);
- 147:Core/Src/freertos.c **** 
- 148:Core/Src/freertos.c ****     rcl_allocator_t freeRTOS_allocator = rcutils_get_zero_initialized_allocator();
-  73              		.loc 1 148 5 is_stmt 1 view .LVU4
-  74              		.loc 1 148 42 is_stmt 0 view .LVU5
+ 158:Core/Src/freertos.c ****       true,
+ 159:Core/Src/freertos.c ****       (void *) &huart1,
+ 160:Core/Src/freertos.c ****       cubemx_transport_open,
+ 161:Core/Src/freertos.c ****       cubemx_transport_close,
+ 162:Core/Src/freertos.c ****       cubemx_transport_write,
+ 163:Core/Src/freertos.c ****       cubemx_transport_read);
+ 164:Core/Src/freertos.c **** 
+ 165:Core/Src/freertos.c ****     rcl_allocator_t freeRTOS_allocator = rcutils_get_zero_initialized_allocator();
+  73              		.loc 1 165 5 is_stmt 1 view .LVU4
+  74              		.loc 1 165 42 is_stmt 0 view .LVU5
   75 0018 1FA8     		add	r0, sp, #124
   76 001a FFF7FEFF 		bl	rcutils_get_zero_initialized_allocator
   77              	.LVL3:
- 149:Core/Src/freertos.c ****     freeRTOS_allocator.allocate = microros_allocate;
-  78              		.loc 1 149 5 is_stmt 1 view .LVU6
-  79              		.loc 1 149 33 is_stmt 0 view .LVU7
+ 166:Core/Src/freertos.c ****     freeRTOS_allocator.allocate = microros_allocate;
+  78              		.loc 1 166 5 is_stmt 1 view .LVU6
+  79              		.loc 1 166 33 is_stmt 0 view .LVU7
   80 001e 344B     		ldr	r3, .L8+20
   81 0020 1F93     		str	r3, [sp, #124]
- 150:Core/Src/freertos.c ****     freeRTOS_allocator.deallocate = microros_deallocate;
-  82              		.loc 1 150 5 is_stmt 1 view .LVU8
-  83              		.loc 1 150 35 is_stmt 0 view .LVU9
+ 167:Core/Src/freertos.c ****     freeRTOS_allocator.deallocate = microros_deallocate;
+  82              		.loc 1 167 5 is_stmt 1 view .LVU8
+  83              		.loc 1 167 35 is_stmt 0 view .LVU9
   84 0022 344B     		ldr	r3, .L8+24
   85 0024 2093     		str	r3, [sp, #128]
- 151:Core/Src/freertos.c ****     freeRTOS_allocator.reallocate = microros_reallocate;
-  86              		.loc 1 151 5 is_stmt 1 view .LVU10
-  87              		.loc 1 151 35 is_stmt 0 view .LVU11
+ 168:Core/Src/freertos.c ****     freeRTOS_allocator.reallocate = microros_reallocate;
+  86              		.loc 1 168 5 is_stmt 1 view .LVU10
+  87              		.loc 1 168 35 is_stmt 0 view .LVU11
   88 0026 344B     		ldr	r3, .L8+28
   89 0028 2193     		str	r3, [sp, #132]
- 152:Core/Src/freertos.c ****     freeRTOS_allocator.zero_allocate =  microros_zero_allocate;
-  90              		.loc 1 152 5 is_stmt 1 view .LVU12
-  91              		.loc 1 152 38 is_stmt 0 view .LVU13
+ 169:Core/Src/freertos.c ****     freeRTOS_allocator.zero_allocate =  microros_zero_allocate;
+  90              		.loc 1 169 5 is_stmt 1 view .LVU12
+  91              		.loc 1 169 38 is_stmt 0 view .LVU13
   92 002a 344B     		ldr	r3, .L8+32
   93 002c 2293     		str	r3, [sp, #136]
- 153:Core/Src/freertos.c **** 
- 154:Core/Src/freertos.c ****     if (!rcutils_set_default_allocator(&freeRTOS_allocator)) {
-  94              		.loc 1 154 5 is_stmt 1 view .LVU14
-  95              		.loc 1 154 10 is_stmt 0 view .LVU15
+ 170:Core/Src/freertos.c **** 
+ 171:Core/Src/freertos.c ****     if (!rcutils_set_default_allocator(&freeRTOS_allocator)) {
+  94              		.loc 1 171 5 is_stmt 1 view .LVU14
+  95              		.loc 1 171 10 is_stmt 0 view .LVU15
   96 002e 1FA8     		add	r0, sp, #124
   97 0030 FFF7FEFF 		bl	rcutils_set_default_allocator
   98              	.LVL4:
-  99              		.loc 1 154 8 view .LVU16
+  99              		.loc 1 171 8 view .LVU16
  100 0034 F8B1     		cbz	r0, .L6
  101              	.L2:
- 155:Core/Src/freertos.c ****         printf("Error on default allocators (line %d)\n", __LINE__);
- 156:Core/Src/freertos.c ****     }
- 157:Core/Src/freertos.c **** 
- 158:Core/Src/freertos.c ****     // micro-ROS app
- 159:Core/Src/freertos.c **** 
- 160:Core/Src/freertos.c ****     rcl_publisher_t publisher;
- 102              		.loc 1 160 5 is_stmt 1 view .LVU17
- 161:Core/Src/freertos.c ****     std_msgs__msg__Int32 msg;
- 103              		.loc 1 161 5 view .LVU18
- 162:Core/Src/freertos.c ****     rclc_support_t support;
- 104              		.loc 1 162 5 view .LVU19
- 163:Core/Src/freertos.c ****     rcl_allocator_t allocator;
- 105              		.loc 1 163 5 view .LVU20
- 164:Core/Src/freertos.c ****     rcl_node_t node;
- 106              		.loc 1 164 5 view .LVU21
- 165:Core/Src/freertos.c **** 
- 166:Core/Src/freertos.c ****     allocator = rcl_get_default_allocator();
-ARM GAS  /tmp/ccZj6Psx.s 			page 6
+ARM GAS  /tmp/ccks3GC7.s 			page 6
 
 
- 107              		.loc 1 166 5 view .LVU22
- 108              		.loc 1 166 17 is_stmt 0 view .LVU23
+ 172:Core/Src/freertos.c ****         printf("Error on default allocators (line %d)\n", __LINE__);
+ 173:Core/Src/freertos.c ****     }
+ 174:Core/Src/freertos.c **** 
+ 175:Core/Src/freertos.c ****     // micro-ROS app
+ 176:Core/Src/freertos.c **** 
+ 177:Core/Src/freertos.c ****     rcl_publisher_t publisher;
+ 102              		.loc 1 177 5 is_stmt 1 view .LVU17
+ 178:Core/Src/freertos.c ****     std_msgs__msg__Int32 msg;
+ 103              		.loc 1 178 5 view .LVU18
+ 179:Core/Src/freertos.c ****     rclc_support_t support;
+ 104              		.loc 1 179 5 view .LVU19
+ 180:Core/Src/freertos.c ****     rcl_allocator_t allocator;
+ 105              		.loc 1 180 5 view .LVU20
+ 181:Core/Src/freertos.c ****     rcl_node_t node;
+ 106              		.loc 1 181 5 view .LVU21
+ 182:Core/Src/freertos.c **** 
+ 183:Core/Src/freertos.c ****     allocator = rcl_get_default_allocator();
+ 107              		.loc 1 183 5 view .LVU22
+ 108              		.loc 1 183 17 is_stmt 0 view .LVU23
  109 0036 02A8     		add	r0, sp, #8
  110 0038 FFF7FEFF 		bl	rcutils_get_default_allocator
  111              	.LVL5:
@@ -312,56 +329,56 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
  115 0042 0FC5     		stmia	r5!, {r0, r1, r2, r3}
  116 0044 2368     		ldr	r3, [r4]
  117 0046 2B60     		str	r3, [r5]
- 167:Core/Src/freertos.c **** 
- 168:Core/Src/freertos.c ****     //create init_options
- 169:Core/Src/freertos.c ****     rclc_support_init(&support, 0, NULL, &allocator);
- 118              		.loc 1 169 5 is_stmt 1 view .LVU24
+ 184:Core/Src/freertos.c **** 
+ 185:Core/Src/freertos.c ****     //create init_options
+ 186:Core/Src/freertos.c ****     rclc_support_init(&support, 0, NULL, &allocator);
+ 118              		.loc 1 186 5 is_stmt 1 view .LVU24
  119 0048 0BAB     		add	r3, sp, #44
  120 004a 0022     		movs	r2, #0
  121 004c 1146     		mov	r1, r2
  122 004e 10A8     		add	r0, sp, #64
  123 0050 FFF7FEFF 		bl	rclc_support_init
  124              	.LVL6:
- 170:Core/Src/freertos.c **** 
- 171:Core/Src/freertos.c ****     // create node
- 172:Core/Src/freertos.c ****     rclc_node_init_default(&node, "cubemx_node", "", &support);
- 125              		.loc 1 172 5 view .LVU25
+ 187:Core/Src/freertos.c **** 
+ 188:Core/Src/freertos.c ****     // create node
+ 189:Core/Src/freertos.c ****     rclc_node_init_default(&node, "cubemx_node", "", &support);
+ 125              		.loc 1 189 5 view .LVU25
  126 0054 10AB     		add	r3, sp, #64
  127 0056 2A4A     		ldr	r2, .L8+36
  128 0058 2A49     		ldr	r1, .L8+40
  129 005a 09A8     		add	r0, sp, #36
  130 005c FFF7FEFF 		bl	rclc_node_init_default
  131              	.LVL7:
- 173:Core/Src/freertos.c **** 
- 174:Core/Src/freertos.c ****     // create publisher
- 175:Core/Src/freertos.c ****     rclc_publisher_init_default(
- 132              		.loc 1 175 5 view .LVU26
+ 190:Core/Src/freertos.c **** 
+ 191:Core/Src/freertos.c ****     // create publisher
+ 192:Core/Src/freertos.c ****     rclc_publisher_init_default(
+ 132              		.loc 1 192 5 view .LVU26
  133 0060 FFF7FEFF 		bl	rosidl_typesupport_c__get_message_type_support_handle__std_msgs__msg__Int32
  134              	.LVL8:
  135 0064 0246     		mov	r2, r0
  136 0066 284B     		ldr	r3, .L8+44
  137 0068 09A9     		add	r1, sp, #36
+ARM GAS  /tmp/ccks3GC7.s 			page 7
+
+
  138 006a 1EA8     		add	r0, sp, #120
  139 006c FFF7FEFF 		bl	rclc_publisher_init_default
  140              	.LVL9:
- 176:Core/Src/freertos.c ****       &publisher,
- 177:Core/Src/freertos.c ****       &node,
- 178:Core/Src/freertos.c ****       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
- 179:Core/Src/freertos.c ****       "cubemx_publisher");
- 180:Core/Src/freertos.c **** 
- 181:Core/Src/freertos.c ****     msg.data = 0;
- 141              		.loc 1 181 5 view .LVU27
- 142              		.loc 1 181 14 is_stmt 0 view .LVU28
+ 193:Core/Src/freertos.c ****       &publisher,
+ 194:Core/Src/freertos.c ****       &node,
+ 195:Core/Src/freertos.c ****       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+ 196:Core/Src/freertos.c ****       "cubemx_publisher");
+ 197:Core/Src/freertos.c **** 
+ 198:Core/Src/freertos.c ****     msg.data = 0;
+ 141              		.loc 1 198 5 view .LVU27
+ 142              		.loc 1 198 14 is_stmt 0 view .LVU28
  143 0070 0023     		movs	r3, #0
  144 0072 1D93     		str	r3, [sp, #116]
  145 0074 29E0     		b	.L4
  146              	.L6:
- 155:Core/Src/freertos.c ****     }
- 147              		.loc 1 155 9 is_stmt 1 view .LVU29
-ARM GAS  /tmp/ccZj6Psx.s 			page 7
-
-
- 148 0076 9B21     		movs	r1, #155
+ 172:Core/Src/freertos.c ****     }
+ 147              		.loc 1 172 9 is_stmt 1 view .LVU29
+ 148 0076 AC21     		movs	r1, #172
  149 0078 2448     		ldr	r0, .L8+48
  150 007a FFF7FEFF 		bl	printf
  151              	.LVL10:
@@ -369,98 +386,101 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
  153              	.LVL11:
  154              	.L7:
  155              	.LBB2:
- 182:Core/Src/freertos.c ****   /* Infinite loop */
- 183:Core/Src/freertos.c ****   for(;;)
- 184:Core/Src/freertos.c ****   {
- 185:Core/Src/freertos.c **** rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
- 186:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
- 187:Core/Src/freertos.c ****       {
- 188:Core/Src/freertos.c ****         printf("Error publishing (line %d)\n", __LINE__);
- 156              		.loc 1 188 9 view .LVU30
- 157 0080 BC21     		movs	r1, #188
+ 199:Core/Src/freertos.c ****   /* Infinite loop */
+ 200:Core/Src/freertos.c ****   for(;;)
+ 201:Core/Src/freertos.c ****   {
+ 202:Core/Src/freertos.c **** rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
+ 203:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
+ 204:Core/Src/freertos.c ****       {
+ 205:Core/Src/freertos.c ****         printf("Error publishing (line %d)\n", __LINE__);
+ 156              		.loc 1 205 9 view .LVU30
+ 157 0080 CD21     		movs	r1, #205
  158 0082 2348     		ldr	r0, .L8+52
  159              	.LVL12:
- 160              		.loc 1 188 9 is_stmt 0 view .LVU31
+ 160              		.loc 1 205 9 is_stmt 0 view .LVU31
  161 0084 FFF7FEFF 		bl	printf
  162              	.LVL13:
  163              	.L3:
- 189:Core/Src/freertos.c ****       }
- 190:Core/Src/freertos.c **** 
- 191:Core/Src/freertos.c ****       msg.data++;
- 164              		.loc 1 191 7 is_stmt 1 view .LVU32
- 165              		.loc 1 191 10 is_stmt 0 view .LVU33
+ 206:Core/Src/freertos.c ****       }
+ 207:Core/Src/freertos.c **** 
+ 208:Core/Src/freertos.c ****       msg.data++;
+ 164              		.loc 1 208 7 is_stmt 1 view .LVU32
+ 165              		.loc 1 208 10 is_stmt 0 view .LVU33
  166 0088 1D9B     		ldr	r3, [sp, #116]
- 167              		.loc 1 191 15 view .LVU34
+ 167              		.loc 1 208 15 view .LVU34
  168 008a 0133     		adds	r3, r3, #1
  169 008c 1D93     		str	r3, [sp, #116]
- 192:Core/Src/freertos.c **** 	 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
- 170              		.loc 1 192 3 is_stmt 1 view .LVU35
+ 209:Core/Src/freertos.c **** 	 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+ 170              		.loc 1 209 3 is_stmt 1 view .LVU35
  171 008e 214D     		ldr	r5, .L8+56
  172 0090 0022     		movs	r2, #0
  173 0092 4FF40051 		mov	r1, #8192
  174 0096 2846     		mov	r0, r5
  175 0098 FFF7FEFF 		bl	HAL_GPIO_WritePin
  176              	.LVL14:
- 193:Core/Src/freertos.c **** HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
- 177              		.loc 1 193 1 view .LVU36
+ARM GAS  /tmp/ccks3GC7.s 			page 8
+
+
+ 210:Core/Src/freertos.c **** HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+ 177              		.loc 1 210 1 view .LVU36
  178 009c 1E4C     		ldr	r4, .L8+60
  179 009e 0022     		movs	r2, #0
  180 00a0 0221     		movs	r1, #2
  181 00a2 2046     		mov	r0, r4
  182 00a4 FFF7FEFF 		bl	HAL_GPIO_WritePin
  183              	.LVL15:
- 194:Core/Src/freertos.c ****     osDelay(200);
- 184              		.loc 1 194 5 view .LVU37
+ 211:Core/Src/freertos.c ****     osDelay(200);
+ 184              		.loc 1 211 5 view .LVU37
  185 00a8 C820     		movs	r0, #200
  186 00aa FFF7FEFF 		bl	osDelay
  187              	.LVL16:
- 195:Core/Src/freertos.c **** 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
- 188              		.loc 1 195 2 view .LVU38
+ 212:Core/Src/freertos.c **** 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+ 188              		.loc 1 212 2 view .LVU38
  189 00ae 0122     		movs	r2, #1
  190 00b0 4FF40051 		mov	r1, #8192
-ARM GAS  /tmp/ccZj6Psx.s 			page 8
-
-
  191 00b4 2846     		mov	r0, r5
  192 00b6 FFF7FEFF 		bl	HAL_GPIO_WritePin
  193              	.LVL17:
- 196:Core/Src/freertos.c **** HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
- 194              		.loc 1 196 1 view .LVU39
+ 213:Core/Src/freertos.c **** HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+ 194              		.loc 1 213 1 view .LVU39
  195 00ba 0122     		movs	r2, #1
  196 00bc 0221     		movs	r1, #2
  197 00be 2046     		mov	r0, r4
  198 00c0 FFF7FEFF 		bl	HAL_GPIO_WritePin
  199              	.LVL18:
- 197:Core/Src/freertos.c ****     osDelay(200);
- 200              		.loc 1 197 5 view .LVU40
+ 214:Core/Src/freertos.c ****     osDelay(200);
+ 200              		.loc 1 214 5 view .LVU40
  201 00c4 C820     		movs	r0, #200
  202 00c6 FFF7FEFF 		bl	osDelay
  203              	.LVL19:
  204              	.LBE2:
- 183:Core/Src/freertos.c ****   {
- 205              		.loc 1 183 8 view .LVU41
+ 200:Core/Src/freertos.c ****   {
+ 205              		.loc 1 200 8 view .LVU41
  206              	.L4:
- 183:Core/Src/freertos.c ****   {
- 207              		.loc 1 183 3 view .LVU42
+ 200:Core/Src/freertos.c ****   {
+ 207              		.loc 1 200 3 view .LVU42
  208              	.LBB3:
- 185:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
- 209              		.loc 1 185 1 view .LVU43
- 185:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
- 210              		.loc 1 185 17 is_stmt 0 view .LVU44
+ 202:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
+ 209              		.loc 1 202 1 view .LVU43
+ 202:Core/Src/freertos.c ****       if (ret != RCL_RET_OK)
+ 210              		.loc 1 202 17 is_stmt 0 view .LVU44
  211 00ca 0022     		movs	r2, #0
  212 00cc 1DA9     		add	r1, sp, #116
  213 00ce 1EA8     		add	r0, sp, #120
  214 00d0 FFF7FEFF 		bl	rcl_publish
  215              	.LVL20:
- 186:Core/Src/freertos.c ****       {
- 216              		.loc 1 186 7 is_stmt 1 view .LVU45
- 186:Core/Src/freertos.c ****       {
- 217              		.loc 1 186 10 is_stmt 0 view .LVU46
+ 203:Core/Src/freertos.c ****       {
+ 216              		.loc 1 203 7 is_stmt 1 view .LVU45
+ 203:Core/Src/freertos.c ****       {
+ 217              		.loc 1 203 10 is_stmt 0 view .LVU46
  218 00d4 0028     		cmp	r0, #0
  219 00d6 D3D1     		bne	.L7
  220 00d8 D6E7     		b	.L3
  221              	.L9:
  222 00da 00BF     		.align	2
+ARM GAS  /tmp/ccks3GC7.s 			page 9
+
+
  223              	.L8:
  224 00dc 00000000 		.word	cubemx_transport_read
  225 00e0 00000000 		.word	cubemx_transport_write
@@ -478,9 +498,6 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
  237 0110 4C000000 		.word	.LC4
  238 0114 00080240 		.word	1073874944
  239 0118 00000240 		.word	1073872896
-ARM GAS  /tmp/ccZj6Psx.s 			page 9
-
-
  240              	.LBE3:
  241              		.cfi_endproc
  242              	.LFE244:
@@ -493,8 +510,8 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
  250              		.fpu fpv4-sp-d16
  252              	MX_FREERTOS_Init:
  253              	.LFB243:
-  95:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
- 254              		.loc 1 95 29 is_stmt 1 view -0
+ 109:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
+ 254              		.loc 1 109 29 is_stmt 1 view -0
  255              		.cfi_startproc
  256              		@ args = 0, pretend = 0, frame = 0
  257              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -503,135 +520,594 @@ ARM GAS  /tmp/ccZj6Psx.s 			page 1
  260              		.cfi_def_cfa_offset 8
  261              		.cfi_offset 3, -8
  262              		.cfi_offset 14, -4
- 118:Core/Src/freertos.c **** 
- 263              		.loc 1 118 3 view .LVU48
- 118:Core/Src/freertos.c **** 
- 264              		.loc 1 118 23 is_stmt 0 view .LVU49
- 265 0002 044A     		ldr	r2, .L12
+ 132:Core/Src/freertos.c **** 
+ 263              		.loc 1 132 3 view .LVU48
+ 132:Core/Src/freertos.c **** 
+ 264              		.loc 1 132 23 is_stmt 0 view .LVU49
+ 265 0002 074A     		ldr	r2, .L12
  266 0004 0021     		movs	r1, #0
- 267 0006 0448     		ldr	r0, .L12+4
+ 267 0006 0748     		ldr	r0, .L12+4
  268 0008 FFF7FEFF 		bl	osThreadNew
  269              	.LVL21:
- 118:Core/Src/freertos.c **** 
- 270              		.loc 1 118 21 view .LVU50
- 271 000c 034B     		ldr	r3, .L12+8
+ 132:Core/Src/freertos.c **** 
+ 270              		.loc 1 132 21 view .LVU50
+ 271 000c 064B     		ldr	r3, .L12+8
  272 000e 1860     		str	r0, [r3]
- 128:Core/Src/freertos.c **** 
- 273              		.loc 1 128 1 view .LVU51
- 274 0010 08BD     		pop	{r3, pc}
- 275              	.L13:
- 276 0012 00BF     		.align	2
- 277              	.L12:
- 278 0014 00000000 		.word	.LANCHOR0
- 279 0018 00000000 		.word	StartDefaultTask
- 280 001c 00000000 		.word	.LANCHOR1
- 281              		.cfi_endproc
- 282              	.LFE243:
- 284              		.global	defaultTask_attributes
- 285              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 135:Core/Src/freertos.c **** 
+ 273              		.loc 1 135 3 is_stmt 1 view .LVU51
+ 135:Core/Src/freertos.c **** 
+ 274              		.loc 1 135 20 is_stmt 0 view .LVU52
+ 275 0010 064A     		ldr	r2, .L12+12
+ARM GAS  /tmp/ccks3GC7.s 			page 10
+
+
+ 276 0012 0021     		movs	r1, #0
+ 277 0014 0648     		ldr	r0, .L12+16
+ 278 0016 FFF7FEFF 		bl	osThreadNew
+ 279              	.LVL22:
+ 135:Core/Src/freertos.c **** 
+ 280              		.loc 1 135 18 view .LVU53
+ 281 001a 064B     		ldr	r3, .L12+20
+ 282 001c 1860     		str	r0, [r3]
+ 145:Core/Src/freertos.c **** 
+ 283              		.loc 1 145 1 view .LVU54
+ 284 001e 08BD     		pop	{r3, pc}
+ 285              	.L13:
  286              		.align	2
- 287              	.LC5:
- 288 0000 64656661 		.ascii	"defaultTask\000"
- 288      756C7454 
- 288      61736B00 
- 289              		.global	defaultTaskControlBlock
- 290              		.global	defaultTaskBuffer
- 291              		.global	defaultTaskHandle
- 292              		.section	.bss.defaultTaskBuffer,"aw",%nobits
-ARM GAS  /tmp/ccZj6Psx.s 			page 10
+ 287              	.L12:
+ 288 0020 00000000 		.word	.LANCHOR0
+ 289 0024 00000000 		.word	StartDefaultTask
+ 290 0028 00000000 		.word	.LANCHOR1
+ 291 002c 00000000 		.word	.LANCHOR2
+ 292 0030 00000000 		.word	StartTask02
+ 293 0034 00000000 		.word	.LANCHOR3
+ 294              		.cfi_endproc
+ 295              	.LFE243:
+ 297              		.section	.text.Configure_TIM4_PWM_Frequency,"ax",%progbits
+ 298              		.align	1
+ 299              		.global	Configure_TIM4_PWM_Frequency
+ 300              		.syntax unified
+ 301              		.thumb
+ 302              		.thumb_func
+ 303              		.fpu fpv4-sp-d16
+ 305              	Configure_TIM4_PWM_Frequency:
+ 306              	.LVL23:
+ 307              	.LFB246:
+ 215:Core/Src/freertos.c ****   }
+ 216:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
+ 217:Core/Src/freertos.c **** }
+ 218:Core/Src/freertos.c **** 
+ 219:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartTask02 */
+ 220:Core/Src/freertos.c **** /**
+ 221:Core/Src/freertos.c **** * @brief Function implementing the PWM_Task thread.
+ 222:Core/Src/freertos.c **** * @param argument: Not used
+ 223:Core/Src/freertos.c **** * @retval None
+ 224:Core/Src/freertos.c **** */
+ 225:Core/Src/freertos.c **** /* USER CODE END Header_StartTask02 */
+ 226:Core/Src/freertos.c **** void StartTask02(void *argument)
+ 227:Core/Src/freertos.c **** {
+ 228:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
+ 229:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_1);
+ 230:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_2);
+ 231:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
+ 232:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
+ 233:Core/Src/freertos.c **** 
+ 234:Core/Src/freertos.c **** 
+ 235:Core/Src/freertos.c ****   TIM4->CCR1 = 100;  //PD12
+ 236:Core/Src/freertos.c ****   TIM4->CCR2 = 400;  //PD13
+ 237:Core/Src/freertos.c ****   TIM4->CCR3 = 600;  //PD14
+ 238:Core/Src/freertos.c ****   TIM4->CCR4 = 800;  //PD15
+ 239:Core/Src/freertos.c **** static int pre = 84;
+ARM GAS  /tmp/ccks3GC7.s 			page 11
 
 
- 293              		.align	2
- 296              	defaultTaskBuffer:
- 297 0000 00000000 		.space	12000
- 297      00000000 
- 297      00000000 
- 297      00000000 
- 297      00000000 
- 298              		.section	.bss.defaultTaskControlBlock,"aw",%nobits
- 299              		.align	2
- 302              	defaultTaskControlBlock:
- 303 0000 00000000 		.space	92
- 303      00000000 
- 303      00000000 
- 303      00000000 
- 303      00000000 
- 304              		.section	.bss.defaultTaskHandle,"aw",%nobits
- 305              		.align	2
- 306              		.set	.LANCHOR1,. + 0
- 309              	defaultTaskHandle:
- 310 0000 00000000 		.space	4
- 311              		.section	.rodata.defaultTask_attributes,"a"
- 312              		.align	2
- 313              		.set	.LANCHOR0,. + 0
- 316              	defaultTask_attributes:
- 317 0000 00000000 		.word	.LC5
- 318 0004 00000000 		.space	4
- 319 0008 00000000 		.word	defaultTaskControlBlock
- 320 000c 5C000000 		.word	92
- 321 0010 00000000 		.word	defaultTaskBuffer
- 322 0014 E02E0000 		.word	12000
- 323 0018 18000000 		.word	24
- 324 001c 00000000 		.space	8
- 324      00000000 
- 325              		.text
- 326              	.Letext0:
- 327              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
- 328              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
- 329              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 330              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
- 331              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 332              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 333              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 334              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 335              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 336              		.file 11 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 337              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 338              		.file 13 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/all
- 339              		.file 14 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/ret
- 340              		.file 15 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 341              		.file 16 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
- 342              		.file 17 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 343              		.file 18 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/typ
- 344              		.file 19 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/con
- 345              		.file 20 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
- 346              		.file 21 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/tim
- 347              		.file 22 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/pub
- 348              		.file 23 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
-ARM GAS  /tmp/ccZj6Psx.s 			page 11
+ 240:Core/Src/freertos.c **** static delayTime = 2000;
+ 241:Core/Src/freertos.c ****   /* Infinite loop */
+ 242:Core/Src/freertos.c ****   for(;;)
+ 243:Core/Src/freertos.c ****   {
+ 244:Core/Src/freertos.c ****     
+ 245:Core/Src/freertos.c **** 
+ 246:Core/Src/freertos.c ****     
+ 247:Core/Src/freertos.c ****           // 逐渐增加频率
+ 248:Core/Src/freertos.c ****         for(int value = 0; value <= 50; value++)
+ 249:Core/Src/freertos.c ****         {
+ 250:Core/Src/freertos.c ****             Configure_TIM4_PWM_Frequency(value); 
+ 251:Core/Src/freertos.c ****             osDelay(100); 
+ 252:Core/Src/freertos.c ****         }
+ 253:Core/Src/freertos.c **** 
+ 254:Core/Src/freertos.c ****         // 逐渐减少频率
+ 255:Core/Src/freertos.c ****         for(int value = 50; value > 0; value--)
+ 256:Core/Src/freertos.c ****         {
+ 257:Core/Src/freertos.c ****             Configure_TIM4_PWM_Frequency(value); 
+ 258:Core/Src/freertos.c ****             osDelay(100); 
+ 259:Core/Src/freertos.c ****         }
+ 260:Core/Src/freertos.c **** 
+ 261:Core/Src/freertos.c ****     
+ 262:Core/Src/freertos.c ****   }
+ 263:Core/Src/freertos.c ****   /* USER CODE END StartTask02 */
+ 264:Core/Src/freertos.c **** }
+ 265:Core/Src/freertos.c **** 
+ 266:Core/Src/freertos.c **** /* Private application code --------------------------------------------------*/
+ 267:Core/Src/freertos.c **** /* USER CODE BEGIN Application */
+ 268:Core/Src/freertos.c **** void Configure_TIM4_PWM_Frequency(uint32_t input)
+ 269:Core/Src/freertos.c **** {
+ 308              		.loc 1 269 1 is_stmt 1 view -0
+ 309              		.cfi_startproc
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312              		.loc 1 269 1 is_stmt 0 view .LVU56
+ 313 0000 38B5     		push	{r3, r4, r5, lr}
+ 314              	.LCFI3:
+ 315              		.cfi_def_cfa_offset 16
+ 316              		.cfi_offset 3, -16
+ 317              		.cfi_offset 4, -12
+ 318              		.cfi_offset 5, -8
+ 319              		.cfi_offset 14, -4
+ 270:Core/Src/freertos.c ****     uint32_t prescaler = 1;  // Prescaler is 1
+ 320              		.loc 1 270 5 is_stmt 1 view .LVU57
+ 321              	.LVL24:
+ 271:Core/Src/freertos.c ****     uint32_t max_frequency = 13000; // 13kHz
+ 322              		.loc 1 271 5 view .LVU58
+ 272:Core/Src/freertos.c ****     uint32_t min_frequency = 0; // 0Hz
+ 323              		.loc 1 272 5 view .LVU59
+ 273:Core/Src/freertos.c ****     uint32_t clock_frequency = 84000000; // Assuming 84MHz Timer Clock frequency
+ 324              		.loc 1 273 5 view .LVU60
+ 274:Core/Src/freertos.c **** 
+ 275:Core/Src/freertos.c ****     // Map input 0-100 to 0-13kHz
+ 276:Core/Src/freertos.c ****     uint32_t target_frequency = ((max_frequency - min_frequency) * input / 100) + min_frequency;
+ 325              		.loc 1 276 5 view .LVU61
+ 326              		.loc 1 276 66 is_stmt 0 view .LVU62
+ 327 0002 43F2C823 		movw	r3, #13000
+ARM GAS  /tmp/ccks3GC7.s 			page 12
 
 
- 349              		.file 24 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/ty
- 350              		.file 25 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 351              		.file 26 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
- 352              		.file 27 "Core/Inc/usart.h"
- 353              		.file 28 "/usr/include/newlib/stdio.h"
- 354              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw_mic
- 355              		.file 30 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/in
- 356              		.file 31 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/no
- 357              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
- 358              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/pu
-ARM GAS  /tmp/ccZj6Psx.s 			page 12
+ 328 0006 00FB03F3 		mul	r3, r0, r3
+ 329              		.loc 1 276 74 view .LVU63
+ 330 000a 1548     		ldr	r0, .L18
+ 331              	.LVL25:
+ 332              		.loc 1 276 74 view .LVU64
+ 333 000c A0FB0323 		umull	r2, r3, r0, r3
+ 334 0010 5B09     		lsrs	r3, r3, #5
+ 335              	.LVL26:
+ 277:Core/Src/freertos.c **** 
+ 278:Core/Src/freertos.c ****     // Calculate period based on the target frequency
+ 279:Core/Src/freertos.c ****     uint32_t period = (clock_frequency / ((prescaler + 1) * target_frequency)) - 1;
+ 336              		.loc 1 279 5 is_stmt 1 view .LVU65
+ 337              		.loc 1 279 59 is_stmt 0 view .LVU66
+ 338 0012 5B00     		lsls	r3, r3, #1
+ 339              	.LVL27:
+ 340              		.loc 1 279 40 view .LVU67
+ 341 0014 134C     		ldr	r4, .L18+4
+ 342 0016 B4FBF3F3 		udiv	r3, r4, r3
+ 343              		.loc 1 279 14 view .LVU68
+ 344 001a 5C1E     		subs	r4, r3, #1
+ 345              	.LVL28:
+ 280:Core/Src/freertos.c **** 
+ 281:Core/Src/freertos.c ****     /* Stop TIM4 to set the new configuration */
+ 282:Core/Src/freertos.c ****     HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_ALL);
+ 346              		.loc 1 282 5 is_stmt 1 view .LVU69
+ 347 001c 124D     		ldr	r5, .L18+8
+ 348 001e 3C21     		movs	r1, #60
+ 349 0020 2846     		mov	r0, r5
+ 350              	.LVL29:
+ 351              		.loc 1 282 5 is_stmt 0 view .LVU70
+ 352 0022 FFF7FEFF 		bl	HAL_TIM_PWM_Stop
+ 353              	.LVL30:
+ 283:Core/Src/freertos.c **** 
+ 284:Core/Src/freertos.c ****     /* Set the new prescaler and period values */
+ 285:Core/Src/freertos.c ****     htim4.Init.Prescaler = prescaler - 1;  // Prescaler value in register is 1 less than actual val
+ 354              		.loc 1 285 5 is_stmt 1 view .LVU71
+ 355              		.loc 1 285 26 is_stmt 0 view .LVU72
+ 356 0026 0023     		movs	r3, #0
+ 357 0028 6B60     		str	r3, [r5, #4]
+ 286:Core/Src/freertos.c ****     htim4.Init.Period = period;
+ 358              		.loc 1 286 5 is_stmt 1 view .LVU73
+ 359              		.loc 1 286 23 is_stmt 0 view .LVU74
+ 360 002a EC60     		str	r4, [r5, #12]
+ 287:Core/Src/freertos.c **** 
+ 288:Core/Src/freertos.c ****     /* Re-initialize TIM4 with new settings */
+ 289:Core/Src/freertos.c ****     if(HAL_TIM_PWM_Init(&htim4) != HAL_OK)
+ 361              		.loc 1 289 5 is_stmt 1 view .LVU75
+ 362              		.loc 1 289 8 is_stmt 0 view .LVU76
+ 363 002c 2846     		mov	r0, r5
+ 364 002e FFF7FEFF 		bl	HAL_TIM_PWM_Init
+ 365              	.LVL31:
+ 366              		.loc 1 289 7 view .LVU77
+ 367 0032 88B9     		cbnz	r0, .L17
+ 368              	.L15:
+ 290:Core/Src/freertos.c ****     {
+ 291:Core/Src/freertos.c ****         Error_Handler();
+ 292:Core/Src/freertos.c ****     }
+ARM GAS  /tmp/ccks3GC7.s 			page 13
+
+
+ 293:Core/Src/freertos.c **** 
+ 294:Core/Src/freertos.c ****     /* Start TIM4 with the new frequency settings */
+ 295:Core/Src/freertos.c ****     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+ 369              		.loc 1 295 5 is_stmt 1 view .LVU78
+ 370 0034 0C4C     		ldr	r4, .L18+8
+ 371              	.LVL32:
+ 372              		.loc 1 295 5 is_stmt 0 view .LVU79
+ 373 0036 0021     		movs	r1, #0
+ 374 0038 2046     		mov	r0, r4
+ 375 003a FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 376              	.LVL33:
+ 296:Core/Src/freertos.c ****     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+ 377              		.loc 1 296 5 is_stmt 1 view .LVU80
+ 378 003e 0421     		movs	r1, #4
+ 379 0040 2046     		mov	r0, r4
+ 380 0042 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 381              	.LVL34:
+ 297:Core/Src/freertos.c ****     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+ 382              		.loc 1 297 5 view .LVU81
+ 383 0046 0821     		movs	r1, #8
+ 384 0048 2046     		mov	r0, r4
+ 385 004a FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 386              	.LVL35:
+ 298:Core/Src/freertos.c ****     HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+ 387              		.loc 1 298 5 view .LVU82
+ 388 004e 0C21     		movs	r1, #12
+ 389 0050 2046     		mov	r0, r4
+ 390 0052 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 391              	.LVL36:
+ 299:Core/Src/freertos.c **** }
+ 392              		.loc 1 299 1 is_stmt 0 view .LVU83
+ 393 0056 38BD     		pop	{r3, r4, r5, pc}
+ 394              	.LVL37:
+ 395              	.L17:
+ 291:Core/Src/freertos.c ****     }
+ 396              		.loc 1 291 9 is_stmt 1 view .LVU84
+ 397 0058 FFF7FEFF 		bl	Error_Handler
+ 398              	.LVL38:
+ 399 005c EAE7     		b	.L15
+ 400              	.L19:
+ 401 005e 00BF     		.align	2
+ 402              	.L18:
+ 403 0060 1F85EB51 		.word	1374389535
+ 404 0064 00BD0105 		.word	84000000
+ 405 0068 00000000 		.word	htim4
+ 406              		.cfi_endproc
+ 407              	.LFE246:
+ 409              		.section	.text.StartTask02,"ax",%progbits
+ 410              		.align	1
+ 411              		.global	StartTask02
+ 412              		.syntax unified
+ 413              		.thumb
+ 414              		.thumb_func
+ 415              		.fpu fpv4-sp-d16
+ 417              	StartTask02:
+ 418              	.LVL39:
+ 419              	.LFB245:
+ARM GAS  /tmp/ccks3GC7.s 			page 14
+
+
+ 227:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
+ 420              		.loc 1 227 1 view -0
+ 421              		.cfi_startproc
+ 422              		@ args = 0, pretend = 0, frame = 0
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 227:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
+ 424              		.loc 1 227 1 is_stmt 0 view .LVU86
+ 425 0000 10B5     		push	{r4, lr}
+ 426              	.LCFI4:
+ 427              		.cfi_def_cfa_offset 8
+ 428              		.cfi_offset 4, -8
+ 429              		.cfi_offset 14, -4
+ 229:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_2);
+ 430              		.loc 1 229 3 is_stmt 1 view .LVU87
+ 431 0002 1A4C     		ldr	r4, .L27
+ 432 0004 0021     		movs	r1, #0
+ 433 0006 2046     		mov	r0, r4
+ 434              	.LVL40:
+ 229:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_2);
+ 435              		.loc 1 229 3 is_stmt 0 view .LVU88
+ 436 0008 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 437              	.LVL41:
+ 230:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
+ 438              		.loc 1 230 3 is_stmt 1 view .LVU89
+ 439 000c 0421     		movs	r1, #4
+ 440 000e 2046     		mov	r0, r4
+ 441 0010 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 442              	.LVL42:
+ 231:Core/Src/freertos.c ****   HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
+ 443              		.loc 1 231 3 view .LVU90
+ 444 0014 0821     		movs	r1, #8
+ 445 0016 2046     		mov	r0, r4
+ 446 0018 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 447              	.LVL43:
+ 232:Core/Src/freertos.c **** 
+ 448              		.loc 1 232 3 view .LVU91
+ 449 001c 0C21     		movs	r1, #12
+ 450 001e 2046     		mov	r0, r4
+ 451 0020 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 452              	.LVL44:
+ 235:Core/Src/freertos.c ****   TIM4->CCR2 = 400;  //PD13
+ 453              		.loc 1 235 3 view .LVU92
+ 235:Core/Src/freertos.c ****   TIM4->CCR2 = 400;  //PD13
+ 454              		.loc 1 235 14 is_stmt 0 view .LVU93
+ 455 0024 124B     		ldr	r3, .L27+4
+ 456 0026 6422     		movs	r2, #100
+ 457 0028 5A63     		str	r2, [r3, #52]
+ 236:Core/Src/freertos.c ****   TIM4->CCR3 = 600;  //PD14
+ 458              		.loc 1 236 3 is_stmt 1 view .LVU94
+ 236:Core/Src/freertos.c ****   TIM4->CCR3 = 600;  //PD14
+ 459              		.loc 1 236 14 is_stmt 0 view .LVU95
+ 460 002a 4FF4C872 		mov	r2, #400
+ 461 002e 9A63     		str	r2, [r3, #56]
+ 237:Core/Src/freertos.c ****   TIM4->CCR4 = 800;  //PD15
+ 462              		.loc 1 237 3 is_stmt 1 view .LVU96
+ 237:Core/Src/freertos.c ****   TIM4->CCR4 = 800;  //PD15
+ 463              		.loc 1 237 14 is_stmt 0 view .LVU97
+ARM GAS  /tmp/ccks3GC7.s 			page 15
+
+
+ 464 0030 4FF41672 		mov	r2, #600
+ 465 0034 DA63     		str	r2, [r3, #60]
+ 238:Core/Src/freertos.c **** static int pre = 84;
+ 466              		.loc 1 238 3 is_stmt 1 view .LVU98
+ 238:Core/Src/freertos.c **** static int pre = 84;
+ 467              		.loc 1 238 14 is_stmt 0 view .LVU99
+ 468 0036 4FF44872 		mov	r2, #800
+ 469 003a 1A64     		str	r2, [r3, #64]
+ 470 003c 13E0     		b	.L25
+ 471              	.LVL45:
+ 472              	.L22:
+ 473              	.LBB4:
+ 250:Core/Src/freertos.c ****             osDelay(100); 
+ 474              		.loc 1 250 13 is_stmt 1 discriminator 3 view .LVU100
+ 475 003e 2046     		mov	r0, r4
+ 476 0040 FFF7FEFF 		bl	Configure_TIM4_PWM_Frequency
+ 477              	.LVL46:
+ 251:Core/Src/freertos.c ****         }
+ 478              		.loc 1 251 13 discriminator 3 view .LVU101
+ 479 0044 6420     		movs	r0, #100
+ 480 0046 FFF7FEFF 		bl	osDelay
+ 481              	.LVL47:
+ 248:Core/Src/freertos.c ****         {
+ 482              		.loc 1 248 41 discriminator 3 view .LVU102
+ 248:Core/Src/freertos.c ****         {
+ 483              		.loc 1 248 46 is_stmt 0 discriminator 3 view .LVU103
+ 484 004a 0134     		adds	r4, r4, #1
+ 485              	.LVL48:
+ 486              	.L21:
+ 248:Core/Src/freertos.c ****         {
+ 487              		.loc 1 248 28 is_stmt 1 discriminator 1 view .LVU104
+ 248:Core/Src/freertos.c ****         {
+ 488              		.loc 1 248 9 is_stmt 0 discriminator 1 view .LVU105
+ 489 004c 322C     		cmp	r4, #50
+ 490 004e F6DD     		ble	.L22
+ 491              	.LBE4:
+ 492              	.LBB5:
+ 255:Core/Src/freertos.c ****         {
+ 493              		.loc 1 255 17 view .LVU106
+ 494 0050 3224     		movs	r4, #50
+ 495              	.LVL49:
+ 255:Core/Src/freertos.c ****         {
+ 496              		.loc 1 255 17 view .LVU107
+ 497 0052 06E0     		b	.L23
+ 498              	.LVL50:
+ 499              	.L24:
+ 257:Core/Src/freertos.c ****             osDelay(100); 
+ 500              		.loc 1 257 13 is_stmt 1 discriminator 3 view .LVU108
+ 501 0054 2046     		mov	r0, r4
+ 502 0056 FFF7FEFF 		bl	Configure_TIM4_PWM_Frequency
+ 503              	.LVL51:
+ 258:Core/Src/freertos.c ****         }
+ 504              		.loc 1 258 13 discriminator 3 view .LVU109
+ 505 005a 6420     		movs	r0, #100
+ 506 005c FFF7FEFF 		bl	osDelay
+ 507              	.LVL52:
+ 255:Core/Src/freertos.c ****         {
+ARM GAS  /tmp/ccks3GC7.s 			page 16
+
+
+ 508              		.loc 1 255 40 discriminator 3 view .LVU110
+ 255:Core/Src/freertos.c ****         {
+ 509              		.loc 1 255 45 is_stmt 0 discriminator 3 view .LVU111
+ 510 0060 013C     		subs	r4, r4, #1
+ 511              	.LVL53:
+ 512              	.L23:
+ 255:Core/Src/freertos.c ****         {
+ 513              		.loc 1 255 29 is_stmt 1 discriminator 1 view .LVU112
+ 255:Core/Src/freertos.c ****         {
+ 514              		.loc 1 255 9 is_stmt 0 discriminator 1 view .LVU113
+ 515 0062 002C     		cmp	r4, #0
+ 516 0064 F6DC     		bgt	.L24
+ 517              	.LVL54:
+ 518              	.L25:
+ 255:Core/Src/freertos.c ****         {
+ 519              		.loc 1 255 9 discriminator 1 view .LVU114
+ 520              	.LBE5:
+ 239:Core/Src/freertos.c **** static delayTime = 2000;
+ 521              		.loc 1 239 1 is_stmt 1 view .LVU115
+ 240:Core/Src/freertos.c ****   /* Infinite loop */
+ 522              		.loc 1 240 1 view .LVU116
+ 242:Core/Src/freertos.c ****   {
+ 523              		.loc 1 242 3 view .LVU117
+ 248:Core/Src/freertos.c ****         {
+ 524              		.loc 1 248 9 view .LVU118
+ 525              	.LBB6:
+ 248:Core/Src/freertos.c ****         {
+ 526              		.loc 1 248 13 view .LVU119
+ 248:Core/Src/freertos.c ****         {
+ 527              		.loc 1 248 17 is_stmt 0 view .LVU120
+ 528 0066 0024     		movs	r4, #0
+ 248:Core/Src/freertos.c ****         {
+ 529              		.loc 1 248 9 view .LVU121
+ 530 0068 F0E7     		b	.L21
+ 531              	.L28:
+ 532 006a 00BF     		.align	2
+ 533              	.L27:
+ 534 006c 00000000 		.word	htim4
+ 535 0070 00080040 		.word	1073743872
+ 536              	.LBE6:
+ 537              		.cfi_endproc
+ 538              	.LFE245:
+ 540              		.global	PWM_Task_attributes
+ 541              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 542              		.align	2
+ 543              	.LC5:
+ 544 0000 50574D5F 		.ascii	"PWM_Task\000"
+ 544      5461736B 
+ 544      00
+ 545              		.global	pwmcontroltaskControlBlock
+ 546              		.global	pwmcontroltaskBuffer
+ 547              		.global	PWM_TaskHandle
+ 548              		.global	defaultTask_attributes
+ 549 0009 000000   		.align	2
+ 550              	.LC6:
+ 551 000c 64656661 		.ascii	"defaultTask\000"
+ 551      756C7454 
+ARM GAS  /tmp/ccks3GC7.s 			page 17
+
+
+ 551      61736B00 
+ 552              		.global	defaultTaskControlBlock
+ 553              		.global	defaultTaskBuffer
+ 554              		.global	defaultTaskHandle
+ 555              		.section	.bss.PWM_TaskHandle,"aw",%nobits
+ 556              		.align	2
+ 557              		.set	.LANCHOR3,. + 0
+ 560              	PWM_TaskHandle:
+ 561 0000 00000000 		.space	4
+ 562              		.section	.bss.defaultTaskBuffer,"aw",%nobits
+ 563              		.align	2
+ 566              	defaultTaskBuffer:
+ 567 0000 00000000 		.space	12000
+ 567      00000000 
+ 567      00000000 
+ 567      00000000 
+ 567      00000000 
+ 568              		.section	.bss.defaultTaskControlBlock,"aw",%nobits
+ 569              		.align	2
+ 572              	defaultTaskControlBlock:
+ 573 0000 00000000 		.space	92
+ 573      00000000 
+ 573      00000000 
+ 573      00000000 
+ 573      00000000 
+ 574              		.section	.bss.defaultTaskHandle,"aw",%nobits
+ 575              		.align	2
+ 576              		.set	.LANCHOR1,. + 0
+ 579              	defaultTaskHandle:
+ 580 0000 00000000 		.space	4
+ 581              		.section	.bss.pwmcontroltaskBuffer,"aw",%nobits
+ 582              		.align	2
+ 585              	pwmcontroltaskBuffer:
+ 586 0000 00000000 		.space	12000
+ 586      00000000 
+ 586      00000000 
+ 586      00000000 
+ 586      00000000 
+ 587              		.section	.bss.pwmcontroltaskControlBlock,"aw",%nobits
+ 588              		.align	2
+ 591              	pwmcontroltaskControlBlock:
+ 592 0000 00000000 		.space	92
+ 592      00000000 
+ 592      00000000 
+ 592      00000000 
+ 592      00000000 
+ 593              		.section	.rodata.PWM_Task_attributes,"a"
+ 594              		.align	2
+ 595              		.set	.LANCHOR2,. + 0
+ 598              	PWM_Task_attributes:
+ 599 0000 00000000 		.word	.LC5
+ 600 0004 00000000 		.space	4
+ 601 0008 00000000 		.word	pwmcontroltaskControlBlock
+ 602 000c 5C000000 		.word	92
+ 603 0010 00000000 		.word	pwmcontroltaskBuffer
+ 604 0014 E02E0000 		.word	12000
+ 605 0018 08000000 		.word	8
+ARM GAS  /tmp/ccks3GC7.s 			page 18
+
+
+ 606 001c 00000000 		.space	8
+ 606      00000000 
+ 607              		.section	.rodata.defaultTask_attributes,"a"
+ 608              		.align	2
+ 609              		.set	.LANCHOR0,. + 0
+ 612              	defaultTask_attributes:
+ 613 0000 0C000000 		.word	.LC6
+ 614 0004 00000000 		.space	4
+ 615 0008 00000000 		.word	defaultTaskControlBlock
+ 616 000c 5C000000 		.word	92
+ 617 0010 00000000 		.word	defaultTaskBuffer
+ 618 0014 E02E0000 		.word	12000
+ 619 0018 18000000 		.word	24
+ 620 001c 00000000 		.space	8
+ 620      00000000 
+ 621              		.text
+ 622              	.Letext0:
+ 623              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 624              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 625              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 626              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
+ 627              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 628              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 629              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 630              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 631              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 632              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 633              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 634              		.file 13 "Core/Inc/usart.h"
+ 635              		.file 14 "Core/Inc/tim.h"
+ 636              		.file 15 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 637              		.file 16 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/all
+ 638              		.file 17 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/ret
+ 639              		.file 18 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 640              		.file 19 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
+ 641              		.file 20 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 642              		.file 21 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/typ
+ 643              		.file 22 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/con
+ 644              		.file 23 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
+ 645              		.file 24 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/tim
+ 646              		.file 25 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/pub
+ 647              		.file 26 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 648              		.file 27 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/ty
+ 649              		.file 28 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 650              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
+ 651              		.file 30 "Core/Inc/main.h"
+ 652              		.file 31 "/usr/include/newlib/stdio.h"
+ 653              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw_mic
+ 654              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/in
+ 655              		.file 34 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/no
+ 656              		.file 35 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
+ 657              		.file 36 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rclc/pu
+ARM GAS  /tmp/ccks3GC7.s 			page 19
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 freertos.c
-     /tmp/ccZj6Psx.s:18     .rodata.StartDefaultTask.str1.4:0000000000000000 $d
-     /tmp/ccZj6Psx.s:34     .text.StartDefaultTask:0000000000000000 $t
-     /tmp/ccZj6Psx.s:42     .text.StartDefaultTask:0000000000000000 StartDefaultTask
-     /tmp/ccZj6Psx.s:224    .text.StartDefaultTask:00000000000000dc $d
-     /tmp/ccZj6Psx.s:245    .text.MX_FREERTOS_Init:0000000000000000 $t
-     /tmp/ccZj6Psx.s:252    .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
-     /tmp/ccZj6Psx.s:278    .text.MX_FREERTOS_Init:0000000000000014 $d
-     /tmp/ccZj6Psx.s:316    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
-     /tmp/ccZj6Psx.s:286    .rodata.str1.4:0000000000000000 $d
-     /tmp/ccZj6Psx.s:302    .bss.defaultTaskControlBlock:0000000000000000 defaultTaskControlBlock
-     /tmp/ccZj6Psx.s:296    .bss.defaultTaskBuffer:0000000000000000 defaultTaskBuffer
-     /tmp/ccZj6Psx.s:309    .bss.defaultTaskHandle:0000000000000000 defaultTaskHandle
-     /tmp/ccZj6Psx.s:293    .bss.defaultTaskBuffer:0000000000000000 $d
-     /tmp/ccZj6Psx.s:299    .bss.defaultTaskControlBlock:0000000000000000 $d
-     /tmp/ccZj6Psx.s:305    .bss.defaultTaskHandle:0000000000000000 $d
-     /tmp/ccZj6Psx.s:312    .rodata.defaultTask_attributes:0000000000000000 $d
+     /tmp/ccks3GC7.s:18     .rodata.StartDefaultTask.str1.4:0000000000000000 $d
+     /tmp/ccks3GC7.s:34     .text.StartDefaultTask:0000000000000000 $t
+     /tmp/ccks3GC7.s:42     .text.StartDefaultTask:0000000000000000 StartDefaultTask
+     /tmp/ccks3GC7.s:224    .text.StartDefaultTask:00000000000000dc $d
+     /tmp/ccks3GC7.s:245    .text.MX_FREERTOS_Init:0000000000000000 $t
+     /tmp/ccks3GC7.s:252    .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
+     /tmp/ccks3GC7.s:288    .text.MX_FREERTOS_Init:0000000000000020 $d
+     /tmp/ccks3GC7.s:417    .text.StartTask02:0000000000000000 StartTask02
+     /tmp/ccks3GC7.s:298    .text.Configure_TIM4_PWM_Frequency:0000000000000000 $t
+     /tmp/ccks3GC7.s:305    .text.Configure_TIM4_PWM_Frequency:0000000000000000 Configure_TIM4_PWM_Frequency
+     /tmp/ccks3GC7.s:403    .text.Configure_TIM4_PWM_Frequency:0000000000000060 $d
+     /tmp/ccks3GC7.s:410    .text.StartTask02:0000000000000000 $t
+     /tmp/ccks3GC7.s:534    .text.StartTask02:000000000000006c $d
+     /tmp/ccks3GC7.s:598    .rodata.PWM_Task_attributes:0000000000000000 PWM_Task_attributes
+     /tmp/ccks3GC7.s:542    .rodata.str1.4:0000000000000000 $d
+     /tmp/ccks3GC7.s:591    .bss.pwmcontroltaskControlBlock:0000000000000000 pwmcontroltaskControlBlock
+     /tmp/ccks3GC7.s:585    .bss.pwmcontroltaskBuffer:0000000000000000 pwmcontroltaskBuffer
+     /tmp/ccks3GC7.s:560    .bss.PWM_TaskHandle:0000000000000000 PWM_TaskHandle
+     /tmp/ccks3GC7.s:612    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
+     /tmp/ccks3GC7.s:572    .bss.defaultTaskControlBlock:0000000000000000 defaultTaskControlBlock
+     /tmp/ccks3GC7.s:566    .bss.defaultTaskBuffer:0000000000000000 defaultTaskBuffer
+     /tmp/ccks3GC7.s:579    .bss.defaultTaskHandle:0000000000000000 defaultTaskHandle
+     /tmp/ccks3GC7.s:556    .bss.PWM_TaskHandle:0000000000000000 $d
+     /tmp/ccks3GC7.s:563    .bss.defaultTaskBuffer:0000000000000000 $d
+     /tmp/ccks3GC7.s:569    .bss.defaultTaskControlBlock:0000000000000000 $d
+     /tmp/ccks3GC7.s:575    .bss.defaultTaskHandle:0000000000000000 $d
+     /tmp/ccks3GC7.s:582    .bss.pwmcontroltaskBuffer:0000000000000000 $d
+     /tmp/ccks3GC7.s:588    .bss.pwmcontroltaskControlBlock:0000000000000000 $d
+     /tmp/ccks3GC7.s:594    .rodata.PWM_Task_attributes:0000000000000000 $d
+     /tmp/ccks3GC7.s:608    .rodata.defaultTask_attributes:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 rmw_uros_set_custom_transport
@@ -656,3 +1132,11 @@ microros_deallocate
 microros_reallocate
 microros_zero_allocate
 osThreadNew
+HAL_TIM_PWM_Stop
+ARM GAS  /tmp/ccks3GC7.s 			page 20
+
+
+HAL_TIM_PWM_Init
+HAL_TIM_PWM_Start
+Error_Handler
+htim4

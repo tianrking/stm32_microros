@@ -43,7 +43,7 @@ build/freertos.o: Core/Src/freertos.c \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- Core/Inc/gpio.h Core/Inc/main.h Core/Inc/usart.h \
+ Core/Inc/gpio.h Core/Inc/main.h Core/Inc/usart.h Core/Inc/tim.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/rcl.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/init.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/allocator.h \
@@ -242,6 +242,7 @@ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 Core/Inc/gpio.h:
 Core/Inc/main.h:
 Core/Inc/usart.h:
+Core/Inc/tim.h:
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/rcl.h:
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/init.h:
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/allocator.h:
