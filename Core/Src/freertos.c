@@ -139,7 +139,7 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN StartDefaultTask */
 rmw_uros_set_custom_transport(
       true,
-      (void *) &huart2,
+      (void *) &huart1,
       cubemx_transport_open,
       cubemx_transport_close,
       cubemx_transport_write,

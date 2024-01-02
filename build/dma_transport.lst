@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccLOdQdD.s 			page 1
+ARM GAS  /tmp/ccCdlX5j.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -27,7 +27,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   24              		.fpu fpv4-sp-d16
   26              	cubemx_transport_open:
   27              	.LVL0:
-  28              	.LFB137:
+  28              	.LFB242:
   29              		.file 1 "micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c"
    1:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** #include <uxr/client/transport.h>
    2:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** 
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   35 0000 08B5     		push	{r3, lr}
   36              	.LCFI0:
   37              		.cfi_def_cfa_offset 8
-ARM GAS  /tmp/ccLOdQdD.s 			page 2
+ARM GAS  /tmp/ccCdlX5j.s 			page 2
 
 
   38              		.cfi_offset 3, -8
@@ -86,7 +86,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   56              	.L3:
   57 0014 00000000 		.word	.LANCHOR0
   58              		.cfi_endproc
-  59              	.LFE137:
+  59              	.LFE242:
   61              		.section	.text.cubemx_transport_close,"ax",%progbits
   62              		.align	1
   63              		.global	cubemx_transport_close
@@ -96,7 +96,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   67              		.fpu fpv4-sp-d16
   69              	cubemx_transport_close:
   70              	.LVL4:
-  71              	.LFB138:
+  71              	.LFB243:
   26:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** 
   27:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** bool cubemx_transport_close(struct uxrCustomTransport * transport){
   72              		.loc 1 27 67 is_stmt 1 view -0
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   86              	.LVL6:
   87              		.loc 1 29 5 is_stmt 0 view .LVU11
   88 0006 FFF7FEFF 		bl	HAL_UART_DMAStop
-ARM GAS  /tmp/ccLOdQdD.s 			page 3
+ARM GAS  /tmp/ccCdlX5j.s 			page 3
 
 
   89              	.LVL7:
@@ -129,7 +129,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   92 000a 0120     		movs	r0, #1
   93 000c 08BD     		pop	{r3, pc}
   94              		.cfi_endproc
-  95              	.LFE138:
+  95              	.LFE243:
   97              		.section	.text.cubemx_transport_write,"ax",%progbits
   98              		.align	1
   99              		.global	cubemx_transport_write
@@ -139,7 +139,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  103              		.fpu fpv4-sp-d16
  105              	cubemx_transport_write:
  106              	.LVL8:
- 107              	.LFB139:
+ 107              	.LFB244:
   32:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** 
   33:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** size_t cubemx_transport_write(struct uxrCustomTransport* transport, uint8_t * buf, size_t len, uint
  108              		.loc 1 33 110 is_stmt 1 view -0
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   41:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****         }
   42:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** 
   43:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****         return (ret == HAL_OK) ? len : 0;
-ARM GAS  /tmp/ccLOdQdD.s 			page 4
+ARM GAS  /tmp/ccCdlX5j.s 			page 4
 
 
   44:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****     }else{
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  173              		.loc 1 43 9 view .LVU36
   43:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****     }else{
  174              		.loc 1 43 38 is_stmt 0 view .LVU37
-ARM GAS  /tmp/ccLOdQdD.s 			page 5
+ARM GAS  /tmp/ccCdlX5j.s 			page 5
 
 
  175 0034 0EB9     		cbnz	r6, .L14
@@ -250,7 +250,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  180 003a 0020     		movs	r0, #0
  181 003c E9E7     		b	.L7
  182              		.cfi_endproc
- 183              	.LFE139:
+ 183              	.LFE244:
  185              		.section	.text.cubemx_transport_read,"ax",%progbits
  186              		.align	1
  187              		.global	cubemx_transport_read
@@ -260,7 +260,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  191              		.fpu fpv4-sp-d16
  193              	cubemx_transport_read:
  194              	.LVL18:
- 195              	.LFB140:
+ 195              	.LFB245:
   48:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** 
   49:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c **** size_t cubemx_transport_read(struct uxrCustomTransport* transport, uint8_t* buf, size_t len, int ti
  196              		.loc 1 49 120 is_stmt 1 view -0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  224              		.loc 1 53 5 is_stmt 1 discriminator 2 view .LVU45
   54:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****     {
   55:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****         __disable_irq();
-ARM GAS  /tmp/ccLOdQdD.s 			page 6
+ARM GAS  /tmp/ccCdlX5j.s 			page 6
 
 
  225              		.loc 1 55 9 discriminator 2 view .LVU46
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
   52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
   53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
-ARM GAS  /tmp/ccLOdQdD.s 			page 7
+ARM GAS  /tmp/ccCdlX5j.s 			page 7
 
 
   54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
  109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
  110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
-ARM GAS  /tmp/ccLOdQdD.s 			page 8
+ARM GAS  /tmp/ccCdlX5j.s 			page 8
 
 
  111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
   57:micro_ros_stm32cubemx_utils/extra_sources/microros_transports/dma_transport.c ****         __enable_irq();
  250              		.loc 1 57 9 is_stmt 1 discriminator 2 view .LVU53
  251              	.LBB8:
-ARM GAS  /tmp/ccLOdQdD.s 			page 9
+ARM GAS  /tmp/ccCdlX5j.s 			page 9
 
 
  252              	.LBI8:
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  296              		.loc 1 65 35 view .LVU68
  297 004c C3F30A03 		ubfx	r3, r3, #0, #11
  298              		.loc 1 65 18 view .LVU69
-ARM GAS  /tmp/ccLOdQdD.s 			page 10
+ARM GAS  /tmp/ccCdlX5j.s 			page 10
 
 
  299 0050 0649     		ldr	r1, .L25
@@ -582,7 +582,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  328 0070 00000000 		.word	.LANCHOR0
  329 0074 00000000 		.word	.LANCHOR1
  330              		.cfi_endproc
- 331              	.LFE140:
+ 331              	.LFE245:
  333              		.section	.bss.dma_buffer,"aw",%nobits
  334              		.align	2
  335              		.set	.LANCHOR0,. + 0
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  345              	dma_head:
  346 0000 00000000 		.space	4
  347              		.section	.bss.dma_tail,"aw",%nobits
-ARM GAS  /tmp/ccLOdQdD.s 			page 11
+ARM GAS  /tmp/ccCdlX5j.s 			page 11
 
 
  348              		.align	2
@@ -618,27 +618,27 @@ ARM GAS  /tmp/ccLOdQdD.s 			page 1
  364              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
  365              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
  366              		.file 13 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
-ARM GAS  /tmp/ccLOdQdD.s 			page 12
+ARM GAS  /tmp/ccCdlX5j.s 			page 12
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 dma_transport.c
-     /tmp/ccLOdQdD.s:18     .text.cubemx_transport_open:0000000000000000 $t
-     /tmp/ccLOdQdD.s:26     .text.cubemx_transport_open:0000000000000000 cubemx_transport_open
-     /tmp/ccLOdQdD.s:57     .text.cubemx_transport_open:0000000000000014 $d
-     /tmp/ccLOdQdD.s:62     .text.cubemx_transport_close:0000000000000000 $t
-     /tmp/ccLOdQdD.s:69     .text.cubemx_transport_close:0000000000000000 cubemx_transport_close
-     /tmp/ccLOdQdD.s:98     .text.cubemx_transport_write:0000000000000000 $t
-     /tmp/ccLOdQdD.s:105    .text.cubemx_transport_write:0000000000000000 cubemx_transport_write
-     /tmp/ccLOdQdD.s:186    .text.cubemx_transport_read:0000000000000000 $t
-     /tmp/ccLOdQdD.s:193    .text.cubemx_transport_read:0000000000000000 cubemx_transport_read
-     /tmp/ccLOdQdD.s:327    .text.cubemx_transport_read:000000000000006c $d
-     /tmp/ccLOdQdD.s:334    .bss.dma_buffer:0000000000000000 $d
-     /tmp/ccLOdQdD.s:338    .bss.dma_buffer:0000000000000000 dma_buffer
-     /tmp/ccLOdQdD.s:341    .bss.dma_head:0000000000000000 $d
-     /tmp/ccLOdQdD.s:345    .bss.dma_head:0000000000000000 dma_head
-     /tmp/ccLOdQdD.s:348    .bss.dma_tail:0000000000000000 $d
-     /tmp/ccLOdQdD.s:352    .bss.dma_tail:0000000000000000 dma_tail
+     /tmp/ccCdlX5j.s:18     .text.cubemx_transport_open:0000000000000000 $t
+     /tmp/ccCdlX5j.s:26     .text.cubemx_transport_open:0000000000000000 cubemx_transport_open
+     /tmp/ccCdlX5j.s:57     .text.cubemx_transport_open:0000000000000014 $d
+     /tmp/ccCdlX5j.s:62     .text.cubemx_transport_close:0000000000000000 $t
+     /tmp/ccCdlX5j.s:69     .text.cubemx_transport_close:0000000000000000 cubemx_transport_close
+     /tmp/ccCdlX5j.s:98     .text.cubemx_transport_write:0000000000000000 $t
+     /tmp/ccCdlX5j.s:105    .text.cubemx_transport_write:0000000000000000 cubemx_transport_write
+     /tmp/ccCdlX5j.s:186    .text.cubemx_transport_read:0000000000000000 $t
+     /tmp/ccCdlX5j.s:193    .text.cubemx_transport_read:0000000000000000 cubemx_transport_read
+     /tmp/ccCdlX5j.s:327    .text.cubemx_transport_read:000000000000006c $d
+     /tmp/ccCdlX5j.s:334    .bss.dma_buffer:0000000000000000 $d
+     /tmp/ccCdlX5j.s:338    .bss.dma_buffer:0000000000000000 dma_buffer
+     /tmp/ccCdlX5j.s:341    .bss.dma_head:0000000000000000 $d
+     /tmp/ccCdlX5j.s:345    .bss.dma_head:0000000000000000 dma_head
+     /tmp/ccCdlX5j.s:348    .bss.dma_tail:0000000000000000 $d
+     /tmp/ccCdlX5j.s:352    .bss.dma_tail:0000000000000000 dma_tail
 
 UNDEFINED SYMBOLS
 HAL_UART_Receive_DMA
