@@ -1,4 +1,47 @@
 #include "step_motor.h"
+#include "include.h"
+
+typedef struct {
+    TIM_HandleTypeDef *htim;  // 定时器句柄
+    uint32_t channel;         // PWM通道
+    float step_angle;         // 电机单步角度
+} StepMotor_angle_control;
+
+// 假设定义一些电机实例
+StepMotor_angle_control motors_ac[] = {
+    {&htim2, TIM_CHANNEL_3, 1.8f},  // 电机1
+    {&htim2, TIM_CHANNEL_4, 1.8f},  // 电机2
+    // ... 根据需要可以定义更多电机
+};
+
+void step_motor_angle_control(uint8_t motor_id, float angle) {
+    // if (motor_id >= sizeof(motors_ac) / sizeof(motors_ac[0])) {
+    //     // 如果ID不合法，则返回或者处理错误
+    //     return;
+    // }
+
+    // 获取对应电机的配置
+    StepMotor_angle_control *motor = &motors_ac[motor_id];
+
+    // 计算需要的脉冲数
+    int pulse_count = (int)(angle / motor->step_angle);
+    HAL_TIM_PWM_Start(motor->htim, motor->channel);
+    // 产生PWM脉冲
+    for(int i = 0; i < pulse_count; i++) {
+        // 设置占空比，产生一个脉冲
+        __HAL_TIM_SET_COMPARE(motor->htim, motor->channel, 500); // 50% duty cycle
+
+        // 简单延时以模拟脉冲宽度
+        HAL_Delay(1); // 延时1ms
+
+        // 停止脉冲
+        __HAL_TIM_SET_COMPARE(motor->htim, motor->channel, 0);
+        
+        // 等待下一个脉冲
+        HAL_Delay(1);
+    }
+    HAL_TIM_PWM_Stop(motor->htim, motor->channel);
+}
 
 
 // change frequency for speed control
@@ -32,29 +75,4 @@ void Configure_TIM2_PWM_Frequency(uint32_t input)
 
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-}
-
-//change for angle control
-
-
-void rotate_motor_by_angle(float angle)
-{
-    // 计算需要的脉冲数
-    int pulse_count = (int)(angle / STEP_ANGLE);
-
-    // 产生PWM脉冲
-    for(int i = 0; i < pulse_count; i++)
-    {
-        // 设置占空比，产生一个脉冲
-        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 500); // 500 out of 1000, 50% duty cycle
-
-        // 简单延时以模拟脉冲宽度
-        HAL_Delay(1); // 延时1ms，这个值取决于你的步进电机和驱动器的要求
-
-        // 停止脉冲
-        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
-        __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-        // 等待下一个脉冲
-        HAL_Delay(1); // 根据步进电机的响应速度调整
-    }
 }

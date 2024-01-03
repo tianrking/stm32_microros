@@ -189,7 +189,15 @@ build/step_motor.o: cooneo_Drivers/step_motor/step_motor.c \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__functions.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/rosidl_generator_c__visibility_control.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h \
- cooneo_Drivers/step_motor/step_motor.h
+ cooneo_Drivers/step_motor/step_motor.h cooneo_Drivers/debug/analyze.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/int32_multi_array.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_layout__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_dimension__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/string.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/primitives_sequence.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__functions.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__type_support.h
 cooneo_Drivers/step_motor/step_motor.h:
 Core/Inc/include.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -387,3 +395,12 @@ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/rosidl_generator_c__visibility_control.h:
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h:
 cooneo_Drivers/step_motor/step_motor.h:
+cooneo_Drivers/debug/analyze.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/int32_multi_array.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__struct.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_layout__struct.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_dimension__struct.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/string.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/primitives_sequence.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__functions.h:
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32_multi_array__type_support.h:

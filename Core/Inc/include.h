@@ -25,5 +25,10 @@ extern "C" {
 
 ///custom driver header
 #include "step_motor.h"
+#include "analyze.h"
+
+//msg type
+#include "std_msgs/msg/int32_multi_array.h"
+#include "queue.h"
 
 #endif
