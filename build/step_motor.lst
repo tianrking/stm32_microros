@@ -1,0 +1,325 @@
+ARM GAS  /tmp/ccIOLwH3.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"step_motor.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.Configure_TIM2_PWM_Frequency,"ax",%progbits
+  16              		.align	1
+  17              		.global	Configure_TIM2_PWM_Frequency
+  18              		.arch armv7-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu softvfp
+  24              	Configure_TIM2_PWM_Frequency:
+  25              	.LVL0:
+  26              	.LFB74:
+  27              		.file 1 "cooneo_Drivers/step_motor/step_motor.c"
+   1:cooneo_Drivers/step_motor/step_motor.c **** #include "step_motor.h"
+   2:cooneo_Drivers/step_motor/step_motor.c **** 
+   3:cooneo_Drivers/step_motor/step_motor.c **** 
+   4:cooneo_Drivers/step_motor/step_motor.c **** // change frequency for speed control
+   5:cooneo_Drivers/step_motor/step_motor.c **** void Configure_TIM2_PWM_Frequency(uint32_t input)
+   6:cooneo_Drivers/step_motor/step_motor.c **** {
+  28              		.loc 1 6 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 6 1 is_stmt 0 view .LVU1
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+   7:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t prescaler = 1;  // Prescaler is 1
+  40              		.loc 1 7 5 is_stmt 1 view .LVU2
+  41              	.LVL1:
+   8:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t max_frequency = 13000; // 13kHz
+  42              		.loc 1 8 5 view .LVU3
+   9:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t min_frequency = 0; // 0Hz
+  43              		.loc 1 9 5 view .LVU4
+  10:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t clock_frequency = 72000000; // Assuming 84MHz Timer Clock frequency
+  44              		.loc 1 10 5 view .LVU5
+  11:cooneo_Drivers/step_motor/step_motor.c **** 
+  12:cooneo_Drivers/step_motor/step_motor.c ****     // Map input 0-100 to 0-13kHz
+  13:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t target_frequency = ((max_frequency - min_frequency) * input / 100) + min_frequency;
+  45              		.loc 1 13 5 view .LVU6
+ARM GAS  /tmp/ccIOLwH3.s 			page 2
+
+
+  46              		.loc 1 13 66 is_stmt 0 view .LVU7
+  47 0002 43F2C823 		movw	r3, #13000
+  48 0006 00FB03F3 		mul	r3, r0, r3
+  49              		.loc 1 13 74 view .LVU8
+  50 000a 1148     		ldr	r0, .L5
+  51              	.LVL2:
+  52              		.loc 1 13 74 view .LVU9
+  53 000c A0FB0323 		umull	r2, r3, r0, r3
+  54 0010 5B09     		lsrs	r3, r3, #5
+  55              	.LVL3:
+  14:cooneo_Drivers/step_motor/step_motor.c **** 
+  15:cooneo_Drivers/step_motor/step_motor.c ****     // Calculate period based on the target frequency
+  16:cooneo_Drivers/step_motor/step_motor.c ****     uint32_t period = (clock_frequency / ((prescaler + 1) * target_frequency)) - 1;
+  56              		.loc 1 16 5 is_stmt 1 view .LVU10
+  57              		.loc 1 16 59 is_stmt 0 view .LVU11
+  58 0012 5B00     		lsls	r3, r3, #1
+  59              	.LVL4:
+  60              		.loc 1 16 40 view .LVU12
+  61 0014 0F4C     		ldr	r4, .L5+4
+  62 0016 B4FBF3F3 		udiv	r3, r4, r3
+  63              		.loc 1 16 14 view .LVU13
+  64 001a 5C1E     		subs	r4, r3, #1
+  65              	.LVL5:
+  17:cooneo_Drivers/step_motor/step_motor.c **** 
+  18:cooneo_Drivers/step_motor/step_motor.c ****     /* Stop TIM4 to set the new configuration */
+  19:cooneo_Drivers/step_motor/step_motor.c ****     HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_ALL);
+  66              		.loc 1 19 5 is_stmt 1 view .LVU14
+  67 001c 0E4D     		ldr	r5, .L5+8
+  68 001e 3C21     		movs	r1, #60
+  69 0020 2846     		mov	r0, r5
+  70              	.LVL6:
+  71              		.loc 1 19 5 is_stmt 0 view .LVU15
+  72 0022 FFF7FEFF 		bl	HAL_TIM_PWM_Stop
+  73              	.LVL7:
+  20:cooneo_Drivers/step_motor/step_motor.c **** 
+  21:cooneo_Drivers/step_motor/step_motor.c ****     /* Set the new prescaler and period values */
+  22:cooneo_Drivers/step_motor/step_motor.c ****     htim2.Init.Prescaler = prescaler - 1;  // Prescaler value in register is 1 less than actual val
+  74              		.loc 1 22 5 is_stmt 1 view .LVU16
+  75              		.loc 1 22 26 is_stmt 0 view .LVU17
+  76 0026 0023     		movs	r3, #0
+  77 0028 6B60     		str	r3, [r5, #4]
+  23:cooneo_Drivers/step_motor/step_motor.c ****     htim2.Init.Period = period;
+  78              		.loc 1 23 5 is_stmt 1 view .LVU18
+  79              		.loc 1 23 23 is_stmt 0 view .LVU19
+  80 002a EC60     		str	r4, [r5, #12]
+  24:cooneo_Drivers/step_motor/step_motor.c **** 
+  25:cooneo_Drivers/step_motor/step_motor.c ****     /* Re-initialize TIM4 with new settings */
+  26:cooneo_Drivers/step_motor/step_motor.c ****     if(HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  81              		.loc 1 26 5 is_stmt 1 view .LVU20
+  82              		.loc 1 26 8 is_stmt 0 view .LVU21
+  83 002c 2846     		mov	r0, r5
+  84 002e FFF7FEFF 		bl	HAL_TIM_PWM_Init
+  85              	.LVL8:
+  86              		.loc 1 26 7 view .LVU22
+  87 0032 48B9     		cbnz	r0, .L4
+  88              	.L2:
+  27:cooneo_Drivers/step_motor/step_motor.c ****     {
+ARM GAS  /tmp/ccIOLwH3.s 			page 3
+
+
+  28:cooneo_Drivers/step_motor/step_motor.c ****         Error_Handler();
+  29:cooneo_Drivers/step_motor/step_motor.c ****     }
+  30:cooneo_Drivers/step_motor/step_motor.c **** 
+  31:cooneo_Drivers/step_motor/step_motor.c ****     /* Start TIM4 with the new frequency settings */
+  32:cooneo_Drivers/step_motor/step_motor.c **** 
+  33:cooneo_Drivers/step_motor/step_motor.c ****     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+  89              		.loc 1 33 5 is_stmt 1 view .LVU23
+  90 0034 084C     		ldr	r4, .L5+8
+  91              	.LVL9:
+  92              		.loc 1 33 5 is_stmt 0 view .LVU24
+  93 0036 0821     		movs	r1, #8
+  94 0038 2046     		mov	r0, r4
+  95 003a FFF7FEFF 		bl	HAL_TIM_PWM_Start
+  96              	.LVL10:
+  34:cooneo_Drivers/step_motor/step_motor.c ****     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+  97              		.loc 1 34 5 is_stmt 1 view .LVU25
+  98 003e 0C21     		movs	r1, #12
+  99 0040 2046     		mov	r0, r4
+ 100 0042 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 101              	.LVL11:
+  35:cooneo_Drivers/step_motor/step_motor.c **** }
+ 102              		.loc 1 35 1 is_stmt 0 view .LVU26
+ 103 0046 38BD     		pop	{r3, r4, r5, pc}
+ 104              	.LVL12:
+ 105              	.L4:
+  28:cooneo_Drivers/step_motor/step_motor.c ****     }
+ 106              		.loc 1 28 9 is_stmt 1 view .LVU27
+ 107 0048 FFF7FEFF 		bl	Error_Handler
+ 108              	.LVL13:
+ 109 004c F2E7     		b	.L2
+ 110              	.L6:
+ 111 004e 00BF     		.align	2
+ 112              	.L5:
+ 113 0050 1F85EB51 		.word	1374389535
+ 114 0054 00A24A04 		.word	72000000
+ 115 0058 00000000 		.word	htim2
+ 116              		.cfi_endproc
+ 117              	.LFE74:
+ 119              		.global	__aeabi_f2d
+ 120              		.global	__aeabi_ddiv
+ 121              		.global	__aeabi_d2iz
+ 122              		.section	.text.rotate_motor_by_angle,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	rotate_motor_by_angle
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu softvfp
+ 130              	rotate_motor_by_angle:
+ 131              	.LVL14:
+ 132              	.LFB75:
+  36:cooneo_Drivers/step_motor/step_motor.c **** 
+  37:cooneo_Drivers/step_motor/step_motor.c **** //change for angle control
+  38:cooneo_Drivers/step_motor/step_motor.c **** 
+  39:cooneo_Drivers/step_motor/step_motor.c **** 
+  40:cooneo_Drivers/step_motor/step_motor.c **** void rotate_motor_by_angle(float angle)
+  41:cooneo_Drivers/step_motor/step_motor.c **** {
+ARM GAS  /tmp/ccIOLwH3.s 			page 4
+
+
+ 133              		.loc 1 41 1 view -0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137              		.loc 1 41 1 is_stmt 0 view .LVU29
+ 138 0000 70B5     		push	{r4, r5, r6, lr}
+ 139              	.LCFI1:
+ 140              		.cfi_def_cfa_offset 16
+ 141              		.cfi_offset 4, -16
+ 142              		.cfi_offset 5, -12
+ 143              		.cfi_offset 6, -8
+ 144              		.cfi_offset 14, -4
+  42:cooneo_Drivers/step_motor/step_motor.c ****     // 计算需要的脉冲数
+  43:cooneo_Drivers/step_motor/step_motor.c ****     int pulse_count = (int)(angle / STEP_ANGLE);
+ 145              		.loc 1 43 5 is_stmt 1 view .LVU30
+ 146              		.loc 1 43 35 is_stmt 0 view .LVU31
+ 147 0002 FFF7FEFF 		bl	__aeabi_f2d
+ 148              	.LVL15:
+ 149              		.loc 1 43 35 view .LVU32
+ 150 0006 0EA3     		adr	r3, .L11
+ 151 0008 D3E90023 		ldrd	r2, [r3]
+ 152 000c FFF7FEFF 		bl	__aeabi_ddiv
+ 153              	.LVL16:
+ 154              		.loc 1 43 9 view .LVU33
+ 155 0010 FFF7FEFF 		bl	__aeabi_d2iz
+ 156              	.LVL17:
+ 157 0014 0646     		mov	r6, r0
+ 158              	.LVL18:
+  44:cooneo_Drivers/step_motor/step_motor.c **** 
+  45:cooneo_Drivers/step_motor/step_motor.c ****     // 产生PWM脉冲
+  46:cooneo_Drivers/step_motor/step_motor.c ****     for(int i = 0; i < pulse_count; i++)
+ 159              		.loc 1 46 5 is_stmt 1 view .LVU34
+ 160              	.LBB2:
+ 161              		.loc 1 46 9 view .LVU35
+ 162              		.loc 1 46 13 is_stmt 0 view .LVU36
+ 163 0016 0024     		movs	r4, #0
+ 164              		.loc 1 46 5 view .LVU37
+ 165 0018 0FE0     		b	.L8
+ 166              	.LVL19:
+ 167              	.L9:
+  47:cooneo_Drivers/step_motor/step_motor.c ****     {
+  48:cooneo_Drivers/step_motor/step_motor.c ****         // 设置占空比，产生一个脉冲
+  49:cooneo_Drivers/step_motor/step_motor.c ****         __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 500); // 500 out of 1000, 50% duty cycle
+ 168              		.loc 1 49 9 is_stmt 1 discriminator 3 view .LVU38
+ 169 001a 0B4D     		ldr	r5, .L11+8
+ 170 001c 2B68     		ldr	r3, [r5]
+ 171 001e 4FF4FA72 		mov	r2, #500
+ 172 0022 DA63     		str	r2, [r3, #60]
+  50:cooneo_Drivers/step_motor/step_motor.c **** 
+  51:cooneo_Drivers/step_motor/step_motor.c ****         // 简单延时以模拟脉冲宽度
+  52:cooneo_Drivers/step_motor/step_motor.c ****         HAL_Delay(1); // 延时1ms，这个值取决于你的步进电机和驱动器的要求
+ 173              		.loc 1 52 9 discriminator 3 view .LVU39
+ 174 0024 0120     		movs	r0, #1
+ 175 0026 FFF7FEFF 		bl	HAL_Delay
+ 176              	.LVL20:
+  53:cooneo_Drivers/step_motor/step_motor.c **** 
+  54:cooneo_Drivers/step_motor/step_motor.c ****         // 停止脉冲
+ARM GAS  /tmp/ccIOLwH3.s 			page 5
+
+
+  55:cooneo_Drivers/step_motor/step_motor.c ****         __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
+ 177              		.loc 1 55 9 discriminator 3 view .LVU40
+ 178 002a 2B68     		ldr	r3, [r5]
+ 179 002c 0022     		movs	r2, #0
+ 180 002e DA63     		str	r2, [r3, #60]
+  56:cooneo_Drivers/step_motor/step_motor.c ****         __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+ 181              		.loc 1 56 9 discriminator 3 view .LVU41
+ 182 0030 1A64     		str	r2, [r3, #64]
+  57:cooneo_Drivers/step_motor/step_motor.c ****         // 等待下一个脉冲
+  58:cooneo_Drivers/step_motor/step_motor.c ****         HAL_Delay(1); // 根据步进电机的响应速度调整
+ 183              		.loc 1 58 9 discriminator 3 view .LVU42
+ 184 0032 0120     		movs	r0, #1
+ 185 0034 FFF7FEFF 		bl	HAL_Delay
+ 186              	.LVL21:
+  46:cooneo_Drivers/step_motor/step_motor.c ****     {
+ 187              		.loc 1 46 37 discriminator 3 view .LVU43
+  46:cooneo_Drivers/step_motor/step_motor.c ****     {
+ 188              		.loc 1 46 38 is_stmt 0 discriminator 3 view .LVU44
+ 189 0038 0134     		adds	r4, r4, #1
+ 190              	.LVL22:
+ 191              	.L8:
+  46:cooneo_Drivers/step_motor/step_motor.c ****     {
+ 192              		.loc 1 46 20 is_stmt 1 discriminator 1 view .LVU45
+  46:cooneo_Drivers/step_motor/step_motor.c ****     {
+ 193              		.loc 1 46 5 is_stmt 0 discriminator 1 view .LVU46
+ 194 003a B442     		cmp	r4, r6
+ 195 003c EDDB     		blt	.L9
+ 196              	.LBE2:
+  59:cooneo_Drivers/step_motor/step_motor.c ****     }
+  60:cooneo_Drivers/step_motor/step_motor.c **** }...
+ 197              		.loc 1 60 1 view .LVU47
+ 198 003e 70BD     		pop	{r4, r5, r6, pc}
+ 199              	.LVL23:
+ 200              	.L12:
+ 201              		.loc 1 60 1 view .LVU48
+ 202              		.align	3
+ 203              	.L11:
+ 204 0040 CDCCCCCC 		.word	-858993459
+ 205 0044 CCCCFC3F 		.word	1073532108
+ 206 0048 00000000 		.word	htim2
+ 207              		.cfi_endproc
+ 208              	.LFE75:
+ 210              		.text
+ 211              	.Letext0:
+ 212              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
+ 213              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+ 214              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 215              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 216              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 217              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 218              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 219              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
+ 220              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 221              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 222              		.file 12 "Core/Inc/tim.h"
+ 223              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 224              		.file 14 "Core/Inc/main.h"
+ARM GAS  /tmp/ccIOLwH3.s 			page 6
+
+
+ARM GAS  /tmp/ccIOLwH3.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 step_motor.c
+     /tmp/ccIOLwH3.s:16     .text.Configure_TIM2_PWM_Frequency:0000000000000000 $t
+     /tmp/ccIOLwH3.s:24     .text.Configure_TIM2_PWM_Frequency:0000000000000000 Configure_TIM2_PWM_Frequency
+     /tmp/ccIOLwH3.s:113    .text.Configure_TIM2_PWM_Frequency:0000000000000050 $d
+     /tmp/ccIOLwH3.s:123    .text.rotate_motor_by_angle:0000000000000000 $t
+     /tmp/ccIOLwH3.s:130    .text.rotate_motor_by_angle:0000000000000000 rotate_motor_by_angle
+     /tmp/ccIOLwH3.s:204    .text.rotate_motor_by_angle:0000000000000040 $d
+
+UNDEFINED SYMBOLS
+HAL_TIM_PWM_Stop
+HAL_TIM_PWM_Init
+HAL_TIM_PWM_Start
+Error_Handler
+htim2
+__aeabi_f2d
+__aeabi_ddiv
+__aeabi_d2iz
+HAL_Delay
