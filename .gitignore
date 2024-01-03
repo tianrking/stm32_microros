@@ -1,0 +1,43 @@
+# 忽略所有生成的文件
+**/*.o
+**/*.elf
+**/*.bin
+**/*.hex
+**/*.srec
+**/*.list
+**/*.map
+
+# 忽略所有編譯器產生的中間文件
+**/*.i
+**/*.s
+**/*.ii
+**/*.ss
+
+# 忽略所有 IDE 生成的配置文件
+**/.vscode/
+**/.settings/
+
+# 忽略所有日誌文件
+**/*.log
+
+# 忽略所有臨時文件
+**/*.tmp
+
+# 忽略所有垃圾文件
+**/*~
+**/#*#
+
+# 忽略 STM32CubeIDE 生成的文件
+**/.metadata/
+**/.project/
+**/.cproject/
+**/.settings/
+**/build/
+
+# 忽略 STM32CubeMX 生成的文件
+**/STM32CubeMX.config
+**/STM32CubeMX.ini
+
+# 忽略 STM32CubeProgrammer 生成的文件
+**/STM32CubeProgrammer.log
+**/STM32CubeProgrammer.out
