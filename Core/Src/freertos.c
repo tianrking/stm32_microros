@@ -243,43 +243,60 @@ void StartDefaultTask(void *argument)
       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
       "mcu_current_state"); // 新话题
 
-  // 初始化状态设置订阅
-  rcl_subscription_options_t status_set_subscription_ops = rcl_subscription_get_default_options();
-  rcl_ret_t sub_ret = rcl_subscription_init(
+  // // 初始化状态设置订阅
+  // rcl_subscription_options_t status_set_subscription_ops = rcl_subscription_get_default_options();
+  // rcl_ret_t sub_ret = rcl_subscription_init(
+  //     &status_set_subscription,
+  //     &node,
+  //     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+  //     "set_mcu_state",
+  //     &status_set_subscription_ops);
+
+  // if (sub_ret != RCL_RET_OK)
+  // {
+  //   // 错误处理
+  //   printf("Error initializing 'set_mcu_state' subscription (line %d)\n", __LINE__);
+  // }
+
+  // // 初始化电机速度订阅
+  // rcl_subscription_options_t wheel_speeds_subscription_ops = rcl_subscription_get_default_options();
+  // sub_ret = rcl_subscription_init(
+  //     &wheel_speeds_subscription,
+  //     &node,
+  //     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32MultiArray),
+  //     "wheel_speeds",
+  //     &wheel_speeds_subscription_ops);
+
+  // if (sub_ret != RCL_RET_OK)
+  // {
+  //   // 错误处理
+  //   printf("Error initializing 'wheel_speeds' subscription (line %d)\n", __LINE__);
+  // }
+  
+  rclc_subscription_init_default(
       &status_set_subscription,
       &node,
       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-      "set_mcu_state",
-      &status_set_subscription_ops);
+      "set_mcu_state");
 
-  if (sub_ret != RCL_RET_OK)
-  {
-    // 错误处理
-    printf("Error initializing 'set_mcu_state' subscription (line %d)\n", __LINE__);
-  }
-
-  // 初始化电机速度订阅
-  rcl_subscription_options_t wheel_speeds_subscription_ops = rcl_subscription_get_default_options();
-  sub_ret = rcl_subscription_init(
-      &wheel_speeds_subscription,
-      &node,
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32MultiArray),
-      "wheel_speeds",
-      &wheel_speeds_subscription_ops);
-
-  if (sub_ret != RCL_RET_OK)
-  {
-    // 错误处理
-    printf("Error initializing 'wheel_speeds' subscription (line %d)\n", __LINE__);
-  }
-
-  // 添加状态设置订阅者到执行器
+  // create executor
+  // rclc_executor_t executor;
+  rclc_executor_init(&executor, &support.context, 5, &allocator);
   rclc_executor_add_subscription(
-      &executor, 
-      &status_set_subscription, 
-      &status_set_msg, 
-      status_set_callback, 
-      ON_NEW_DATA);
+    &executor, 
+    &status_set_subscription, 
+    &status_set_msg,  // 假设这是新增的需要的参数，代表消息类型
+    &status_set_callback, 
+    ON_NEW_DATA
+  );
+
+  // // 添加状态设置订阅者到执行器
+  // rclc_executor_add_subscription(
+  //     &executor, 
+  //     &status_set_subscription, 
+  //     &status_set_msg, 
+  //     &status_set_callback, 
+  //     ON_NEW_DATA);
 
   // 添加电机速度订阅者到执行器
   rclc_executor_add_subscription(
@@ -314,7 +331,7 @@ void StartDefaultTask(void *argument)
     }
 
     // current_state_msg.data = desired_state;
-    ret = rcl_publish(&current_state_publisher, &current_state_msg, NULL);
+    //ret = rcl_publish(&current_state_publisher, &current_state_msg, NULL);
     // if(msg.data % 100 == 0){
     //   // publish_current_state(msg.data);
     //   publish_current_state();
@@ -425,7 +442,8 @@ void status_set_callback(const void *msgin)
   // publish_current_state(desired_state);
 
   // current_state_msg.data = desired_state;
-  // ret = rcl_publish(&current_state_publisher, msg, NULL);
+  
+  rcl_ret_t ret = rcl_publish(&current_state_publisher, msg, NULL);
   //  这里可能需要发布当前状态，根据具体情况来调用 publish_current_state(current_state);
 }
 
