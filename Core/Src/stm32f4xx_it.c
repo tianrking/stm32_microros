@@ -41,6 +41,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+volatile char receivedChar; // 用于存储接收到的字符
+const char MODE_SWITCH_CHAR = '$'; // 切换模式的特殊字符
+
+typedef enum {
+    MODE_NORMAL,       // 普通通信模式
+    MODE_MICRO_ROS     // micro-ROS通信模式
+} CommunicationMode;
+
+volatile CommunicationMode currentMode = MODE_NORMAL; // 当前通信模式
 
 /* USER CODE END PV */
 
@@ -228,7 +237,34 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
+    // 检查是否收到了数据
+  // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
+  //     // 读取接收到的数据
+  //     uint8_t receivedChar = (uint8_t)(huart2.Instance->DR & 0xFF);
 
+  //     // 根据当前模式处理数据
+  //     if (currentMode == MODE_NORMAL) {
+  //         // 如果收到特殊字符，则切换模式
+  //         if (receivedChar == MODE_SWITCH_CHAR) {
+  //             currentMode = MODE_MICRO_ROS;
+  //             // 进行micro-ROS模式相关初始化
+  //             // ...
+  //         } else {
+  //             // 处理普通通信数据
+  //             // ...
+  //         }
+  //     } else if (currentMode == MODE_MICRO_ROS) {
+  //         // 如果收到特殊字符，则切换模式
+  //         if (receivedChar == MODE_SWITCH_CHAR) {
+  //             currentMode = MODE_NORMAL;
+  //             // 清理micro-ROS模式相关资源
+  //             // ...
+  //         } else {
+  //             // 将数据传递给micro-ROS处理
+  //             // ...
+  //         }
+  //     }
+  // }
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */

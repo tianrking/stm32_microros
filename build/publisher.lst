@@ -1,42 +1,42 @@
-ARM GAS  /tmp/cchTtEJb.s 			page 1
+ARM GAS  /tmp/ccbJkX3v.s 			page 1
 
 
    1              		.cpu cortex-m4
-   2              		.eabi_attribute 27, 1
-   3              		.eabi_attribute 28, 1
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 1
-  11              		.eabi_attribute 34, 1
-  12              		.eabi_attribute 18, 4
-  13              		.file	"publisher.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.section	.rodata.publish_current_state.str1.4,"aMS",%progbits,1
-  18              		.align	2
-  19              	.LC0:
-  20 0000 4661696C 		.ascii	"Failed to publish current state.\000"
-  20      65642074 
-  20      6F207075 
-  20      626C6973 
-  20      68206375 
-  21              		.section	.text.publish_current_state,"ax",%progbits
-  22              		.align	1
-  23              		.global	publish_current_state
-  24              		.arch armv7e-m
-  25              		.syntax unified
-  26              		.thumb
-  27              		.thumb_func
-  28              		.fpu fpv4-sp-d16
-  30              	publish_current_state:
-  31              	.LVL0:
-  32              	.LFB243:
-  33              		.file 1 "cooneo_Drivers/microros_scheduler/publisher.c"
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"publisher.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "cooneo_Drivers/microros_scheduler/publisher.c"
+  20              		.section	.rodata.publish_current_state.str1.4,"aMS",%progbits,1
+  21              		.align	2
+  22              	.LC0:
+  23 0000 4661696C 		.ascii	"Failed to publish current state.\000"
+  23      65642074 
+  23      6F207075 
+  23      626C6973 
+  23      68206375 
+  24              		.section	.text.publish_current_state,"ax",%progbits
+  25              		.align	1
+  26              		.global	publish_current_state
+  27              		.syntax unified
+  28              		.thumb
+  29              		.thumb_func
+  31              	publish_current_state:
+  32              	.LVL0:
+  33              	.LFB243:
    1:cooneo_Drivers/microros_scheduler/publisher.c **** #include "include.h"
    2:cooneo_Drivers/microros_scheduler/publisher.c **** #include <std_msgs/msg/int32.h>
    3:cooneo_Drivers/microros_scheduler/publisher.c **** #include <rmw/rmw.h>  // 包含rmw_qos_profile_default
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cchTtEJb.s 			page 1
   36              		@ args = 0, pretend = 0, frame = 0
   37              		@ frame_needed = 0, uses_anonymous_args = 0
   38              		.loc 1 16 1 is_stmt 0 view .LVU1
-ARM GAS  /tmp/cchTtEJb.s 			page 2
+ARM GAS  /tmp/ccbJkX3v.s 			page 2
 
 
   39 0000 08B5     		push	{r3, lr}
@@ -109,52 +109,51 @@ ARM GAS  /tmp/cchTtEJb.s 			page 1
   73              	.L6:
   74 001a 00BF     		.align	2
   75              	.L5:
-  76 001c 00000000 		.word	.LANCHOR0
-  77 0020 00000000 		.word	.LANCHOR1
+  76 001c 00000000 		.word	current_state_msg
+  77 0020 00000000 		.word	current_state_publisher
   78 0024 00000000 		.word	.LC0
   79              		.cfi_endproc
   80              	.LFE243:
   82              		.global	current_state_msg
-  83              		.global	current_state_publisher
-  84              		.section	.bss.current_state_msg,"aw",%nobits
-  85              		.align	2
-ARM GAS  /tmp/cchTtEJb.s 			page 3
+  83              		.section	.bss.current_state_msg,"aw",%nobits
+  84              		.align	2
+  87              	current_state_msg:
+ARM GAS  /tmp/ccbJkX3v.s 			page 3
 
 
-  86              		.set	.LANCHOR0,. + 0
-  89              	current_state_msg:
-  90 0000 00000000 		.space	4
-  91              		.section	.bss.current_state_publisher,"aw",%nobits
-  92              		.align	2
-  93              		.set	.LANCHOR1,. + 0
-  96              	current_state_publisher:
-  97 0000 00000000 		.space	4
-  98              		.text
-  99              	.Letext0:
- 100              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h"
- 101              		.file 3 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
- 102              		.file 4 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/ret_
- 103              		.file 5 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
- 104              		.file 6 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
- 105              		.file 7 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/type
- 106              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/publ
- 107              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos_
- 108              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 109              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
- 110              		.file 12 "<built-in>"
-ARM GAS  /tmp/cchTtEJb.s 			page 4
+  88 0000 00000000 		.space	4
+  89              		.global	current_state_publisher
+  90              		.section	.bss.current_state_publisher,"aw",%nobits
+  91              		.align	2
+  94              	current_state_publisher:
+  95 0000 00000000 		.space	4
+  96              		.text
+  97              	.Letext0:
+  98              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+  99              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 100              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 101              		.file 5 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/ret_
+ 102              		.file 6 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 103              		.file 7 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
+ 104              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/type
+ 105              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/publ
+ 106              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 107              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 108              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msg
+ 109              		.file 13 "<built-in>"
+ARM GAS  /tmp/ccbJkX3v.s 			page 4
 
 
 DEFINED SYMBOLS
-                            *ABS*:0000000000000000 publisher.c
-     /tmp/cchTtEJb.s:18     .rodata.publish_current_state.str1.4:0000000000000000 $d
-     /tmp/cchTtEJb.s:22     .text.publish_current_state:0000000000000000 $t
-     /tmp/cchTtEJb.s:30     .text.publish_current_state:0000000000000000 publish_current_state
-     /tmp/cchTtEJb.s:76     .text.publish_current_state:000000000000001c $d
-     /tmp/cchTtEJb.s:89     .bss.current_state_msg:0000000000000000 current_state_msg
-     /tmp/cchTtEJb.s:96     .bss.current_state_publisher:0000000000000000 current_state_publisher
-     /tmp/cchTtEJb.s:85     .bss.current_state_msg:0000000000000000 $d
-     /tmp/cchTtEJb.s:92     .bss.current_state_publisher:0000000000000000 $d
+                            *ABS*:00000000 publisher.c
+     /tmp/ccbJkX3v.s:21     .rodata.publish_current_state.str1.4:00000000 $d
+     /tmp/ccbJkX3v.s:25     .text.publish_current_state:00000000 $t
+     /tmp/ccbJkX3v.s:31     .text.publish_current_state:00000000 publish_current_state
+     /tmp/ccbJkX3v.s:76     .text.publish_current_state:0000001c $d
+     /tmp/ccbJkX3v.s:87     .bss.current_state_msg:00000000 current_state_msg
+     /tmp/ccbJkX3v.s:94     .bss.current_state_publisher:00000000 current_state_publisher
+     /tmp/ccbJkX3v.s:84     .bss.current_state_msg:00000000 $d
+     /tmp/ccbJkX3v.s:91     .bss.current_state_publisher:00000000 $d
 
 UNDEFINED SYMBOLS
 rcl_publish

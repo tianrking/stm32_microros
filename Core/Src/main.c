@@ -17,7 +17,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
 #include "cmsis_os.h"
 #include "adc.h"
@@ -111,7 +110,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-
+  //LCD_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

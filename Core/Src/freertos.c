@@ -86,27 +86,27 @@ void wheel_speeds_callback(const void *msgin);
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[7000];
+uint32_t defaultTaskBuffer[ 7000 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .cb_mem = &defaultTaskControlBlock,
-    .cb_size = sizeof(defaultTaskControlBlock),
-    .stack_mem = &defaultTaskBuffer[0],
-    .stack_size = sizeof(defaultTaskBuffer),
-    .priority = (osPriority_t)osPriorityNormal,
+  .name = "defaultTask",
+  .cb_mem = &defaultTaskControlBlock,
+  .cb_size = sizeof(defaultTaskControlBlock),
+  .stack_mem = &defaultTaskBuffer[0],
+  .stack_size = sizeof(defaultTaskBuffer),
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for PWM_Task */
 osThreadId_t PWM_TaskHandle;
-uint32_t pwmcontroltaskBuffer[3000];
+uint32_t pwmcontroltaskBuffer[ 3000 ];
 osStaticThreadDef_t pwmcontroltaskControlBlock;
 const osThreadAttr_t PWM_Task_attributes = {
-    .name = "PWM_Task",
-    .cb_mem = &pwmcontroltaskControlBlock,
-    .cb_size = sizeof(pwmcontroltaskControlBlock),
-    .stack_mem = &pwmcontroltaskBuffer[0],
-    .stack_size = sizeof(pwmcontroltaskBuffer),
-    .priority = (osPriority_t)osPriorityLow,
+  .name = "PWM_Task",
+  .cb_mem = &pwmcontroltaskControlBlock,
+  .cb_size = sizeof(pwmcontroltaskControlBlock),
+  .stack_mem = &pwmcontroltaskBuffer[0],
+  .stack_size = sizeof(pwmcontroltaskBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,12 +120,11 @@ void StartTask02(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
-{
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -160,6 +159,7 @@ void MX_FREERTOS_Init(void)
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -179,6 +179,7 @@ extern int desired_state;
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+  //LCD_Init();
   rmw_uros_set_custom_transport(
       true,
       (void *)&huart2,
@@ -448,3 +449,4 @@ void status_set_callback(const void *msgin)
 }
 
 /* USER CODE END Application */
+
