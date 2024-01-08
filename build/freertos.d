@@ -203,7 +203,9 @@ build/freertos.o: Core/Src/freertos.c \
  cooneo_Drivers/include.h cooneo_Drivers/move_motor/move_motor.h \
  cooneo_Drivers/step_motor/step_motor.h \
  cooneo_Drivers/microros_scheduler/mc_include.h \
- cooneo_Drivers/spi_bus/spi_240_240.h
+ cooneo_Drivers/spi_bus/spi_240_240.h \
+ cooneo_Drivers/emm_motor/emm_motor.h \
+ cooneo_Drivers/emm_motor/emm_motor_rsp.h cooneo_Drivers/math/dk.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
@@ -416,3 +418,6 @@ cooneo_Drivers/move_motor/move_motor.h:
 cooneo_Drivers/step_motor/step_motor.h:
 cooneo_Drivers/microros_scheduler/mc_include.h:
 cooneo_Drivers/spi_bus/spi_240_240.h:
+cooneo_Drivers/emm_motor/emm_motor.h:
+cooneo_Drivers/emm_motor/emm_motor_rsp.h:
+cooneo_Drivers/math/dk.h:

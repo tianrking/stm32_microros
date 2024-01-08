@@ -1,0 +1,762 @@
+ARM GAS  /tmp/cc0KRzdx.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"emm_motor_rsp.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "cooneo_Drivers/emm_motor/emm_motor_rsp.c"
+  20              		.section	.text.parseMotorRealTimePosition,"ax",%progbits
+  21              		.align	1
+  22              		.global	parseMotorRealTimePosition
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	parseMotorRealTimePosition:
+  28              	.LVL0:
+  29              	.LFB243:
+   1:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** #include "include.h"
+   2:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+   3:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 定义命令类型枚举
+   4:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** typedef enum {
+   5:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_MOTOR_REAL_TIME_POSITION = 0x36,
+   6:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_ENCODER_VALUE = 0x30,
+   7:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_INPUT_PULSES = 0x33,
+   8:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_POSITION_ERROR = 0x39,
+   9:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_ENABLE_STATUS = 0x3A,
+  10:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     READ_STALL_FLAG = 0x3E
+  11:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // 可以在这里添加其他命令类型
+  12:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** } CommandType;
+  13:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  14:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 定义解析函数指针类型
+  15:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** typedef void (*parseFunction)(uint8_t*);
+  16:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  17:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 定义一个结构体来关联命令类型和解析函数
+  18:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** typedef struct {
+  19:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     CommandType cmdType;
+  20:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     parseFunction parser;
+  21:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** } CommandParser;
+  22:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  23:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 创建一个全局的命令解析表
+  24:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** CommandParser commandParsers[] = {
+  25:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_MOTOR_REAL_TIME_POSITION, parseMotorRealTimePosition},
+  26:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_ENCODER_VALUE, parseEncoderValue},
+  27:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_INPUT_PULSES, parseInputPulses},
+  28:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_POSITION_ERROR, parsePositionError},
+  29:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_ENABLE_STATUS, parseEnableStatus},
+ARM GAS  /tmp/cc0KRzdx.s 			page 2
+
+
+  30:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_STALL_FLAG, parseStallFlag},
+  31:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // 在这里可以添加其他命令和解析函数
+  32:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** };
+  33:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  34:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** int e1,e2,e3,e4,e5,e6,ee;
+  35:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 实现电机实时位置解析函数
+  36:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parseMotorRealTimePosition(uint8_t* data) {
+  30              		.loc 1 36 48 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  37:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // 解析数据，转换成 int32_t 类型
+  38:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     int32_t motorPosition = ((int32_t)data[1] << 24) | 
+  35              		.loc 1 38 5 view .LVU1
+  39:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                             ((int32_t)data[2] << 16) |
+  40:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                             ((int32_t)data[3] << 8) |
+  41:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                             ((int32_t)data[4]);
+  42:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // 进行其他必要的处理，例如转换成角度等
+  43:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     double angle = (double)motorPosition * 360 / 65536;
+  36              		.loc 1 43 5 view .LVU2
+  44:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)angle;
+  37              		.loc 1 44 5 view .LVU3
+  45:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e1++;
+  38              		.loc 1 45 5 view .LVU4
+  39              		.loc 1 45 7 is_stmt 0 view .LVU5
+  40 0000 024A     		ldr	r2, .L2
+  41 0002 1368     		ldr	r3, [r2]
+  42 0004 0133     		adds	r3, r3, #1
+  43 0006 1360     		str	r3, [r2]
+  44              	.LVL1:
+  46:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: 在这里添加你的处理逻辑，例如更新UI或变量等
+  47:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+  45              		.loc 1 47 1 view .LVU6
+  46 0008 7047     		bx	lr
+  47              	.L3:
+  48 000a 00BF     		.align	2
+  49              	.L2:
+  50 000c 00000000 		.word	e1
+  51              		.cfi_endproc
+  52              	.LFE243:
+  54              		.section	.text.parseEncoderValue,"ax",%progbits
+  55              		.align	1
+  56              		.global	parseEncoderValue
+  57              		.syntax unified
+  58              		.thumb
+  59              		.thumb_func
+  61              	parseEncoderValue:
+  62              	.LVL2:
+  63              	.LFB244:
+  48:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  49:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parseEncoderValue(uint8_t* data) {
+  64              		.loc 1 49 39 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              		@ link register save eliminated.
+ARM GAS  /tmp/cc0KRzdx.s 			page 3
+
+
+  50:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // Assuming data[1] and data[2] are the bytes representing the encoder value
+  51:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     uint16_t encoderValue = ((uint16_t)data[1] << 8) | (uint16_t)data[2];
+  69              		.loc 1 51 5 view .LVU8
+  52:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)encoderValue;
+  70              		.loc 1 52 5 view .LVU9
+  53:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the encoder value
+  54:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e2++;
+  71              		.loc 1 54 5 view .LVU10
+  72              		.loc 1 54 7 is_stmt 0 view .LVU11
+  73 0000 024A     		ldr	r2, .L5
+  74 0002 1368     		ldr	r3, [r2]
+  75 0004 0133     		adds	r3, r3, #1
+  76 0006 1360     		str	r3, [r2]
+  77              	.LVL3:
+  55:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+  78              		.loc 1 55 1 view .LVU12
+  79 0008 7047     		bx	lr
+  80              	.L6:
+  81 000a 00BF     		.align	2
+  82              	.L5:
+  83 000c 00000000 		.word	e2
+  84              		.cfi_endproc
+  85              	.LFE244:
+  87              		.section	.text.parseInputPulses,"ax",%progbits
+  88              		.align	1
+  89              		.global	parseInputPulses
+  90              		.syntax unified
+  91              		.thumb
+  92              		.thumb_func
+  94              	parseInputPulses:
+  95              	.LVL4:
+  96              	.LFB245:
+  56:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  57:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parseInputPulses(uint8_t* data) {
+  97              		.loc 1 57 38 is_stmt 1 view -0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101              		@ link register save eliminated.
+  58:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // Assuming data[1] to data[4] are the bytes representing the input pulse count
+  59:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     int32_t inputPulses = ((int32_t)data[1] << 24) |
+ 102              		.loc 1 59 5 view .LVU14
+  60:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                           ((int32_t)data[2] << 16) |
+  61:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                           ((int32_t)data[3] << 8)  |
+  62:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                           (int32_t)data[4];
+  63:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  64:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)inputPulses;
+ 103              		.loc 1 64 5 view .LVU15
+  65:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e3++;
+ 104              		.loc 1 65 5 view .LVU16
+ 105              		.loc 1 65 7 is_stmt 0 view .LVU17
+ 106 0000 024A     		ldr	r2, .L8
+ 107 0002 1368     		ldr	r3, [r2]
+ 108 0004 0133     		adds	r3, r3, #1
+ 109 0006 1360     		str	r3, [r2]
+ 110              	.LVL5:
+  66:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the input pulses
+ARM GAS  /tmp/cc0KRzdx.s 			page 4
+
+
+  67:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 111              		.loc 1 67 1 view .LVU18
+ 112 0008 7047     		bx	lr
+ 113              	.L9:
+ 114 000a 00BF     		.align	2
+ 115              	.L8:
+ 116 000c 00000000 		.word	e3
+ 117              		.cfi_endproc
+ 118              	.LFE245:
+ 120              		.section	.text.parsePositionError,"ax",%progbits
+ 121              		.align	1
+ 122              		.global	parsePositionError
+ 123              		.syntax unified
+ 124              		.thumb
+ 125              		.thumb_func
+ 127              	parsePositionError:
+ 128              	.LVL6:
+ 129              	.LFB246:
+  68:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  69:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parsePositionError(uint8_t* data) {
+ 130              		.loc 1 69 40 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 0
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+  70:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     int16_t positionError = ((int16_t)data[1] << 8) | (int16_t)data[2];
+ 135              		.loc 1 70 5 view .LVU20
+  71:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // Convert the position error to angle if necessary
+  72:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     double angleError = (double)positionError * 360 / 65536;
+ 136              		.loc 1 72 5 view .LVU21
+  73:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)angleError;
+ 137              		.loc 1 73 5 view .LVU22
+  74:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e4++;
+ 138              		.loc 1 74 5 view .LVU23
+ 139              		.loc 1 74 7 is_stmt 0 view .LVU24
+ 140 0000 024A     		ldr	r2, .L11
+ 141 0002 1368     		ldr	r3, [r2]
+ 142 0004 0133     		adds	r3, r3, #1
+ 143 0006 1360     		str	r3, [r2]
+ 144              	.LVL7:
+  75:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the position error
+  76:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 145              		.loc 1 76 1 view .LVU25
+ 146 0008 7047     		bx	lr
+ 147              	.L12:
+ 148 000a 00BF     		.align	2
+ 149              	.L11:
+ 150 000c 00000000 		.word	e4
+ 151              		.cfi_endproc
+ 152              	.LFE246:
+ 154              		.section	.text.parseEnableStatus,"ax",%progbits
+ 155              		.align	1
+ 156              		.global	parseEnableStatus
+ 157              		.syntax unified
+ 158              		.thumb
+ 159              		.thumb_func
+ 161              	parseEnableStatus:
+ARM GAS  /tmp/cc0KRzdx.s 			page 5
+
+
+ 162              	.LVL8:
+ 163              	.LFB247:
+  77:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  78:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parseEnableStatus(uint8_t* data) {
+ 164              		.loc 1 78 39 is_stmt 1 view -0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168              		@ link register save eliminated.
+  79:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     uint8_t enableStatus = data[1]; // Assuming data[1] is the enable status byte
+ 169              		.loc 1 79 5 view .LVU27
+  80:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)enableStatus;
+ 170              		.loc 1 80 5 view .LVU28
+  81:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the enable status
+  82:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e5++;
+ 171              		.loc 1 82 5 view .LVU29
+ 172              		.loc 1 82 7 is_stmt 0 view .LVU30
+ 173 0000 024A     		ldr	r2, .L14
+ 174 0002 1368     		ldr	r3, [r2]
+ 175 0004 0133     		adds	r3, r3, #1
+ 176 0006 1360     		str	r3, [r2]
+ 177              	.LVL9:
+  83:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 178              		.loc 1 83 1 view .LVU31
+ 179 0008 7047     		bx	lr
+ 180              	.L15:
+ 181 000a 00BF     		.align	2
+ 182              	.L14:
+ 183 000c 00000000 		.word	e5
+ 184              		.cfi_endproc
+ 185              	.LFE247:
+ 187              		.section	.text.parseStallFlag,"ax",%progbits
+ 188              		.align	1
+ 189              		.global	parseStallFlag
+ 190              		.syntax unified
+ 191              		.thumb
+ 192              		.thumb_func
+ 194              	parseStallFlag:
+ 195              	.LVL10:
+ 196              	.LFB248:
+  84:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  85:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void parseStallFlag(uint8_t* data) {
+ 197              		.loc 1 85 36 is_stmt 1 view -0
+ 198              		.cfi_startproc
+ 199              		@ args = 0, pretend = 0, frame = 0
+ 200              		@ frame_needed = 0, uses_anonymous_args = 0
+ 201              		@ link register save eliminated.
+  86:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     uint8_t stallFlag = data[1]; // Assuming data[1] is the stall flag byte
+ 202              		.loc 1 86 5 view .LVU33
+  87:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     (void)stallFlag;
+ 203              		.loc 1 87 5 view .LVU34
+  88:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the stall flag
+  89:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     e6++;
+ 204              		.loc 1 89 5 view .LVU35
+ 205              		.loc 1 89 7 is_stmt 0 view .LVU36
+ 206 0000 024A     		ldr	r2, .L17
+ 207 0002 1368     		ldr	r3, [r2]
+ARM GAS  /tmp/cc0KRzdx.s 			page 6
+
+
+ 208 0004 0133     		adds	r3, r3, #1
+ 209 0006 1360     		str	r3, [r2]
+ 210              	.LVL11:
+  90:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 211              		.loc 1 90 1 view .LVU37
+ 212 0008 7047     		bx	lr
+ 213              	.L18:
+ 214 000a 00BF     		.align	2
+ 215              	.L17:
+ 216 000c 00000000 		.word	e6
+ 217              		.cfi_endproc
+ 218              	.LFE248:
+ 220              		.section	.text.handleError,"ax",%progbits
+ 221              		.align	1
+ 222              		.global	handleError
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ 227              	handleError:
+ 228              	.LVL12:
+ 229              	.LFB249:
+  91:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+  92:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 实现错误处理函数
+  93:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void handleError(int errorCode) {
+ 230              		.loc 1 93 33 is_stmt 1 view -0
+ 231              		.cfi_startproc
+ 232              		@ args = 0, pretend = 0, frame = 0
+ 233              		@ frame_needed = 0, uses_anonymous_args = 0
+ 234              		@ link register save eliminated.
+  94:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     switch (errorCode) {
+ 235              		.loc 1 94 5 view .LVU39
+  95:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         case ERR_INVALID_DATA:
+  96:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             // 处理无效数据错误
+  97:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             break;
+  98:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         case ERR_UNKNOWN_CMD:
+  99:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             // 处理未知命令错误
+ 100:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             break;
+ 101:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         case ERR_BUFFER_OVERFLOW:
+ 102:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             // 处理缓冲区溢出错误
+ 103:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             break;
+ 104:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         // 添加其他错误处理逻辑
+ 105:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         default:
+ 106:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             // 处理未知错误
+ 107:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             break;
+ 236              		.loc 1 107 13 view .LVU40
+ 108:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
+ 109:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // 可以添加错误日志记录或通知用户代码
+ 110:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 237              		.loc 1 110 1 is_stmt 0 view .LVU41
+ 238 0000 7047     		bx	lr
+ 239              		.cfi_endproc
+ 240              	.LFE249:
+ 242              		.section	.text.dispatchParser,"ax",%progbits
+ 243              		.align	1
+ 244              		.global	dispatchParser
+ 245              		.syntax unified
+ 246              		.thumb
+ARM GAS  /tmp/cc0KRzdx.s 			page 7
+
+
+ 247              		.thumb_func
+ 249              	dispatchParser:
+ 250              	.LVL13:
+ 251              	.LFB250:
+ 111:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 112:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // 分发函数实现
+ 113:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void dispatchParser(uint8_t* receivedData, size_t dataSize) {
+ 252              		.loc 1 113 61 is_stmt 1 view -0
+ 253              		.cfi_startproc
+ 254              		@ args = 0, pretend = 0, frame = 0
+ 255              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     if(dataSize < 1) {
+ 256              		.loc 1 114 5 view .LVU43
+ 257              		.loc 1 114 7 is_stmt 0 view .LVU44
+ 258 0000 B1B1     		cbz	r1, .L26
+ 113:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     if(dataSize < 1) {
+ 259              		.loc 1 113 61 view .LVU45
+ 260 0002 08B5     		push	{r3, lr}
+ 261              	.LCFI0:
+ 262              		.cfi_def_cfa_offset 8
+ 263              		.cfi_offset 3, -8
+ 264              		.cfi_offset 14, -4
+ 115:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         handleError(ERR_INVALID_DATA);
+ 116:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         return;
+ 117:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
+ 118:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 119:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     uint8_t cmdType = receivedData[0];
+ 265              		.loc 1 119 5 is_stmt 1 view .LVU46
+ 266              		.loc 1 119 13 is_stmt 0 view .LVU47
+ 267 0004 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+ 268              	.LVL14:
+ 120:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
+ 269              		.loc 1 120 5 is_stmt 1 view .LVU48
+ 270              	.LBB2:
+ 271              		.loc 1 120 10 view .LVU49
+ 272              		.loc 1 120 14 is_stmt 0 view .LVU50
+ 273 0006 0023     		movs	r3, #0
+ 274              	.LVL15:
+ 275              	.L22:
+ 276              		.loc 1 120 23 is_stmt 1 discriminator 1 view .LVU51
+ 277 0008 052B     		cmp	r3, #5
+ 278 000a 0CD8     		bhi	.L29
+ 121:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         if (commandParsers[i].cmdType == cmdType) {
+ 279              		.loc 1 121 9 view .LVU52
+ 280              		.loc 1 121 30 is_stmt 0 view .LVU53
+ 281 000c 094A     		ldr	r2, .L31
+ 282 000e 12F83320 		ldrb	r2, [r2, r3, lsl #3]	@ zero_extendqisi2
+ 283              		.loc 1 121 12 view .LVU54
+ 284 0012 8A42     		cmp	r2, r1
+ 285 0014 01D0     		beq	.L30
+ 120:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
+ 286              		.loc 1 120 73 is_stmt 1 discriminator 2 view .LVU55
+ 287 0016 0133     		adds	r3, r3, #1
+ 288              	.LVL16:
+ 120:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
+ 289              		.loc 1 120 73 is_stmt 0 discriminator 2 view .LVU56
+ 290 0018 F6E7     		b	.L22
+ARM GAS  /tmp/cc0KRzdx.s 			page 8
+
+
+ 291              	.L30:
+ 122:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             commandParsers[i].parser(receivedData);
+ 292              		.loc 1 122 13 is_stmt 1 view .LVU57
+ 293              		.loc 1 122 30 is_stmt 0 view .LVU58
+ 294 001a 064A     		ldr	r2, .L31
+ 295 001c 02EBC303 		add	r3, r2, r3, lsl #3
+ 296              	.LVL17:
+ 297              		.loc 1 122 30 view .LVU59
+ 298 0020 5B68     		ldr	r3, [r3, #4]
+ 299              		.loc 1 122 13 view .LVU60
+ 300 0022 9847     		blx	r3
+ 301              	.LVL18:
+ 123:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             return;
+ 302              		.loc 1 123 13 is_stmt 1 view .LVU61
+ 303 0024 03E0     		b	.L20
+ 304              	.LVL19:
+ 305              	.L29:
+ 306              		.loc 1 123 13 is_stmt 0 view .LVU62
+ 307              	.LBE2:
+ 124:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         }
+ 125:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
+ 126:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     ee++;
+ 308              		.loc 1 126 5 is_stmt 1 view .LVU63
+ 309              		.loc 1 126 7 is_stmt 0 view .LVU64
+ 310 0026 044A     		ldr	r2, .L31+4
+ 311 0028 1368     		ldr	r3, [r2]
+ 312              	.LVL20:
+ 313              		.loc 1 126 7 view .LVU65
+ 314 002a 0133     		adds	r3, r3, #1
+ 315 002c 1360     		str	r3, [r2]
+ 127:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     handleError(ERR_UNKNOWN_CMD);
+ 316              		.loc 1 127 5 is_stmt 1 view .LVU66
+ 317              	.LVL21:
+ 318              	.L20:
+ 128:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 319              		.loc 1 128 1 is_stmt 0 view .LVU67
+ 320 002e 08BD     		pop	{r3, pc}
+ 321              	.LVL22:
+ 322              	.L26:
+ 323              	.LCFI1:
+ 324              		.cfi_def_cfa_offset 0
+ 325              		.cfi_restore 3
+ 326              		.cfi_restore 14
+ 327              		.loc 1 128 1 view .LVU68
+ 328 0030 7047     		bx	lr
+ 329              	.L32:
+ 330 0032 00BF     		.align	2
+ 331              	.L31:
+ 332 0034 00000000 		.word	commandParsers
+ 333 0038 00000000 		.word	ee
+ 334              		.cfi_endproc
+ 335              	.LFE250:
+ 337              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 338              		.align	1
+ 339              		.global	HAL_UART_RxCpltCallback
+ 340              		.syntax unified
+ 341              		.thumb
+ARM GAS  /tmp/cc0KRzdx.s 			page 9
+
+
+ 342              		.thumb_func
+ 344              	HAL_UART_RxCpltCallback:
+ 345              	.LVL23:
+ 346              	.LFB251:
+ 129:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 130:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** uint8_t dataBuffer;
+ 131:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** int eee;
+ 132:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // UART接收中断回调函数
+ 133:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+ 347              		.loc 1 133 57 is_stmt 1 view -0
+ 348              		.cfi_startproc
+ 349              		@ args = 0, pretend = 0, frame = 0
+ 350              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
+ 351              		.loc 1 134 5 view .LVU70
+ 135:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static size_t currentLength = 0;
+ 352              		.loc 1 135 5 view .LVU71
+ 136:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     eee ++;
+ 353              		.loc 1 136 5 view .LVU72
+ 354              		.loc 1 136 9 is_stmt 0 view .LVU73
+ 355 0000 144A     		ldr	r2, .L43
+ 356 0002 1368     		ldr	r3, [r2]
+ 357 0004 0133     		adds	r3, r3, #1
+ 358 0006 1360     		str	r3, [r2]
+ 137:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     if (huart->Instance == USART1) {  // 确保是UART1的中断
+ 359              		.loc 1 137 5 is_stmt 1 view .LVU74
+ 360              		.loc 1 137 14 is_stmt 0 view .LVU75
+ 361 0008 0268     		ldr	r2, [r0]
+ 362              		.loc 1 137 8 view .LVU76
+ 363 000a 134B     		ldr	r3, .L43+4
+ 364 000c 9A42     		cmp	r2, r3
+ 365 000e 00D0     		beq	.L42
+ 366 0010 7047     		bx	lr
+ 367              	.L42:
+ 133:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
+ 368              		.loc 1 133 57 view .LVU77
+ 369 0012 10B5     		push	{r4, lr}
+ 370              	.LCFI2:
+ 371              		.cfi_def_cfa_offset 8
+ 372              		.cfi_offset 4, -8
+ 373              		.cfi_offset 14, -4
+ 374 0014 0446     		mov	r4, r0
+ 138:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         if (currentLength < MAX_DATA_LENGTH) {
+ 375              		.loc 1 138 9 is_stmt 1 view .LVU78
+ 376              		.loc 1 138 27 is_stmt 0 view .LVU79
+ 377 0016 114B     		ldr	r3, .L43+8
+ 378 0018 1B68     		ldr	r3, [r3]
+ 379              		.loc 1 138 12 view .LVU80
+ 380 001a 092B     		cmp	r3, #9
+ 381 001c 11D8     		bhi	.L35
+ 139:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             receivedData[currentLength++] = dataBuffer;
+ 382              		.loc 1 139 13 is_stmt 1 view .LVU81
+ 383              		.loc 1 139 39 is_stmt 0 view .LVU82
+ 384 001e 591C     		adds	r1, r3, #1
+ 385 0020 0E4A     		ldr	r2, .L43+8
+ 386 0022 1160     		str	r1, [r2]
+ 387              		.loc 1 139 43 view .LVU83
+ARM GAS  /tmp/cc0KRzdx.s 			page 10
+
+
+ 388 0024 0E4A     		ldr	r2, .L43+12
+ 389 0026 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 390 0028 0E48     		ldr	r0, .L43+16
+ 391              	.LVL24:
+ 392              		.loc 1 139 43 view .LVU84
+ 393 002a C254     		strb	r2, [r0, r3]
+ 140:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 141:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             if(dataBuffer == 0x6B || currentLength == MAX_DATA_LENGTH) { // 假设0x6B是结束标�
+ 394              		.loc 1 141 13 is_stmt 1 view .LVU85
+ 395              		.loc 1 141 15 is_stmt 0 view .LVU86
+ 396 002c 6B2A     		cmp	r2, #107
+ 397 002e 01D0     		beq	.L36
+ 398              		.loc 1 141 35 discriminator 1 view .LVU87
+ 399 0030 0A29     		cmp	r1, #10
+ 400 0032 09D1     		bne	.L37
+ 401              	.L36:
+ 142:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 dispatchParser(receivedData, currentLength);
+ 402              		.loc 1 142 17 is_stmt 1 view .LVU88
+ 403 0034 0B48     		ldr	r0, .L43+16
+ 404 0036 FFF7FEFF 		bl	dispatchParser
+ 405              	.LVL25:
+ 143:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 currentLength = 0; // 重置长度，准备下一次接收
+ 406              		.loc 1 143 17 view .LVU89
+ 407              		.loc 1 143 31 is_stmt 0 view .LVU90
+ 408 003a 084B     		ldr	r3, .L43+8
+ 409 003c 0022     		movs	r2, #0
+ 410 003e 1A60     		str	r2, [r3]
+ 411 0040 02E0     		b	.L37
+ 412              	.LVL26:
+ 413              	.L35:
+ 144:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             }
+ 145:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         } else {
+ 146:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             currentLength = 0; // 重置长度
+ 414              		.loc 1 146 13 is_stmt 1 view .LVU91
+ 415              		.loc 1 146 27 is_stmt 0 view .LVU92
+ 416 0042 064B     		ldr	r3, .L43+8
+ 417 0044 0022     		movs	r2, #0
+ 418 0046 1A60     		str	r2, [r3]
+ 419              	.LVL27:
+ 420              	.L37:
+ 147:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         }
+ 148:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 149:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         // 继续接收下一个字节
+ 150:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         HAL_UART_Receive_IT(huart, &dataBuffer, 1);
+ 421              		.loc 1 150 9 is_stmt 1 view .LVU93
+ 422 0048 0122     		movs	r2, #1
+ 423 004a 0549     		ldr	r1, .L43+12
+ 424 004c 2046     		mov	r0, r4
+ 425 004e FFF7FEFF 		bl	HAL_UART_Receive_IT
+ 426              	.LVL28:
+ 151:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
+ 152:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 427              		.loc 1 152 1 is_stmt 0 view .LVU94
+ 428 0052 10BD     		pop	{r4, pc}
+ 429              	.LVL29:
+ 430              	.L44:
+ 431              		.loc 1 152 1 view .LVU95
+ARM GAS  /tmp/cc0KRzdx.s 			page 11
+
+
+ 432              		.align	2
+ 433              	.L43:
+ 434 0054 00000000 		.word	eee
+ 435 0058 00100140 		.word	1073811456
+ 436 005c 00000000 		.word	currentLength.1
+ 437 0060 00000000 		.word	dataBuffer
+ 438 0064 00000000 		.word	receivedData.0
+ 439              		.cfi_endproc
+ 440              	.LFE251:
+ 442              		.section	.bss.receivedData.0,"aw",%nobits
+ 443              		.align	2
+ 446              	receivedData.0:
+ 447 0000 00000000 		.space	10
+ 447      00000000 
+ 447      0000
+ 448              		.section	.bss.currentLength.1,"aw",%nobits
+ 449              		.align	2
+ 452              	currentLength.1:
+ 453 0000 00000000 		.space	4
+ 454              		.global	eee
+ 455              		.section	.bss.eee,"aw",%nobits
+ 456              		.align	2
+ 459              	eee:
+ 460 0000 00000000 		.space	4
+ 461              		.global	dataBuffer
+ 462              		.section	.bss.dataBuffer,"aw",%nobits
+ 465              	dataBuffer:
+ 466 0000 00       		.space	1
+ 467              		.global	ee
+ 468              		.section	.bss.ee,"aw",%nobits
+ 469              		.align	2
+ 472              	ee:
+ 473 0000 00000000 		.space	4
+ 474              		.global	e6
+ 475              		.section	.bss.e6,"aw",%nobits
+ 476              		.align	2
+ 479              	e6:
+ 480 0000 00000000 		.space	4
+ 481              		.global	e5
+ 482              		.section	.bss.e5,"aw",%nobits
+ 483              		.align	2
+ 486              	e5:
+ 487 0000 00000000 		.space	4
+ 488              		.global	e4
+ 489              		.section	.bss.e4,"aw",%nobits
+ 490              		.align	2
+ 493              	e4:
+ 494 0000 00000000 		.space	4
+ 495              		.global	e3
+ 496              		.section	.bss.e3,"aw",%nobits
+ 497              		.align	2
+ 500              	e3:
+ 501 0000 00000000 		.space	4
+ 502              		.global	e2
+ 503              		.section	.bss.e2,"aw",%nobits
+ 504              		.align	2
+ 507              	e2:
+ARM GAS  /tmp/cc0KRzdx.s 			page 12
+
+
+ 508 0000 00000000 		.space	4
+ 509              		.global	e1
+ 510              		.section	.bss.e1,"aw",%nobits
+ 511              		.align	2
+ 514              	e1:
+ 515 0000 00000000 		.space	4
+ 516              		.global	commandParsers
+ 517              		.section	.data.commandParsers,"aw"
+ 518              		.align	2
+ 521              	commandParsers:
+ 522 0000 36       		.byte	54
+ 523 0001 000000   		.space	3
+ 524 0004 00000000 		.word	parseMotorRealTimePosition
+ 525 0008 30       		.byte	48
+ 526 0009 000000   		.space	3
+ 527 000c 00000000 		.word	parseEncoderValue
+ 528 0010 33       		.byte	51
+ 529 0011 000000   		.space	3
+ 530 0014 00000000 		.word	parseInputPulses
+ 531 0018 39       		.byte	57
+ 532 0019 000000   		.space	3
+ 533 001c 00000000 		.word	parsePositionError
+ 534 0020 3A       		.byte	58
+ 535 0021 000000   		.space	3
+ 536 0024 00000000 		.word	parseEnableStatus
+ 537 0028 3E       		.byte	62
+ 538 0029 000000   		.space	3
+ 539 002c 00000000 		.word	parseStallFlag
+ 540              		.text
+ 541              	.Letext0:
+ 542              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 543              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 544              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 545              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 546              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 547              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 548              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 549              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 550              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 551              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 552              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ARM GAS  /tmp/cc0KRzdx.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 emm_motor_rsp.c
+     /tmp/cc0KRzdx.s:21     .text.parseMotorRealTimePosition:00000000 $t
+     /tmp/cc0KRzdx.s:27     .text.parseMotorRealTimePosition:00000000 parseMotorRealTimePosition
+     /tmp/cc0KRzdx.s:50     .text.parseMotorRealTimePosition:0000000c $d
+     /tmp/cc0KRzdx.s:514    .bss.e1:00000000 e1
+     /tmp/cc0KRzdx.s:55     .text.parseEncoderValue:00000000 $t
+     /tmp/cc0KRzdx.s:61     .text.parseEncoderValue:00000000 parseEncoderValue
+     /tmp/cc0KRzdx.s:83     .text.parseEncoderValue:0000000c $d
+     /tmp/cc0KRzdx.s:507    .bss.e2:00000000 e2
+     /tmp/cc0KRzdx.s:88     .text.parseInputPulses:00000000 $t
+     /tmp/cc0KRzdx.s:94     .text.parseInputPulses:00000000 parseInputPulses
+     /tmp/cc0KRzdx.s:116    .text.parseInputPulses:0000000c $d
+     /tmp/cc0KRzdx.s:500    .bss.e3:00000000 e3
+     /tmp/cc0KRzdx.s:121    .text.parsePositionError:00000000 $t
+     /tmp/cc0KRzdx.s:127    .text.parsePositionError:00000000 parsePositionError
+     /tmp/cc0KRzdx.s:150    .text.parsePositionError:0000000c $d
+     /tmp/cc0KRzdx.s:493    .bss.e4:00000000 e4
+     /tmp/cc0KRzdx.s:155    .text.parseEnableStatus:00000000 $t
+     /tmp/cc0KRzdx.s:161    .text.parseEnableStatus:00000000 parseEnableStatus
+     /tmp/cc0KRzdx.s:183    .text.parseEnableStatus:0000000c $d
+     /tmp/cc0KRzdx.s:486    .bss.e5:00000000 e5
+     /tmp/cc0KRzdx.s:188    .text.parseStallFlag:00000000 $t
+     /tmp/cc0KRzdx.s:194    .text.parseStallFlag:00000000 parseStallFlag
+     /tmp/cc0KRzdx.s:216    .text.parseStallFlag:0000000c $d
+     /tmp/cc0KRzdx.s:479    .bss.e6:00000000 e6
+     /tmp/cc0KRzdx.s:221    .text.handleError:00000000 $t
+     /tmp/cc0KRzdx.s:227    .text.handleError:00000000 handleError
+     /tmp/cc0KRzdx.s:243    .text.dispatchParser:00000000 $t
+     /tmp/cc0KRzdx.s:249    .text.dispatchParser:00000000 dispatchParser
+     /tmp/cc0KRzdx.s:332    .text.dispatchParser:00000034 $d
+     /tmp/cc0KRzdx.s:521    .data.commandParsers:00000000 commandParsers
+     /tmp/cc0KRzdx.s:472    .bss.ee:00000000 ee
+     /tmp/cc0KRzdx.s:338    .text.HAL_UART_RxCpltCallback:00000000 $t
+     /tmp/cc0KRzdx.s:344    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+     /tmp/cc0KRzdx.s:434    .text.HAL_UART_RxCpltCallback:00000054 $d
+     /tmp/cc0KRzdx.s:459    .bss.eee:00000000 eee
+     /tmp/cc0KRzdx.s:452    .bss.currentLength.1:00000000 currentLength.1
+     /tmp/cc0KRzdx.s:465    .bss.dataBuffer:00000000 dataBuffer
+     /tmp/cc0KRzdx.s:446    .bss.receivedData.0:00000000 receivedData.0
+     /tmp/cc0KRzdx.s:443    .bss.receivedData.0:00000000 $d
+     /tmp/cc0KRzdx.s:449    .bss.currentLength.1:00000000 $d
+     /tmp/cc0KRzdx.s:456    .bss.eee:00000000 $d
+     /tmp/cc0KRzdx.s:466    .bss.dataBuffer:00000000 $d
+     /tmp/cc0KRzdx.s:469    .bss.ee:00000000 $d
+     /tmp/cc0KRzdx.s:476    .bss.e6:00000000 $d
+     /tmp/cc0KRzdx.s:483    .bss.e5:00000000 $d
+     /tmp/cc0KRzdx.s:490    .bss.e4:00000000 $d
+     /tmp/cc0KRzdx.s:497    .bss.e3:00000000 $d
+     /tmp/cc0KRzdx.s:504    .bss.e2:00000000 $d
+     /tmp/cc0KRzdx.s:511    .bss.e1:00000000 $d
+     /tmp/cc0KRzdx.s:518    .data.commandParsers:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Receive_IT

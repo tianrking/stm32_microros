@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccCJfQP7.s 			page 1
+ARM GAS  /tmp/ccWlcTvz.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
   28:Core/Src/stm32f4xx_it.c **** /* USER CODE BEGIN TD */
   29:Core/Src/stm32f4xx_it.c **** 
   30:Core/Src/stm32f4xx_it.c **** /* USER CODE END TD */
-ARM GAS  /tmp/ccCJfQP7.s 			page 2
+ARM GAS  /tmp/ccWlcTvz.s 			page 2
 
 
   31:Core/Src/stm32f4xx_it.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
   85:Core/Src/stm32f4xx_it.c ****   */
   86:Core/Src/stm32f4xx_it.c **** void NMI_Handler(void)
   87:Core/Src/stm32f4xx_it.c **** {
-ARM GAS  /tmp/ccCJfQP7.s 			page 3
+ARM GAS  /tmp/ccWlcTvz.s 			page 3
 
 
   29              		.loc 1 87 1 view -0
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  106:Core/Src/stm32f4xx_it.c ****   {
   61              		.loc 1 106 9 view .LVU7
   62 0000 FEE7     		b	.L4
-ARM GAS  /tmp/ccCJfQP7.s 			page 4
+ARM GAS  /tmp/ccWlcTvz.s 			page 4
 
 
   63              		.cfi_endproc
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
   98              		.loc 1 132 1 view -0
   99              		.cfi_startproc
  100              		@ Volatile: function does not return.
-ARM GAS  /tmp/ccCJfQP7.s 			page 5
+ARM GAS  /tmp/ccWlcTvz.s 			page 5
 
 
  101              		@ args = 0, pretend = 0, frame = 0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  132              		.cfi_endproc
  133              	.LFE239:
  135              		.section	.text.DebugMon_Handler,"ax",%progbits
-ARM GAS  /tmp/ccCJfQP7.s 			page 6
+ARM GAS  /tmp/ccWlcTvz.s 			page 6
 
 
  136              		.align	1
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  166              		@ frame_needed = 0, uses_anonymous_args = 0
  167 0000 08B5     		push	{r3, lr}
  168              	.LCFI0:
-ARM GAS  /tmp/ccCJfQP7.s 			page 7
+ARM GAS  /tmp/ccWlcTvz.s 			page 7
 
 
  169              		.cfi_def_cfa_offset 8
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  201:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN DMA1_Stream6_IRQn 1 */
  202:Core/Src/stm32f4xx_it.c **** 
  203:Core/Src/stm32f4xx_it.c ****   /* USER CODE END DMA1_Stream6_IRQn 1 */
-ARM GAS  /tmp/ccCJfQP7.s 			page 8
+ARM GAS  /tmp/ccWlcTvz.s 			page 8
 
 
  204:Core/Src/stm32f4xx_it.c **** }
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  249              		.global	USART1_IRQHandler
  250              		.syntax unified
  251              		.thumb
-ARM GAS  /tmp/ccCJfQP7.s 			page 9
+ARM GAS  /tmp/ccWlcTvz.s 			page 9
 
 
  252              		.thumb_func
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  289              		@ args = 0, pretend = 0, frame = 0
  290              		@ frame_needed = 0, uses_anonymous_args = 0
  291 0000 08B5     		push	{r3, lr}
-ARM GAS  /tmp/ccCJfQP7.s 			page 10
+ARM GAS  /tmp/ccWlcTvz.s 			page 10
 
 
  292              	.LCFI4:
@@ -547,334 +547,256 @@ ARM GAS  /tmp/ccCJfQP7.s 			page 1
  295              		.cfi_offset 14, -4
  239:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN USART2_IRQn 0 */
  240:Core/Src/stm32f4xx_it.c ****     // 检查是否收到了数据
- 241:Core/Src/stm32f4xx_it.c ****   if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
- 296              		.loc 1 241 3 view .LVU35
- 297              		.loc 1 241 7 is_stmt 0 view .LVU36
- 298 0002 104B     		ldr	r3, .L33
- 299 0004 1B68     		ldr	r3, [r3]
- 300 0006 1A68     		ldr	r2, [r3]
- 301              		.loc 1 241 6 view .LVU37
- 302 0008 12F0200F 		tst	r2, #32
- 303 000c 06D0     		beq	.L29
- 304              	.LBB2:
- 242:Core/Src/stm32f4xx_it.c ****       // 读取接收到的数据
- 243:Core/Src/stm32f4xx_it.c ****       uint8_t receivedChar = (uint8_t)(huart2.Instance->DR & 0xFF);
- 305              		.loc 1 243 7 is_stmt 1 view .LVU38
- 306              		.loc 1 243 55 is_stmt 0 view .LVU39
- 307 000e 5B68     		ldr	r3, [r3, #4]
- 308              		.loc 1 243 15 view .LVU40
- 309 0010 DBB2     		uxtb	r3, r3
- 310              	.LVL4:
+ 241:Core/Src/stm32f4xx_it.c ****   // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
+ 242:Core/Src/stm32f4xx_it.c ****   //     // 读取接收到的数据
+ 243:Core/Src/stm32f4xx_it.c ****   //     uint8_t receivedChar = (uint8_t)(huart2.Instance->DR & 0xFF);
  244:Core/Src/stm32f4xx_it.c **** 
- 245:Core/Src/stm32f4xx_it.c ****       // 根据当前模式处理数据
- 246:Core/Src/stm32f4xx_it.c ****       if (currentMode == MODE_NORMAL) {
- 311              		.loc 1 246 7 is_stmt 1 view .LVU41
- 312              		.loc 1 246 23 is_stmt 0 view .LVU42
- 313 0012 0D4A     		ldr	r2, .L33+4
- 314 0014 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
- 315              		.loc 1 246 10 view .LVU43
- 316 0016 4AB9     		cbnz	r2, .L30
- 247:Core/Src/stm32f4xx_it.c ****           // 如果收到特殊字符，则切换模式
- 248:Core/Src/stm32f4xx_it.c ****           if (receivedChar == MODE_SWITCH_CHAR) {
- 317              		.loc 1 248 11 is_stmt 1 view .LVU44
- 318              		.loc 1 248 14 is_stmt 0 view .LVU45
- 319 0018 242B     		cmp	r3, #36
- 320 001a 03D0     		beq	.L32
- 321              	.LVL5:
- 322              	.L29:
- 249:Core/Src/stm32f4xx_it.c ****               currentMode = MODE_MICRO_ROS;
- 250:Core/Src/stm32f4xx_it.c ****               // 进行micro-ROS模式相关初始化
- 251:Core/Src/stm32f4xx_it.c ****               // ...
- 252:Core/Src/stm32f4xx_it.c ****           } else {
- 253:Core/Src/stm32f4xx_it.c ****               // 处理普通通信数据
- 254:Core/Src/stm32f4xx_it.c ****               // ...
- 255:Core/Src/stm32f4xx_it.c ****           }
- 256:Core/Src/stm32f4xx_it.c ****       } else if (currentMode == MODE_MICRO_ROS) {
- 257:Core/Src/stm32f4xx_it.c ****           // 如果收到特殊字符，则切换模式
- 258:Core/Src/stm32f4xx_it.c ****           if (receivedChar == MODE_SWITCH_CHAR) {
- 259:Core/Src/stm32f4xx_it.c ****               currentMode = MODE_NORMAL;
- 260:Core/Src/stm32f4xx_it.c ****               // 清理micro-ROS模式相关资源
- 261:Core/Src/stm32f4xx_it.c ****               // ...
- 262:Core/Src/stm32f4xx_it.c ****           } else {
- 263:Core/Src/stm32f4xx_it.c ****               // 将数据传递给micro-ROS处理
- 264:Core/Src/stm32f4xx_it.c ****               // ...
-ARM GAS  /tmp/ccCJfQP7.s 			page 11
-
-
- 265:Core/Src/stm32f4xx_it.c ****           }
- 323              		.loc 1 265 11 is_stmt 1 view .LVU46
- 324              	.LBE2:
- 266:Core/Src/stm32f4xx_it.c ****       }
- 267:Core/Src/stm32f4xx_it.c ****   }
+ 245:Core/Src/stm32f4xx_it.c ****   //     // 根据当前模式处理数据
+ 246:Core/Src/stm32f4xx_it.c ****   //     if (currentMode == MODE_NORMAL) {
+ 247:Core/Src/stm32f4xx_it.c ****   //         // 如果收到特殊字符，则切换模式
+ 248:Core/Src/stm32f4xx_it.c ****   //         if (receivedChar == MODE_SWITCH_CHAR) {
+ 249:Core/Src/stm32f4xx_it.c ****   //             currentMode = MODE_MICRO_ROS;
+ 250:Core/Src/stm32f4xx_it.c ****   //             // 进行micro-ROS模式相关初始化
+ 251:Core/Src/stm32f4xx_it.c ****   //             // ...
+ 252:Core/Src/stm32f4xx_it.c ****   //         } else {
+ 253:Core/Src/stm32f4xx_it.c ****   //             // 处理普通通信数据
+ 254:Core/Src/stm32f4xx_it.c ****   //             // ...
+ 255:Core/Src/stm32f4xx_it.c ****   //         }
+ 256:Core/Src/stm32f4xx_it.c ****   //     } else if (currentMode == MODE_MICRO_ROS) {
+ 257:Core/Src/stm32f4xx_it.c ****   //         // 如果收到特殊字符，则切换模式
+ 258:Core/Src/stm32f4xx_it.c ****   //         if (receivedChar == MODE_SWITCH_CHAR) {
+ 259:Core/Src/stm32f4xx_it.c ****   //             currentMode = MODE_NORMAL;
+ 260:Core/Src/stm32f4xx_it.c ****   //             // 清理micro-ROS模式相关资源
+ 261:Core/Src/stm32f4xx_it.c ****   //             // ...
+ 262:Core/Src/stm32f4xx_it.c ****   //         } else {
+ 263:Core/Src/stm32f4xx_it.c ****   //             // 将数据传递给micro-ROS处理
+ 264:Core/Src/stm32f4xx_it.c ****   //             // ...
+ 265:Core/Src/stm32f4xx_it.c ****   //         }
+ 266:Core/Src/stm32f4xx_it.c ****   //     }
+ 267:Core/Src/stm32f4xx_it.c ****   // }
  268:Core/Src/stm32f4xx_it.c ****   /* USER CODE END USART2_IRQn 0 */
  269:Core/Src/stm32f4xx_it.c ****   HAL_UART_IRQHandler(&huart2);
- 325              		.loc 1 269 3 view .LVU47
- 326 001c 0948     		ldr	r0, .L33
- 327 001e FFF7FEFF 		bl	HAL_UART_IRQHandler
- 328              	.LVL6:
+ 296              		.loc 1 269 3 view .LVU35
+ 297 0002 0248     		ldr	r0, .L30
+ 298 0004 FFF7FEFF 		bl	HAL_UART_IRQHandler
+ 299              	.LVL4:
  270:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN USART2_IRQn 1 */
  271:Core/Src/stm32f4xx_it.c **** 
  272:Core/Src/stm32f4xx_it.c ****   /* USER CODE END USART2_IRQn 1 */
  273:Core/Src/stm32f4xx_it.c **** }
- 329              		.loc 1 273 1 is_stmt 0 view .LVU48
- 330 0022 08BD     		pop	{r3, pc}
- 331              	.LVL7:
- 332              	.L32:
- 333              	.LBB3:
- 249:Core/Src/stm32f4xx_it.c ****               // 进行micro-ROS模式相关初始化
- 334              		.loc 1 249 15 is_stmt 1 view .LVU49
- 249:Core/Src/stm32f4xx_it.c ****               // 进行micro-ROS模式相关初始化
- 335              		.loc 1 249 27 is_stmt 0 view .LVU50
- 336 0024 084B     		ldr	r3, .L33+4
- 337              	.LVL8:
- 249:Core/Src/stm32f4xx_it.c ****               // 进行micro-ROS模式相关初始化
- 338              		.loc 1 249 27 view .LVU51
- 339 0026 0122     		movs	r2, #1
- 340 0028 1A70     		strb	r2, [r3]
- 341 002a F7E7     		b	.L29
- 342              	.LVL9:
- 343              	.L30:
- 256:Core/Src/stm32f4xx_it.c ****           // 如果收到特殊字符，则切换模式
- 344              		.loc 1 256 14 is_stmt 1 view .LVU52
- 256:Core/Src/stm32f4xx_it.c ****           // 如果收到特殊字符，则切换模式
- 345              		.loc 1 256 30 is_stmt 0 view .LVU53
- 346 002c 064A     		ldr	r2, .L33+4
- 347 002e 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
- 348 0030 D2B2     		uxtb	r2, r2
- 256:Core/Src/stm32f4xx_it.c ****           // 如果收到特殊字符，则切换模式
- 349              		.loc 1 256 17 view .LVU54
- 350 0032 012A     		cmp	r2, #1
- 351 0034 F2D1     		bne	.L29
- 258:Core/Src/stm32f4xx_it.c ****               currentMode = MODE_NORMAL;
- 352              		.loc 1 258 11 is_stmt 1 view .LVU55
- 258:Core/Src/stm32f4xx_it.c ****               currentMode = MODE_NORMAL;
- 353              		.loc 1 258 14 is_stmt 0 view .LVU56
- 354 0036 242B     		cmp	r3, #36
- 355 0038 F0D1     		bne	.L29
- 259:Core/Src/stm32f4xx_it.c ****               // 清理micro-ROS模式相关资源
- 356              		.loc 1 259 15 is_stmt 1 view .LVU57
- 259:Core/Src/stm32f4xx_it.c ****               // 清理micro-ROS模式相关资源
- 357              		.loc 1 259 27 is_stmt 0 view .LVU58
- 358 003a 034B     		ldr	r3, .L33+4
- 359              	.LVL10:
- 259:Core/Src/stm32f4xx_it.c ****               // 清理micro-ROS模式相关资源
-ARM GAS  /tmp/ccCJfQP7.s 			page 12
+ 300              		.loc 1 273 1 is_stmt 0 view .LVU36
+ 301 0008 08BD     		pop	{r3, pc}
+ 302              	.L31:
+ 303 000a 00BF     		.align	2
+ 304              	.L30:
+ 305 000c 00000000 		.word	huart2
+ 306              		.cfi_endproc
+ 307              	.LFE245:
+ 309              		.section	.text.TIM8_TRG_COM_TIM14_IRQHandler,"ax",%progbits
+ 310              		.align	1
+ 311              		.global	TIM8_TRG_COM_TIM14_IRQHandler
+ 312              		.syntax unified
+ 313              		.thumb
+ 314              		.thumb_func
+ARM GAS  /tmp/ccWlcTvz.s 			page 11
 
 
- 360              		.loc 1 259 27 view .LVU59
- 361 003c 0022     		movs	r2, #0
- 362 003e 1A70     		strb	r2, [r3]
- 363 0040 ECE7     		b	.L29
- 364              	.L34:
- 365 0042 00BF     		.align	2
- 366              	.L33:
- 367 0044 00000000 		.word	huart2
- 368 0048 00000000 		.word	currentMode
- 369              	.LBE3:
- 370              		.cfi_endproc
- 371              	.LFE245:
- 373              		.section	.text.TIM8_TRG_COM_TIM14_IRQHandler,"ax",%progbits
- 374              		.align	1
- 375              		.global	TIM8_TRG_COM_TIM14_IRQHandler
- 376              		.syntax unified
- 377              		.thumb
- 378              		.thumb_func
- 380              	TIM8_TRG_COM_TIM14_IRQHandler:
- 381              	.LFB246:
+ 316              	TIM8_TRG_COM_TIM14_IRQHandler:
+ 317              	.LFB246:
  274:Core/Src/stm32f4xx_it.c **** 
  275:Core/Src/stm32f4xx_it.c **** /**
  276:Core/Src/stm32f4xx_it.c ****   * @brief This function handles TIM8 trigger and commutation interrupts and TIM14 global interrupt
  277:Core/Src/stm32f4xx_it.c ****   */
  278:Core/Src/stm32f4xx_it.c **** void TIM8_TRG_COM_TIM14_IRQHandler(void)
  279:Core/Src/stm32f4xx_it.c **** {
- 382              		.loc 1 279 1 is_stmt 1 view -0
- 383              		.cfi_startproc
- 384              		@ args = 0, pretend = 0, frame = 0
- 385              		@ frame_needed = 0, uses_anonymous_args = 0
- 386 0000 08B5     		push	{r3, lr}
- 387              	.LCFI5:
- 388              		.cfi_def_cfa_offset 8
- 389              		.cfi_offset 3, -8
- 390              		.cfi_offset 14, -4
+ 318              		.loc 1 279 1 is_stmt 1 view -0
+ 319              		.cfi_startproc
+ 320              		@ args = 0, pretend = 0, frame = 0
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322 0000 08B5     		push	{r3, lr}
+ 323              	.LCFI5:
+ 324              		.cfi_def_cfa_offset 8
+ 325              		.cfi_offset 3, -8
+ 326              		.cfi_offset 14, -4
  280:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 0 */
  281:Core/Src/stm32f4xx_it.c **** 
  282:Core/Src/stm32f4xx_it.c ****   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 0 */
  283:Core/Src/stm32f4xx_it.c ****   HAL_TIM_IRQHandler(&htim14);
- 391              		.loc 1 283 3 view .LVU61
- 392 0002 0248     		ldr	r0, .L37
- 393 0004 FFF7FEFF 		bl	HAL_TIM_IRQHandler
- 394              	.LVL11:
+ 327              		.loc 1 283 3 view .LVU38
+ 328 0002 0248     		ldr	r0, .L34
+ 329 0004 FFF7FEFF 		bl	HAL_TIM_IRQHandler
+ 330              	.LVL5:
  284:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 1 */
  285:Core/Src/stm32f4xx_it.c **** 
  286:Core/Src/stm32f4xx_it.c ****   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
  287:Core/Src/stm32f4xx_it.c **** }
- 395              		.loc 1 287 1 is_stmt 0 view .LVU62
- 396 0008 08BD     		pop	{r3, pc}
- 397              	.L38:
- 398 000a 00BF     		.align	2
- 399              	.L37:
- 400 000c 00000000 		.word	htim14
- 401              		.cfi_endproc
- 402              	.LFE246:
- 404              		.section	.text.DMA2_Stream2_IRQHandler,"ax",%progbits
- 405              		.align	1
-ARM GAS  /tmp/ccCJfQP7.s 			page 13
-
-
- 406              		.global	DMA2_Stream2_IRQHandler
- 407              		.syntax unified
- 408              		.thumb
- 409              		.thumb_func
- 411              	DMA2_Stream2_IRQHandler:
- 412              	.LFB247:
+ 331              		.loc 1 287 1 is_stmt 0 view .LVU39
+ 332 0008 08BD     		pop	{r3, pc}
+ 333              	.L35:
+ 334 000a 00BF     		.align	2
+ 335              	.L34:
+ 336 000c 00000000 		.word	htim14
+ 337              		.cfi_endproc
+ 338              	.LFE246:
+ 340              		.section	.text.DMA2_Stream2_IRQHandler,"ax",%progbits
+ 341              		.align	1
+ 342              		.global	DMA2_Stream2_IRQHandler
+ 343              		.syntax unified
+ 344              		.thumb
+ 345              		.thumb_func
+ 347              	DMA2_Stream2_IRQHandler:
+ 348              	.LFB247:
  288:Core/Src/stm32f4xx_it.c **** 
  289:Core/Src/stm32f4xx_it.c **** /**
  290:Core/Src/stm32f4xx_it.c ****   * @brief This function handles DMA2 stream2 global interrupt.
  291:Core/Src/stm32f4xx_it.c ****   */
  292:Core/Src/stm32f4xx_it.c **** void DMA2_Stream2_IRQHandler(void)
  293:Core/Src/stm32f4xx_it.c **** {
- 413              		.loc 1 293 1 is_stmt 1 view -0
- 414              		.cfi_startproc
- 415              		@ args = 0, pretend = 0, frame = 0
- 416              		@ frame_needed = 0, uses_anonymous_args = 0
- 417 0000 08B5     		push	{r3, lr}
- 418              	.LCFI6:
- 419              		.cfi_def_cfa_offset 8
- 420              		.cfi_offset 3, -8
- 421              		.cfi_offset 14, -4
+ 349              		.loc 1 293 1 is_stmt 1 view -0
+ 350              		.cfi_startproc
+ 351              		@ args = 0, pretend = 0, frame = 0
+ 352              		@ frame_needed = 0, uses_anonymous_args = 0
+ 353 0000 08B5     		push	{r3, lr}
+ 354              	.LCFI6:
+ARM GAS  /tmp/ccWlcTvz.s 			page 12
+
+
+ 355              		.cfi_def_cfa_offset 8
+ 356              		.cfi_offset 3, -8
+ 357              		.cfi_offset 14, -4
  294:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
  295:Core/Src/stm32f4xx_it.c **** 
  296:Core/Src/stm32f4xx_it.c ****   /* USER CODE END DMA2_Stream2_IRQn 0 */
  297:Core/Src/stm32f4xx_it.c ****   HAL_DMA_IRQHandler(&hdma_usart1_rx);
- 422              		.loc 1 297 3 view .LVU64
- 423 0002 0248     		ldr	r0, .L41
- 424 0004 FFF7FEFF 		bl	HAL_DMA_IRQHandler
- 425              	.LVL12:
+ 358              		.loc 1 297 3 view .LVU41
+ 359 0002 0248     		ldr	r0, .L38
+ 360 0004 FFF7FEFF 		bl	HAL_DMA_IRQHandler
+ 361              	.LVL6:
  298:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
  299:Core/Src/stm32f4xx_it.c **** 
  300:Core/Src/stm32f4xx_it.c ****   /* USER CODE END DMA2_Stream2_IRQn 1 */
  301:Core/Src/stm32f4xx_it.c **** }
- 426              		.loc 1 301 1 is_stmt 0 view .LVU65
- 427 0008 08BD     		pop	{r3, pc}
- 428              	.L42:
- 429 000a 00BF     		.align	2
- 430              	.L41:
- 431 000c 00000000 		.word	hdma_usart1_rx
- 432              		.cfi_endproc
- 433              	.LFE247:
- 435              		.section	.text.DMA2_Stream7_IRQHandler,"ax",%progbits
- 436              		.align	1
- 437              		.global	DMA2_Stream7_IRQHandler
- 438              		.syntax unified
- 439              		.thumb
- 440              		.thumb_func
- 442              	DMA2_Stream7_IRQHandler:
- 443              	.LFB248:
+ 362              		.loc 1 301 1 is_stmt 0 view .LVU42
+ 363 0008 08BD     		pop	{r3, pc}
+ 364              	.L39:
+ 365 000a 00BF     		.align	2
+ 366              	.L38:
+ 367 000c 00000000 		.word	hdma_usart1_rx
+ 368              		.cfi_endproc
+ 369              	.LFE247:
+ 371              		.section	.text.DMA2_Stream7_IRQHandler,"ax",%progbits
+ 372              		.align	1
+ 373              		.global	DMA2_Stream7_IRQHandler
+ 374              		.syntax unified
+ 375              		.thumb
+ 376              		.thumb_func
+ 378              	DMA2_Stream7_IRQHandler:
+ 379              	.LFB248:
  302:Core/Src/stm32f4xx_it.c **** 
  303:Core/Src/stm32f4xx_it.c **** /**
  304:Core/Src/stm32f4xx_it.c ****   * @brief This function handles DMA2 stream7 global interrupt.
  305:Core/Src/stm32f4xx_it.c ****   */
  306:Core/Src/stm32f4xx_it.c **** void DMA2_Stream7_IRQHandler(void)
  307:Core/Src/stm32f4xx_it.c **** {
- 444              		.loc 1 307 1 is_stmt 1 view -0
- 445              		.cfi_startproc
-ARM GAS  /tmp/ccCJfQP7.s 			page 14
-
-
- 446              		@ args = 0, pretend = 0, frame = 0
- 447              		@ frame_needed = 0, uses_anonymous_args = 0
- 448 0000 08B5     		push	{r3, lr}
- 449              	.LCFI7:
- 450              		.cfi_def_cfa_offset 8
- 451              		.cfi_offset 3, -8
- 452              		.cfi_offset 14, -4
+ 380              		.loc 1 307 1 is_stmt 1 view -0
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 0
+ 383              		@ frame_needed = 0, uses_anonymous_args = 0
+ 384 0000 08B5     		push	{r3, lr}
+ 385              	.LCFI7:
+ 386              		.cfi_def_cfa_offset 8
+ 387              		.cfi_offset 3, -8
+ 388              		.cfi_offset 14, -4
  308:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
  309:Core/Src/stm32f4xx_it.c **** 
  310:Core/Src/stm32f4xx_it.c ****   /* USER CODE END DMA2_Stream7_IRQn 0 */
  311:Core/Src/stm32f4xx_it.c ****   HAL_DMA_IRQHandler(&hdma_usart1_tx);
- 453              		.loc 1 311 3 view .LVU67
- 454 0002 0248     		ldr	r0, .L45
- 455 0004 FFF7FEFF 		bl	HAL_DMA_IRQHandler
- 456              	.LVL13:
+ 389              		.loc 1 311 3 view .LVU44
+ 390 0002 0248     		ldr	r0, .L42
+ 391 0004 FFF7FEFF 		bl	HAL_DMA_IRQHandler
+ 392              	.LVL7:
  312:Core/Src/stm32f4xx_it.c ****   /* USER CODE BEGIN DMA2_Stream7_IRQn 1 */
  313:Core/Src/stm32f4xx_it.c **** 
  314:Core/Src/stm32f4xx_it.c ****   /* USER CODE END DMA2_Stream7_IRQn 1 */
+ARM GAS  /tmp/ccWlcTvz.s 			page 13
+
+
  315:Core/Src/stm32f4xx_it.c **** }
- 457              		.loc 1 315 1 is_stmt 0 view .LVU68
- 458 0008 08BD     		pop	{r3, pc}
- 459              	.L46:
- 460 000a 00BF     		.align	2
- 461              	.L45:
- 462 000c 00000000 		.word	hdma_usart1_tx
- 463              		.cfi_endproc
- 464              	.LFE248:
- 466              		.global	currentMode
- 467              		.section	.bss.currentMode,"aw",%nobits
- 470              	currentMode:
- 471 0000 00       		.space	1
- 472              		.global	MODE_SWITCH_CHAR
- 473              		.section	.rodata.MODE_SWITCH_CHAR,"a"
- 476              	MODE_SWITCH_CHAR:
- 477 0000 24       		.byte	36
- 478              		.global	receivedChar
- 479              		.section	.bss.receivedChar,"aw",%nobits
- 482              	receivedChar:
- 483 0000 00       		.space	1
- 484              		.text
- 485              	.Letext0:
- 486              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 487              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 488              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 489              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 490              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 491              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 492              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
-ARM GAS  /tmp/ccCJfQP7.s 			page 15
+ 393              		.loc 1 315 1 is_stmt 0 view .LVU45
+ 394 0008 08BD     		pop	{r3, pc}
+ 395              	.L43:
+ 396 000a 00BF     		.align	2
+ 397              	.L42:
+ 398 000c 00000000 		.word	hdma_usart1_tx
+ 399              		.cfi_endproc
+ 400              	.LFE248:
+ 402              		.global	currentMode
+ 403              		.section	.bss.currentMode,"aw",%nobits
+ 406              	currentMode:
+ 407 0000 00       		.space	1
+ 408              		.global	MODE_SWITCH_CHAR
+ 409              		.section	.rodata.MODE_SWITCH_CHAR,"a"
+ 412              	MODE_SWITCH_CHAR:
+ 413 0000 24       		.byte	36
+ 414              		.global	receivedChar
+ 415              		.section	.bss.receivedChar,"aw",%nobits
+ 418              	receivedChar:
+ 419 0000 00       		.space	1
+ 420              		.text
+ 421              	.Letext0:
+ 422              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 423              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 424              		.file 4 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 425              		.file 5 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 426              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 427              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 428              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ARM GAS  /tmp/ccWlcTvz.s 			page 14
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f4xx_it.c
-     /tmp/ccCJfQP7.s:21     .text.NMI_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:27     .text.NMI_Handler:00000000 NMI_Handler
-     /tmp/ccCJfQP7.s:44     .text.HardFault_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:50     .text.HardFault_Handler:00000000 HardFault_Handler
-     /tmp/ccCJfQP7.s:67     .text.MemManage_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:73     .text.MemManage_Handler:00000000 MemManage_Handler
-     /tmp/ccCJfQP7.s:90     .text.BusFault_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:96     .text.BusFault_Handler:00000000 BusFault_Handler
-     /tmp/ccCJfQP7.s:113    .text.UsageFault_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:119    .text.UsageFault_Handler:00000000 UsageFault_Handler
-     /tmp/ccCJfQP7.s:136    .text.DebugMon_Handler:00000000 $t
-     /tmp/ccCJfQP7.s:142    .text.DebugMon_Handler:00000000 DebugMon_Handler
-     /tmp/ccCJfQP7.s:155    .text.DMA1_Stream5_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:161    .text.DMA1_Stream5_IRQHandler:00000000 DMA1_Stream5_IRQHandler
-     /tmp/ccCJfQP7.s:181    .text.DMA1_Stream5_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:186    .text.DMA1_Stream6_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:192    .text.DMA1_Stream6_IRQHandler:00000000 DMA1_Stream6_IRQHandler
-     /tmp/ccCJfQP7.s:212    .text.DMA1_Stream6_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:217    .text.TIM1_UP_TIM10_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:223    .text.TIM1_UP_TIM10_IRQHandler:00000000 TIM1_UP_TIM10_IRQHandler
-     /tmp/ccCJfQP7.s:243    .text.TIM1_UP_TIM10_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:248    .text.USART1_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:254    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
-     /tmp/ccCJfQP7.s:274    .text.USART1_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:279    .text.USART2_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:285    .text.USART2_IRQHandler:00000000 USART2_IRQHandler
-     /tmp/ccCJfQP7.s:367    .text.USART2_IRQHandler:00000044 $d
-     /tmp/ccCJfQP7.s:470    .bss.currentMode:00000000 currentMode
-     /tmp/ccCJfQP7.s:374    .text.TIM8_TRG_COM_TIM14_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:380    .text.TIM8_TRG_COM_TIM14_IRQHandler:00000000 TIM8_TRG_COM_TIM14_IRQHandler
-     /tmp/ccCJfQP7.s:400    .text.TIM8_TRG_COM_TIM14_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:405    .text.DMA2_Stream2_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:411    .text.DMA2_Stream2_IRQHandler:00000000 DMA2_Stream2_IRQHandler
-     /tmp/ccCJfQP7.s:431    .text.DMA2_Stream2_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:436    .text.DMA2_Stream7_IRQHandler:00000000 $t
-     /tmp/ccCJfQP7.s:442    .text.DMA2_Stream7_IRQHandler:00000000 DMA2_Stream7_IRQHandler
-     /tmp/ccCJfQP7.s:462    .text.DMA2_Stream7_IRQHandler:0000000c $d
-     /tmp/ccCJfQP7.s:471    .bss.currentMode:00000000 $d
-     /tmp/ccCJfQP7.s:476    .rodata.MODE_SWITCH_CHAR:00000000 MODE_SWITCH_CHAR
-     /tmp/ccCJfQP7.s:482    .bss.receivedChar:00000000 receivedChar
-     /tmp/ccCJfQP7.s:483    .bss.receivedChar:00000000 $d
+     /tmp/ccWlcTvz.s:21     .text.NMI_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:27     .text.NMI_Handler:00000000 NMI_Handler
+     /tmp/ccWlcTvz.s:44     .text.HardFault_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:50     .text.HardFault_Handler:00000000 HardFault_Handler
+     /tmp/ccWlcTvz.s:67     .text.MemManage_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:73     .text.MemManage_Handler:00000000 MemManage_Handler
+     /tmp/ccWlcTvz.s:90     .text.BusFault_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:96     .text.BusFault_Handler:00000000 BusFault_Handler
+     /tmp/ccWlcTvz.s:113    .text.UsageFault_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:119    .text.UsageFault_Handler:00000000 UsageFault_Handler
+     /tmp/ccWlcTvz.s:136    .text.DebugMon_Handler:00000000 $t
+     /tmp/ccWlcTvz.s:142    .text.DebugMon_Handler:00000000 DebugMon_Handler
+     /tmp/ccWlcTvz.s:155    .text.DMA1_Stream5_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:161    .text.DMA1_Stream5_IRQHandler:00000000 DMA1_Stream5_IRQHandler
+     /tmp/ccWlcTvz.s:181    .text.DMA1_Stream5_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:186    .text.DMA1_Stream6_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:192    .text.DMA1_Stream6_IRQHandler:00000000 DMA1_Stream6_IRQHandler
+     /tmp/ccWlcTvz.s:212    .text.DMA1_Stream6_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:217    .text.TIM1_UP_TIM10_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:223    .text.TIM1_UP_TIM10_IRQHandler:00000000 TIM1_UP_TIM10_IRQHandler
+     /tmp/ccWlcTvz.s:243    .text.TIM1_UP_TIM10_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:248    .text.USART1_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:254    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
+     /tmp/ccWlcTvz.s:274    .text.USART1_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:279    .text.USART2_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:285    .text.USART2_IRQHandler:00000000 USART2_IRQHandler
+     /tmp/ccWlcTvz.s:305    .text.USART2_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:310    .text.TIM8_TRG_COM_TIM14_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:316    .text.TIM8_TRG_COM_TIM14_IRQHandler:00000000 TIM8_TRG_COM_TIM14_IRQHandler
+     /tmp/ccWlcTvz.s:336    .text.TIM8_TRG_COM_TIM14_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:341    .text.DMA2_Stream2_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:347    .text.DMA2_Stream2_IRQHandler:00000000 DMA2_Stream2_IRQHandler
+     /tmp/ccWlcTvz.s:367    .text.DMA2_Stream2_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:372    .text.DMA2_Stream7_IRQHandler:00000000 $t
+     /tmp/ccWlcTvz.s:378    .text.DMA2_Stream7_IRQHandler:00000000 DMA2_Stream7_IRQHandler
+     /tmp/ccWlcTvz.s:398    .text.DMA2_Stream7_IRQHandler:0000000c $d
+     /tmp/ccWlcTvz.s:406    .bss.currentMode:00000000 currentMode
+     /tmp/ccWlcTvz.s:407    .bss.currentMode:00000000 $d
+     /tmp/ccWlcTvz.s:412    .rodata.MODE_SWITCH_CHAR:00000000 MODE_SWITCH_CHAR
+     /tmp/ccWlcTvz.s:418    .bss.receivedChar:00000000 receivedChar
+     /tmp/ccWlcTvz.s:419    .bss.receivedChar:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_DMA_IRQHandler

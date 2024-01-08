@@ -89,6 +89,9 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c
 ASM_SOURCES =  \
 startup_stm32f407xx.s
 
+# C++ sources
+# CPP_SOURCES =  \
+# 	cooneo_Drivers/math/DeltaKinematics.cpp
 
 #######################################
 # binaries
@@ -96,6 +99,8 @@ startup_stm32f407xx.s
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
+# CXX = arm-none-eabi-g++
+
 ifdef GCC_PATH
 CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
@@ -106,6 +111,8 @@ CC = $(PREFIX)gcc
 AS = $(PREFIX)gcc -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
+# CXX = $(PREFIX)g++
+
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
@@ -159,12 +166,17 @@ C_SOURCES += cooneo_Drivers/move_motor/move_motor.c \
 	cooneo_Drivers/microros_scheduler/publisher.c \
 	cooneo_Drivers/microros_scheduler/subscriber.c \
 	cooneo_Drivers/spi_bus/spi_240_240.c \
-	cooneo_Drivers/microros_scheduler/service.c 
+	cooneo_Drivers/emm_motor/emm_motor.c \
+	cooneo_Drivers/emm_motor/emm_motor_rsp.c \
+	cooneo_Drivers/microros_scheduler/service.c \
+	cooneo_Drivers/math/dk.c
 
 C_INCLUDES +=  -Icooneo_Drivers/move_motor \
 	-Icooneo_Drivers/step_motor \
 	-Icooneo_Drivers/microros_scheduler \
 	-Icooneo_Drivers/spi_bus \
+	-Icooneo_Drivers/emm_motor \
+	-Icooneo_Drivers/math \
 	-Icooneo_Drivers
 
 ########################################
@@ -180,6 +192,8 @@ ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
 
+# C++ Flags
+# CXXFLAGS += $(CFLAGS) -std=c++11 # or any other C++ standard
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
@@ -226,6 +240,9 @@ vpath %.c $(sort $(dir $(C_SOURCES)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
+# OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES:.cpp=.o)))
+# vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
+
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
@@ -242,6 +259,13 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(BIN) $< $@	
 	
+# $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
+# 	$(CXX) -c $(CXXFLAGS) $< -o $@
+
+# $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+# 	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+# 	$(SZ) $@
+
 $(BUILD_DIR):
 	mkdir $@		
 

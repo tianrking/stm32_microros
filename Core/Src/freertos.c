@@ -49,6 +49,8 @@ void Configure_TIM4_PWM_Frequency(uint32_t input);
 #include <std_msgs/msg/int32.h>
 #include <std_msgs/msg/int32_multi_array.h>
 #include "include.h"
+
+#include "dk.h"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -111,7 +113,12 @@ const osThreadAttr_t PWM_Task_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+uint16_t lowSpeed = 0x0100; // 举例设置一个低速值，需要根据实际情况调整
+uint8_t acceleration = 0x01; // 设置一个低加速度，需要根据实际情况调整
+int desiredSpeed = 10;
+double desiredAngle;
 
+#define no_error 1 
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -175,6 +182,10 @@ std_msgs__msg__Int32 new_msg;  // 新的消息类型
 extern rcl_publisher_t current_state_publisher;
 extern std_msgs__msg__Int32 current_state_msg;
 extern int desired_state;
+
+DeltaKinematics dk;
+int uu1,uu2,uu3;
+int xx,yy,zz;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -376,23 +387,38 @@ void StartTask02(void *argument)
   TIM4->CCR4 = 800; // PD15
   // static int pre = 84;
   // static int delayTime = 2000;
+  DeltaKinematics_Init(&dk, 232, 336, 119, 120);
   /* Infinite loop */
   for (;;)
   {
 
     // 逐渐增加频率
-    for (int value = 0; value <= 50; value++)
-    {
-      Configure_TIM4_PWM_Frequency(value);
-      osDelay(100);
-    }
+    // for (int value = 0; value <= 50; value++)
+    // {
+    //   Configure_TIM4_PWM_Frequency(value);
+    //   osDelay(100);
+    // }
 
-    // 逐渐减少频率
-    for (int value = 50; value > 0; value--)
-    {
-      Configure_TIM4_PWM_Frequency(value);
-      osDelay(100);
-    }
+    // // 逐渐减少频率
+    // for (int value = 50; value > 0; value--)
+    // {
+    //   Configure_TIM4_PWM_Frequency(value);
+    //   osDelay(100);
+    // }
+    osDelay(2000);
+    //emm_ControlMotorDirectionSpeed(2, convertToDirectionSpeed(desiredSpeed), acceleration);
+    emm_ControlMotorToAngle(2,desiredAngle); // 0-360
+
+// dk->ArmLength = 232;
+//         dk->RodLength = 336;
+//         dk->BassTri = 119;
+//         dk->PlatformTri = 120;
+
+            DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
+            DeltaKinematics_inverse(&dk, 0, 0, zz);
+    emm_ReadMotorRealTimePosition(2);
+    //emm_ReadEncoderValue(2);  //f1
+
   }
   /* USER CODE END StartTask02 */
 }

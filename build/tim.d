@@ -196,7 +196,9 @@ build/tim.o: Core/Src/tim.c Core/Inc/tim.h Core/Inc/main.h \
  cooneo_Drivers/move_motor/move_motor.h \
  cooneo_Drivers/step_motor/step_motor.h \
  cooneo_Drivers/microros_scheduler/mc_include.h \
- cooneo_Drivers/spi_bus/spi_240_240.h
+ cooneo_Drivers/spi_bus/spi_240_240.h \
+ cooneo_Drivers/emm_motor/emm_motor.h \
+ cooneo_Drivers/emm_motor/emm_motor_rsp.h
 Core/Inc/tim.h:
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -401,3 +403,5 @@ cooneo_Drivers/move_motor/move_motor.h:
 cooneo_Drivers/step_motor/step_motor.h:
 cooneo_Drivers/microros_scheduler/mc_include.h:
 cooneo_Drivers/spi_bus/spi_240_240.h:
+cooneo_Drivers/emm_motor/emm_motor.h:
+cooneo_Drivers/emm_motor/emm_motor_rsp.h:

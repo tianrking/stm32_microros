@@ -27,5 +27,7 @@ extern "C" {
 
 #include "mc_include.h"
 #include "spi_240_240.h"
+#include "emm_motor.h"
+#include "emm_motor_rsp.h"
 
 #endif
