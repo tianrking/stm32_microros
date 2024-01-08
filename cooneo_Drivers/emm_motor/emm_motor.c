@@ -134,7 +134,14 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     uint8_t acceleration = 0x01; // 设置加速度值sss
 
     double currentAngle = motorAngles[motorId]; // 假设能实时获取电机当前角度
-    double angleToMove = desiredAngle - currentAngle; // 需要移动的角度
+    // double angleToMove = desiredAngle - currentAngle; // 需要移动的角度
+
+     // 确保目标角度在 -80 到 +80 度之间
+    if (desiredAngle > 70.0) desiredAngle = 70.0;
+    if (desiredAngle < -70.0) desiredAngle = -70.0;
+
+    // 重新计算需要移动的角度
+    double angleToMove = desiredAngle - currentAngle;
 
     //   // 设置速度和方向
     uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
@@ -159,6 +166,8 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     } else {
         // 如果已经在或非常接近目标角度，可能需要发送停止命令或不执行操作
         // 这里发送停止命令或者不做任何事情
+        emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, 0);
+
     }
 }
 
