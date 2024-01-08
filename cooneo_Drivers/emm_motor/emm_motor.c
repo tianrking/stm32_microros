@@ -133,12 +133,8 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     uint16_t directionSpeed ; // 设置一个方向和速度值
     uint8_t acceleration = 0x01; // 设置加速度值sss
 
-    // 根据desiredAngle的符号设置方向
-    // if(desiredAngle >= 0) {
-    //     directionSpeed = 0x0100;  // 正方向
-    // } else {
-    //     directionSpeed = 0x0000;  // 负方向
-    // }
+    double currentAngle = motorAngles[motorId]; // 假设能实时获取电机当前角度
+    double angleToMove = desiredAngle - currentAngle; // 需要移动的角度
 
     //   // 设置速度和方向
     uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
@@ -150,12 +146,20 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
         directionSpeed = speed;  // 方向位设置为0（因为是负数），其他位设置速度值
     }
 
+    // 确保电机只移动所需的角度
+    if(fabs(angleToMove) > 0.01) { // 0.01为可接受的误差范围
+        // 计算需要移动的脉冲数
+        uint32_t pulseCount = calculatePulseCount(angleToMove, anglePerPulse);
 
-    // 计算脉冲数
-    uint32_t pulseCount = calculatePulseCount(desiredAngle, anglePerPulse);
-    emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
+        // 调用emm_ControlMotorRelativeAngle来实际控制电机
+        emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
 
-    motorAngles[motorId] = desiredAngle;
+        // 更新全局变量以记录新的角度
+        motorAngles[motorId] = desiredAngle;
+    } else {
+        // 如果已经在或非常接近目标角度，可能需要发送停止命令或不执行操作
+        // 这里发送停止命令或者不做任何事情
+    }
 }
 
 // tools
