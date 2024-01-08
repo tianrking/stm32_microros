@@ -28,4 +28,7 @@ void emm_ControlMotorRelativeAngle(uint8_t motorId, uint16_t directionSpeed, uin
 
 uint16_t convertToDirectionSpeed(int speed) ;
 
+//位置记录
+void emm_UpdateMotorAngle(uint8_t motorId, double additionalAngle);
+
 #endif

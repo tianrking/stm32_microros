@@ -119,22 +119,24 @@ void dispatchParser(uint8_t* receivedData, size_t dataSize) {
     uint8_t cmdType = receivedData[0];
     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
         if (commandParsers[i].cmdType == cmdType) {
-            commandParsers[i].parser(receivedData);
+            commandParsers[i].parser(receivedData);  //not arrive
             return;
         }
     }
-    ee++;
+    ee++; //arrived
     handleError(ERR_UNKNOWN_CMD);
 }
 
 uint8_t dataBuffer;
-int eee;
+int eee,eee1;
+
 // UART接收中断回调函数
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     static uint8_t receivedData[MAX_DATA_LENGTH];
     static size_t currentLength = 0;
     eee ++;
     if (huart->Instance == USART1) {  // 确保是UART1的中断
+        eee1++;
         if (currentLength < MAX_DATA_LENGTH) {
             receivedData[currentLength++] = dataBuffer;
 

@@ -186,6 +186,7 @@ extern int desired_state;
 DeltaKinematics dk;
 int uu1,uu2,uu3;
 int xx,yy,zz;
+
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -408,7 +409,7 @@ void StartTask02(void *argument)
     osDelay(2000);
     //emm_ControlMotorDirectionSpeed(2, convertToDirectionSpeed(desiredSpeed), acceleration);
     emm_ControlMotorToAngle(2,desiredAngle); // 0-360
-
+    
 // dk->ArmLength = 232;
 //         dk->RodLength = 336;
 //         dk->BassTri = 119;
@@ -416,7 +417,7 @@ void StartTask02(void *argument)
 
             DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
             DeltaKinematics_inverse(&dk, 0, 0, zz);
-    emm_ReadMotorRealTimePosition(2);
+    //emm_ReadMotorRealTimePosition(2);
     //emm_ReadEncoderValue(2);  //f1
 
   }

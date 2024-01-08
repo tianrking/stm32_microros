@@ -1,5 +1,6 @@
 #include "include.h"
 
+double motorAngles[3] = {0.0, 0.0, 0.0};  
 
 // 触发部分
 void emm_TriggerEncoderCalibration(uint8_t motorId) {
@@ -23,45 +24,45 @@ void emm_ReadEncoderValue(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x30, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
     f1++;
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    //rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadInputPulses(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x33, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
     f2++;
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    //rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadMotorRealTimePosition(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x36, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
     f3++;
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    // rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadPositionError(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x39, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    //rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadEnableStatus(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x3A, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    // rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadStallFlag(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x3E, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    // rsp实现接收逻辑并处理返回的数据
 }
 
 void emm_ReadAutoHomeStatus(uint8_t motorId) {
     uint8_t command[] = {motorId, 0x3F, 0x6B}; // 命令数据
     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
-    // 接下来，你需要实现接收逻辑并处理返回的数据
+    // rsp实现接收逻辑并处理返回的数据
 }
 
 
@@ -119,7 +120,8 @@ void emm_ControlMotorRelativeAngle(uint8_t motorId,uint16_t directionSpeed, uint
 // }
 uint32_t calculatePulseCount(double desiredAngle, double anglePerPulse) {
     // 使用四舍五入以避免因浮点数除法带来的误差
-    return (uint32_t)(desiredAngle / anglePerPulse + 0.5);
+    // return (uint32_t)(desiredAngle / anglePerPulse + 0.5);
+    return (uint32_t)(abs(desiredAngle) / anglePerPulse);
 }
 
 // 上层接口
@@ -128,12 +130,32 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     //double desiredAngle = 90.0; // 目标旋转角度
     //desiredAngle = 180;
     double anglePerPulse = 1.8 / 16; // 每个脉冲的旋转角度
-    uint16_t directionSpeed = 0x0100; // 设置一个方向和速度值
+    uint16_t directionSpeed ; // 设置一个方向和速度值
     uint8_t acceleration = 0x01; // 设置加速度值sss
+
+    // 根据desiredAngle的符号设置方向
+    // if(desiredAngle >= 0) {
+    //     directionSpeed = 0x0100;  // 正方向
+    // } else {
+    //     directionSpeed = 0x0000;  // 负方向
+    // }
+
+    //   // 设置速度和方向
+    uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
+    if(desiredAngle >= 0) {
+        // 正方向
+        directionSpeed = (0x1 << 12) | speed;  // 方向位设置为1，其他位设置速度值
+    } else {
+        // 负方向
+        directionSpeed = speed;  // 方向位设置为0（因为是负数），其他位设置速度值
+    }
+
 
     // 计算脉冲数
     uint32_t pulseCount = calculatePulseCount(desiredAngle, anglePerPulse);
     emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
+
+    motorAngles[motorId] = desiredAngle;
 }
 
 // tools
@@ -155,5 +177,18 @@ uint16_t convertToDirectionSpeed(int speed) {
     directionSpeed |= absSpeed;
 
     return directionSpeed;
+}
+
+
+// 函数用于累加电机角度，用于多次运动后的角度计算
+void emm_UpdateMotorAngle(uint8_t motorId, double additionalAngle) {
+    // 更新电机角度
+    motorAngles[motorId] += additionalAngle;
+
+    // // 在实际应用中，可能还需要考虑角度的周期性，例如360度后回到0度
+    // motorAngles[motorId] = fmod(motorAngles[motorId], 360.0);
+
+    // 确保电机转动到新的位置
+    emm_ControlMotorToAngle(motorId, motorAngles[motorId]);
 }
 

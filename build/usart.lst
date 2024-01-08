@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc3udUhY.s 			page 1
+ARM GAS  /tmp/ccJFVG22.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
   28:Core/Src/usart.c **** UART_HandleTypeDef huart5;
   29:Core/Src/usart.c **** UART_HandleTypeDef huart1;
   30:Core/Src/usart.c **** UART_HandleTypeDef huart2;
-ARM GAS  /tmp/cc3udUhY.s 			page 2
+ARM GAS  /tmp/ccJFVG22.s 			page 2
 
 
   31:Core/Src/usart.c **** UART_HandleTypeDef huart3;
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
   60 0018 4261     		str	r2, [r0, #20]
   54:Core/Src/usart.c ****   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   61              		.loc 1 54 3 is_stmt 1 view .LVU13
-ARM GAS  /tmp/cc3udUhY.s 			page 3
+ARM GAS  /tmp/ccJFVG22.s 			page 3
 
 
   62              		.loc 1 54 25 is_stmt 0 view .LVU14
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  104              	.LCFI1:
  105              		.cfi_def_cfa_offset 8
  106              		.cfi_offset 3, -8
-ARM GAS  /tmp/cc3udUhY.s 			page 4
+ARM GAS  /tmp/ccJFVG22.s 			page 4
 
 
  107              		.cfi_offset 14, -4
@@ -238,7 +238,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
   85:Core/Src/usart.c ****   {
   86:Core/Src/usart.c ****     Error_Handler();
   87:Core/Src/usart.c ****   }
-ARM GAS  /tmp/cc3udUhY.s 			page 5
+ARM GAS  /tmp/ccJFVG22.s 			page 5
 
 
   88:Core/Src/usart.c ****   /* USER CODE BEGIN UART5_Init 2 */
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  181 0004 0A4B     		ldr	r3, .L17+4
  182 0006 0360     		str	r3, [r0]
  106:Core/Src/usart.c ****   huart1.Init.BaudRate = 115200;
-ARM GAS  /tmp/cc3udUhY.s 			page 6
+ARM GAS  /tmp/ccJFVG22.s 			page 6
 
 
  183              		.loc 1 106 3 is_stmt 1 view .LVU49
@@ -358,7 +358,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  221 002a FBE7     		b	.L13
  222              	.L18:
  223              		.align	2
-ARM GAS  /tmp/cc3udUhY.s 			page 7
+ARM GAS  /tmp/ccJFVG22.s 			page 7
 
 
  224              	.L17:
@@ -418,7 +418,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  138:Core/Src/usart.c ****   huart2.Init.Parity = UART_PARITY_NONE;
  264              		.loc 1 138 3 is_stmt 1 view .LVU78
  265              		.loc 1 138 22 is_stmt 0 view .LVU79
-ARM GAS  /tmp/cc3udUhY.s 			page 8
+ARM GAS  /tmp/ccJFVG22.s 			page 8
 
 
  266 0012 0361     		str	r3, [r0, #16]
@@ -478,7 +478,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  309              	.LFB239:
  151:Core/Src/usart.c **** /* USART3 init function */
  152:Core/Src/usart.c **** 
-ARM GAS  /tmp/cc3udUhY.s 			page 9
+ARM GAS  /tmp/ccJFVG22.s 			page 9
 
 
  153:Core/Src/usart.c **** void MX_USART3_UART_Init(void)
@@ -538,7 +538,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  346              		.loc 1 170 28 is_stmt 0 view .LVU108
  347 001c C361     		str	r3, [r0, #28]
  171:Core/Src/usart.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
-ARM GAS  /tmp/cc3udUhY.s 			page 10
+ARM GAS  /tmp/ccJFVG22.s 			page 10
 
 
  348              		.loc 1 171 3 is_stmt 1 view .LVU109
@@ -598,7 +598,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  392              		.cfi_offset 7, -8
  393              		.cfi_offset 14, -4
  394 0002 93B0     		sub	sp, sp, #76
-ARM GAS  /tmp/cc3udUhY.s 			page 11
+ARM GAS  /tmp/ccJFVG22.s 			page 11
 
 
  395              	.LCFI6:
@@ -658,7 +658,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  414              		.loc 1 217 10 is_stmt 0 view .LVU123
  415 001a 744A     		ldr	r2, .L51+4
  416 001c 9342     		cmp	r3, r2
-ARM GAS  /tmp/cc3udUhY.s 			page 12
+ARM GAS  /tmp/ccJFVG22.s 			page 12
 
 
  417 001e 44D0     		beq	.L43
@@ -718,7 +718,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  266:Core/Src/usart.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
  267:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  268:Core/Src/usart.c **** 
-ARM GAS  /tmp/cc3udUhY.s 			page 13
+ARM GAS  /tmp/ccJFVG22.s 			page 13
 
 
  269:Core/Src/usart.c ****     /* USART1 DMA Init */
@@ -778,7 +778,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  318:Core/Src/usart.c ****     /* USART2 clock enable */
  319:Core/Src/usart.c ****     __HAL_RCC_USART2_CLK_ENABLE();
  320:Core/Src/usart.c **** 
-ARM GAS  /tmp/cc3udUhY.s 			page 14
+ARM GAS  /tmp/ccJFVG22.s 			page 14
 
 
  321:Core/Src/usart.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -838,7 +838,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  375:Core/Src/usart.c ****   /* USER CODE END USART2_MspInit 1 */
  376:Core/Src/usart.c ****   }
  377:Core/Src/usart.c ****   else if(uartHandle->Instance==USART3)
-ARM GAS  /tmp/cc3udUhY.s 			page 15
+ARM GAS  /tmp/ccJFVG22.s 			page 15
 
 
  428              		.loc 1 377 8 is_stmt 1 view .LVU128
@@ -898,7 +898,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  455 0046 1A64     		str	r2, [r3, #64]
  191:Core/Src/usart.c **** 
  456              		.loc 1 191 5 view .LVU134
-ARM GAS  /tmp/cc3udUhY.s 			page 16
+ARM GAS  /tmp/ccJFVG22.s 			page 16
 
 
  457 0048 1A6C     		ldr	r2, [r3, #64]
@@ -958,7 +958,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  496              		.loc 1 199 5 view .LVU149
  199:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
  497              		.loc 1 199 25 is_stmt 0 view .LVU150
-ARM GAS  /tmp/cc3udUhY.s 			page 17
+ARM GAS  /tmp/ccJFVG22.s 			page 17
 
 
  498 007a 0123     		movs	r3, #1
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  210:Core/Src/usart.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
  534              		.loc 1 210 31 is_stmt 0 view .LVU169
  535 009e 1195     		str	r5, [sp, #68]
-ARM GAS  /tmp/cc3udUhY.s 			page 18
+ARM GAS  /tmp/ccJFVG22.s 			page 18
 
 
  211:Core/Src/usart.c **** 
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  577              		.loc 1 225 5 view .LVU182
  226:Core/Src/usart.c ****     /**UART5 GPIO Configuration
  578              		.loc 1 226 5 view .LVU183
-ARM GAS  /tmp/cc3udUhY.s 			page 19
+ARM GAS  /tmp/ccJFVG22.s 			page 19
 
 
  579              	.LBB7:
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  617              	.LVL18:
  238:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
  618              		.loc 1 238 5 is_stmt 1 view .LVU200
-ARM GAS  /tmp/cc3udUhY.s 			page 20
+ARM GAS  /tmp/ccJFVG22.s 			page 20
 
 
  238:Core/Src/usart.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  658              	.LBE8:
  255:Core/Src/usart.c **** 
  659              		.loc 1 255 5 view .LVU216
-ARM GAS  /tmp/cc3udUhY.s 			page 21
+ARM GAS  /tmp/ccJFVG22.s 			page 21
 
 
  257:Core/Src/usart.c ****     /**USART1 GPIO Configuration
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  697              		.loc 1 267 5 is_stmt 0 view .LVU233
  698 015c FFF7FEFF 		bl	HAL_GPIO_Init
  699              	.LVL22:
-ARM GAS  /tmp/cc3udUhY.s 			page 22
+ARM GAS  /tmp/ccJFVG22.s 			page 22
 
 
  271:Core/Src/usart.c ****     hdma_usart1_rx.Init.Channel = DMA_CHANNEL_4;
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  734              		.loc 1 280 34 is_stmt 0 view .LVU253
  735 0186 4562     		str	r5, [r0, #36]
  281:Core/Src/usart.c ****     {
-ARM GAS  /tmp/cc3udUhY.s 			page 23
+ARM GAS  /tmp/ccJFVG22.s 			page 23
 
 
  736              		.loc 1 281 5 is_stmt 1 view .LVU254
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  772              		.loc 1 294 45 is_stmt 0 view .LVU272
  773 01ae 4361     		str	r3, [r0, #20]
  295:Core/Src/usart.c ****     hdma_usart1_tx.Init.Mode = DMA_NORMAL;
-ARM GAS  /tmp/cc3udUhY.s 			page 24
+ARM GAS  /tmp/ccJFVG22.s 			page 24
 
 
  774              		.loc 1 295 5 is_stmt 1 view .LVU273
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  812              	.L47:
  283:Core/Src/usart.c ****     }
  813              		.loc 1 283 7 view .LVU290
-ARM GAS  /tmp/cc3udUhY.s 			page 25
+ARM GAS  /tmp/ccJFVG22.s 			page 25
 
 
  814 01da FFF7FEFF 		bl	Error_Handler
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  321:Core/Src/usart.c ****     /**USART2 GPIO Configuration
  860              		.loc 1 321 5 view .LVU299
  861 0234 0A95     		str	r5, [sp, #40]
-ARM GAS  /tmp/cc3udUhY.s 			page 26
+ARM GAS  /tmp/ccJFVG22.s 			page 26
 
 
  321:Core/Src/usart.c ****     /**USART2 GPIO Configuration
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  899              		.loc 1 335 29 is_stmt 0 view .LVU316
  900 0260 3548     		ldr	r0, .L53+8
  901 0262 364B     		ldr	r3, .L53+12
-ARM GAS  /tmp/cc3udUhY.s 			page 27
+ARM GAS  /tmp/ccJFVG22.s 			page 27
 
 
  902 0264 0360     		str	r3, [r0]
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  936 0288 FFF7FEFF 		bl	HAL_DMA_Init
  937              	.LVL32:
  345:Core/Src/usart.c ****     {
-ARM GAS  /tmp/cc3udUhY.s 			page 28
+ARM GAS  /tmp/ccJFVG22.s 			page 28
 
 
  938              		.loc 1 345 8 discriminator 1 view .LVU337
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  974 02b0 8361     		str	r3, [r0, #24]
  360:Core/Src/usart.c ****     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
  975              		.loc 1 360 5 is_stmt 1 view .LVU356
-ARM GAS  /tmp/cc3udUhY.s 			page 29
+ARM GAS  /tmp/ccJFVG22.s 			page 29
 
 
  360:Core/Src/usart.c ****     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1015              	.L50:
  365:Core/Src/usart.c ****     }
  1016              		.loc 1 365 7 view .LVU372
-ARM GAS  /tmp/cc3udUhY.s 			page 30
+ARM GAS  /tmp/ccJFVG22.s 			page 30
 
 
  1017 02e0 FFF7FEFF 		bl	Error_Handler
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1057              		.loc 1 390 25 is_stmt 0 view .LVU386
  1058 0312 4FF44073 		mov	r3, #768
  1059 0316 0D93     		str	r3, [sp, #52]
-ARM GAS  /tmp/cc3udUhY.s 			page 31
+ARM GAS  /tmp/ccJFVG22.s 			page 31
 
 
  391:Core/Src/usart.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  404:Core/Src/usart.c **** {
  1105              		.loc 1 404 1 is_stmt 1 view -0
  1106              		.cfi_startproc
-ARM GAS  /tmp/cc3udUhY.s 			page 32
+ARM GAS  /tmp/ccJFVG22.s 			page 32
 
 
  1107              		@ args = 0, pretend = 0, frame = 0
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  438:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_12);
  439:Core/Src/usart.c **** 
  440:Core/Src/usart.c ****     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
-ARM GAS  /tmp/cc3udUhY.s 			page 33
+ARM GAS  /tmp/ccJFVG22.s 			page 33
 
 
  441:Core/Src/usart.c **** 
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  485:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmarx);
  486:Core/Src/usart.c ****     HAL_DMA_DeInit(uartHandle->hdmatx);
  487:Core/Src/usart.c **** 
-ARM GAS  /tmp/cc3udUhY.s 			page 34
+ARM GAS  /tmp/ccJFVG22.s 			page 34
 
 
  488:Core/Src/usart.c ****     /* USART2 interrupt Deinit */
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1163 003e 2A48     		ldr	r0, .L67+24
  1164 0040 FFF7FEFF 		bl	HAL_GPIO_DeInit
  1165              	.LVL46:
-ARM GAS  /tmp/cc3udUhY.s 			page 35
+ARM GAS  /tmp/ccJFVG22.s 			page 35
 
 
  1166 0044 EEE7     		b	.L55
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1210 0088 2520     		movs	r0, #37
  1211 008a FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
  1212              	.LVL56:
-ARM GAS  /tmp/cc3udUhY.s 			page 36
+ARM GAS  /tmp/ccJFVG22.s 			page 36
 
 
  1213 008e C9E7     		b	.L55
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1258              		.align	2
  1259              	.L67:
  1260 00d0 004C0040 		.word	1073761280
-ARM GAS  /tmp/cc3udUhY.s 			page 37
+ARM GAS  /tmp/ccJFVG22.s 			page 37
 
 
  1261 00d4 00500040 		.word	1073762304
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1306              		.global	huart2
  1307              		.section	.bss.huart2,"aw",%nobits
  1308              		.align	2
-ARM GAS  /tmp/cc3udUhY.s 			page 38
+ARM GAS  /tmp/ccJFVG22.s 			page 38
 
 
  1311              	huart2:
@@ -2266,52 +2266,52 @@ ARM GAS  /tmp/cc3udUhY.s 			page 1
  1343              		.file 9 "Core/Inc/usart.h"
  1344              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
  1345              		.file 11 "Core/Inc/main.h"
-ARM GAS  /tmp/cc3udUhY.s 			page 39
+ARM GAS  /tmp/ccJFVG22.s 			page 39
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 usart.c
-     /tmp/cc3udUhY.s:21     .text.MX_UART4_Init:00000000 $t
-     /tmp/cc3udUhY.s:27     .text.MX_UART4_Init:00000000 MX_UART4_Init
-     /tmp/cc3udUhY.s:85     .text.MX_UART4_Init:0000002c $d
-     /tmp/cc3udUhY.s:1332   .bss.huart4:00000000 huart4
-     /tmp/cc3udUhY.s:91     .text.MX_UART5_Init:00000000 $t
-     /tmp/cc3udUhY.s:97     .text.MX_UART5_Init:00000000 MX_UART5_Init
-     /tmp/cc3udUhY.s:155    .text.MX_UART5_Init:0000002c $d
-     /tmp/cc3udUhY.s:1325   .bss.huart5:00000000 huart5
-     /tmp/cc3udUhY.s:161    .text.MX_USART1_UART_Init:00000000 $t
-     /tmp/cc3udUhY.s:167    .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
-     /tmp/cc3udUhY.s:225    .text.MX_USART1_UART_Init:0000002c $d
-     /tmp/cc3udUhY.s:1318   .bss.huart1:00000000 huart1
-     /tmp/cc3udUhY.s:231    .text.MX_USART2_UART_Init:00000000 $t
-     /tmp/cc3udUhY.s:237    .text.MX_USART2_UART_Init:00000000 MX_USART2_UART_Init
-     /tmp/cc3udUhY.s:295    .text.MX_USART2_UART_Init:0000002c $d
-     /tmp/cc3udUhY.s:1311   .bss.huart2:00000000 huart2
-     /tmp/cc3udUhY.s:302    .text.MX_USART3_UART_Init:00000000 $t
-     /tmp/cc3udUhY.s:308    .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
-     /tmp/cc3udUhY.s:366    .text.MX_USART3_UART_Init:0000002c $d
-     /tmp/cc3udUhY.s:1304   .bss.huart3:00000000 huart3
-     /tmp/cc3udUhY.s:372    .text.HAL_UART_MspInit:00000000 $t
-     /tmp/cc3udUhY.s:378    .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
-     /tmp/cc3udUhY.s:825    .text.HAL_UART_MspInit:000001e8 $d
-     /tmp/cc3udUhY.s:1297   .bss.hdma_usart1_rx:00000000 hdma_usart1_rx
-     /tmp/cc3udUhY.s:1290   .bss.hdma_usart1_tx:00000000 hdma_usart1_tx
-     /tmp/cc3udUhY.s:843    .text.HAL_UART_MspInit:0000021c $t
-     /tmp/cc3udUhY.s:1085   .text.HAL_UART_MspInit:00000330 $d
-     /tmp/cc3udUhY.s:1283   .bss.hdma_usart2_rx:00000000 hdma_usart2_rx
-     /tmp/cc3udUhY.s:1276   .bss.hdma_usart2_tx:00000000 hdma_usart2_tx
-     /tmp/cc3udUhY.s:1096   .text.HAL_UART_MspDeInit:00000000 $t
-     /tmp/cc3udUhY.s:1102   .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
-     /tmp/cc3udUhY.s:1260   .text.HAL_UART_MspDeInit:000000d0 $d
-     /tmp/cc3udUhY.s:1273   .bss.hdma_usart2_tx:00000000 $d
-     /tmp/cc3udUhY.s:1280   .bss.hdma_usart2_rx:00000000 $d
-     /tmp/cc3udUhY.s:1287   .bss.hdma_usart1_tx:00000000 $d
-     /tmp/cc3udUhY.s:1294   .bss.hdma_usart1_rx:00000000 $d
-     /tmp/cc3udUhY.s:1301   .bss.huart3:00000000 $d
-     /tmp/cc3udUhY.s:1308   .bss.huart2:00000000 $d
-     /tmp/cc3udUhY.s:1315   .bss.huart1:00000000 $d
-     /tmp/cc3udUhY.s:1322   .bss.huart5:00000000 $d
-     /tmp/cc3udUhY.s:1329   .bss.huart4:00000000 $d
+     /tmp/ccJFVG22.s:21     .text.MX_UART4_Init:00000000 $t
+     /tmp/ccJFVG22.s:27     .text.MX_UART4_Init:00000000 MX_UART4_Init
+     /tmp/ccJFVG22.s:85     .text.MX_UART4_Init:0000002c $d
+     /tmp/ccJFVG22.s:1332   .bss.huart4:00000000 huart4
+     /tmp/ccJFVG22.s:91     .text.MX_UART5_Init:00000000 $t
+     /tmp/ccJFVG22.s:97     .text.MX_UART5_Init:00000000 MX_UART5_Init
+     /tmp/ccJFVG22.s:155    .text.MX_UART5_Init:0000002c $d
+     /tmp/ccJFVG22.s:1325   .bss.huart5:00000000 huart5
+     /tmp/ccJFVG22.s:161    .text.MX_USART1_UART_Init:00000000 $t
+     /tmp/ccJFVG22.s:167    .text.MX_USART1_UART_Init:00000000 MX_USART1_UART_Init
+     /tmp/ccJFVG22.s:225    .text.MX_USART1_UART_Init:0000002c $d
+     /tmp/ccJFVG22.s:1318   .bss.huart1:00000000 huart1
+     /tmp/ccJFVG22.s:231    .text.MX_USART2_UART_Init:00000000 $t
+     /tmp/ccJFVG22.s:237    .text.MX_USART2_UART_Init:00000000 MX_USART2_UART_Init
+     /tmp/ccJFVG22.s:295    .text.MX_USART2_UART_Init:0000002c $d
+     /tmp/ccJFVG22.s:1311   .bss.huart2:00000000 huart2
+     /tmp/ccJFVG22.s:302    .text.MX_USART3_UART_Init:00000000 $t
+     /tmp/ccJFVG22.s:308    .text.MX_USART3_UART_Init:00000000 MX_USART3_UART_Init
+     /tmp/ccJFVG22.s:366    .text.MX_USART3_UART_Init:0000002c $d
+     /tmp/ccJFVG22.s:1304   .bss.huart3:00000000 huart3
+     /tmp/ccJFVG22.s:372    .text.HAL_UART_MspInit:00000000 $t
+     /tmp/ccJFVG22.s:378    .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+     /tmp/ccJFVG22.s:825    .text.HAL_UART_MspInit:000001e8 $d
+     /tmp/ccJFVG22.s:1297   .bss.hdma_usart1_rx:00000000 hdma_usart1_rx
+     /tmp/ccJFVG22.s:1290   .bss.hdma_usart1_tx:00000000 hdma_usart1_tx
+     /tmp/ccJFVG22.s:843    .text.HAL_UART_MspInit:0000021c $t
+     /tmp/ccJFVG22.s:1085   .text.HAL_UART_MspInit:00000330 $d
+     /tmp/ccJFVG22.s:1283   .bss.hdma_usart2_rx:00000000 hdma_usart2_rx
+     /tmp/ccJFVG22.s:1276   .bss.hdma_usart2_tx:00000000 hdma_usart2_tx
+     /tmp/ccJFVG22.s:1096   .text.HAL_UART_MspDeInit:00000000 $t
+     /tmp/ccJFVG22.s:1102   .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
+     /tmp/ccJFVG22.s:1260   .text.HAL_UART_MspDeInit:000000d0 $d
+     /tmp/ccJFVG22.s:1273   .bss.hdma_usart2_tx:00000000 $d
+     /tmp/ccJFVG22.s:1280   .bss.hdma_usart2_rx:00000000 $d
+     /tmp/ccJFVG22.s:1287   .bss.hdma_usart1_tx:00000000 $d
+     /tmp/ccJFVG22.s:1294   .bss.hdma_usart1_rx:00000000 $d
+     /tmp/ccJFVG22.s:1301   .bss.huart3:00000000 $d
+     /tmp/ccJFVG22.s:1308   .bss.huart2:00000000 $d
+     /tmp/ccJFVG22.s:1315   .bss.huart1:00000000 $d
+     /tmp/ccJFVG22.s:1322   .bss.huart5:00000000 $d
+     /tmp/ccJFVG22.s:1329   .bss.huart4:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Init

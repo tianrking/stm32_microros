@@ -1,4 +1,4 @@
-ARM GAS  /tmp/cc0KRzdx.s 			page 1
+ARM GAS  /tmp/ccyLdBQy.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
   27:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_INPUT_PULSES, parseInputPulses},
   28:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_POSITION_ERROR, parsePositionError},
   29:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_ENABLE_STATUS, parseEnableStatus},
-ARM GAS  /tmp/cc0KRzdx.s 			page 2
+ARM GAS  /tmp/ccyLdBQy.s 			page 2
 
 
   30:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_STALL_FLAG, parseStallFlag},
@@ -118,7 +118,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
   66              		@ args = 0, pretend = 0, frame = 0
   67              		@ frame_needed = 0, uses_anonymous_args = 0
   68              		@ link register save eliminated.
-ARM GAS  /tmp/cc0KRzdx.s 			page 3
+ARM GAS  /tmp/ccyLdBQy.s 			page 3
 
 
   50:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // Assuming data[1] and data[2] are the bytes representing the encoder value
@@ -178,7 +178,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  109 0006 1360     		str	r3, [r2]
  110              	.LVL5:
   66:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the input pulses
-ARM GAS  /tmp/cc0KRzdx.s 			page 4
+ARM GAS  /tmp/ccyLdBQy.s 			page 4
 
 
   67:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
@@ -238,7 +238,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  158              		.thumb
  159              		.thumb_func
  161              	parseEnableStatus:
-ARM GAS  /tmp/cc0KRzdx.s 			page 5
+ARM GAS  /tmp/ccyLdBQy.s 			page 5
 
 
  162              	.LVL8:
@@ -298,7 +298,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  205              		.loc 1 89 7 is_stmt 0 view .LVU36
  206 0000 024A     		ldr	r2, .L17
  207 0002 1368     		ldr	r3, [r2]
-ARM GAS  /tmp/cc0KRzdx.s 			page 6
+ARM GAS  /tmp/ccyLdBQy.s 			page 6
 
 
  208 0004 0133     		adds	r3, r3, #1
@@ -358,7 +358,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  244              		.global	dispatchParser
  245              		.syntax unified
  246              		.thumb
-ARM GAS  /tmp/cc0KRzdx.s 			page 7
+ARM GAS  /tmp/ccyLdBQy.s 			page 7
 
 
  247              		.thumb_func
@@ -418,11 +418,11 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  120:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
  289              		.loc 1 120 73 is_stmt 0 discriminator 2 view .LVU56
  290 0018 F6E7     		b	.L22
-ARM GAS  /tmp/cc0KRzdx.s 			page 8
+ARM GAS  /tmp/ccyLdBQy.s 			page 8
 
 
  291              	.L30:
- 122:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             commandParsers[i].parser(receivedData);
+ 122:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             commandParsers[i].parser(receivedData);  //not arrive
  292              		.loc 1 122 13 is_stmt 1 view .LVU57
  293              		.loc 1 122 30 is_stmt 0 view .LVU58
  294 001a 064A     		ldr	r2, .L31
@@ -442,7 +442,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  307              	.LBE2:
  124:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         }
  125:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
- 126:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     ee++;
+ 126:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     ee++; //arrived
  308              		.loc 1 126 5 is_stmt 1 view .LVU63
  309              		.loc 1 126 7 is_stmt 0 view .LVU64
  310 0026 044A     		ldr	r2, .L31+4
@@ -478,7 +478,7 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  339              		.global	HAL_UART_RxCpltCallback
  340              		.syntax unified
  341              		.thumb
-ARM GAS  /tmp/cc0KRzdx.s 			page 9
+ARM GAS  /tmp/ccyLdBQy.s 			page 9
 
 
  342              		.thumb_func
@@ -487,276 +487,295 @@ ARM GAS  /tmp/cc0KRzdx.s 			page 1
  346              	.LFB251:
  129:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
  130:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** uint8_t dataBuffer;
- 131:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** int eee;
- 132:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // UART接收中断回调函数
- 133:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
- 347              		.loc 1 133 57 is_stmt 1 view -0
+ 131:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** int eee,eee1;
+ 132:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 133:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** // UART接收中断回调函数
+ 134:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+ 347              		.loc 1 134 57 is_stmt 1 view -0
  348              		.cfi_startproc
  349              		@ args = 0, pretend = 0, frame = 0
  350              		@ frame_needed = 0, uses_anonymous_args = 0
- 134:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
- 351              		.loc 1 134 5 view .LVU70
- 135:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static size_t currentLength = 0;
- 352              		.loc 1 135 5 view .LVU71
- 136:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     eee ++;
- 353              		.loc 1 136 5 view .LVU72
- 354              		.loc 1 136 9 is_stmt 0 view .LVU73
- 355 0000 144A     		ldr	r2, .L43
+ 135:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
+ 351              		.loc 1 135 5 view .LVU70
+ 136:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static size_t currentLength = 0;
+ 352              		.loc 1 136 5 view .LVU71
+ 137:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     eee ++;
+ 353              		.loc 1 137 5 view .LVU72
+ 354              		.loc 1 137 9 is_stmt 0 view .LVU73
+ 355 0000 164A     		ldr	r2, .L43
  356 0002 1368     		ldr	r3, [r2]
  357 0004 0133     		adds	r3, r3, #1
  358 0006 1360     		str	r3, [r2]
- 137:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     if (huart->Instance == USART1) {  // 确保是UART1的中断
- 359              		.loc 1 137 5 is_stmt 1 view .LVU74
- 360              		.loc 1 137 14 is_stmt 0 view .LVU75
+ 138:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     if (huart->Instance == USART1) {  // 确保是UART1的中断
+ 359              		.loc 1 138 5 is_stmt 1 view .LVU74
+ 360              		.loc 1 138 14 is_stmt 0 view .LVU75
  361 0008 0268     		ldr	r2, [r0]
- 362              		.loc 1 137 8 view .LVU76
- 363 000a 134B     		ldr	r3, .L43+4
+ 362              		.loc 1 138 8 view .LVU76
+ 363 000a 154B     		ldr	r3, .L43+4
  364 000c 9A42     		cmp	r2, r3
  365 000e 00D0     		beq	.L42
  366 0010 7047     		bx	lr
  367              	.L42:
- 133:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
- 368              		.loc 1 133 57 view .LVU77
+ 134:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     static uint8_t receivedData[MAX_DATA_LENGTH];
+ 368              		.loc 1 134 57 view .LVU77
  369 0012 10B5     		push	{r4, lr}
  370              	.LCFI2:
  371              		.cfi_def_cfa_offset 8
  372              		.cfi_offset 4, -8
  373              		.cfi_offset 14, -4
  374 0014 0446     		mov	r4, r0
- 138:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         if (currentLength < MAX_DATA_LENGTH) {
- 375              		.loc 1 138 9 is_stmt 1 view .LVU78
- 376              		.loc 1 138 27 is_stmt 0 view .LVU79
- 377 0016 114B     		ldr	r3, .L43+8
- 378 0018 1B68     		ldr	r3, [r3]
- 379              		.loc 1 138 12 view .LVU80
- 380 001a 092B     		cmp	r3, #9
- 381 001c 11D8     		bhi	.L35
- 139:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             receivedData[currentLength++] = dataBuffer;
- 382              		.loc 1 139 13 is_stmt 1 view .LVU81
- 383              		.loc 1 139 39 is_stmt 0 view .LVU82
- 384 001e 591C     		adds	r1, r3, #1
- 385 0020 0E4A     		ldr	r2, .L43+8
- 386 0022 1160     		str	r1, [r2]
- 387              		.loc 1 139 43 view .LVU83
-ARM GAS  /tmp/cc0KRzdx.s 			page 10
+ 139:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         eee1++;
+ 375              		.loc 1 139 9 is_stmt 1 view .LVU78
+ 376              		.loc 1 139 13 is_stmt 0 view .LVU79
+ 377 0016 134A     		ldr	r2, .L43+8
+ 378 0018 1368     		ldr	r3, [r2]
+ 379 001a 0133     		adds	r3, r3, #1
+ 380 001c 1360     		str	r3, [r2]
+ 140:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         if (currentLength < MAX_DATA_LENGTH) {
+ 381              		.loc 1 140 9 is_stmt 1 view .LVU80
+ 382              		.loc 1 140 27 is_stmt 0 view .LVU81
+ 383 001e 124B     		ldr	r3, .L43+12
+ 384 0020 1B68     		ldr	r3, [r3]
+ 385              		.loc 1 140 12 view .LVU82
+ 386 0022 092B     		cmp	r3, #9
+ARM GAS  /tmp/ccyLdBQy.s 			page 10
 
 
- 388 0024 0E4A     		ldr	r2, .L43+12
- 389 0026 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
- 390 0028 0E48     		ldr	r0, .L43+16
- 391              	.LVL24:
- 392              		.loc 1 139 43 view .LVU84
- 393 002a C254     		strb	r2, [r0, r3]
- 140:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
- 141:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             if(dataBuffer == 0x6B || currentLength == MAX_DATA_LENGTH) { // 假设0x6B是结束标�
- 394              		.loc 1 141 13 is_stmt 1 view .LVU85
- 395              		.loc 1 141 15 is_stmt 0 view .LVU86
- 396 002c 6B2A     		cmp	r2, #107
- 397 002e 01D0     		beq	.L36
- 398              		.loc 1 141 35 discriminator 1 view .LVU87
- 399 0030 0A29     		cmp	r1, #10
- 400 0032 09D1     		bne	.L37
- 401              	.L36:
- 142:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 dispatchParser(receivedData, currentLength);
- 402              		.loc 1 142 17 is_stmt 1 view .LVU88
- 403 0034 0B48     		ldr	r0, .L43+16
- 404 0036 FFF7FEFF 		bl	dispatchParser
- 405              	.LVL25:
- 143:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 currentLength = 0; // 重置长度，准备下一次接收
- 406              		.loc 1 143 17 view .LVU89
- 407              		.loc 1 143 31 is_stmt 0 view .LVU90
- 408 003a 084B     		ldr	r3, .L43+8
- 409 003c 0022     		movs	r2, #0
- 410 003e 1A60     		str	r2, [r3]
- 411 0040 02E0     		b	.L37
- 412              	.LVL26:
- 413              	.L35:
- 144:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             }
- 145:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         } else {
- 146:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             currentLength = 0; // 重置长度
- 414              		.loc 1 146 13 is_stmt 1 view .LVU91
- 415              		.loc 1 146 27 is_stmt 0 view .LVU92
- 416 0042 064B     		ldr	r3, .L43+8
- 417 0044 0022     		movs	r2, #0
- 418 0046 1A60     		str	r2, [r3]
- 419              	.LVL27:
- 420              	.L37:
- 147:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         }
- 148:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
- 149:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         // 继续接收下一个字节
- 150:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         HAL_UART_Receive_IT(huart, &dataBuffer, 1);
- 421              		.loc 1 150 9 is_stmt 1 view .LVU93
- 422 0048 0122     		movs	r2, #1
- 423 004a 0549     		ldr	r1, .L43+12
- 424 004c 2046     		mov	r0, r4
- 425 004e FFF7FEFF 		bl	HAL_UART_Receive_IT
- 426              	.LVL28:
- 151:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
- 152:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
- 427              		.loc 1 152 1 is_stmt 0 view .LVU94
- 428 0052 10BD     		pop	{r4, pc}
- 429              	.LVL29:
- 430              	.L44:
- 431              		.loc 1 152 1 view .LVU95
-ARM GAS  /tmp/cc0KRzdx.s 			page 11
+ 387 0024 11D8     		bhi	.L35
+ 141:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             receivedData[currentLength++] = dataBuffer;
+ 388              		.loc 1 141 13 is_stmt 1 view .LVU83
+ 389              		.loc 1 141 39 is_stmt 0 view .LVU84
+ 390 0026 591C     		adds	r1, r3, #1
+ 391 0028 0F4A     		ldr	r2, .L43+12
+ 392 002a 1160     		str	r1, [r2]
+ 393              		.loc 1 141 43 view .LVU85
+ 394 002c 0F4A     		ldr	r2, .L43+16
+ 395 002e 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 396 0030 0F48     		ldr	r0, .L43+20
+ 397              	.LVL24:
+ 398              		.loc 1 141 43 view .LVU86
+ 399 0032 C254     		strb	r2, [r0, r3]
+ 142:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 143:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             if(dataBuffer == 0x6B || currentLength == MAX_DATA_LENGTH) { // 假设0x6B是结束标�
+ 400              		.loc 1 143 13 is_stmt 1 view .LVU87
+ 401              		.loc 1 143 15 is_stmt 0 view .LVU88
+ 402 0034 6B2A     		cmp	r2, #107
+ 403 0036 01D0     		beq	.L36
+ 404              		.loc 1 143 35 discriminator 1 view .LVU89
+ 405 0038 0A29     		cmp	r1, #10
+ 406 003a 09D1     		bne	.L37
+ 407              	.L36:
+ 144:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 dispatchParser(receivedData, currentLength);
+ 408              		.loc 1 144 17 is_stmt 1 view .LVU90
+ 409 003c 0C48     		ldr	r0, .L43+20
+ 410 003e FFF7FEFF 		bl	dispatchParser
+ 411              	.LVL25:
+ 145:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****                 currentLength = 0; // 重置长度，准备下一次接收
+ 412              		.loc 1 145 17 view .LVU91
+ 413              		.loc 1 145 31 is_stmt 0 view .LVU92
+ 414 0042 094B     		ldr	r3, .L43+12
+ 415 0044 0022     		movs	r2, #0
+ 416 0046 1A60     		str	r2, [r3]
+ 417 0048 02E0     		b	.L37
+ 418              	.LVL26:
+ 419              	.L35:
+ 146:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             }
+ 147:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         } else {
+ 148:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****             currentLength = 0; // 重置长度
+ 420              		.loc 1 148 13 is_stmt 1 view .LVU93
+ 421              		.loc 1 148 27 is_stmt 0 view .LVU94
+ 422 004a 074B     		ldr	r3, .L43+12
+ 423 004c 0022     		movs	r2, #0
+ 424 004e 1A60     		str	r2, [r3]
+ 425              	.LVL27:
+ 426              	.L37:
+ 149:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         }
+ 150:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** 
+ 151:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         // 继续接收下一个字节
+ 152:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****         HAL_UART_Receive_IT(huart, &dataBuffer, 1);
+ 427              		.loc 1 152 9 is_stmt 1 view .LVU95
+ 428 0050 0122     		movs	r2, #1
+ 429 0052 0649     		ldr	r1, .L43+16
+ 430 0054 2046     		mov	r0, r4
+ 431 0056 FFF7FEFF 		bl	HAL_UART_Receive_IT
+ARM GAS  /tmp/ccyLdBQy.s 			page 11
 
 
- 432              		.align	2
- 433              	.L43:
- 434 0054 00000000 		.word	eee
- 435 0058 00100140 		.word	1073811456
- 436 005c 00000000 		.word	currentLength.1
- 437 0060 00000000 		.word	dataBuffer
- 438 0064 00000000 		.word	receivedData.0
- 439              		.cfi_endproc
- 440              	.LFE251:
- 442              		.section	.bss.receivedData.0,"aw",%nobits
- 443              		.align	2
- 446              	receivedData.0:
- 447 0000 00000000 		.space	10
- 447      00000000 
- 447      0000
- 448              		.section	.bss.currentLength.1,"aw",%nobits
- 449              		.align	2
- 452              	currentLength.1:
- 453 0000 00000000 		.space	4
- 454              		.global	eee
- 455              		.section	.bss.eee,"aw",%nobits
+ 432              	.LVL28:
+ 153:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     }
+ 154:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
+ 433              		.loc 1 154 1 is_stmt 0 view .LVU96
+ 434 005a 10BD     		pop	{r4, pc}
+ 435              	.LVL29:
+ 436              	.L44:
+ 437              		.loc 1 154 1 view .LVU97
+ 438              		.align	2
+ 439              	.L43:
+ 440 005c 00000000 		.word	eee
+ 441 0060 00100140 		.word	1073811456
+ 442 0064 00000000 		.word	eee1
+ 443 0068 00000000 		.word	currentLength.1
+ 444 006c 00000000 		.word	dataBuffer
+ 445 0070 00000000 		.word	receivedData.0
+ 446              		.cfi_endproc
+ 447              	.LFE251:
+ 449              		.section	.bss.receivedData.0,"aw",%nobits
+ 450              		.align	2
+ 453              	receivedData.0:
+ 454 0000 00000000 		.space	10
+ 454      00000000 
+ 454      0000
+ 455              		.section	.bss.currentLength.1,"aw",%nobits
  456              		.align	2
- 459              	eee:
+ 459              	currentLength.1:
  460 0000 00000000 		.space	4
- 461              		.global	dataBuffer
- 462              		.section	.bss.dataBuffer,"aw",%nobits
- 465              	dataBuffer:
- 466 0000 00       		.space	1
- 467              		.global	ee
- 468              		.section	.bss.ee,"aw",%nobits
- 469              		.align	2
- 472              	ee:
- 473 0000 00000000 		.space	4
- 474              		.global	e6
- 475              		.section	.bss.e6,"aw",%nobits
- 476              		.align	2
- 479              	e6:
- 480 0000 00000000 		.space	4
- 481              		.global	e5
- 482              		.section	.bss.e5,"aw",%nobits
+ 461              		.global	eee1
+ 462              		.section	.bss.eee1,"aw",%nobits
+ 463              		.align	2
+ 466              	eee1:
+ 467 0000 00000000 		.space	4
+ 468              		.global	eee
+ 469              		.section	.bss.eee,"aw",%nobits
+ 470              		.align	2
+ 473              	eee:
+ 474 0000 00000000 		.space	4
+ 475              		.global	dataBuffer
+ 476              		.section	.bss.dataBuffer,"aw",%nobits
+ 479              	dataBuffer:
+ 480 0000 00       		.space	1
+ 481              		.global	ee
+ 482              		.section	.bss.ee,"aw",%nobits
  483              		.align	2
- 486              	e5:
+ 486              	ee:
  487 0000 00000000 		.space	4
- 488              		.global	e4
- 489              		.section	.bss.e4,"aw",%nobits
+ 488              		.global	e6
+ 489              		.section	.bss.e6,"aw",%nobits
  490              		.align	2
- 493              	e4:
+ 493              	e6:
  494 0000 00000000 		.space	4
- 495              		.global	e3
- 496              		.section	.bss.e3,"aw",%nobits
+ 495              		.global	e5
+ 496              		.section	.bss.e5,"aw",%nobits
  497              		.align	2
- 500              	e3:
+ 500              	e5:
  501 0000 00000000 		.space	4
- 502              		.global	e2
- 503              		.section	.bss.e2,"aw",%nobits
+ARM GAS  /tmp/ccyLdBQy.s 			page 12
+
+
+ 502              		.global	e4
+ 503              		.section	.bss.e4,"aw",%nobits
  504              		.align	2
- 507              	e2:
-ARM GAS  /tmp/cc0KRzdx.s 			page 12
-
-
+ 507              	e4:
  508 0000 00000000 		.space	4
- 509              		.global	e1
- 510              		.section	.bss.e1,"aw",%nobits
+ 509              		.global	e3
+ 510              		.section	.bss.e3,"aw",%nobits
  511              		.align	2
- 514              	e1:
+ 514              	e3:
  515 0000 00000000 		.space	4
- 516              		.global	commandParsers
- 517              		.section	.data.commandParsers,"aw"
+ 516              		.global	e2
+ 517              		.section	.bss.e2,"aw",%nobits
  518              		.align	2
- 521              	commandParsers:
- 522 0000 36       		.byte	54
- 523 0001 000000   		.space	3
- 524 0004 00000000 		.word	parseMotorRealTimePosition
- 525 0008 30       		.byte	48
- 526 0009 000000   		.space	3
- 527 000c 00000000 		.word	parseEncoderValue
- 528 0010 33       		.byte	51
- 529 0011 000000   		.space	3
- 530 0014 00000000 		.word	parseInputPulses
- 531 0018 39       		.byte	57
- 532 0019 000000   		.space	3
- 533 001c 00000000 		.word	parsePositionError
- 534 0020 3A       		.byte	58
- 535 0021 000000   		.space	3
- 536 0024 00000000 		.word	parseEnableStatus
- 537 0028 3E       		.byte	62
- 538 0029 000000   		.space	3
- 539 002c 00000000 		.word	parseStallFlag
- 540              		.text
- 541              	.Letext0:
- 542              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 543              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 544              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 545              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 546              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 547              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 548              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 549              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
- 550              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 551              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
- 552              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
-ARM GAS  /tmp/cc0KRzdx.s 			page 13
+ 521              	e2:
+ 522 0000 00000000 		.space	4
+ 523              		.global	e1
+ 524              		.section	.bss.e1,"aw",%nobits
+ 525              		.align	2
+ 528              	e1:
+ 529 0000 00000000 		.space	4
+ 530              		.global	commandParsers
+ 531              		.section	.data.commandParsers,"aw"
+ 532              		.align	2
+ 535              	commandParsers:
+ 536 0000 36       		.byte	54
+ 537 0001 000000   		.space	3
+ 538 0004 00000000 		.word	parseMotorRealTimePosition
+ 539 0008 30       		.byte	48
+ 540 0009 000000   		.space	3
+ 541 000c 00000000 		.word	parseEncoderValue
+ 542 0010 33       		.byte	51
+ 543 0011 000000   		.space	3
+ 544 0014 00000000 		.word	parseInputPulses
+ 545 0018 39       		.byte	57
+ 546 0019 000000   		.space	3
+ 547 001c 00000000 		.word	parsePositionError
+ 548 0020 3A       		.byte	58
+ 549 0021 000000   		.space	3
+ 550 0024 00000000 		.word	parseEnableStatus
+ 551 0028 3E       		.byte	62
+ 552 0029 000000   		.space	3
+ 553 002c 00000000 		.word	parseStallFlag
+ 554              		.text
+ 555              	.Letext0:
+ 556              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 557              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 558              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 559              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 560              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 561              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 562              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 563              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 564              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 565              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 566              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ARM GAS  /tmp/ccyLdBQy.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 emm_motor_rsp.c
-     /tmp/cc0KRzdx.s:21     .text.parseMotorRealTimePosition:00000000 $t
-     /tmp/cc0KRzdx.s:27     .text.parseMotorRealTimePosition:00000000 parseMotorRealTimePosition
-     /tmp/cc0KRzdx.s:50     .text.parseMotorRealTimePosition:0000000c $d
-     /tmp/cc0KRzdx.s:514    .bss.e1:00000000 e1
-     /tmp/cc0KRzdx.s:55     .text.parseEncoderValue:00000000 $t
-     /tmp/cc0KRzdx.s:61     .text.parseEncoderValue:00000000 parseEncoderValue
-     /tmp/cc0KRzdx.s:83     .text.parseEncoderValue:0000000c $d
-     /tmp/cc0KRzdx.s:507    .bss.e2:00000000 e2
-     /tmp/cc0KRzdx.s:88     .text.parseInputPulses:00000000 $t
-     /tmp/cc0KRzdx.s:94     .text.parseInputPulses:00000000 parseInputPulses
-     /tmp/cc0KRzdx.s:116    .text.parseInputPulses:0000000c $d
-     /tmp/cc0KRzdx.s:500    .bss.e3:00000000 e3
-     /tmp/cc0KRzdx.s:121    .text.parsePositionError:00000000 $t
-     /tmp/cc0KRzdx.s:127    .text.parsePositionError:00000000 parsePositionError
-     /tmp/cc0KRzdx.s:150    .text.parsePositionError:0000000c $d
-     /tmp/cc0KRzdx.s:493    .bss.e4:00000000 e4
-     /tmp/cc0KRzdx.s:155    .text.parseEnableStatus:00000000 $t
-     /tmp/cc0KRzdx.s:161    .text.parseEnableStatus:00000000 parseEnableStatus
-     /tmp/cc0KRzdx.s:183    .text.parseEnableStatus:0000000c $d
-     /tmp/cc0KRzdx.s:486    .bss.e5:00000000 e5
-     /tmp/cc0KRzdx.s:188    .text.parseStallFlag:00000000 $t
-     /tmp/cc0KRzdx.s:194    .text.parseStallFlag:00000000 parseStallFlag
-     /tmp/cc0KRzdx.s:216    .text.parseStallFlag:0000000c $d
-     /tmp/cc0KRzdx.s:479    .bss.e6:00000000 e6
-     /tmp/cc0KRzdx.s:221    .text.handleError:00000000 $t
-     /tmp/cc0KRzdx.s:227    .text.handleError:00000000 handleError
-     /tmp/cc0KRzdx.s:243    .text.dispatchParser:00000000 $t
-     /tmp/cc0KRzdx.s:249    .text.dispatchParser:00000000 dispatchParser
-     /tmp/cc0KRzdx.s:332    .text.dispatchParser:00000034 $d
-     /tmp/cc0KRzdx.s:521    .data.commandParsers:00000000 commandParsers
-     /tmp/cc0KRzdx.s:472    .bss.ee:00000000 ee
-     /tmp/cc0KRzdx.s:338    .text.HAL_UART_RxCpltCallback:00000000 $t
-     /tmp/cc0KRzdx.s:344    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
-     /tmp/cc0KRzdx.s:434    .text.HAL_UART_RxCpltCallback:00000054 $d
-     /tmp/cc0KRzdx.s:459    .bss.eee:00000000 eee
-     /tmp/cc0KRzdx.s:452    .bss.currentLength.1:00000000 currentLength.1
-     /tmp/cc0KRzdx.s:465    .bss.dataBuffer:00000000 dataBuffer
-     /tmp/cc0KRzdx.s:446    .bss.receivedData.0:00000000 receivedData.0
-     /tmp/cc0KRzdx.s:443    .bss.receivedData.0:00000000 $d
-     /tmp/cc0KRzdx.s:449    .bss.currentLength.1:00000000 $d
-     /tmp/cc0KRzdx.s:456    .bss.eee:00000000 $d
-     /tmp/cc0KRzdx.s:466    .bss.dataBuffer:00000000 $d
-     /tmp/cc0KRzdx.s:469    .bss.ee:00000000 $d
-     /tmp/cc0KRzdx.s:476    .bss.e6:00000000 $d
-     /tmp/cc0KRzdx.s:483    .bss.e5:00000000 $d
-     /tmp/cc0KRzdx.s:490    .bss.e4:00000000 $d
-     /tmp/cc0KRzdx.s:497    .bss.e3:00000000 $d
-     /tmp/cc0KRzdx.s:504    .bss.e2:00000000 $d
-     /tmp/cc0KRzdx.s:511    .bss.e1:00000000 $d
-     /tmp/cc0KRzdx.s:518    .data.commandParsers:00000000 $d
+     /tmp/ccyLdBQy.s:21     .text.parseMotorRealTimePosition:00000000 $t
+     /tmp/ccyLdBQy.s:27     .text.parseMotorRealTimePosition:00000000 parseMotorRealTimePosition
+     /tmp/ccyLdBQy.s:50     .text.parseMotorRealTimePosition:0000000c $d
+     /tmp/ccyLdBQy.s:528    .bss.e1:00000000 e1
+     /tmp/ccyLdBQy.s:55     .text.parseEncoderValue:00000000 $t
+     /tmp/ccyLdBQy.s:61     .text.parseEncoderValue:00000000 parseEncoderValue
+     /tmp/ccyLdBQy.s:83     .text.parseEncoderValue:0000000c $d
+     /tmp/ccyLdBQy.s:521    .bss.e2:00000000 e2
+     /tmp/ccyLdBQy.s:88     .text.parseInputPulses:00000000 $t
+     /tmp/ccyLdBQy.s:94     .text.parseInputPulses:00000000 parseInputPulses
+     /tmp/ccyLdBQy.s:116    .text.parseInputPulses:0000000c $d
+     /tmp/ccyLdBQy.s:514    .bss.e3:00000000 e3
+     /tmp/ccyLdBQy.s:121    .text.parsePositionError:00000000 $t
+     /tmp/ccyLdBQy.s:127    .text.parsePositionError:00000000 parsePositionError
+     /tmp/ccyLdBQy.s:150    .text.parsePositionError:0000000c $d
+     /tmp/ccyLdBQy.s:507    .bss.e4:00000000 e4
+     /tmp/ccyLdBQy.s:155    .text.parseEnableStatus:00000000 $t
+     /tmp/ccyLdBQy.s:161    .text.parseEnableStatus:00000000 parseEnableStatus
+     /tmp/ccyLdBQy.s:183    .text.parseEnableStatus:0000000c $d
+     /tmp/ccyLdBQy.s:500    .bss.e5:00000000 e5
+     /tmp/ccyLdBQy.s:188    .text.parseStallFlag:00000000 $t
+     /tmp/ccyLdBQy.s:194    .text.parseStallFlag:00000000 parseStallFlag
+     /tmp/ccyLdBQy.s:216    .text.parseStallFlag:0000000c $d
+     /tmp/ccyLdBQy.s:493    .bss.e6:00000000 e6
+     /tmp/ccyLdBQy.s:221    .text.handleError:00000000 $t
+     /tmp/ccyLdBQy.s:227    .text.handleError:00000000 handleError
+     /tmp/ccyLdBQy.s:243    .text.dispatchParser:00000000 $t
+     /tmp/ccyLdBQy.s:249    .text.dispatchParser:00000000 dispatchParser
+     /tmp/ccyLdBQy.s:332    .text.dispatchParser:00000034 $d
+     /tmp/ccyLdBQy.s:535    .data.commandParsers:00000000 commandParsers
+     /tmp/ccyLdBQy.s:486    .bss.ee:00000000 ee
+     /tmp/ccyLdBQy.s:338    .text.HAL_UART_RxCpltCallback:00000000 $t
+     /tmp/ccyLdBQy.s:344    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+     /tmp/ccyLdBQy.s:440    .text.HAL_UART_RxCpltCallback:0000005c $d
+     /tmp/ccyLdBQy.s:473    .bss.eee:00000000 eee
+     /tmp/ccyLdBQy.s:466    .bss.eee1:00000000 eee1
+     /tmp/ccyLdBQy.s:459    .bss.currentLength.1:00000000 currentLength.1
+     /tmp/ccyLdBQy.s:479    .bss.dataBuffer:00000000 dataBuffer
+     /tmp/ccyLdBQy.s:453    .bss.receivedData.0:00000000 receivedData.0
+     /tmp/ccyLdBQy.s:450    .bss.receivedData.0:00000000 $d
+     /tmp/ccyLdBQy.s:456    .bss.currentLength.1:00000000 $d
+     /tmp/ccyLdBQy.s:463    .bss.eee1:00000000 $d
+     /tmp/ccyLdBQy.s:470    .bss.eee:00000000 $d
+     /tmp/ccyLdBQy.s:480    .bss.dataBuffer:00000000 $d
+     /tmp/ccyLdBQy.s:483    .bss.ee:00000000 $d
+     /tmp/ccyLdBQy.s:490    .bss.e6:00000000 $d
+     /tmp/ccyLdBQy.s:497    .bss.e5:00000000 $d
+     /tmp/ccyLdBQy.s:504    .bss.e4:00000000 $d
+     /tmp/ccyLdBQy.s:511    .bss.e3:00000000 $d
+     /tmp/ccyLdBQy.s:518    .bss.e2:00000000 $d
+     /tmp/ccyLdBQy.s:525    .bss.e1:00000000 $d
+     /tmp/ccyLdBQy.s:532    .data.commandParsers:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Receive_IT
+ARM GAS  /tmp/ccyLdBQy.s 			page 14
+
+

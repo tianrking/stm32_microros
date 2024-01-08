@@ -111,6 +111,9 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
   //LCD_Init();
+  // Begin receiving in interrupt mode
+  uint8_t dataBuffer; 
+  HAL_UART_Receive_IT(&huart1, &dataBuffer, 1);
   /* USER CODE END 2 */
 
   /* Init scheduler */

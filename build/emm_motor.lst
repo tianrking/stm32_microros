@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccYmLYLe.s 			page 1
+ARM GAS  /tmp/cc0UY95u.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -31,14 +31,15 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
   29              	.LFB243:
    1:cooneo_Drivers/emm_motor/emm_motor.c **** #include "include.h"
    2:cooneo_Drivers/emm_motor/emm_motor.c **** 
-   3:cooneo_Drivers/emm_motor/emm_motor.c **** 
-   4:cooneo_Drivers/emm_motor/emm_motor.c **** // 触发部分
-   5:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_TriggerEncoderCalibration(uint8_t motorId) {
-  30              		.loc 1 5 53 view -0
+   3:cooneo_Drivers/emm_motor/emm_motor.c **** double motorAngles[3] = {0.0, 0.0, 0.0};  
+   4:cooneo_Drivers/emm_motor/emm_motor.c **** 
+   5:cooneo_Drivers/emm_motor/emm_motor.c **** // 触发部分
+   6:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_TriggerEncoderCalibration(uint8_t motorId) {
+  30              		.loc 1 6 53 view -0
   31              		.cfi_startproc
   32              		@ args = 0, pretend = 0, frame = 8
   33              		@ frame_needed = 0, uses_anonymous_args = 0
-  34              		.loc 1 5 53 is_stmt 0 view .LVU1
+  34              		.loc 1 6 53 is_stmt 0 view .LVU1
   35 0000 00B5     		push	{lr}
   36              	.LCFI0:
   37              		.cfi_def_cfa_offset 4
@@ -46,9 +47,9 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
   39 0002 83B0     		sub	sp, sp, #12
   40              	.LCFI1:
   41              		.cfi_def_cfa_offset 16
-   6:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x06, 0x45, 0x6B}; // 命令数据
-  42              		.loc 1 6 5 is_stmt 1 view .LVU2
-  43              		.loc 1 6 13 is_stmt 0 view .LVU3
+   7:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x06, 0x45, 0x6B}; // 命令数据
+  42              		.loc 1 7 5 is_stmt 1 view .LVU2
+  43              		.loc 1 7 13 is_stmt 0 view .LVU3
   44 0004 8DF80400 		strb	r0, [sp, #4]
   45 0008 0623     		movs	r3, #6
   46 000a 8DF80530 		strb	r3, [sp, #5]
@@ -56,21 +57,21 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
   48 0010 8DF80630 		strb	r3, [sp, #6]
   49 0014 6B23     		movs	r3, #107
   50 0016 8DF80730 		strb	r3, [sp, #7]
-   7:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
-  51              		.loc 1 7 5 is_stmt 1 view .LVU4
-ARM GAS  /tmp/ccYmLYLe.s 			page 2
+   8:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ARM GAS  /tmp/cc0UY95u.s 			page 2
 
 
+  51              		.loc 1 8 5 is_stmt 1 view .LVU4
   52 001a 0A23     		movs	r3, #10
   53 001c 0422     		movs	r2, #4
   54 001e 0DEB0201 		add	r1, sp, r2
   55 0022 0348     		ldr	r0, .L3
   56              	.LVL1:
-  57              		.loc 1 7 5 is_stmt 0 view .LVU5
+  57              		.loc 1 8 5 is_stmt 0 view .LVU5
   58 0024 FFF7FEFF 		bl	HAL_UART_Transmit
   59              	.LVL2:
-   8:cooneo_Drivers/emm_motor/emm_motor.c **** }
-  60              		.loc 1 8 1 view .LVU6
+   9:cooneo_Drivers/emm_motor/emm_motor.c **** }
+  60              		.loc 1 9 1 view .LVU6
   61 0028 03B0     		add	sp, sp, #12
   62              	.LCFI2:
   63              		.cfi_def_cfa_offset 4
@@ -91,13 +92,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
   80              	emm_SetCurrentPositionToZero:
   81              	.LVL3:
   82              	.LFB244:
-   9:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  10:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_SetCurrentPositionToZero(uint8_t motorId) {
-  83              		.loc 1 10 52 is_stmt 1 view -0
+  10:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  11:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_SetCurrentPositionToZero(uint8_t motorId) {
+  83              		.loc 1 11 52 is_stmt 1 view -0
   84              		.cfi_startproc
   85              		@ args = 0, pretend = 0, frame = 8
   86              		@ frame_needed = 0, uses_anonymous_args = 0
-  87              		.loc 1 10 52 is_stmt 0 view .LVU8
+  87              		.loc 1 11 52 is_stmt 0 view .LVU8
   88 0000 00B5     		push	{lr}
   89              	.LCFI3:
   90              		.cfi_def_cfa_offset 4
@@ -105,9 +106,9 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
   92 0002 83B0     		sub	sp, sp, #12
   93              	.LCFI4:
   94              		.cfi_def_cfa_offset 16
-  11:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x0A, 0x6D, 0x6B}; // 命令数据
-  95              		.loc 1 11 5 is_stmt 1 view .LVU9
-  96              		.loc 1 11 13 is_stmt 0 view .LVU10
+  12:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x0A, 0x6D, 0x6B}; // 命令数据
+  95              		.loc 1 12 5 is_stmt 1 view .LVU9
+  96              		.loc 1 12 13 is_stmt 0 view .LVU10
   97 0004 8DF80400 		strb	r0, [sp, #4]
   98 0008 0A23     		movs	r3, #10
   99 000a 8DF80530 		strb	r3, [sp, #5]
@@ -115,20 +116,20 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  101 0010 8DF80620 		strb	r2, [sp, #6]
  102 0014 6B22     		movs	r2, #107
  103 0016 8DF80720 		strb	r2, [sp, #7]
-  12:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 104              		.loc 1 12 5 is_stmt 1 view .LVU11
+  13:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 104              		.loc 1 13 5 is_stmt 1 view .LVU11
+ARM GAS  /tmp/cc0UY95u.s 			page 3
+
+
  105 001a 0422     		movs	r2, #4
-ARM GAS  /tmp/ccYmLYLe.s 			page 3
-
-
  106 001c 0DEB0201 		add	r1, sp, r2
  107 0020 0248     		ldr	r0, .L7
  108              	.LVL4:
- 109              		.loc 1 12 5 is_stmt 0 view .LVU12
+ 109              		.loc 1 13 5 is_stmt 0 view .LVU12
  110 0022 FFF7FEFF 		bl	HAL_UART_Transmit
  111              	.LVL5:
-  13:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 112              		.loc 1 13 1 view .LVU13
+  14:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 112              		.loc 1 14 1 view .LVU13
  113 0026 03B0     		add	sp, sp, #12
  114              	.LCFI5:
  115              		.cfi_def_cfa_offset 4
@@ -149,13 +150,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  132              	emmReleaseStallProtection:
  133              	.LVL6:
  134              	.LFB245:
-  14:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  15:cooneo_Drivers/emm_motor/emm_motor.c **** void emmReleaseStallProtection(uint8_t motorId) {
- 135              		.loc 1 15 49 is_stmt 1 view -0
+  15:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  16:cooneo_Drivers/emm_motor/emm_motor.c **** void emmReleaseStallProtection(uint8_t motorId) {
+ 135              		.loc 1 16 49 is_stmt 1 view -0
  136              		.cfi_startproc
  137              		@ args = 0, pretend = 0, frame = 8
  138              		@ frame_needed = 0, uses_anonymous_args = 0
- 139              		.loc 1 15 49 is_stmt 0 view .LVU15
+ 139              		.loc 1 16 49 is_stmt 0 view .LVU15
  140 0000 00B5     		push	{lr}
  141              	.LCFI6:
  142              		.cfi_def_cfa_offset 4
@@ -163,9 +164,9 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  144 0002 83B0     		sub	sp, sp, #12
  145              	.LCFI7:
  146              		.cfi_def_cfa_offset 16
-  16:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x0E, 0x52, 0x6B}; // 命令数据
- 147              		.loc 1 16 5 is_stmt 1 view .LVU16
- 148              		.loc 1 16 13 is_stmt 0 view .LVU17
+  17:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x0E, 0x52, 0x6B}; // 命令数据
+ 147              		.loc 1 17 5 is_stmt 1 view .LVU16
+ 148              		.loc 1 17 13 is_stmt 0 view .LVU17
  149 0004 8DF80400 		strb	r0, [sp, #4]
  150 0008 0E23     		movs	r3, #14
  151 000a 8DF80530 		strb	r3, [sp, #5]
@@ -173,21 +174,21 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  153 0010 8DF80630 		strb	r3, [sp, #6]
  154 0014 6B23     		movs	r3, #107
  155 0016 8DF80730 		strb	r3, [sp, #7]
-  17:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 156              		.loc 1 17 5 is_stmt 1 view .LVU18
+  18:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 156              		.loc 1 18 5 is_stmt 1 view .LVU18
  157 001a 0A23     		movs	r3, #10
  158 001c 0422     		movs	r2, #4
+ARM GAS  /tmp/cc0UY95u.s 			page 4
+
+
  159 001e 0DEB0201 		add	r1, sp, r2
-ARM GAS  /tmp/ccYmLYLe.s 			page 4
-
-
  160 0022 0348     		ldr	r0, .L11
  161              	.LVL7:
- 162              		.loc 1 17 5 is_stmt 0 view .LVU19
+ 162              		.loc 1 18 5 is_stmt 0 view .LVU19
  163 0024 FFF7FEFF 		bl	HAL_UART_Transmit
  164              	.LVL8:
-  18:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 165              		.loc 1 18 1 view .LVU20
+  19:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 165              		.loc 1 19 1 view .LVU20
  166 0028 03B0     		add	sp, sp, #12
  167              	.LCFI8:
  168              		.cfi_def_cfa_offset 4
@@ -208,15 +209,15 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  185              	emm_ReadEncoderValue:
  186              	.LVL9:
  187              	.LFB246:
-  19:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  20:cooneo_Drivers/emm_motor/emm_motor.c **** // 读取参数部分
-  21:cooneo_Drivers/emm_motor/emm_motor.c **** int  f1,f2,f3,f4,f5,f6,f7;
-  22:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadEncoderValue(uint8_t motorId) {
- 188              		.loc 1 22 44 is_stmt 1 view -0
+  20:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  21:cooneo_Drivers/emm_motor/emm_motor.c **** // 读取参数部分
+  22:cooneo_Drivers/emm_motor/emm_motor.c **** int  f1,f2,f3,f4,f5,f6,f7;
+  23:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadEncoderValue(uint8_t motorId) {
+ 188              		.loc 1 23 44 is_stmt 1 view -0
  189              		.cfi_startproc
  190              		@ args = 0, pretend = 0, frame = 8
  191              		@ frame_needed = 0, uses_anonymous_args = 0
- 192              		.loc 1 22 44 is_stmt 0 view .LVU22
+ 192              		.loc 1 23 44 is_stmt 0 view .LVU22
  193 0000 00B5     		push	{lr}
  194              	.LCFI9:
  195              		.cfi_def_cfa_offset 4
@@ -224,37 +225,37 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  197 0002 83B0     		sub	sp, sp, #12
  198              	.LCFI10:
  199              		.cfi_def_cfa_offset 16
-  23:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x30, 0x6B}; // 命令数据
- 200              		.loc 1 23 5 is_stmt 1 view .LVU23
- 201              		.loc 1 23 13 is_stmt 0 view .LVU24
+  24:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x30, 0x6B}; // 命令数据
+ 200              		.loc 1 24 5 is_stmt 1 view .LVU23
+ 201              		.loc 1 24 13 is_stmt 0 view .LVU24
  202 0004 8DF80400 		strb	r0, [sp, #4]
  203 0008 3023     		movs	r3, #48
  204 000a 8DF80530 		strb	r3, [sp, #5]
  205 000e 6B23     		movs	r3, #107
  206 0010 8DF80630 		strb	r3, [sp, #6]
-  24:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 207              		.loc 1 24 5 is_stmt 1 view .LVU25
+  25:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 207              		.loc 1 25 5 is_stmt 1 view .LVU25
  208 0014 0A23     		movs	r3, #10
  209 0016 0322     		movs	r2, #3
  210 0018 01A9     		add	r1, sp, #4
+ARM GAS  /tmp/cc0UY95u.s 			page 5
+
+
  211 001a 0548     		ldr	r0, .L15
-ARM GAS  /tmp/ccYmLYLe.s 			page 5
-
-
  212              	.LVL10:
- 213              		.loc 1 24 5 is_stmt 0 view .LVU26
+ 213              		.loc 1 25 5 is_stmt 0 view .LVU26
  214 001c FFF7FEFF 		bl	HAL_UART_Transmit
  215              	.LVL11:
-  25:cooneo_Drivers/emm_motor/emm_motor.c ****     f1++;
- 216              		.loc 1 25 5 is_stmt 1 view .LVU27
- 217              		.loc 1 25 7 is_stmt 0 view .LVU28
+  26:cooneo_Drivers/emm_motor/emm_motor.c ****     f1++;
+ 216              		.loc 1 26 5 is_stmt 1 view .LVU27
+ 217              		.loc 1 26 7 is_stmt 0 view .LVU28
  218 0020 044A     		ldr	r2, .L15+4
  219 0022 1368     		ldr	r3, [r2]
  220 0024 0133     		adds	r3, r3, #1
  221 0026 1360     		str	r3, [r2]
-  26:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  27:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 222              		.loc 1 27 1 view .LVU29
+  27:cooneo_Drivers/emm_motor/emm_motor.c ****     //rsp实现接收逻辑并处理返回的数据
+  28:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 222              		.loc 1 28 1 view .LVU29
  223 0028 03B0     		add	sp, sp, #12
  224              	.LCFI11:
  225              		.cfi_def_cfa_offset 4
@@ -276,13 +277,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  243              	emm_ReadInputPulses:
  244              	.LVL12:
  245              	.LFB247:
-  28:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  29:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadInputPulses(uint8_t motorId) {
- 246              		.loc 1 29 43 is_stmt 1 view -0
+  29:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  30:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadInputPulses(uint8_t motorId) {
+ 246              		.loc 1 30 43 is_stmt 1 view -0
  247              		.cfi_startproc
  248              		@ args = 0, pretend = 0, frame = 8
  249              		@ frame_needed = 0, uses_anonymous_args = 0
- 250              		.loc 1 29 43 is_stmt 0 view .LVU31
+ 250              		.loc 1 30 43 is_stmt 0 view .LVU31
  251 0000 00B5     		push	{lr}
  252              	.LCFI12:
  253              		.cfi_def_cfa_offset 4
@@ -290,37 +291,37 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  255 0002 83B0     		sub	sp, sp, #12
  256              	.LCFI13:
  257              		.cfi_def_cfa_offset 16
-  30:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x33, 0x6B}; // 命令数据
- 258              		.loc 1 30 5 is_stmt 1 view .LVU32
- 259              		.loc 1 30 13 is_stmt 0 view .LVU33
+  31:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x33, 0x6B}; // 命令数据
+ 258              		.loc 1 31 5 is_stmt 1 view .LVU32
+ 259              		.loc 1 31 13 is_stmt 0 view .LVU33
  260 0004 8DF80400 		strb	r0, [sp, #4]
  261 0008 3323     		movs	r3, #51
  262 000a 8DF80530 		strb	r3, [sp, #5]
  263 000e 6B23     		movs	r3, #107
+ARM GAS  /tmp/cc0UY95u.s 			page 6
+
+
  264 0010 8DF80630 		strb	r3, [sp, #6]
-ARM GAS  /tmp/ccYmLYLe.s 			page 6
-
-
-  31:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 265              		.loc 1 31 5 is_stmt 1 view .LVU34
+  32:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 265              		.loc 1 32 5 is_stmt 1 view .LVU34
  266 0014 0A23     		movs	r3, #10
  267 0016 0322     		movs	r2, #3
  268 0018 01A9     		add	r1, sp, #4
  269 001a 0548     		ldr	r0, .L19
  270              	.LVL13:
- 271              		.loc 1 31 5 is_stmt 0 view .LVU35
+ 271              		.loc 1 32 5 is_stmt 0 view .LVU35
  272 001c FFF7FEFF 		bl	HAL_UART_Transmit
  273              	.LVL14:
-  32:cooneo_Drivers/emm_motor/emm_motor.c ****     f2++;
- 274              		.loc 1 32 5 is_stmt 1 view .LVU36
- 275              		.loc 1 32 7 is_stmt 0 view .LVU37
+  33:cooneo_Drivers/emm_motor/emm_motor.c ****     f2++;
+ 274              		.loc 1 33 5 is_stmt 1 view .LVU36
+ 275              		.loc 1 33 7 is_stmt 0 view .LVU37
  276 0020 044A     		ldr	r2, .L19+4
  277 0022 1368     		ldr	r3, [r2]
  278 0024 0133     		adds	r3, r3, #1
  279 0026 1360     		str	r3, [r2]
-  33:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  34:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 280              		.loc 1 34 1 view .LVU38
+  34:cooneo_Drivers/emm_motor/emm_motor.c ****     //rsp实现接收逻辑并处理返回的数据
+  35:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 280              		.loc 1 35 1 view .LVU38
  281 0028 03B0     		add	sp, sp, #12
  282              	.LCFI14:
  283              		.cfi_def_cfa_offset 4
@@ -342,13 +343,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  301              	emm_ReadMotorRealTimePosition:
  302              	.LVL15:
  303              	.LFB248:
-  35:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  36:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadMotorRealTimePosition(uint8_t motorId) {
- 304              		.loc 1 36 53 is_stmt 1 view -0
+  36:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  37:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadMotorRealTimePosition(uint8_t motorId) {
+ 304              		.loc 1 37 53 is_stmt 1 view -0
  305              		.cfi_startproc
  306              		@ args = 0, pretend = 0, frame = 8
  307              		@ frame_needed = 0, uses_anonymous_args = 0
- 308              		.loc 1 36 53 is_stmt 0 view .LVU40
+ 308              		.loc 1 37 53 is_stmt 0 view .LVU40
  309 0000 00B5     		push	{lr}
  310              	.LCFI15:
  311              		.cfi_def_cfa_offset 4
@@ -356,37 +357,37 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  313 0002 83B0     		sub	sp, sp, #12
  314              	.LCFI16:
  315              		.cfi_def_cfa_offset 16
-  37:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x36, 0x6B}; // 命令数据
- 316              		.loc 1 37 5 is_stmt 1 view .LVU41
-ARM GAS  /tmp/ccYmLYLe.s 			page 7
+  38:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x36, 0x6B}; // 命令数据
+ARM GAS  /tmp/cc0UY95u.s 			page 7
 
 
- 317              		.loc 1 37 13 is_stmt 0 view .LVU42
+ 316              		.loc 1 38 5 is_stmt 1 view .LVU41
+ 317              		.loc 1 38 13 is_stmt 0 view .LVU42
  318 0004 8DF80400 		strb	r0, [sp, #4]
  319 0008 3623     		movs	r3, #54
  320 000a 8DF80530 		strb	r3, [sp, #5]
  321 000e 6B23     		movs	r3, #107
  322 0010 8DF80630 		strb	r3, [sp, #6]
-  38:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 323              		.loc 1 38 5 is_stmt 1 view .LVU43
+  39:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 323              		.loc 1 39 5 is_stmt 1 view .LVU43
  324 0014 0A23     		movs	r3, #10
  325 0016 0322     		movs	r2, #3
  326 0018 01A9     		add	r1, sp, #4
  327 001a 0548     		ldr	r0, .L23
  328              	.LVL16:
- 329              		.loc 1 38 5 is_stmt 0 view .LVU44
+ 329              		.loc 1 39 5 is_stmt 0 view .LVU44
  330 001c FFF7FEFF 		bl	HAL_UART_Transmit
  331              	.LVL17:
-  39:cooneo_Drivers/emm_motor/emm_motor.c ****     f3++;
- 332              		.loc 1 39 5 is_stmt 1 view .LVU45
- 333              		.loc 1 39 7 is_stmt 0 view .LVU46
+  40:cooneo_Drivers/emm_motor/emm_motor.c ****     f3++;
+ 332              		.loc 1 40 5 is_stmt 1 view .LVU45
+ 333              		.loc 1 40 7 is_stmt 0 view .LVU46
  334 0020 044A     		ldr	r2, .L23+4
  335 0022 1368     		ldr	r3, [r2]
  336 0024 0133     		adds	r3, r3, #1
  337 0026 1360     		str	r3, [r2]
-  40:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  41:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 338              		.loc 1 41 1 view .LVU47
+  41:cooneo_Drivers/emm_motor/emm_motor.c ****     // rsp实现接收逻辑并处理返回的数据
+  42:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 338              		.loc 1 42 1 view .LVU47
  339 0028 03B0     		add	sp, sp, #12
  340              	.LCFI17:
  341              		.cfi_def_cfa_offset 4
@@ -408,44 +409,44 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  359              	emm_ReadPositionError:
  360              	.LVL18:
  361              	.LFB249:
-  42:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  43:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadPositionError(uint8_t motorId) {
- 362              		.loc 1 43 45 is_stmt 1 view -0
+  43:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  44:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadPositionError(uint8_t motorId) {
+ 362              		.loc 1 44 45 is_stmt 1 view -0
  363              		.cfi_startproc
  364              		@ args = 0, pretend = 0, frame = 8
  365              		@ frame_needed = 0, uses_anonymous_args = 0
- 366              		.loc 1 43 45 is_stmt 0 view .LVU49
+ 366              		.loc 1 44 45 is_stmt 0 view .LVU49
  367 0000 00B5     		push	{lr}
  368              	.LCFI18:
+ARM GAS  /tmp/cc0UY95u.s 			page 8
+
+
  369              		.cfi_def_cfa_offset 4
-ARM GAS  /tmp/ccYmLYLe.s 			page 8
-
-
  370              		.cfi_offset 14, -4
  371 0002 83B0     		sub	sp, sp, #12
  372              	.LCFI19:
  373              		.cfi_def_cfa_offset 16
-  44:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x39, 0x6B}; // 命令数据
- 374              		.loc 1 44 5 is_stmt 1 view .LVU50
- 375              		.loc 1 44 13 is_stmt 0 view .LVU51
+  45:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x39, 0x6B}; // 命令数据
+ 374              		.loc 1 45 5 is_stmt 1 view .LVU50
+ 375              		.loc 1 45 13 is_stmt 0 view .LVU51
  376 0004 8DF80400 		strb	r0, [sp, #4]
  377 0008 3923     		movs	r3, #57
  378 000a 8DF80530 		strb	r3, [sp, #5]
  379 000e 6B23     		movs	r3, #107
  380 0010 8DF80630 		strb	r3, [sp, #6]
-  45:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 381              		.loc 1 45 5 is_stmt 1 view .LVU52
+  46:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 381              		.loc 1 46 5 is_stmt 1 view .LVU52
  382 0014 0A23     		movs	r3, #10
  383 0016 0322     		movs	r2, #3
  384 0018 01A9     		add	r1, sp, #4
  385 001a 0348     		ldr	r0, .L27
  386              	.LVL19:
- 387              		.loc 1 45 5 is_stmt 0 view .LVU53
+ 387              		.loc 1 46 5 is_stmt 0 view .LVU53
  388 001c FFF7FEFF 		bl	HAL_UART_Transmit
  389              	.LVL20:
-  46:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  47:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 390              		.loc 1 47 1 view .LVU54
+  47:cooneo_Drivers/emm_motor/emm_motor.c ****     //rsp实现接收逻辑并处理返回的数据
+  48:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 390              		.loc 1 48 1 view .LVU54
  391 0020 03B0     		add	sp, sp, #12
  392              	.LCFI20:
  393              		.cfi_def_cfa_offset 4
@@ -466,44 +467,44 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  410              	emm_ReadEnableStatus:
  411              	.LVL21:
  412              	.LFB250:
-  48:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  49:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadEnableStatus(uint8_t motorId) {
- 413              		.loc 1 49 44 is_stmt 1 view -0
+  49:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  50:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadEnableStatus(uint8_t motorId) {
+ 413              		.loc 1 50 44 is_stmt 1 view -0
  414              		.cfi_startproc
  415              		@ args = 0, pretend = 0, frame = 8
  416              		@ frame_needed = 0, uses_anonymous_args = 0
- 417              		.loc 1 49 44 is_stmt 0 view .LVU56
+ 417              		.loc 1 50 44 is_stmt 0 view .LVU56
  418 0000 00B5     		push	{lr}
  419              	.LCFI21:
  420              		.cfi_def_cfa_offset 4
  421              		.cfi_offset 14, -4
+ARM GAS  /tmp/cc0UY95u.s 			page 9
+
+
  422 0002 83B0     		sub	sp, sp, #12
-ARM GAS  /tmp/ccYmLYLe.s 			page 9
-
-
  423              	.LCFI22:
  424              		.cfi_def_cfa_offset 16
-  50:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3A, 0x6B}; // 命令数据
- 425              		.loc 1 50 5 is_stmt 1 view .LVU57
- 426              		.loc 1 50 13 is_stmt 0 view .LVU58
+  51:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3A, 0x6B}; // 命令数据
+ 425              		.loc 1 51 5 is_stmt 1 view .LVU57
+ 426              		.loc 1 51 13 is_stmt 0 view .LVU58
  427 0004 8DF80400 		strb	r0, [sp, #4]
  428 0008 3A23     		movs	r3, #58
  429 000a 8DF80530 		strb	r3, [sp, #5]
  430 000e 6B23     		movs	r3, #107
  431 0010 8DF80630 		strb	r3, [sp, #6]
-  51:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 432              		.loc 1 51 5 is_stmt 1 view .LVU59
+  52:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 432              		.loc 1 52 5 is_stmt 1 view .LVU59
  433 0014 0A23     		movs	r3, #10
  434 0016 0322     		movs	r2, #3
  435 0018 01A9     		add	r1, sp, #4
  436 001a 0348     		ldr	r0, .L31
  437              	.LVL22:
- 438              		.loc 1 51 5 is_stmt 0 view .LVU60
+ 438              		.loc 1 52 5 is_stmt 0 view .LVU60
  439 001c FFF7FEFF 		bl	HAL_UART_Transmit
  440              	.LVL23:
-  52:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  53:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 441              		.loc 1 53 1 view .LVU61
+  53:cooneo_Drivers/emm_motor/emm_motor.c ****     // rsp实现接收逻辑并处理返回的数据
+  54:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 441              		.loc 1 54 1 view .LVU61
  442 0020 03B0     		add	sp, sp, #12
  443              	.LCFI23:
  444              		.cfi_def_cfa_offset 4
@@ -524,44 +525,44 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  461              	emm_ReadStallFlag:
  462              	.LVL24:
  463              	.LFB251:
-  54:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  55:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadStallFlag(uint8_t motorId) {
- 464              		.loc 1 55 41 is_stmt 1 view -0
+  55:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  56:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadStallFlag(uint8_t motorId) {
+ 464              		.loc 1 56 41 is_stmt 1 view -0
  465              		.cfi_startproc
  466              		@ args = 0, pretend = 0, frame = 8
  467              		@ frame_needed = 0, uses_anonymous_args = 0
- 468              		.loc 1 55 41 is_stmt 0 view .LVU63
+ 468              		.loc 1 56 41 is_stmt 0 view .LVU63
  469 0000 00B5     		push	{lr}
  470              	.LCFI24:
  471              		.cfi_def_cfa_offset 4
  472              		.cfi_offset 14, -4
  473 0002 83B0     		sub	sp, sp, #12
  474              	.LCFI25:
+ARM GAS  /tmp/cc0UY95u.s 			page 10
+
+
  475              		.cfi_def_cfa_offset 16
-ARM GAS  /tmp/ccYmLYLe.s 			page 10
-
-
-  56:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3E, 0x6B}; // 命令数据
- 476              		.loc 1 56 5 is_stmt 1 view .LVU64
- 477              		.loc 1 56 13 is_stmt 0 view .LVU65
+  57:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3E, 0x6B}; // 命令数据
+ 476              		.loc 1 57 5 is_stmt 1 view .LVU64
+ 477              		.loc 1 57 13 is_stmt 0 view .LVU65
  478 0004 8DF80400 		strb	r0, [sp, #4]
  479 0008 3E23     		movs	r3, #62
  480 000a 8DF80530 		strb	r3, [sp, #5]
  481 000e 6B23     		movs	r3, #107
  482 0010 8DF80630 		strb	r3, [sp, #6]
-  57:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 483              		.loc 1 57 5 is_stmt 1 view .LVU66
+  58:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 483              		.loc 1 58 5 is_stmt 1 view .LVU66
  484 0014 0A23     		movs	r3, #10
  485 0016 0322     		movs	r2, #3
  486 0018 01A9     		add	r1, sp, #4
  487 001a 0348     		ldr	r0, .L35
  488              	.LVL25:
- 489              		.loc 1 57 5 is_stmt 0 view .LVU67
+ 489              		.loc 1 58 5 is_stmt 0 view .LVU67
  490 001c FFF7FEFF 		bl	HAL_UART_Transmit
  491              	.LVL26:
-  58:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  59:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 492              		.loc 1 59 1 view .LVU68
+  59:cooneo_Drivers/emm_motor/emm_motor.c ****     // rsp实现接收逻辑并处理返回的数据
+  60:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 492              		.loc 1 60 1 view .LVU68
  493 0020 03B0     		add	sp, sp, #12
  494              	.LCFI26:
  495              		.cfi_def_cfa_offset 4
@@ -582,13 +583,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  512              	emm_ReadAutoHomeStatus:
  513              	.LVL27:
  514              	.LFB252:
-  60:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  61:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadAutoHomeStatus(uint8_t motorId) {
- 515              		.loc 1 61 46 is_stmt 1 view -0
+  61:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  62:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ReadAutoHomeStatus(uint8_t motorId) {
+ 515              		.loc 1 62 46 is_stmt 1 view -0
  516              		.cfi_startproc
  517              		@ args = 0, pretend = 0, frame = 8
  518              		@ frame_needed = 0, uses_anonymous_args = 0
- 519              		.loc 1 61 46 is_stmt 0 view .LVU70
+ 519              		.loc 1 62 46 is_stmt 0 view .LVU70
  520 0000 00B5     		push	{lr}
  521              	.LCFI27:
  522              		.cfi_def_cfa_offset 4
@@ -596,30 +597,30 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  524 0002 83B0     		sub	sp, sp, #12
  525              	.LCFI28:
  526              		.cfi_def_cfa_offset 16
-  62:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3F, 0x6B}; // 命令数据
- 527              		.loc 1 62 5 is_stmt 1 view .LVU71
-ARM GAS  /tmp/ccYmLYLe.s 			page 11
+  63:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0x3F, 0x6B}; // 命令数据
+ARM GAS  /tmp/cc0UY95u.s 			page 11
 
 
- 528              		.loc 1 62 13 is_stmt 0 view .LVU72
+ 527              		.loc 1 63 5 is_stmt 1 view .LVU71
+ 528              		.loc 1 63 13 is_stmt 0 view .LVU72
  529 0004 8DF80400 		strb	r0, [sp, #4]
  530 0008 3F23     		movs	r3, #63
  531 000a 8DF80530 		strb	r3, [sp, #5]
  532 000e 6B23     		movs	r3, #107
  533 0010 8DF80630 		strb	r3, [sp, #6]
-  63:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 534              		.loc 1 63 5 is_stmt 1 view .LVU73
+  64:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 534              		.loc 1 64 5 is_stmt 1 view .LVU73
  535 0014 0A23     		movs	r3, #10
  536 0016 0322     		movs	r2, #3
  537 0018 01A9     		add	r1, sp, #4
  538 001a 0348     		ldr	r0, .L39
  539              	.LVL28:
- 540              		.loc 1 63 5 is_stmt 0 view .LVU74
+ 540              		.loc 1 64 5 is_stmt 0 view .LVU74
  541 001c FFF7FEFF 		bl	HAL_UART_Transmit
  542              	.LVL29:
-  64:cooneo_Drivers/emm_motor/emm_motor.c ****     // 接下来，你需要实现接收逻辑并处理返回的数据
-  65:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 543              		.loc 1 65 1 view .LVU75
+  65:cooneo_Drivers/emm_motor/emm_motor.c ****     // rsp实现接收逻辑并处理返回的数据
+  66:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 543              		.loc 1 66 1 view .LVU75
  544 0020 03B0     		add	sp, sp, #12
  545              	.LCFI29:
  546              		.cfi_def_cfa_offset 4
@@ -640,16 +641,16 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  563              	emm_ControlMotorEnable:
  564              	.LVL30:
  565              	.LFB253:
-  66:cooneo_Drivers/emm_motor/emm_motor.c **** 
   67:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  68:cooneo_Drivers/emm_motor/emm_motor.c **** // 控制部分
-  69:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  70:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorEnable(uint8_t motorId,uint8_t enableStatus) {
- 566              		.loc 1 70 67 is_stmt 1 view -0
+  68:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  69:cooneo_Drivers/emm_motor/emm_motor.c **** // 控制部分
+  70:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  71:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorEnable(uint8_t motorId,uint8_t enableStatus) {
+ 566              		.loc 1 71 67 is_stmt 1 view -0
  567              		.cfi_startproc
  568              		@ args = 0, pretend = 0, frame = 8
  569              		@ frame_needed = 0, uses_anonymous_args = 0
- 570              		.loc 1 70 67 is_stmt 0 view .LVU77
+ 570              		.loc 1 71 67 is_stmt 0 view .LVU77
  571 0000 00B5     		push	{lr}
  572              	.LCFI30:
  573              		.cfi_def_cfa_offset 4
@@ -657,32 +658,32 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  575 0002 83B0     		sub	sp, sp, #12
  576              	.LCFI31:
  577              		.cfi_def_cfa_offset 16
-  71:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xF3, enableStatus, 0x6B}; // 命令数据
-ARM GAS  /tmp/ccYmLYLe.s 			page 12
+ARM GAS  /tmp/cc0UY95u.s 			page 12
 
 
- 578              		.loc 1 71 5 is_stmt 1 view .LVU78
- 579              		.loc 1 71 13 is_stmt 0 view .LVU79
+  72:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xF3, enableStatus, 0x6B}; // 命令数据
+ 578              		.loc 1 72 5 is_stmt 1 view .LVU78
+ 579              		.loc 1 72 13 is_stmt 0 view .LVU79
  580 0004 8DF80400 		strb	r0, [sp, #4]
  581 0008 F323     		movs	r3, #243
  582 000a 8DF80530 		strb	r3, [sp, #5]
  583 000e 8DF80610 		strb	r1, [sp, #6]
  584 0012 6B23     		movs	r3, #107
  585 0014 8DF80730 		strb	r3, [sp, #7]
-  72:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 586              		.loc 1 72 5 is_stmt 1 view .LVU80
+  73:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 586              		.loc 1 73 5 is_stmt 1 view .LVU80
  587 0018 0A23     		movs	r3, #10
  588 001a 0422     		movs	r2, #4
  589 001c 0DEB0201 		add	r1, sp, r2
  590              	.LVL31:
- 591              		.loc 1 72 5 is_stmt 0 view .LVU81
+ 591              		.loc 1 73 5 is_stmt 0 view .LVU81
  592 0020 0248     		ldr	r0, .L43
  593              	.LVL32:
- 594              		.loc 1 72 5 view .LVU82
+ 594              		.loc 1 73 5 view .LVU82
  595 0022 FFF7FEFF 		bl	HAL_UART_Transmit
  596              	.LVL33:
-  73:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 597              		.loc 1 73 1 view .LVU83
+  74:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 597              		.loc 1 74 1 view .LVU83
  598 0026 03B0     		add	sp, sp, #12
  599              	.LCFI32:
  600              		.cfi_def_cfa_offset 4
@@ -703,13 +704,13 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  617              	emm_ControlMotorDirectionSpeed:
  618              	.LVL34:
  619              	.LFB254:
-  74:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  75:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorDirectionSpeed(uint8_t motorId,uint16_t directionSpeed, uint8_t acceleration) 
- 620              		.loc 1 75 100 is_stmt 1 view -0
+  75:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  76:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorDirectionSpeed(uint8_t motorId,uint16_t directionSpeed, uint8_t acceleration) 
+ 620              		.loc 1 76 100 is_stmt 1 view -0
  621              		.cfi_startproc
  622              		@ args = 0, pretend = 0, frame = 8
  623              		@ frame_needed = 0, uses_anonymous_args = 0
- 624              		.loc 1 75 100 is_stmt 0 view .LVU85
+ 624              		.loc 1 76 100 is_stmt 0 view .LVU85
  625 0000 00B5     		push	{lr}
  626              	.LCFI33:
  627              		.cfi_def_cfa_offset 4
@@ -717,12 +718,12 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  629 0002 83B0     		sub	sp, sp, #12
  630              	.LCFI34:
  631              		.cfi_def_cfa_offset 16
-  76:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xF6, directionSpeed >> 8, directionSpeed & 0xFF, acceleration, 0
-ARM GAS  /tmp/ccYmLYLe.s 			page 13
+ARM GAS  /tmp/cc0UY95u.s 			page 13
 
 
- 632              		.loc 1 76 5 is_stmt 1 view .LVU86
- 633              		.loc 1 76 13 is_stmt 0 view .LVU87
+  77:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xF6, directionSpeed >> 8, directionSpeed & 0xFF, acceleration, 0
+ 632              		.loc 1 77 5 is_stmt 1 view .LVU86
+ 633              		.loc 1 77 13 is_stmt 0 view .LVU87
  634 0004 8DF80000 		strb	r0, [sp]
  635 0008 F623     		movs	r3, #246
  636 000a 8DF80130 		strb	r3, [sp, #1]
@@ -732,22 +733,22 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  640 0018 8DF80420 		strb	r2, [sp, #4]
  641 001c 6B23     		movs	r3, #107
  642 001e 8DF80530 		strb	r3, [sp, #5]
-  77:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 643              		.loc 1 77 5 is_stmt 1 view .LVU88
+  78:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 643              		.loc 1 78 5 is_stmt 1 view .LVU88
  644 0022 0A23     		movs	r3, #10
  645 0024 0622     		movs	r2, #6
  646              	.LVL35:
- 647              		.loc 1 77 5 is_stmt 0 view .LVU89
+ 647              		.loc 1 78 5 is_stmt 0 view .LVU89
  648 0026 6946     		mov	r1, sp
  649              	.LVL36:
- 650              		.loc 1 77 5 view .LVU90
+ 650              		.loc 1 78 5 view .LVU90
  651 0028 0248     		ldr	r0, .L47
  652              	.LVL37:
- 653              		.loc 1 77 5 view .LVU91
+ 653              		.loc 1 78 5 view .LVU91
  654 002a FFF7FEFF 		bl	HAL_UART_Transmit
  655              	.LVL38:
-  78:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 656              		.loc 1 78 1 view .LVU92
+  79:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 656              		.loc 1 79 1 view .LVU92
  657 002e 03B0     		add	sp, sp, #12
  658              	.LCFI35:
  659              		.cfi_def_cfa_offset 4
@@ -768,46 +769,46 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  676              	emm_StoreOrClearParameters:
  677              	.LVL39:
  678              	.LFB255:
-  79:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  80:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_StoreOrClearParameters(uint8_t motorId,uint8_t operation) {
- 679              		.loc 1 80 68 is_stmt 1 view -0
+  80:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  81:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_StoreOrClearParameters(uint8_t motorId,uint8_t operation) {
+ 679              		.loc 1 81 68 is_stmt 1 view -0
  680              		.cfi_startproc
  681              		@ args = 0, pretend = 0, frame = 8
  682              		@ frame_needed = 0, uses_anonymous_args = 0
- 683              		.loc 1 80 68 is_stmt 0 view .LVU94
+ 683              		.loc 1 81 68 is_stmt 0 view .LVU94
  684 0000 00B5     		push	{lr}
  685              	.LCFI36:
+ARM GAS  /tmp/cc0UY95u.s 			page 14
+
+
  686              		.cfi_def_cfa_offset 4
-ARM GAS  /tmp/ccYmLYLe.s 			page 14
-
-
  687              		.cfi_offset 14, -4
  688 0002 83B0     		sub	sp, sp, #12
  689              	.LCFI37:
  690              		.cfi_def_cfa_offset 16
-  81:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xFF, operation, 0x6B}; // 命令数据
- 691              		.loc 1 81 5 is_stmt 1 view .LVU95
- 692              		.loc 1 81 13 is_stmt 0 view .LVU96
+  82:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {motorId, 0xFF, operation, 0x6B}; // 命令数据
+ 691              		.loc 1 82 5 is_stmt 1 view .LVU95
+ 692              		.loc 1 82 13 is_stmt 0 view .LVU96
  693 0004 8DF80400 		strb	r0, [sp, #4]
  694 0008 FF23     		movs	r3, #255
  695 000a 8DF80530 		strb	r3, [sp, #5]
  696 000e 8DF80610 		strb	r1, [sp, #6]
  697 0012 6B23     		movs	r3, #107
  698 0014 8DF80730 		strb	r3, [sp, #7]
-  82:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 699              		.loc 1 82 5 is_stmt 1 view .LVU97
+  83:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 699              		.loc 1 83 5 is_stmt 1 view .LVU97
  700 0018 0A23     		movs	r3, #10
  701 001a 0422     		movs	r2, #4
  702 001c 0DEB0201 		add	r1, sp, r2
  703              	.LVL40:
- 704              		.loc 1 82 5 is_stmt 0 view .LVU98
+ 704              		.loc 1 83 5 is_stmt 0 view .LVU98
  705 0020 0248     		ldr	r0, .L51
  706              	.LVL41:
- 707              		.loc 1 82 5 view .LVU99
+ 707              		.loc 1 83 5 view .LVU99
  708 0022 FFF7FEFF 		bl	HAL_UART_Transmit
  709              	.LVL42:
-  83:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 710              		.loc 1 83 1 view .LVU100
+  84:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 710              		.loc 1 84 1 view .LVU100
  711 0026 03B0     		add	sp, sp, #12
  712              	.LCFI38:
  713              		.cfi_def_cfa_offset 4
@@ -828,93 +829,93 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  730              	emm_ControlMotorRelativeAngle:
  731              	.LVL43:
  732              	.LFB256:
-  84:cooneo_Drivers/emm_motor/emm_motor.c **** 
-  85:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorRelativeAngle(uint8_t motorId,uint16_t directionSpeed, uint8_t acceleration, u
- 733              		.loc 1 85 120 is_stmt 1 view -0
+  85:cooneo_Drivers/emm_motor/emm_motor.c **** 
+  86:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorRelativeAngle(uint8_t motorId,uint16_t directionSpeed, uint8_t acceleration, u
+ 733              		.loc 1 86 120 is_stmt 1 view -0
  734              		.cfi_startproc
  735              		@ args = 0, pretend = 0, frame = 16
  736              		@ frame_needed = 0, uses_anonymous_args = 0
- 737              		.loc 1 85 120 is_stmt 0 view .LVU102
+ 737              		.loc 1 86 120 is_stmt 0 view .LVU102
  738 0000 00B5     		push	{lr}
  739              	.LCFI39:
+ARM GAS  /tmp/cc0UY95u.s 			page 15
+
+
  740              		.cfi_def_cfa_offset 4
-ARM GAS  /tmp/ccYmLYLe.s 			page 15
-
-
  741              		.cfi_offset 14, -4
  742 0002 85B0     		sub	sp, sp, #20
  743              	.LCFI40:
  744              		.cfi_def_cfa_offset 24
-  86:cooneo_Drivers/emm_motor/emm_motor.c ****     // uint8_t command[] = {
-  87:cooneo_Drivers/emm_motor/emm_motor.c ****     //     motorId, 0xFD,
-  88:cooneo_Drivers/emm_motor/emm_motor.c ****     //     directionSpeed >> 8, directionSpeed & 0xFF,
-  89:cooneo_Drivers/emm_motor/emm_motor.c ****     //     acceleration,
-  90:cooneo_Drivers/emm_motor/emm_motor.c ****     //     pulseCount >> 16, (pulseCount >> 8) & 0xFF, pulseCount & 0xFF,
-  91:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x6B
-  92:cooneo_Drivers/emm_motor/emm_motor.c ****     // }; // 命令数据
-  93:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {
- 745              		.loc 1 93 5 is_stmt 1 view .LVU103
- 746              		.loc 1 93 13 is_stmt 0 view .LVU104
+  87:cooneo_Drivers/emm_motor/emm_motor.c ****     // uint8_t command[] = {
+  88:cooneo_Drivers/emm_motor/emm_motor.c ****     //     motorId, 0xFD,
+  89:cooneo_Drivers/emm_motor/emm_motor.c ****     //     directionSpeed >> 8, directionSpeed & 0xFF,
+  90:cooneo_Drivers/emm_motor/emm_motor.c ****     //     acceleration,
+  91:cooneo_Drivers/emm_motor/emm_motor.c ****     //     pulseCount >> 16, (pulseCount >> 8) & 0xFF, pulseCount & 0xFF,
+  92:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x6B
+  93:cooneo_Drivers/emm_motor/emm_motor.c ****     // }; // 命令数据
+  94:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t command[] = {
+ 745              		.loc 1 94 5 is_stmt 1 view .LVU103
+ 746              		.loc 1 94 13 is_stmt 0 view .LVU104
  747 0004 8DF80400 		strb	r0, [sp, #4]
  748 0008 FD20     		movs	r0, #253
  749              	.LVL44:
- 750              		.loc 1 93 13 view .LVU105
+ 750              		.loc 1 94 13 view .LVU105
  751 000a 8DF80500 		strb	r0, [sp, #5]
  752 000e 080A     		lsrs	r0, r1, #8
  753 0010 8DF80600 		strb	r0, [sp, #6]
  754 0014 8DF80710 		strb	r1, [sp, #7]
  755 0018 8DF80820 		strb	r2, [sp, #8]
-  94:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
-  95:cooneo_Drivers/emm_motor/emm_motor.c ****         directionSpeed >> 8, directionSpeed & 0xFF,
-  96:cooneo_Drivers/emm_motor/emm_motor.c ****         acceleration,
-  97:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)(pulseCount >> 16),       // 最高位字节
- 756              		.loc 1 97 9 view .LVU106
+  95:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
+  96:cooneo_Drivers/emm_motor/emm_motor.c ****         directionSpeed >> 8, directionSpeed & 0xFF,
+  97:cooneo_Drivers/emm_motor/emm_motor.c ****         acceleration,
+  98:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)(pulseCount >> 16),       // 最高位字节
+ 756              		.loc 1 98 9 view .LVU106
  757 001c C3F30742 		ubfx	r2, r3, #16, #8
  758              	.LVL45:
-  93:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
- 759              		.loc 1 93 13 view .LVU107
+  94:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
+ 759              		.loc 1 94 13 view .LVU107
  760 0020 8DF80920 		strb	r2, [sp, #9]
-  98:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)((pulseCount >> 8) & 0xFF), // 中间字节
- 761              		.loc 1 98 9 view .LVU108
+  99:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)((pulseCount >> 8) & 0xFF), // 中间字节
+ 761              		.loc 1 99 9 view .LVU108
  762 0024 C3F30722 		ubfx	r2, r3, #8, #8
-  93:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
- 763              		.loc 1 93 13 view .LVU109
+  94:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
+ 763              		.loc 1 94 13 view .LVU109
  764 0028 8DF80A20 		strb	r2, [sp, #10]
  765 002c 8DF80B30 		strb	r3, [sp, #11]
  766 0030 6B23     		movs	r3, #107
  767              	.LVL46:
-  93:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
- 768              		.loc 1 93 13 view .LVU110
+  94:cooneo_Drivers/emm_motor/emm_motor.c ****         motorId, 0xFD,
+ 768              		.loc 1 94 13 view .LVU110
  769 0032 8DF80C30 		strb	r3, [sp, #12]
-  99:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)(pulseCount & 0xFF),       // 最低位字节
- 100:cooneo_Drivers/emm_motor/emm_motor.c ****         0x6B
- 101:cooneo_Drivers/emm_motor/emm_motor.c ****     }; 
- 102:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 103:cooneo_Drivers/emm_motor/emm_motor.c ****     //01 FD 14 FF 00 00 0C 80 6B
- 104:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 105:cooneo_Drivers/emm_motor/emm_motor.c ****     // uint8_t command[] = {
- 106:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x02, 0xFD,
- 107:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x14, 0xFF,
- 108:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x00,
- 109:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x00, 0x06, 0x40,
- 110:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x6B
-ARM GAS  /tmp/ccYmLYLe.s 			page 16
+ 100:cooneo_Drivers/emm_motor/emm_motor.c ****         (uint8_t)(pulseCount & 0xFF),       // 最低位字节
+ 101:cooneo_Drivers/emm_motor/emm_motor.c ****         0x6B
+ 102:cooneo_Drivers/emm_motor/emm_motor.c ****     }; 
+ 103:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 104:cooneo_Drivers/emm_motor/emm_motor.c ****     //01 FD 14 FF 00 00 0C 80 6B
+ 105:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 106:cooneo_Drivers/emm_motor/emm_motor.c ****     // uint8_t command[] = {
+ 107:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x02, 0xFD,
+ 108:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x14, 0xFF,
+ 109:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x00,
+ 110:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x00, 0x06, 0x40,
+ARM GAS  /tmp/cc0UY95u.s 			page 16
 
 
- 111:cooneo_Drivers/emm_motor/emm_motor.c ****     // }; // 命令数据
- 112:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 113:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
- 770              		.loc 1 113 5 is_stmt 1 view .LVU111
+ 111:cooneo_Drivers/emm_motor/emm_motor.c ****     //     0x6B
+ 112:cooneo_Drivers/emm_motor/emm_motor.c ****     // }; // 命令数据
+ 113:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 114:cooneo_Drivers/emm_motor/emm_motor.c ****     HAL_UART_Transmit(&huart1, command, sizeof(command), 10); // 发送命令
+ 770              		.loc 1 114 5 is_stmt 1 view .LVU111
  771 0036 0A23     		movs	r3, #10
  772 0038 0922     		movs	r2, #9
  773 003a 01A9     		add	r1, sp, #4
  774              	.LVL47:
- 775              		.loc 1 113 5 is_stmt 0 view .LVU112
+ 775              		.loc 1 114 5 is_stmt 0 view .LVU112
  776 003c 0248     		ldr	r0, .L55
  777 003e FFF7FEFF 		bl	HAL_UART_Transmit
  778              	.LVL48:
- 114:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 779              		.loc 1 114 1 view .LVU113
+ 115:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 779              		.loc 1 115 1 view .LVU113
  780 0042 05B0     		add	sp, sp, #20
  781              	.LCFI41:
  782              		.cfi_def_cfa_offset 4
@@ -926,338 +927,486 @@ ARM GAS  /tmp/ccYmLYLe.s 			page 1
  788 0048 00000000 		.word	huart1
  789              		.cfi_endproc
  790              	.LFE256:
- 792              		.global	__aeabi_ddiv
- 793              		.global	__aeabi_dadd
- 794              		.global	__aeabi_d2uiz
- 795              		.section	.text.calculatePulseCount,"ax",%progbits
- 796              		.align	1
- 797              		.global	calculatePulseCount
- 798              		.syntax unified
- 799              		.thumb
- 800              		.thumb_func
- 802              	calculatePulseCount:
- 803              	.LVL49:
- 804              	.LFB257:
- 115:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 116:cooneo_Drivers/emm_motor/emm_motor.c **** // 计算所需脉冲数的函数
- 117:cooneo_Drivers/emm_motor/emm_motor.c **** // uint32_t calculatePulseCount(double desiredAngle, double anglePerPulse) {
- 118:cooneo_Drivers/emm_motor/emm_motor.c **** //     return (uint32_t)(desiredAngle / anglePerPulse);
- 119:cooneo_Drivers/emm_motor/emm_motor.c **** // }
- 120:cooneo_Drivers/emm_motor/emm_motor.c **** uint32_t calculatePulseCount(double desiredAngle, double anglePerPulse) {
- 805              		.loc 1 120 73 is_stmt 1 view -0
- 806              		.cfi_startproc
- 807              		@ args = 0, pretend = 0, frame = 0
- 808              		@ frame_needed = 0, uses_anonymous_args = 0
- 809              		.loc 1 120 73 is_stmt 0 view .LVU115
- 810 0000 08B5     		push	{r3, lr}
- 811              	.LCFI42:
- 812              		.cfi_def_cfa_offset 8
- 813              		.cfi_offset 3, -8
- 814              		.cfi_offset 14, -4
- 815 0002 51EC100B 		vmov	r0, r1, d0
- 816 0006 53EC112B 		vmov	r2, r3, d1
- 121:cooneo_Drivers/emm_motor/emm_motor.c ****     // 使用四舍五入以避免因浮点数除法带来的误差
- 122:cooneo_Drivers/emm_motor/emm_motor.c ****     return (uint32_t)(desiredAngle / anglePerPulse + 0.5);
-ARM GAS  /tmp/ccYmLYLe.s 			page 17
+ 792              		.global	__aeabi_d2iz
+ 793              		.global	__aeabi_i2d
+ 794              		.global	__aeabi_ddiv
+ 795              		.global	__aeabi_d2uiz
+ 796              		.section	.text.calculatePulseCount,"ax",%progbits
+ 797              		.align	1
+ 798              		.global	calculatePulseCount
+ 799              		.syntax unified
+ 800              		.thumb
+ 801              		.thumb_func
+ 803              	calculatePulseCount:
+ 804              	.LVL49:
+ 805              	.LFB257:
+ 116:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 117:cooneo_Drivers/emm_motor/emm_motor.c **** // 计算所需脉冲数的函数
+ 118:cooneo_Drivers/emm_motor/emm_motor.c **** // uint32_t calculatePulseCount(double desiredAngle, double anglePerPulse) {
+ 119:cooneo_Drivers/emm_motor/emm_motor.c **** //     return (uint32_t)(desiredAngle / anglePerPulse);
+ 120:cooneo_Drivers/emm_motor/emm_motor.c **** // }
+ 121:cooneo_Drivers/emm_motor/emm_motor.c **** uint32_t calculatePulseCount(double desiredAngle, double anglePerPulse) {
+ 806              		.loc 1 121 73 is_stmt 1 view -0
+ 807              		.cfi_startproc
+ 808              		@ args = 0, pretend = 0, frame = 0
+ 809              		@ frame_needed = 0, uses_anonymous_args = 0
+ 810              		.loc 1 121 73 is_stmt 0 view .LVU115
+ 811 0000 38B5     		push	{r3, r4, r5, lr}
+ 812              	.LCFI42:
+ 813              		.cfi_def_cfa_offset 16
+ 814              		.cfi_offset 3, -16
+ 815              		.cfi_offset 4, -12
+ 816              		.cfi_offset 5, -8
+ 817              		.cfi_offset 14, -4
+ARM GAS  /tmp/cc0UY95u.s 			page 17
 
 
- 817              		.loc 1 122 5 is_stmt 1 view .LVU116
- 818              		.loc 1 122 36 is_stmt 0 view .LVU117
- 819 000a FFF7FEFF 		bl	__aeabi_ddiv
- 820              	.LVL50:
- 821              		.loc 1 122 52 view .LVU118
- 822 000e 0022     		movs	r2, #0
- 823 0010 024B     		ldr	r3, .L59
- 824 0012 FFF7FEFF 		bl	__aeabi_dadd
- 825              	.LVL51:
- 826              		.loc 1 122 12 view .LVU119
- 827 0016 FFF7FEFF 		bl	__aeabi_d2uiz
- 828              	.LVL52:
- 123:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 829              		.loc 1 123 1 view .LVU120
- 830 001a 08BD     		pop	{r3, pc}
- 831              	.L60:
- 832              		.align	2
- 833              	.L59:
- 834 001c 0000E03F 		.word	1071644672
- 835              		.cfi_endproc
- 836              	.LFE257:
- 838              		.section	.text.emm_ControlMotorToAngle,"ax",%progbits
- 839              		.align	1
- 840              		.global	emm_ControlMotorToAngle
- 841              		.syntax unified
- 842              		.thumb
- 843              		.thumb_func
- 845              	emm_ControlMotorToAngle:
- 846              	.LVL53:
- 847              	.LFB258:
- 124:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 125:cooneo_Drivers/emm_motor/emm_motor.c **** // 上层接口
- 126:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
- 848              		.loc 1 126 68 is_stmt 1 view -0
- 849              		.cfi_startproc
- 850              		@ args = 0, pretend = 0, frame = 0
- 851              		@ frame_needed = 0, uses_anonymous_args = 0
- 852              		.loc 1 126 68 is_stmt 0 view .LVU122
- 853 0000 10B5     		push	{r4, lr}
- 854              	.LCFI43:
- 855              		.cfi_def_cfa_offset 8
- 856              		.cfi_offset 4, -8
- 857              		.cfi_offset 14, -4
- 858 0002 0446     		mov	r4, r0
- 127:cooneo_Drivers/emm_motor/emm_motor.c ****     
- 128:cooneo_Drivers/emm_motor/emm_motor.c ****     //double desiredAngle = 90.0; // 目标旋转角度
- 129:cooneo_Drivers/emm_motor/emm_motor.c ****     //desiredAngle = 180;
- 130:cooneo_Drivers/emm_motor/emm_motor.c ****     double anglePerPulse = 1.8 / 16; // 每个脉冲的旋转角度
- 859              		.loc 1 130 5 is_stmt 1 view .LVU123
- 860              	.LVL54:
- 131:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t directionSpeed = 0x0100; // 设置一个方向和速度值
- 861              		.loc 1 131 5 view .LVU124
- 132:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t acceleration = 0x01; // 设置加速度值sss
- 862              		.loc 1 132 5 view .LVU125
- 133:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 134:cooneo_Drivers/emm_motor/emm_motor.c ****     // 计算脉冲数
- 135:cooneo_Drivers/emm_motor/emm_motor.c ****     uint32_t pulseCount = calculatePulseCount(desiredAngle, anglePerPulse);
-ARM GAS  /tmp/ccYmLYLe.s 			page 18
+ 818 0002 51EC100B 		vmov	r0, r1, d0
+ 819 0006 55EC114B 		vmov	r4, r5, d1
+ 122:cooneo_Drivers/emm_motor/emm_motor.c ****     // 使用四舍五入以避免因浮点数除法带来的误差
+ 123:cooneo_Drivers/emm_motor/emm_motor.c ****     // return (uint32_t)(desiredAngle / anglePerPulse + 0.5);
+ 124:cooneo_Drivers/emm_motor/emm_motor.c ****     return (uint32_t)(abs(desiredAngle) / anglePerPulse);
+ 820              		.loc 1 124 5 is_stmt 1 view .LVU116
+ 821              		.loc 1 124 23 is_stmt 0 view .LVU117
+ 822 000a FFF7FEFF 		bl	__aeabi_d2iz
+ 823              	.LVL50:
+ 824              		.loc 1 124 41 view .LVU118
+ 825 000e 0028     		cmp	r0, #0
+ 826 0010 B8BF     		it	lt
+ 827 0012 4042     		rsblt	r0, r0, #0
+ 828 0014 FFF7FEFF 		bl	__aeabi_i2d
+ 829              	.LVL51:
+ 830 0018 2246     		mov	r2, r4
+ 831 001a 2B46     		mov	r3, r5
+ 832 001c FFF7FEFF 		bl	__aeabi_ddiv
+ 833              	.LVL52:
+ 834              		.loc 1 124 12 view .LVU119
+ 835 0020 FFF7FEFF 		bl	__aeabi_d2uiz
+ 836              	.LVL53:
+ 125:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 837              		.loc 1 125 1 view .LVU120
+ 838 0024 38BD     		pop	{r3, r4, r5, pc}
+ 839              		.loc 1 125 1 view .LVU121
+ 840              		.cfi_endproc
+ 841              	.LFE257:
+ 843              		.global	__aeabi_dcmpge
+ 844              		.section	.text.emm_ControlMotorToAngle,"ax",%progbits
+ 845              		.align	1
+ 846              		.global	emm_ControlMotorToAngle
+ 847              		.syntax unified
+ 848              		.thumb
+ 849              		.thumb_func
+ 851              	emm_ControlMotorToAngle:
+ 852              	.LVL54:
+ 853              	.LFB258:
+ 126:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 127:cooneo_Drivers/emm_motor/emm_motor.c **** // 上层接口
+ 128:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
+ 854              		.loc 1 128 68 is_stmt 1 view -0
+ 855              		.cfi_startproc
+ 856              		@ args = 0, pretend = 0, frame = 0
+ 857              		@ frame_needed = 0, uses_anonymous_args = 0
+ 858              		.loc 1 128 68 is_stmt 0 view .LVU123
+ 859 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 860              	.LCFI43:
+ 861              		.cfi_def_cfa_offset 24
+ 862              		.cfi_offset 3, -24
+ 863              		.cfi_offset 4, -20
+ 864              		.cfi_offset 5, -16
+ 865              		.cfi_offset 6, -12
+ 866              		.cfi_offset 7, -8
+ 867              		.cfi_offset 14, -4
+ 868 0002 0646     		mov	r6, r0
+ 869 0004 55EC104B 		vmov	r4, r5, d0
+ARM GAS  /tmp/cc0UY95u.s 			page 18
 
 
- 863              		.loc 1 135 5 view .LVU126
- 864              		.loc 1 135 27 is_stmt 0 view .LVU127
- 865 0004 9FED061B 		vldr.64	d1, .L63
- 866 0008 FFF7FEFF 		bl	calculatePulseCount
- 867              	.LVL55:
- 868              		.loc 1 135 27 view .LVU128
- 869 000c 0346     		mov	r3, r0
- 870              	.LVL56:
- 136:cooneo_Drivers/emm_motor/emm_motor.c ****     emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
- 871              		.loc 1 136 5 is_stmt 1 view .LVU129
- 872 000e 0122     		movs	r2, #1
- 873 0010 4FF48071 		mov	r1, #256
- 874 0014 2046     		mov	r0, r4
- 875              	.LVL57:
- 876              		.loc 1 136 5 is_stmt 0 view .LVU130
- 877 0016 FFF7FEFF 		bl	emm_ControlMotorRelativeAngle
- 878              	.LVL58:
- 137:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 879              		.loc 1 137 1 view .LVU131
- 880 001a 10BD     		pop	{r4, pc}
- 881              	.LVL59:
- 882              	.L64:
- 883              		.loc 1 137 1 view .LVU132
- 884 001c AFF30080 		.align	3
- 885              	.L63:
- 886 0020 CDCCCCCC 		.word	-858993459
- 887 0024 CCCCBC3F 		.word	1069337804
- 888              		.cfi_endproc
- 889              	.LFE258:
- 891              		.section	.text.convertToDirectionSpeed,"ax",%progbits
- 892              		.align	1
- 893              		.global	convertToDirectionSpeed
- 894              		.syntax unified
- 895              		.thumb
- 896              		.thumb_func
- 898              	convertToDirectionSpeed:
- 899              	.LVL60:
- 900              	.LFB259:
- 138:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 139:cooneo_Drivers/emm_motor/emm_motor.c **** // tools
- 140:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 141:cooneo_Drivers/emm_motor/emm_motor.c **** uint16_t convertToDirectionSpeed(int speed) {
- 901              		.loc 1 141 45 is_stmt 1 view -0
- 902              		.cfi_startproc
- 903              		@ args = 0, pretend = 0, frame = 0
- 904              		@ frame_needed = 0, uses_anonymous_args = 0
- 905              		@ link register save eliminated.
- 142:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t directionSpeed;
- 906              		.loc 1 142 5 view .LVU134
- 143:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t absSpeed = (speed >= 0) ? speed : -speed; // 获取速度的绝对值
- 907              		.loc 1 143 5 view .LVU135
- 908              		.loc 1 143 46 is_stmt 0 view .LVU136
- 909 0000 80EAE073 		eor	r3, r0, r0, asr #31
- 910 0004 A3EBE073 		sub	r3, r3, r0, asr #31
- 911              		.loc 1 143 14 view .LVU137
- 912 0008 9BB2     		uxth	r3, r3
- 913              	.LVL61:
-ARM GAS  /tmp/ccYmLYLe.s 			page 19
-
-
- 144:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 145:cooneo_Drivers/emm_motor/emm_motor.c ****     // 限制速度值范围（例如，电机的实际速度范围可能是 0x0000 - 0x04FF）
- 146:cooneo_Drivers/emm_motor/emm_motor.c ****     if (absSpeed > 0x04FF) {
- 914              		.loc 1 146 5 is_stmt 1 view .LVU138
- 915              		.loc 1 146 8 is_stmt 0 view .LVU139
- 916 000a B3F5A06F 		cmp	r3, #1280
- 917 000e 01D3     		bcc	.L66
- 147:cooneo_Drivers/emm_motor/emm_motor.c ****         absSpeed = 0x04FF;
- 918              		.loc 1 147 18 view .LVU140
- 919 0010 40F2FF43 		movw	r3, #1279
- 920              	.LVL62:
- 921              	.L66:
- 148:cooneo_Drivers/emm_motor/emm_motor.c ****     }
- 149:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 150:cooneo_Drivers/emm_motor/emm_motor.c ****     // 设置方向位（最高半字节）
- 151:cooneo_Drivers/emm_motor/emm_motor.c ****     // 假设：正数为正转（0x0），负数为反转（0x1）
- 152:cooneo_Drivers/emm_motor/emm_motor.c ****     directionSpeed = (speed >= 0) ? 0x0000 : 0x1000;
- 922              		.loc 1 152 5 is_stmt 1 view .LVU141
- 923              		.loc 1 152 20 is_stmt 0 view .LVU142
- 924 0014 0028     		cmp	r0, #0
- 925 0016 02DB     		blt	.L69
- 926              		.loc 1 152 20 discriminator 1 view .LVU143
- 927 0018 0020     		movs	r0, #0
- 928              	.LVL63:
- 929              	.L67:
+ 129:cooneo_Drivers/emm_motor/emm_motor.c ****     
+ 130:cooneo_Drivers/emm_motor/emm_motor.c ****     //double desiredAngle = 90.0; // 目标旋转角度
+ 131:cooneo_Drivers/emm_motor/emm_motor.c ****     //desiredAngle = 180;
+ 132:cooneo_Drivers/emm_motor/emm_motor.c ****     double anglePerPulse = 1.8 / 16; // 每个脉冲的旋转角度
+ 870              		.loc 1 132 5 is_stmt 1 view .LVU124
+ 871              	.LVL55:
+ 133:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t directionSpeed ; // 设置一个方向和速度值
+ 872              		.loc 1 133 5 view .LVU125
+ 134:cooneo_Drivers/emm_motor/emm_motor.c ****     uint8_t acceleration = 0x01; // 设置加速度值sss
+ 873              		.loc 1 134 5 view .LVU126
+ 135:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 136:cooneo_Drivers/emm_motor/emm_motor.c ****     // 根据desiredAngle的符号设置方向
+ 137:cooneo_Drivers/emm_motor/emm_motor.c ****     // if(desiredAngle >= 0) {
+ 138:cooneo_Drivers/emm_motor/emm_motor.c ****     //     directionSpeed = 0x0100;  // 正方向
+ 139:cooneo_Drivers/emm_motor/emm_motor.c ****     // } else {
+ 140:cooneo_Drivers/emm_motor/emm_motor.c ****     //     directionSpeed = 0x0000;  // 负方向
+ 141:cooneo_Drivers/emm_motor/emm_motor.c ****     // }
+ 142:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 143:cooneo_Drivers/emm_motor/emm_motor.c ****     //   // 设置速度和方向
+ 144:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
+ 874              		.loc 1 144 5 view .LVU127
+ 145:cooneo_Drivers/emm_motor/emm_motor.c ****     if(desiredAngle >= 0) {
+ 875              		.loc 1 145 5 view .LVU128
+ 876              		.loc 1 145 7 is_stmt 0 view .LVU129
+ 877 0008 0022     		movs	r2, #0
+ 878 000a 0023     		movs	r3, #0
+ 879 000c 2046     		mov	r0, r4
+ 880              	.LVL56:
+ 881              		.loc 1 145 7 view .LVU130
+ 882 000e 2946     		mov	r1, r5
+ 883 0010 FFF7FEFF 		bl	__aeabi_dcmpge
+ 884              	.LVL57:
+ 885              		.loc 1 145 7 view .LVU131
+ 886 0014 98B1     		cbz	r0, .L64
+ 146:cooneo_Drivers/emm_motor/emm_motor.c ****         // 正方向
+ 147:cooneo_Drivers/emm_motor/emm_motor.c ****         directionSpeed = (0x1 << 12) | speed;  // 方向位设置为1，其他位设置速度值
+ 887              		.loc 1 147 24 view .LVU132
+ 888 0016 41F2FF47 		movw	r7, #5375
+ 889              	.L60:
+ 890              	.LVL58:
+ 148:cooneo_Drivers/emm_motor/emm_motor.c ****     } else {
+ 149:cooneo_Drivers/emm_motor/emm_motor.c ****         // 负方向
+ 150:cooneo_Drivers/emm_motor/emm_motor.c ****         directionSpeed = speed;  // 方向位设置为0（因为是负数），其他位设置速�
+ 151:cooneo_Drivers/emm_motor/emm_motor.c ****     }
+ 152:cooneo_Drivers/emm_motor/emm_motor.c **** 
  153:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 154:cooneo_Drivers/emm_motor/emm_motor.c ****     // 结合方向和速度
- 155:cooneo_Drivers/emm_motor/emm_motor.c ****     directionSpeed |= absSpeed;
- 930              		.loc 1 155 5 is_stmt 1 view .LVU144
- 156:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 157:cooneo_Drivers/emm_motor/emm_motor.c ****     return directionSpeed;
- 931              		.loc 1 157 5 view .LVU145
- 158:cooneo_Drivers/emm_motor/emm_motor.c **** }
- 932              		.loc 1 158 1 is_stmt 0 view .LVU146
- 933 001a 1843     		orrs	r0, r0, r3
- 934              	.LVL64:
- 935              		.loc 1 158 1 view .LVU147
- 936 001c 7047     		bx	lr
- 937              	.LVL65:
- 938              	.L69:
- 152:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 939              		.loc 1 152 20 discriminator 2 view .LVU148
- 940 001e 4FF48050 		mov	r0, #4096
- 941              	.LVL66:
- 152:cooneo_Drivers/emm_motor/emm_motor.c **** 
- 942              		.loc 1 152 20 discriminator 2 view .LVU149
- 943 0022 FAE7     		b	.L67
- 944              		.cfi_endproc
- 945              	.LFE259:
- 947              		.global	f7
- 948              		.section	.bss.f7,"aw",%nobits
- 949              		.align	2
- 952              	f7:
- 953 0000 00000000 		.space	4
- 954              		.global	f6
- 955              		.section	.bss.f6,"aw",%nobits
- 956              		.align	2
-ARM GAS  /tmp/ccYmLYLe.s 			page 20
+ 154:cooneo_Drivers/emm_motor/emm_motor.c ****     // 计算脉冲数
+ 155:cooneo_Drivers/emm_motor/emm_motor.c ****     uint32_t pulseCount = calculatePulseCount(desiredAngle, anglePerPulse);
+ 891              		.loc 1 155 5 is_stmt 1 view .LVU133
+ 892              		.loc 1 155 27 is_stmt 0 view .LVU134
+ 893 001a 9FED0B1B 		vldr.64	d1, .L66
+ 894 001e 45EC104B 		vmov	d0, r4, r5
+ 895 0022 FFF7FEFF 		bl	calculatePulseCount
+ 896              	.LVL59:
+ 897 0026 0346     		mov	r3, r0
+ 898              	.LVL60:
+ 156:cooneo_Drivers/emm_motor/emm_motor.c ****     emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
+ARM GAS  /tmp/cc0UY95u.s 			page 19
 
 
- 959              	f6:
- 960 0000 00000000 		.space	4
- 961              		.global	f5
- 962              		.section	.bss.f5,"aw",%nobits
- 963              		.align	2
- 966              	f5:
- 967 0000 00000000 		.space	4
- 968              		.global	f4
- 969              		.section	.bss.f4,"aw",%nobits
- 970              		.align	2
- 973              	f4:
- 974 0000 00000000 		.space	4
- 975              		.global	f3
- 976              		.section	.bss.f3,"aw",%nobits
- 977              		.align	2
- 980              	f3:
- 981 0000 00000000 		.space	4
- 982              		.global	f2
- 983              		.section	.bss.f2,"aw",%nobits
- 984              		.align	2
- 987              	f2:
- 988 0000 00000000 		.space	4
- 989              		.global	f1
- 990              		.section	.bss.f1,"aw",%nobits
- 991              		.align	2
- 994              	f1:
- 995 0000 00000000 		.space	4
- 996              		.text
- 997              	.Letext0:
- 998              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 999              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 1000              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 1001              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 1002              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 1003              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 1004              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 1005              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
- 1006              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 1007              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
- 1008              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 1009              		.file 13 "Core/Inc/usart.h"
-ARM GAS  /tmp/ccYmLYLe.s 			page 21
+ 899              		.loc 1 156 5 is_stmt 1 view .LVU135
+ 900 0028 0122     		movs	r2, #1
+ 901 002a 3946     		mov	r1, r7
+ 902 002c 3046     		mov	r0, r6
+ 903              	.LVL61:
+ 904              		.loc 1 156 5 is_stmt 0 view .LVU136
+ 905 002e FFF7FEFF 		bl	emm_ControlMotorRelativeAngle
+ 906              	.LVL62:
+ 157:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 158:cooneo_Drivers/emm_motor/emm_motor.c ****     motorAngles[motorId] = desiredAngle;
+ 907              		.loc 1 158 5 is_stmt 1 view .LVU137
+ 908              		.loc 1 158 26 is_stmt 0 view .LVU138
+ 909 0032 074B     		ldr	r3, .L66+8
+ 910 0034 03EBC603 		add	r3, r3, r6, lsl #3
+ 911 0038 C3E90045 		strd	r4, [r3]
+ 159:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 912              		.loc 1 159 1 view .LVU139
+ 913 003c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 914              	.LVL63:
+ 915              	.L64:
+ 150:cooneo_Drivers/emm_motor/emm_motor.c ****     }
+ 916              		.loc 1 150 24 view .LVU140
+ 917 003e 40F2FF47 		movw	r7, #1279
+ 918 0042 EAE7     		b	.L60
+ 919              	.L67:
+ 920 0044 AFF30080 		.align	3
+ 921              	.L66:
+ 922 0048 CDCCCCCC 		.word	-858993459
+ 923 004c CCCCBC3F 		.word	1069337804
+ 924 0050 00000000 		.word	motorAngles
+ 925              		.cfi_endproc
+ 926              	.LFE258:
+ 928              		.section	.text.convertToDirectionSpeed,"ax",%progbits
+ 929              		.align	1
+ 930              		.global	convertToDirectionSpeed
+ 931              		.syntax unified
+ 932              		.thumb
+ 933              		.thumb_func
+ 935              	convertToDirectionSpeed:
+ 936              	.LVL64:
+ 937              	.LFB259:
+ 160:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 161:cooneo_Drivers/emm_motor/emm_motor.c **** // tools
+ 162:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 163:cooneo_Drivers/emm_motor/emm_motor.c **** uint16_t convertToDirectionSpeed(int speed) {
+ 938              		.loc 1 163 45 is_stmt 1 view -0
+ 939              		.cfi_startproc
+ 940              		@ args = 0, pretend = 0, frame = 0
+ 941              		@ frame_needed = 0, uses_anonymous_args = 0
+ 942              		@ link register save eliminated.
+ 164:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t directionSpeed;
+ 943              		.loc 1 164 5 view .LVU142
+ 165:cooneo_Drivers/emm_motor/emm_motor.c ****     uint16_t absSpeed = (speed >= 0) ? speed : -speed; // 获取速度的绝对值
+ 944              		.loc 1 165 5 view .LVU143
+ 945              		.loc 1 165 46 is_stmt 0 view .LVU144
+ 946 0000 80EAE073 		eor	r3, r0, r0, asr #31
+ 947 0004 A3EBE073 		sub	r3, r3, r0, asr #31
+ARM GAS  /tmp/cc0UY95u.s 			page 20
+
+
+ 948              		.loc 1 165 14 view .LVU145
+ 949 0008 9BB2     		uxth	r3, r3
+ 950              	.LVL65:
+ 166:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 167:cooneo_Drivers/emm_motor/emm_motor.c ****     // 限制速度值范围（例如，电机的实际速度范围可能是 0x0000 - 0x04FF）
+ 168:cooneo_Drivers/emm_motor/emm_motor.c ****     if (absSpeed > 0x04FF) {
+ 951              		.loc 1 168 5 is_stmt 1 view .LVU146
+ 952              		.loc 1 168 8 is_stmt 0 view .LVU147
+ 953 000a B3F5A06F 		cmp	r3, #1280
+ 954 000e 01D3     		bcc	.L69
+ 169:cooneo_Drivers/emm_motor/emm_motor.c ****         absSpeed = 0x04FF;
+ 955              		.loc 1 169 18 view .LVU148
+ 956 0010 40F2FF43 		movw	r3, #1279
+ 957              	.LVL66:
+ 958              	.L69:
+ 170:cooneo_Drivers/emm_motor/emm_motor.c ****     }
+ 171:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 172:cooneo_Drivers/emm_motor/emm_motor.c ****     // 设置方向位（最高半字节）
+ 173:cooneo_Drivers/emm_motor/emm_motor.c ****     // 假设：正数为正转（0x0），负数为反转（0x1）
+ 174:cooneo_Drivers/emm_motor/emm_motor.c ****     directionSpeed = (speed >= 0) ? 0x0000 : 0x1000;
+ 959              		.loc 1 174 5 is_stmt 1 view .LVU149
+ 960              		.loc 1 174 20 is_stmt 0 view .LVU150
+ 961 0014 0028     		cmp	r0, #0
+ 962 0016 02DB     		blt	.L72
+ 963              		.loc 1 174 20 discriminator 1 view .LVU151
+ 964 0018 0020     		movs	r0, #0
+ 965              	.LVL67:
+ 966              	.L70:
+ 175:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 176:cooneo_Drivers/emm_motor/emm_motor.c ****     // 结合方向和速度
+ 177:cooneo_Drivers/emm_motor/emm_motor.c ****     directionSpeed |= absSpeed;
+ 967              		.loc 1 177 5 is_stmt 1 view .LVU152
+ 178:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 179:cooneo_Drivers/emm_motor/emm_motor.c ****     return directionSpeed;
+ 968              		.loc 1 179 5 view .LVU153
+ 180:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 969              		.loc 1 180 1 is_stmt 0 view .LVU154
+ 970 001a 1843     		orrs	r0, r0, r3
+ 971              	.LVL68:
+ 972              		.loc 1 180 1 view .LVU155
+ 973 001c 7047     		bx	lr
+ 974              	.LVL69:
+ 975              	.L72:
+ 174:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 976              		.loc 1 174 20 discriminator 2 view .LVU156
+ 977 001e 4FF48050 		mov	r0, #4096
+ 978              	.LVL70:
+ 174:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 979              		.loc 1 174 20 discriminator 2 view .LVU157
+ 980 0022 FAE7     		b	.L70
+ 981              		.cfi_endproc
+ 982              	.LFE259:
+ 984              		.global	__aeabi_dadd
+ 985              		.section	.text.emm_UpdateMotorAngle,"ax",%progbits
+ 986              		.align	1
+ 987              		.global	emm_UpdateMotorAngle
+ 988              		.syntax unified
+ARM GAS  /tmp/cc0UY95u.s 			page 21
+
+
+ 989              		.thumb
+ 990              		.thumb_func
+ 992              	emm_UpdateMotorAngle:
+ 993              	.LVL71:
+ 994              	.LFB260:
+ 181:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 182:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 183:cooneo_Drivers/emm_motor/emm_motor.c **** // 函数用于累加电机角度，用于多次运动后的角度计算
+ 184:cooneo_Drivers/emm_motor/emm_motor.c **** void emm_UpdateMotorAngle(uint8_t motorId, double additionalAngle) {
+ 995              		.loc 1 184 68 is_stmt 1 view -0
+ 996              		.cfi_startproc
+ 997              		@ args = 0, pretend = 0, frame = 0
+ 998              		@ frame_needed = 0, uses_anonymous_args = 0
+ 999              		.loc 1 184 68 is_stmt 0 view .LVU159
+ 1000 0000 38B5     		push	{r3, r4, r5, lr}
+ 1001              	.LCFI44:
+ 1002              		.cfi_def_cfa_offset 16
+ 1003              		.cfi_offset 3, -16
+ 1004              		.cfi_offset 4, -12
+ 1005              		.cfi_offset 5, -8
+ 1006              		.cfi_offset 14, -4
+ 1007 0002 0446     		mov	r4, r0
+ 1008 0004 53EC102B 		vmov	r2, r3, d0
+ 185:cooneo_Drivers/emm_motor/emm_motor.c ****     // 更新电机角度
+ 186:cooneo_Drivers/emm_motor/emm_motor.c ****     motorAngles[motorId] += additionalAngle;
+ 1009              		.loc 1 186 5 is_stmt 1 view .LVU160
+ 1010              		.loc 1 186 16 is_stmt 0 view .LVU161
+ 1011 0008 074D     		ldr	r5, .L75
+ 1012 000a 05EBC005 		add	r5, r5, r0, lsl #3
+ 1013              		.loc 1 186 26 view .LVU162
+ 1014 000e D5E90001 		ldrd	r0, [r5]
+ 1015              	.LVL72:
+ 1016              		.loc 1 186 26 view .LVU163
+ 1017 0012 FFF7FEFF 		bl	__aeabi_dadd
+ 1018              	.LVL73:
+ 1019              		.loc 1 186 26 view .LVU164
+ 1020 0016 41EC100B 		vmov	d0, r0, r1
+ 1021 001a C5E90001 		strd	r0, [r5]
+ 187:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 188:cooneo_Drivers/emm_motor/emm_motor.c ****     // // 在实际应用中，可能还需要考虑角度的周期性，例如360度后回到0度
+ 189:cooneo_Drivers/emm_motor/emm_motor.c ****     // motorAngles[motorId] = fmod(motorAngles[motorId], 360.0);
+ 190:cooneo_Drivers/emm_motor/emm_motor.c **** 
+ 191:cooneo_Drivers/emm_motor/emm_motor.c ****     // 确保电机转动到新的位置
+ 192:cooneo_Drivers/emm_motor/emm_motor.c ****     emm_ControlMotorToAngle(motorId, motorAngles[motorId]);
+ 1022              		.loc 1 192 5 is_stmt 1 view .LVU165
+ 1023 001e 2046     		mov	r0, r4
+ 1024 0020 FFF7FEFF 		bl	emm_ControlMotorToAngle
+ 1025              	.LVL74:
+ 193:cooneo_Drivers/emm_motor/emm_motor.c **** }
+ 1026              		.loc 1 193 1 is_stmt 0 view .LVU166
+ 1027 0024 38BD     		pop	{r3, r4, r5, pc}
+ 1028              	.LVL75:
+ 1029              	.L76:
+ 1030              		.loc 1 193 1 view .LVU167
+ 1031 0026 00BF     		.align	2
+ 1032              	.L75:
+ 1033 0028 00000000 		.word	motorAngles
+ARM GAS  /tmp/cc0UY95u.s 			page 22
+
+
+ 1034              		.cfi_endproc
+ 1035              	.LFE260:
+ 1037              		.global	f7
+ 1038              		.section	.bss.f7,"aw",%nobits
+ 1039              		.align	2
+ 1042              	f7:
+ 1043 0000 00000000 		.space	4
+ 1044              		.global	f6
+ 1045              		.section	.bss.f6,"aw",%nobits
+ 1046              		.align	2
+ 1049              	f6:
+ 1050 0000 00000000 		.space	4
+ 1051              		.global	f5
+ 1052              		.section	.bss.f5,"aw",%nobits
+ 1053              		.align	2
+ 1056              	f5:
+ 1057 0000 00000000 		.space	4
+ 1058              		.global	f4
+ 1059              		.section	.bss.f4,"aw",%nobits
+ 1060              		.align	2
+ 1063              	f4:
+ 1064 0000 00000000 		.space	4
+ 1065              		.global	f3
+ 1066              		.section	.bss.f3,"aw",%nobits
+ 1067              		.align	2
+ 1070              	f3:
+ 1071 0000 00000000 		.space	4
+ 1072              		.global	f2
+ 1073              		.section	.bss.f2,"aw",%nobits
+ 1074              		.align	2
+ 1077              	f2:
+ 1078 0000 00000000 		.space	4
+ 1079              		.global	f1
+ 1080              		.section	.bss.f1,"aw",%nobits
+ 1081              		.align	2
+ 1084              	f1:
+ 1085 0000 00000000 		.space	4
+ 1086              		.global	motorAngles
+ 1087              		.section	.bss.motorAngles,"aw",%nobits
+ 1088              		.align	3
+ 1091              	motorAngles:
+ 1092 0000 00000000 		.space	24
+ 1092      00000000 
+ 1092      00000000 
+ 1092      00000000 
+ 1092      00000000 
+ 1093              		.text
+ 1094              	.Letext0:
+ 1095              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1096              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1097              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1098              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 1099              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 1100              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 1101              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 1102              		.file 9 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 1103              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ARM GAS  /tmp/cc0UY95u.s 			page 23
+
+
+ 1104              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 1105              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 1106              		.file 13 "Core/Inc/usart.h"
+ARM GAS  /tmp/cc0UY95u.s 			page 24
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 emm_motor.c
-     /tmp/ccYmLYLe.s:21     .text.emm_TriggerEncoderCalibration:00000000 $t
-     /tmp/ccYmLYLe.s:27     .text.emm_TriggerEncoderCalibration:00000000 emm_TriggerEncoderCalibration
-     /tmp/ccYmLYLe.s:69     .text.emm_TriggerEncoderCalibration:00000030 $d
-     /tmp/ccYmLYLe.s:74     .text.emm_SetCurrentPositionToZero:00000000 $t
-     /tmp/ccYmLYLe.s:80     .text.emm_SetCurrentPositionToZero:00000000 emm_SetCurrentPositionToZero
-     /tmp/ccYmLYLe.s:121    .text.emm_SetCurrentPositionToZero:0000002c $d
-     /tmp/ccYmLYLe.s:126    .text.emmReleaseStallProtection:00000000 $t
-     /tmp/ccYmLYLe.s:132    .text.emmReleaseStallProtection:00000000 emmReleaseStallProtection
-     /tmp/ccYmLYLe.s:174    .text.emmReleaseStallProtection:00000030 $d
-     /tmp/ccYmLYLe.s:179    .text.emm_ReadEncoderValue:00000000 $t
-     /tmp/ccYmLYLe.s:185    .text.emm_ReadEncoderValue:00000000 emm_ReadEncoderValue
-     /tmp/ccYmLYLe.s:231    .text.emm_ReadEncoderValue:00000030 $d
-     /tmp/ccYmLYLe.s:994    .bss.f1:00000000 f1
-     /tmp/ccYmLYLe.s:237    .text.emm_ReadInputPulses:00000000 $t
-     /tmp/ccYmLYLe.s:243    .text.emm_ReadInputPulses:00000000 emm_ReadInputPulses
-     /tmp/ccYmLYLe.s:289    .text.emm_ReadInputPulses:00000030 $d
-     /tmp/ccYmLYLe.s:987    .bss.f2:00000000 f2
-     /tmp/ccYmLYLe.s:295    .text.emm_ReadMotorRealTimePosition:00000000 $t
-     /tmp/ccYmLYLe.s:301    .text.emm_ReadMotorRealTimePosition:00000000 emm_ReadMotorRealTimePosition
-     /tmp/ccYmLYLe.s:347    .text.emm_ReadMotorRealTimePosition:00000030 $d
-     /tmp/ccYmLYLe.s:980    .bss.f3:00000000 f3
-     /tmp/ccYmLYLe.s:353    .text.emm_ReadPositionError:00000000 $t
-     /tmp/ccYmLYLe.s:359    .text.emm_ReadPositionError:00000000 emm_ReadPositionError
-     /tmp/ccYmLYLe.s:399    .text.emm_ReadPositionError:00000028 $d
-     /tmp/ccYmLYLe.s:404    .text.emm_ReadEnableStatus:00000000 $t
-     /tmp/ccYmLYLe.s:410    .text.emm_ReadEnableStatus:00000000 emm_ReadEnableStatus
-     /tmp/ccYmLYLe.s:450    .text.emm_ReadEnableStatus:00000028 $d
-     /tmp/ccYmLYLe.s:455    .text.emm_ReadStallFlag:00000000 $t
-     /tmp/ccYmLYLe.s:461    .text.emm_ReadStallFlag:00000000 emm_ReadStallFlag
-     /tmp/ccYmLYLe.s:501    .text.emm_ReadStallFlag:00000028 $d
-     /tmp/ccYmLYLe.s:506    .text.emm_ReadAutoHomeStatus:00000000 $t
-     /tmp/ccYmLYLe.s:512    .text.emm_ReadAutoHomeStatus:00000000 emm_ReadAutoHomeStatus
-     /tmp/ccYmLYLe.s:552    .text.emm_ReadAutoHomeStatus:00000028 $d
-     /tmp/ccYmLYLe.s:557    .text.emm_ControlMotorEnable:00000000 $t
-     /tmp/ccYmLYLe.s:563    .text.emm_ControlMotorEnable:00000000 emm_ControlMotorEnable
-     /tmp/ccYmLYLe.s:606    .text.emm_ControlMotorEnable:0000002c $d
-     /tmp/ccYmLYLe.s:611    .text.emm_ControlMotorDirectionSpeed:00000000 $t
-     /tmp/ccYmLYLe.s:617    .text.emm_ControlMotorDirectionSpeed:00000000 emm_ControlMotorDirectionSpeed
-     /tmp/ccYmLYLe.s:665    .text.emm_ControlMotorDirectionSpeed:00000034 $d
-     /tmp/ccYmLYLe.s:670    .text.emm_StoreOrClearParameters:00000000 $t
-     /tmp/ccYmLYLe.s:676    .text.emm_StoreOrClearParameters:00000000 emm_StoreOrClearParameters
-     /tmp/ccYmLYLe.s:719    .text.emm_StoreOrClearParameters:0000002c $d
-     /tmp/ccYmLYLe.s:724    .text.emm_ControlMotorRelativeAngle:00000000 $t
-     /tmp/ccYmLYLe.s:730    .text.emm_ControlMotorRelativeAngle:00000000 emm_ControlMotorRelativeAngle
-     /tmp/ccYmLYLe.s:788    .text.emm_ControlMotorRelativeAngle:00000048 $d
-     /tmp/ccYmLYLe.s:796    .text.calculatePulseCount:00000000 $t
-     /tmp/ccYmLYLe.s:802    .text.calculatePulseCount:00000000 calculatePulseCount
-     /tmp/ccYmLYLe.s:834    .text.calculatePulseCount:0000001c $d
-     /tmp/ccYmLYLe.s:839    .text.emm_ControlMotorToAngle:00000000 $t
-     /tmp/ccYmLYLe.s:845    .text.emm_ControlMotorToAngle:00000000 emm_ControlMotorToAngle
-     /tmp/ccYmLYLe.s:886    .text.emm_ControlMotorToAngle:00000020 $d
-     /tmp/ccYmLYLe.s:892    .text.convertToDirectionSpeed:00000000 $t
-     /tmp/ccYmLYLe.s:898    .text.convertToDirectionSpeed:00000000 convertToDirectionSpeed
-     /tmp/ccYmLYLe.s:952    .bss.f7:00000000 f7
-     /tmp/ccYmLYLe.s:949    .bss.f7:00000000 $d
-ARM GAS  /tmp/ccYmLYLe.s 			page 22
+     /tmp/cc0UY95u.s:21     .text.emm_TriggerEncoderCalibration:00000000 $t
+     /tmp/cc0UY95u.s:27     .text.emm_TriggerEncoderCalibration:00000000 emm_TriggerEncoderCalibration
+     /tmp/cc0UY95u.s:69     .text.emm_TriggerEncoderCalibration:00000030 $d
+     /tmp/cc0UY95u.s:74     .text.emm_SetCurrentPositionToZero:00000000 $t
+     /tmp/cc0UY95u.s:80     .text.emm_SetCurrentPositionToZero:00000000 emm_SetCurrentPositionToZero
+     /tmp/cc0UY95u.s:121    .text.emm_SetCurrentPositionToZero:0000002c $d
+     /tmp/cc0UY95u.s:126    .text.emmReleaseStallProtection:00000000 $t
+     /tmp/cc0UY95u.s:132    .text.emmReleaseStallProtection:00000000 emmReleaseStallProtection
+     /tmp/cc0UY95u.s:174    .text.emmReleaseStallProtection:00000030 $d
+     /tmp/cc0UY95u.s:179    .text.emm_ReadEncoderValue:00000000 $t
+     /tmp/cc0UY95u.s:185    .text.emm_ReadEncoderValue:00000000 emm_ReadEncoderValue
+     /tmp/cc0UY95u.s:231    .text.emm_ReadEncoderValue:00000030 $d
+     /tmp/cc0UY95u.s:1084   .bss.f1:00000000 f1
+     /tmp/cc0UY95u.s:237    .text.emm_ReadInputPulses:00000000 $t
+     /tmp/cc0UY95u.s:243    .text.emm_ReadInputPulses:00000000 emm_ReadInputPulses
+     /tmp/cc0UY95u.s:289    .text.emm_ReadInputPulses:00000030 $d
+     /tmp/cc0UY95u.s:1077   .bss.f2:00000000 f2
+     /tmp/cc0UY95u.s:295    .text.emm_ReadMotorRealTimePosition:00000000 $t
+     /tmp/cc0UY95u.s:301    .text.emm_ReadMotorRealTimePosition:00000000 emm_ReadMotorRealTimePosition
+     /tmp/cc0UY95u.s:347    .text.emm_ReadMotorRealTimePosition:00000030 $d
+     /tmp/cc0UY95u.s:1070   .bss.f3:00000000 f3
+     /tmp/cc0UY95u.s:353    .text.emm_ReadPositionError:00000000 $t
+     /tmp/cc0UY95u.s:359    .text.emm_ReadPositionError:00000000 emm_ReadPositionError
+     /tmp/cc0UY95u.s:399    .text.emm_ReadPositionError:00000028 $d
+     /tmp/cc0UY95u.s:404    .text.emm_ReadEnableStatus:00000000 $t
+     /tmp/cc0UY95u.s:410    .text.emm_ReadEnableStatus:00000000 emm_ReadEnableStatus
+     /tmp/cc0UY95u.s:450    .text.emm_ReadEnableStatus:00000028 $d
+     /tmp/cc0UY95u.s:455    .text.emm_ReadStallFlag:00000000 $t
+     /tmp/cc0UY95u.s:461    .text.emm_ReadStallFlag:00000000 emm_ReadStallFlag
+     /tmp/cc0UY95u.s:501    .text.emm_ReadStallFlag:00000028 $d
+     /tmp/cc0UY95u.s:506    .text.emm_ReadAutoHomeStatus:00000000 $t
+     /tmp/cc0UY95u.s:512    .text.emm_ReadAutoHomeStatus:00000000 emm_ReadAutoHomeStatus
+     /tmp/cc0UY95u.s:552    .text.emm_ReadAutoHomeStatus:00000028 $d
+     /tmp/cc0UY95u.s:557    .text.emm_ControlMotorEnable:00000000 $t
+     /tmp/cc0UY95u.s:563    .text.emm_ControlMotorEnable:00000000 emm_ControlMotorEnable
+     /tmp/cc0UY95u.s:606    .text.emm_ControlMotorEnable:0000002c $d
+     /tmp/cc0UY95u.s:611    .text.emm_ControlMotorDirectionSpeed:00000000 $t
+     /tmp/cc0UY95u.s:617    .text.emm_ControlMotorDirectionSpeed:00000000 emm_ControlMotorDirectionSpeed
+     /tmp/cc0UY95u.s:665    .text.emm_ControlMotorDirectionSpeed:00000034 $d
+     /tmp/cc0UY95u.s:670    .text.emm_StoreOrClearParameters:00000000 $t
+     /tmp/cc0UY95u.s:676    .text.emm_StoreOrClearParameters:00000000 emm_StoreOrClearParameters
+     /tmp/cc0UY95u.s:719    .text.emm_StoreOrClearParameters:0000002c $d
+     /tmp/cc0UY95u.s:724    .text.emm_ControlMotorRelativeAngle:00000000 $t
+     /tmp/cc0UY95u.s:730    .text.emm_ControlMotorRelativeAngle:00000000 emm_ControlMotorRelativeAngle
+     /tmp/cc0UY95u.s:788    .text.emm_ControlMotorRelativeAngle:00000048 $d
+     /tmp/cc0UY95u.s:797    .text.calculatePulseCount:00000000 $t
+     /tmp/cc0UY95u.s:803    .text.calculatePulseCount:00000000 calculatePulseCount
+     /tmp/cc0UY95u.s:845    .text.emm_ControlMotorToAngle:00000000 $t
+     /tmp/cc0UY95u.s:851    .text.emm_ControlMotorToAngle:00000000 emm_ControlMotorToAngle
+     /tmp/cc0UY95u.s:922    .text.emm_ControlMotorToAngle:00000048 $d
+     /tmp/cc0UY95u.s:1091   .bss.motorAngles:00000000 motorAngles
+     /tmp/cc0UY95u.s:929    .text.convertToDirectionSpeed:00000000 $t
+     /tmp/cc0UY95u.s:935    .text.convertToDirectionSpeed:00000000 convertToDirectionSpeed
+     /tmp/cc0UY95u.s:986    .text.emm_UpdateMotorAngle:00000000 $t
+     /tmp/cc0UY95u.s:992    .text.emm_UpdateMotorAngle:00000000 emm_UpdateMotorAngle
+ARM GAS  /tmp/cc0UY95u.s 			page 25
 
 
-     /tmp/ccYmLYLe.s:959    .bss.f6:00000000 f6
-     /tmp/ccYmLYLe.s:956    .bss.f6:00000000 $d
-     /tmp/ccYmLYLe.s:966    .bss.f5:00000000 f5
-     /tmp/ccYmLYLe.s:963    .bss.f5:00000000 $d
-     /tmp/ccYmLYLe.s:973    .bss.f4:00000000 f4
-     /tmp/ccYmLYLe.s:970    .bss.f4:00000000 $d
-     /tmp/ccYmLYLe.s:977    .bss.f3:00000000 $d
-     /tmp/ccYmLYLe.s:984    .bss.f2:00000000 $d
-     /tmp/ccYmLYLe.s:991    .bss.f1:00000000 $d
+     /tmp/cc0UY95u.s:1033   .text.emm_UpdateMotorAngle:00000028 $d
+     /tmp/cc0UY95u.s:1042   .bss.f7:00000000 f7
+     /tmp/cc0UY95u.s:1039   .bss.f7:00000000 $d
+     /tmp/cc0UY95u.s:1049   .bss.f6:00000000 f6
+     /tmp/cc0UY95u.s:1046   .bss.f6:00000000 $d
+     /tmp/cc0UY95u.s:1056   .bss.f5:00000000 f5
+     /tmp/cc0UY95u.s:1053   .bss.f5:00000000 $d
+     /tmp/cc0UY95u.s:1063   .bss.f4:00000000 f4
+     /tmp/cc0UY95u.s:1060   .bss.f4:00000000 $d
+     /tmp/cc0UY95u.s:1067   .bss.f3:00000000 $d
+     /tmp/cc0UY95u.s:1074   .bss.f2:00000000 $d
+     /tmp/cc0UY95u.s:1081   .bss.f1:00000000 $d
+     /tmp/cc0UY95u.s:1088   .bss.motorAngles:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Transmit
 huart1
+__aeabi_d2iz
+__aeabi_i2d
 __aeabi_ddiv
-__aeabi_dadd
 __aeabi_d2uiz
+__aeabi_dcmpge
+__aeabi_dadd

@@ -9,7 +9,7 @@ extern "C" {
 #endif
 #include "include.h"
 
-#define MAX_DATA_LENGTH 10  
+#define MAX_DATA_LENGTH 10
 // 错误代码定义
 #define ERR_INVALID_DATA -1
 #define ERR_UNKNOWN_CMD -2
