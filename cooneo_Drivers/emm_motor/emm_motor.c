@@ -133,15 +133,19 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     uint16_t directionSpeed ; // 设置一个方向和速度值
     uint8_t acceleration = 0x01; // 设置加速度值sss
 
-    double currentAngle = motorAngles[motorId]; // 假设能实时获取电机当前角度
+    double currentAngle = motorAngles[motorId-1]; // 假设能实时获取电机当前角度
     // double angleToMove = desiredAngle - currentAngle; // 需要移动的角度
 
      // 确保目标角度在 -80 到 +80 度之间
-    if (desiredAngle > 70.0) desiredAngle = 70.0;
-    if (desiredAngle < -70.0) desiredAngle = -70.0;
+    // if (desiredAngle > 70.0) desiredAngle = 70.0;
+    // if (desiredAngle < -70.0) desiredAngle = -70.0;
+
+    if (desiredAngle > 90.0) desiredAngle = 90.0;
+    if (desiredAngle < 0) desiredAngle = 0;
+
 
     // 重新计算需要移动的角度
-    double angleToMove = currentAngle - desiredAngle ;
+    double angleToMove = desiredAngle - currentAngle;
 
     //   // 设置速度和方向
     uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
@@ -162,7 +166,7 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
         emm_ControlMotorRelativeAngle(motorId, directionSpeed, acceleration, pulseCount);
 
         // 更新全局变量以记录新的角度
-        motorAngles[motorId] = desiredAngle;
+        motorAngles[motorId-1] = desiredAngle;
         
     } else {
         // 如果已经在或非常接近目标角度，可能需要发送停止命令或不执行操作
@@ -197,12 +201,12 @@ uint16_t convertToDirectionSpeed(int speed) {
 // 函数用于累加电机角度，用于多次运动后的角度计算
 void emm_UpdateMotorAngle(uint8_t motorId, double additionalAngle) {
     // 更新电机角度
-    motorAngles[motorId] += additionalAngle;
+    motorAngles[motorId-1] += additionalAngle;
 
     // // 在实际应用中，可能还需要考虑角度的周期性，例如360度后回到0度
     // motorAngles[motorId] = fmod(motorAngles[motorId], 360.0);
 
     // 确保电机转动到新的位置
-    emm_ControlMotorToAngle(motorId, motorAngles[motorId]);
+    emm_ControlMotorToAngle(motorId, motorAngles[motorId-1]);
 }
 

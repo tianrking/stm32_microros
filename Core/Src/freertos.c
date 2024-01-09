@@ -189,7 +189,7 @@ int xx, yy, zz;
 
 double currentZ,currentX,currentY = 0; // 当前存储的 zz 值
 double lastZ,lastX,lastY = 0;    // 上一次的 zz 值
-
+double aa,bb,cc;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -416,32 +416,40 @@ void StartTask02(void *argument)
     //         dk->PlatformTri = 120;
 
     // DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
-    currentZ = zz;
-    currentY = yy;
-    currentX = xx;
+    // currentZ = zz;
+    // currentY = yy;
+    // currentX = xx;
     
-    if (lastZ != currentZ ||
-        lastY != currentY ||
-        lastX != currentX
-        )
-    {
-      DeltaKinematics_inverse(&dk, currentX, currentY, currentZ);
+    // if (lastZ != currentZ ||
+    //     lastY != currentY ||
+    //     lastX != currentX
+    //     )
+    // {
+    //   DeltaKinematics_inverse(&dk, currentX, currentY, currentZ);
 
-      emm_ControlMotorToAngle(1, dk.a);
-      osDelay(2);
-      emm_ControlMotorToAngle(2, dk.b); // 0-360
-      osDelay(2);
-      emm_ControlMotorToAngle(3, dk.c);
-      osDelay(2);
-    }
-    // emm_ControlMotorToAngle(3,desiredAngle);
+    //   emm_ControlMotorToAngle(1, dk.a);
+    //   osDelay(2);
+    //   emm_ControlMotorToAngle(2, dk.b); // 0-360
+    //   osDelay(2);
+    //   emm_ControlMotorToAngle(3, dk.c);
+    //   osDelay(2);
+    // }
+    // // emm_ControlMotorToAngle(3,desiredAngle);
 
-    lastZ = currentZ;
-    lastY = currentY;
-    lastX = currentX;
-    // dk->ArmLength = 232;
-    // emm_ReadMotorRealTimePosition(2);
-    // emm_ReadEncoderValue(2);  //f1
+    // lastZ = currentZ;
+    // lastY = currentY;
+    // lastX = currentX;
+    // // dk->ArmLength = 232;
+    // // emm_ReadMotorRealTimePosition(2);
+    // // emm_ReadEncoderValue(2);  //f1
+
+      emm_ControlMotorToAngle(1, aa);
+      osDelay(2);
+      emm_ControlMotorToAngle(2, aa); // 0-90
+      osDelay(2);
+      emm_ControlMotorToAngle(3, aa);
+      osDelay(2);
+      osDelay(2000);
   }
   /* USER CODE END StartTask02 */
 }
