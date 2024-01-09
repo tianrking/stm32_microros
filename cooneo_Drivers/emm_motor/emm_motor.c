@@ -141,11 +141,11 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
     if (desiredAngle < -70.0) desiredAngle = -70.0;
 
     // 重新计算需要移动的角度
-    double angleToMove = desiredAngle - currentAngle;
+    double angleToMove = currentAngle - desiredAngle ;
 
     //   // 设置速度和方向
     uint16_t speed = 0x4FF; // 假设这是您希望使用的速度档位
-    if(desiredAngle >= 0) {
+    if(angleToMove >= 0) {
         // 正方向
         directionSpeed = (0x1 << 12) | speed;  // 方向位设置为1，其他位设置速度值
     } else {
@@ -163,6 +163,7 @@ void emm_ControlMotorToAngle(uint8_t motorId, double desiredAngle) {
 
         // 更新全局变量以记录新的角度
         motorAngles[motorId] = desiredAngle;
+        
     } else {
         // 如果已经在或非常接近目标角度，可能需要发送停止命令或不执行操作
         // 这里发送停止命令或者不做任何事情

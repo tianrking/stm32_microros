@@ -88,37 +88,37 @@ void wheel_speeds_callback(const void *msgin);
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[ 7000 ];
+uint32_t defaultTaskBuffer[7000];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
-  .cb_mem = &defaultTaskControlBlock,
-  .cb_size = sizeof(defaultTaskControlBlock),
-  .stack_mem = &defaultTaskBuffer[0],
-  .stack_size = sizeof(defaultTaskBuffer),
-  .priority = (osPriority_t) osPriorityNormal,
+    .name = "defaultTask",
+    .cb_mem = &defaultTaskControlBlock,
+    .cb_size = sizeof(defaultTaskControlBlock),
+    .stack_mem = &defaultTaskBuffer[0],
+    .stack_size = sizeof(defaultTaskBuffer),
+    .priority = (osPriority_t)osPriorityNormal,
 };
 /* Definitions for PWM_Task */
 osThreadId_t PWM_TaskHandle;
-uint32_t pwmcontroltaskBuffer[ 3000 ];
+uint32_t pwmcontroltaskBuffer[3000];
 osStaticThreadDef_t pwmcontroltaskControlBlock;
 const osThreadAttr_t PWM_Task_attributes = {
-  .name = "PWM_Task",
-  .cb_mem = &pwmcontroltaskControlBlock,
-  .cb_size = sizeof(pwmcontroltaskControlBlock),
-  .stack_mem = &pwmcontroltaskBuffer[0],
-  .stack_size = sizeof(pwmcontroltaskBuffer),
-  .priority = (osPriority_t) osPriorityLow,
+    .name = "PWM_Task",
+    .cb_mem = &pwmcontroltaskControlBlock,
+    .cb_size = sizeof(pwmcontroltaskControlBlock),
+    .stack_mem = &pwmcontroltaskBuffer[0],
+    .stack_size = sizeof(pwmcontroltaskBuffer),
+    .priority = (osPriority_t)osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-uint16_t lowSpeed = 0x0100; // 举例设置一个低速值，需要根据实际情况调整
+uint16_t lowSpeed = 0x0100;  // 举例设置一个低速值，需要根据实际情况调整
 uint8_t acceleration = 0x01; // 设置一个低加速度，需要根据实际情况调整
 int desiredSpeed = 10;
 double desiredAngle;
 
-#define no_error 1 
+#define no_error 1
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -127,11 +127,12 @@ void StartTask02(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
-void MX_FREERTOS_Init(void) {
+ * @brief  FreeRTOS initialization
+ * @param  None
+ * @retval None
+ */
+void MX_FREERTOS_Init(void)
+{
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -166,7 +167,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
-
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -184,14 +184,17 @@ extern std_msgs__msg__Int32 current_state_msg;
 extern int desired_state;
 
 DeltaKinematics dk;
-int uu1,uu2,uu3;
-int xx,yy,zz;
+int uu1, uu2, uu3;
+int xx, yy, zz;
+
+double currentZ,currentX,currentY = 0; // 当前存储的 zz 值
+double lastZ,lastX,lastY = 0;    // 上一次的 zz 值
 
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  //LCD_Init();
+  // LCD_Init();
   rmw_uros_set_custom_transport(
       true,
       (void *)&huart2,
@@ -285,7 +288,7 @@ void StartDefaultTask(void *argument)
   //   // 错误处理
   //   printf("Error initializing 'wheel_speeds' subscription (line %d)\n", __LINE__);
   // }
-  
+
   rclc_subscription_init_default(
       &status_set_subscription,
       &node,
@@ -296,29 +299,27 @@ void StartDefaultTask(void *argument)
   // rclc_executor_t executor;
   rclc_executor_init(&executor, &support.context, 5, &allocator);
   rclc_executor_add_subscription(
-    &executor, 
-    &status_set_subscription, 
-    &status_set_msg,  // 假设这是新增的需要的参数，代表消息类型
-    &status_set_callback, 
-    ON_NEW_DATA
-  );
+      &executor,
+      &status_set_subscription,
+      &status_set_msg, // 假设这是新增的需要的参数，代表消息类型
+      &status_set_callback,
+      ON_NEW_DATA);
 
   // // 添加状态设置订阅者到执行器
   // rclc_executor_add_subscription(
-  //     &executor, 
-  //     &status_set_subscription, 
-  //     &status_set_msg, 
-  //     &status_set_callback, 
+  //     &executor,
+  //     &status_set_subscription,
+  //     &status_set_msg,
+  //     &status_set_callback,
   //     ON_NEW_DATA);
 
   // 添加电机速度订阅者到执行器
   rclc_executor_add_subscription(
-      &executor, 
-      &wheel_speeds_subscription, 
-      &wheel_speeds_msg, 
+      &executor,
+      &wheel_speeds_subscription,
+      &wheel_speeds_msg,
       NULL, // 确保这里不是NULL，应该是正确的回调函数
       ON_NEW_DATA);
-
 
   new_msg.data = 0;
   current_state_msg.data = 0;
@@ -344,7 +345,7 @@ void StartDefaultTask(void *argument)
     }
 
     // current_state_msg.data = desired_state;
-    //ret = rcl_publish(&current_state_publisher, &current_state_msg, NULL);
+    // ret = rcl_publish(&current_state_publisher, &current_state_msg, NULL);
     // if(msg.data % 100 == 0){
     //   // publish_current_state(msg.data);
     //   publish_current_state();
@@ -390,6 +391,7 @@ void StartTask02(void *argument)
   // static int delayTime = 2000;
   DeltaKinematics_Init(&dk, 232, 336, 119, 120);
   /* Infinite loop */
+  DeltaKinematics_Init(&dk, 232, 336, 119, 120); // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
   for (;;)
   {
 
@@ -406,20 +408,40 @@ void StartTask02(void *argument)
     //   Configure_TIM4_PWM_Frequency(value);
     //   osDelay(100);
     // }
-    osDelay(2000);
-    //emm_ControlMotorDirectionSpeed(2, convertToDirectionSpeed(desiredSpeed), acceleration);
-    emm_ControlMotorToAngle(2,desiredAngle); // 0-360
+    // osDelay(2000);
+    // emm_ControlMotorDirectionSpeed(2, convertToDirectionSpeed(desiredSpeed), acceleration);
+
+    //         dk->RodLength = 336;
+    //         dk->BassTri = 119;
+    //         dk->PlatformTri = 120;
+
+    // DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
+    currentZ = zz;
+    currentY = yy;
+    currentX = xx;
     
-// dk->ArmLength = 232;
-//         dk->RodLength = 336;
-//         dk->BassTri = 119;
-//         dk->PlatformTri = 120;
+    if (lastZ != currentZ ||
+        lastY != currentY ||
+        lastX != currentX
+        )
+    {
+      DeltaKinematics_inverse(&dk, currentX, currentY, currentZ);
 
-            DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
-            DeltaKinematics_inverse(&dk, 0, 0, zz);
-    //emm_ReadMotorRealTimePosition(2);
-    //emm_ReadEncoderValue(2);  //f1
+      emm_ControlMotorToAngle(1, dk.a);
+      osDelay(2);
+      emm_ControlMotorToAngle(2, dk.b); // 0-360
+      osDelay(2);
+      emm_ControlMotorToAngle(3, dk.c);
+      osDelay(2);
+    }
+    // emm_ControlMotorToAngle(3,desiredAngle);
 
+    lastZ = currentZ;
+    lastY = currentY;
+    lastX = currentX;
+    // dk->ArmLength = 232;
+    // emm_ReadMotorRealTimePosition(2);
+    // emm_ReadEncoderValue(2);  //f1
   }
   /* USER CODE END StartTask02 */
 }
@@ -470,10 +492,9 @@ void status_set_callback(const void *msgin)
   // publish_current_state(desired_state);
 
   // current_state_msg.data = desired_state;
-  
+
   rcl_ret_t ret = rcl_publish(&current_state_publisher, msg, NULL);
   //  这里可能需要发布当前状态，根据具体情况来调用 publish_current_state(current_state);
 }
 
 /* USER CODE END Application */
-

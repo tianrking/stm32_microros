@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccQ9HSto.s 			page 1
+ARM GAS  /tmp/ccizZaUb.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -20,114 +20,30 @@ ARM GAS  /tmp/ccQ9HSto.s 			page 1
   17              	.Ltext0:
   18              		.cfi_sections	.debug_frame
   19              		.file 1 "cooneo_Drivers/math/dk.c"
-  20              		.section	.rodata.DeltaKinematics_Init.str1.4,"aMS",%progbits,1
-  21              		.align	2
-  22              	.LC0:
-  23 0000 41726D4C 		.ascii	"ArmLength: %f\012\000"
-  23      656E6774 
-  23      683A2025 
-  23      660A00
-  24 000f 00       		.align	2
-  25              	.LC1:
-  26 0010 526F644C 		.ascii	"RodLength: %f\012\000"
-  26      656E6774 
-  26      683A2025 
-  26      660A00
-  27 001f 00       		.align	2
-  28              	.LC2:
-  29 0020 42617373 		.ascii	"BassTri: %f\012\000"
-  29      5472693A 
-  29      2025660A 
-  29      00
-  30 002d 000000   		.align	2
-  31              	.LC3:
-  32 0030 506C6174 		.ascii	"PlatformTri: %f\012\000"
-  32      666F726D 
-  32      5472693A 
-  32      2025660A 
-  32      00
-  33 0041 000000   		.align	2
-  34              	.LC4:
-  35 0044 783A2025 		.ascii	"x: %f (%.2f, %.2f)\012\000"
-  35      66202825 
-  35      2E32662C 
-  35      20252E32 
-  35      66290A00 
-  36              		.align	2
-  37              	.LC5:
-  38 0058 793A2025 		.ascii	"y: %f (%.2f, %.2f)\012\000"
-  38      66202825 
-  38      2E32662C 
-ARM GAS  /tmp/ccQ9HSto.s 			page 2
-
-
-  38      20252E32 
-  38      66290A00 
-  39              		.align	2
-  40              	.LC6:
-  41 006c 7A3A2025 		.ascii	"z: %f (%.2f, %.2f)\012\000"
-  41      66202825 
-  41      2E32662C 
-  41      20252E32 
-  41      66290A00 
-  42              		.align	2
-  43              	.LC7:
-  44 0080 74686574 		.ascii	"thetaA: %f (%.2f, %.2f)\012\000"
-  44      61413A20 
-  44      25662028 
-  44      252E3266 
-  44      2C20252E 
-  45 0099 000000   		.align	2
-  46              	.LC8:
-  47 009c 74686574 		.ascii	"thetaB: %f (%.2f, %.2f)\012\000"
-  47      61423A20 
-  47      25662028 
-  47      252E3266 
-  47      2C20252E 
-  48 00b5 000000   		.align	2
-  49              	.LC9:
-  50 00b8 74686574 		.ascii	"thetaC: %f (%.2f, %.2f)\012\000"
-  50      61433A20 
-  50      25662028 
-  50      252E3266 
-  50      2C20252E 
-  51              		.section	.text.DeltaKinematics_Init,"ax",%progbits
-  52              		.align	1
-  53              		.global	DeltaKinematics_Init
-  54              		.syntax unified
-  55              		.thumb
-  56              		.thumb_func
-  58              	DeltaKinematics_Init:
-  59              	.LVL0:
-  60              	.LFB243:
+  20              		.section	.text.DeltaKinematics_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	DeltaKinematics_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	DeltaKinematics_Init:
+  28              	.LVL0:
+  29              	.LFB243:
    1:cooneo_Drivers/math/dk.c **** // DeltaKinematics.c
    2:cooneo_Drivers/math/dk.c **** 
    3:cooneo_Drivers/math/dk.c **** #include "dk.h"
    4:cooneo_Drivers/math/dk.c **** 
    5:cooneo_Drivers/math/dk.c **** void DeltaKinematics_Init(DeltaKinematics *dk, double _ArmLength, double _RodLength, double _BassTr
-  61              		.loc 1 5 124 view -0
-  62              		.cfi_startproc
-  63              		@ args = 0, pretend = 0, frame = 0
-  64              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		.loc 1 5 124 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
    6:cooneo_Drivers/math/dk.c ****     if (dk != NULL) {
-  65              		.loc 1 6 5 view .LVU1
-  66              		.loc 1 6 8 is_stmt 0 view .LVU2
-  67 0000 0028     		cmp	r0, #0
-  68 0002 75D0     		beq	.L4
-   5:cooneo_Drivers/math/dk.c ****     if (dk != NULL) {
-  69              		.loc 1 5 124 view .LVU3
-  70 0004 10B5     		push	{r4, lr}
-  71              	.LCFI0:
-ARM GAS  /tmp/ccQ9HSto.s 			page 3
-
-
-  72              		.cfi_def_cfa_offset 8
-  73              		.cfi_offset 4, -8
-  74              		.cfi_offset 14, -4
-  75 0006 84B0     		sub	sp, sp, #16
-  76              	.LCFI1:
-  77              		.cfi_def_cfa_offset 24
-  78 0008 0446     		mov	r4, r0
+  35              		.loc 1 6 5 view .LVU1
+  36              		.loc 1 6 8 is_stmt 0 view .LVU2
+  37 0000 0346     		mov	r3, r0
+  38 0002 C0B1     		cbz	r0, .L1
    7:cooneo_Drivers/math/dk.c **** 
    8:cooneo_Drivers/math/dk.c ****         // dk->ArmLength = _ArmLength; //232
    9:cooneo_Drivers/math/dk.c ****         // dk->RodLength = _RodLength;  //336
@@ -135,2112 +51,2044 @@ ARM GAS  /tmp/ccQ9HSto.s 			page 1
   11:cooneo_Drivers/math/dk.c ****         // dk->PlatformTri = _PlatformTri; //120
   12:cooneo_Drivers/math/dk.c **** 
   13:cooneo_Drivers/math/dk.c ****         dk->ArmLength = 232;
-  79              		.loc 1 13 9 is_stmt 1 view .LVU4
-  80              		.loc 1 13 23 is_stmt 0 view .LVU5
-  81 000a 0022     		movs	r2, #0
-  82 000c 3C4B     		ldr	r3, .L7+8
-  83 000e C0E90023 		strd	r2, [r0]
+  39              		.loc 1 13 9 is_stmt 1 view .LVU3
+  40              		.loc 1 13 23 is_stmt 0 view .LVU4
+  41 0004 0020     		movs	r0, #0
+  42              	.LVL1:
+  43              		.loc 1 13 23 view .LVU5
+  44 0006 0E49     		ldr	r1, .L3+8
+  45 0008 C3E90001 		strd	r0, [r3]
+ARM GAS  /tmp/ccizZaUb.s 			page 2
+
+
   14:cooneo_Drivers/math/dk.c ****         dk->RodLength = 336;
-  84              		.loc 1 14 9 is_stmt 1 view .LVU6
-  85              		.loc 1 14 23 is_stmt 0 view .LVU7
-  86 0012 0020     		movs	r0, #0
-  87              	.LVL1:
-  88              		.loc 1 14 23 view .LVU8
-  89 0014 3B49     		ldr	r1, .L7+12
-  90 0016 C4E90201 		strd	r0, [r4, #8]
+  46              		.loc 1 14 9 is_stmt 1 view .LVU6
+  47              		.loc 1 14 23 is_stmt 0 view .LVU7
+  48 000c 0020     		movs	r0, #0
+  49 000e 0D49     		ldr	r1, .L3+12
+  50 0010 C3E90201 		strd	r0, [r3, #8]
   15:cooneo_Drivers/math/dk.c ****         dk->BassTri = 119;
-  91              		.loc 1 15 9 is_stmt 1 view .LVU9
-  92              		.loc 1 15 21 is_stmt 0 view .LVU10
-  93 001a 37A1     		adr	r1, .L7
-  94 001c D1E90001 		ldrd	r0, [r1]
-  95 0020 C4E90401 		strd	r0, [r4, #16]
+  51              		.loc 1 15 9 is_stmt 1 view .LVU8
+  52              		.loc 1 15 21 is_stmt 0 view .LVU9
+  53 0014 08A1     		adr	r1, .L3
+  54 0016 D1E90001 		ldrd	r0, [r1]
+  55 001a C3E90401 		strd	r0, [r3, #16]
   16:cooneo_Drivers/math/dk.c ****         dk->PlatformTri = 120;
-  96              		.loc 1 16 9 is_stmt 1 view .LVU11
-  97              		.loc 1 16 25 is_stmt 0 view .LVU12
-  98 0024 0020     		movs	r0, #0
-  99 0026 3849     		ldr	r1, .L7+16
- 100 0028 C4E90601 		strd	r0, [r4, #24]
+  56              		.loc 1 16 9 is_stmt 1 view .LVU10
+  57              		.loc 1 16 25 is_stmt 0 view .LVU11
+  58 001e 0020     		movs	r0, #0
+  59 0020 0949     		ldr	r1, .L3+16
+  60 0022 C3E90601 		strd	r0, [r3, #24]
   17:cooneo_Drivers/math/dk.c **** 
-  18:cooneo_Drivers/math/dk.c ****         // // 计算 x, y, z 的范围
-  19:cooneo_Drivers/math/dk.c ****         // dk->xMin = -dk->ArmLength * sin(dk->a) * cos(dk->b);
-  20:cooneo_Drivers/math/dk.c ****         // dk->xMax = dk->ArmLength * sin(dk->a) * cos(dk->b);
-  21:cooneo_Drivers/math/dk.c ****         // dk->yMin = -dk->ArmLength * sin(dk->a) * sin(dk->b);
-  22:cooneo_Drivers/math/dk.c ****         // dk->yMax = dk->ArmLength * sin(dk->a) * sin(dk->b);
-  23:cooneo_Drivers/math/dk.c ****         // dk->zMin = 0;
-  24:cooneo_Drivers/math/dk.c ****         // dk->zMax = dk->ArmLength;
-  25:cooneo_Drivers/math/dk.c **** 
-  26:cooneo_Drivers/math/dk.c ****         // // 计算 thetaA, thetaB, thetaC 的范围
-  27:cooneo_Drivers/math/dk.c ****         // dk->thetaAMin = asin(dk->zMin / dk->ArmLength);
-  28:cooneo_Drivers/math/dk.c ****         // dk->thetaAMax = asin(dk->zMax / dk->ArmLength);
-  29:cooneo_Drivers/math/dk.c ****         // dk->thetaBMin = -90.0;
-  30:cooneo_Drivers/math/dk.c ****         // dk->thetaBMax = 90.0;
-  31:cooneo_Drivers/math/dk.c ****         // dk->thetaCMin = 0.0;
-  32:cooneo_Drivers/math/dk.c ****         // dk->thetaCMax = 180.0;
-  33:cooneo_Drivers/math/dk.c **** 
-  34:cooneo_Drivers/math/dk.c ****         // 打印初始化结果
-ARM GAS  /tmp/ccQ9HSto.s 			page 4
+  18:cooneo_Drivers/math/dk.c ****         dk->a = 0;
+  61              		.loc 1 18 9 is_stmt 1 view .LVU12
+  62              		.loc 1 18 15 is_stmt 0 view .LVU13
+  63 0026 0020     		movs	r0, #0
+  64 0028 0021     		movs	r1, #0
+  65 002a C3E90E01 		strd	r0, [r3, #56]
+  19:cooneo_Drivers/math/dk.c ****         dk->b = 0;
+  66              		.loc 1 19 9 is_stmt 1 view .LVU14
+  67              		.loc 1 19 15 is_stmt 0 view .LVU15
+  68 002e C3E91001 		strd	r0, [r3, #64]
+  20:cooneo_Drivers/math/dk.c ****         dk->c = 0;
+  69              		.loc 1 20 9 is_stmt 1 view .LVU16
+  70              		.loc 1 20 15 is_stmt 0 view .LVU17
+  71 0032 C3E91201 		strd	r0, [r3, #72]
+  72              	.L1:
+  21:cooneo_Drivers/math/dk.c **** 
+  22:cooneo_Drivers/math/dk.c ****         // // 计算 x, y, z 的范围
+  23:cooneo_Drivers/math/dk.c ****         // dk->xMin = -dk->ArmLength * sin(dk->a) * cos(dk->b);
+  24:cooneo_Drivers/math/dk.c ****         // dk->xMax = dk->ArmLength * sin(dk->a) * cos(dk->b);
+  25:cooneo_Drivers/math/dk.c ****         // dk->yMin = -dk->ArmLength * sin(dk->a) * sin(dk->b);
+  26:cooneo_Drivers/math/dk.c ****         // dk->yMax = dk->ArmLength * sin(dk->a) * sin(dk->b);
+  27:cooneo_Drivers/math/dk.c ****         // dk->zMin = 0;
+  28:cooneo_Drivers/math/dk.c ****         // dk->zMax = dk->ArmLength;
+  29:cooneo_Drivers/math/dk.c **** 
+  30:cooneo_Drivers/math/dk.c ****         // // 计算 thetaA, thetaB, thetaC 的范围
+  31:cooneo_Drivers/math/dk.c ****         // dk->thetaAMin = asin(dk->zMin / dk->ArmLength);
+  32:cooneo_Drivers/math/dk.c ****         // dk->thetaAMax = asin(dk->zMax / dk->ArmLength);
+  33:cooneo_Drivers/math/dk.c ****         // dk->thetaBMin = -90.0;
+  34:cooneo_Drivers/math/dk.c ****         // dk->thetaBMax = 90.0;
+  35:cooneo_Drivers/math/dk.c ****         // dk->thetaCMin = 0.0;
+  36:cooneo_Drivers/math/dk.c ****         // dk->thetaCMax = 180.0;
+  37:cooneo_Drivers/math/dk.c **** 
+  38:cooneo_Drivers/math/dk.c ****         // 打印初始化结果
+  39:cooneo_Drivers/math/dk.c **** 
+  40:cooneo_Drivers/math/dk.c ****         // printf("ArmLength: %f\n", dk->ArmLength);
+  41:cooneo_Drivers/math/dk.c ****         // printf("RodLength: %f\n", dk->RodLength);
+  42:cooneo_Drivers/math/dk.c ****         // printf("BassTri: %f\n", dk->BassTri);
+  43:cooneo_Drivers/math/dk.c ****         // printf("PlatformTri: %f\n", dk->PlatformTri);
+ARM GAS  /tmp/ccizZaUb.s 			page 3
 
 
-  35:cooneo_Drivers/math/dk.c **** 
-  36:cooneo_Drivers/math/dk.c ****         printf("ArmLength: %f\n", dk->ArmLength);
- 101              		.loc 1 36 9 is_stmt 1 view .LVU13
- 102 002c 3748     		ldr	r0, .L7+20
- 103 002e FFF7FEFF 		bl	printf
- 104              	.LVL2:
-  37:cooneo_Drivers/math/dk.c ****         printf("RodLength: %f\n", dk->RodLength);
- 105              		.loc 1 37 9 view .LVU14
- 106 0032 D4E90223 		ldrd	r2, [r4, #8]
- 107 0036 3648     		ldr	r0, .L7+24
- 108 0038 FFF7FEFF 		bl	printf
- 109              	.LVL3:
-  38:cooneo_Drivers/math/dk.c ****         printf("BassTri: %f\n", dk->BassTri);
- 110              		.loc 1 38 9 view .LVU15
- 111 003c D4E90423 		ldrd	r2, [r4, #16]
- 112 0040 3448     		ldr	r0, .L7+28
- 113 0042 FFF7FEFF 		bl	printf
- 114              	.LVL4:
-  39:cooneo_Drivers/math/dk.c ****         printf("PlatformTri: %f\n", dk->PlatformTri);
- 115              		.loc 1 39 9 view .LVU16
- 116 0046 D4E90623 		ldrd	r2, [r4, #24]
- 117 004a 3348     		ldr	r0, .L7+32
- 118 004c FFF7FEFF 		bl	printf
- 119              	.LVL5:
-  40:cooneo_Drivers/math/dk.c ****         printf("x: %f (%.2f, %.2f)\n", dk->x, dk->xMin, dk->xMax);
- 120              		.loc 1 40 9 view .LVU17
- 121 0050 D4E91623 		ldrd	r2, [r4, #88]
- 122 0054 CDE90223 		strd	r2, [sp, #8]
- 123 0058 D4E91423 		ldrd	r2, [r4, #80]
- 124 005c CDE90023 		strd	r2, [sp]
- 125 0060 D4E90823 		ldrd	r2, [r4, #32]
- 126 0064 2D48     		ldr	r0, .L7+36
- 127 0066 FFF7FEFF 		bl	printf
- 128              	.LVL6:
-  41:cooneo_Drivers/math/dk.c ****         printf("y: %f (%.2f, %.2f)\n", dk->y, dk->yMin, dk->yMax);
- 129              		.loc 1 41 9 view .LVU18
- 130 006a D4E91A23 		ldrd	r2, [r4, #104]
- 131 006e CDE90223 		strd	r2, [sp, #8]
- 132 0072 D4E91823 		ldrd	r2, [r4, #96]
- 133 0076 CDE90023 		strd	r2, [sp]
- 134 007a D4E90A23 		ldrd	r2, [r4, #40]
- 135 007e 2848     		ldr	r0, .L7+40
- 136 0080 FFF7FEFF 		bl	printf
- 137              	.LVL7:
-  42:cooneo_Drivers/math/dk.c ****         printf("z: %f (%.2f, %.2f)\n", dk->z, dk->zMin, dk->zMax);
- 138              		.loc 1 42 9 view .LVU19
- 139 0084 D4E91E23 		ldrd	r2, [r4, #120]
- 140 0088 CDE90223 		strd	r2, [sp, #8]
- 141 008c D4E91C23 		ldrd	r2, [r4, #112]
- 142 0090 CDE90023 		strd	r2, [sp]
- 143 0094 D4E90C23 		ldrd	r2, [r4, #48]
- 144 0098 2248     		ldr	r0, .L7+44
- 145 009a FFF7FEFF 		bl	printf
- 146              	.LVL8:
-  43:cooneo_Drivers/math/dk.c ****         printf("thetaA: %f (%.2f, %.2f)\n", dk->a, dk->thetaAMin, dk->thetaAMax);
- 147              		.loc 1 43 9 view .LVU20
- 148 009e D4E92223 		ldrd	r2, [r4, #136]
-ARM GAS  /tmp/ccQ9HSto.s 			page 5
-
-
- 149 00a2 CDE90223 		strd	r2, [sp, #8]
- 150 00a6 D4E92023 		ldrd	r2, [r4, #128]
- 151 00aa CDE90023 		strd	r2, [sp]
- 152 00ae D4E90E23 		ldrd	r2, [r4, #56]
- 153 00b2 1D48     		ldr	r0, .L7+48
- 154 00b4 FFF7FEFF 		bl	printf
- 155              	.LVL9:
-  44:cooneo_Drivers/math/dk.c ****         printf("thetaB: %f (%.2f, %.2f)\n", dk->b, dk->thetaBMin, dk->thetaBMax);
- 156              		.loc 1 44 9 view .LVU21
- 157 00b8 D4E92623 		ldrd	r2, [r4, #152]
- 158 00bc CDE90223 		strd	r2, [sp, #8]
- 159 00c0 D4E92423 		ldrd	r2, [r4, #144]
- 160 00c4 CDE90023 		strd	r2, [sp]
- 161 00c8 D4E91023 		ldrd	r2, [r4, #64]
- 162 00cc 1748     		ldr	r0, .L7+52
- 163 00ce FFF7FEFF 		bl	printf
- 164              	.LVL10:
-  45:cooneo_Drivers/math/dk.c ****         printf("thetaC: %f (%.2f, %.2f)\n", dk->c, dk->thetaCMin, dk->thetaCMax);
- 165              		.loc 1 45 9 view .LVU22
- 166 00d2 D4E92A23 		ldrd	r2, [r4, #168]
- 167 00d6 CDE90223 		strd	r2, [sp, #8]
- 168 00da D4E92823 		ldrd	r2, [r4, #160]
- 169 00de CDE90023 		strd	r2, [sp]
- 170 00e2 D4E91223 		ldrd	r2, [r4, #72]
- 171 00e6 1248     		ldr	r0, .L7+56
- 172 00e8 FFF7FEFF 		bl	printf
- 173              	.LVL11:
-  46:cooneo_Drivers/math/dk.c **** 
-  47:cooneo_Drivers/math/dk.c ****     }
-  48:cooneo_Drivers/math/dk.c **** }
- 174              		.loc 1 48 1 is_stmt 0 view .LVU23
- 175 00ec 04B0     		add	sp, sp, #16
- 176              	.LCFI2:
- 177              		.cfi_def_cfa_offset 8
- 178              		@ sp needed
- 179 00ee 10BD     		pop	{r4, pc}
- 180              	.LVL12:
- 181              	.L4:
- 182              	.LCFI3:
- 183              		.cfi_def_cfa_offset 0
- 184              		.cfi_restore 4
- 185              		.cfi_restore 14
- 186              		.loc 1 48 1 view .LVU24
- 187 00f0 7047     		bx	lr
- 188              	.L8:
- 189 00f2 00BFAFF3 		.align	3
- 189      0080
- 190              	.L7:
- 191 00f8 00000000 		.word	0
- 192 00fc 00C05D40 		.word	1079885824
- 193 0100 00006D40 		.word	1080885248
- 194 0104 00007540 		.word	1081409536
- 195 0108 00005E40 		.word	1079902208
- 196 010c 00000000 		.word	.LC0
- 197 0110 10000000 		.word	.LC1
- 198 0114 20000000 		.word	.LC2
- 199 0118 30000000 		.word	.LC3
-ARM GAS  /tmp/ccQ9HSto.s 			page 6
-
-
- 200 011c 44000000 		.word	.LC4
- 201 0120 58000000 		.word	.LC5
- 202 0124 6C000000 		.word	.LC6
- 203 0128 80000000 		.word	.LC7
- 204 012c 9C000000 		.word	.LC8
- 205 0130 B8000000 		.word	.LC9
- 206              		.cfi_endproc
- 207              	.LFE243:
- 209              		.global	__aeabi_dsub
- 210              		.global	__aeabi_dmul
- 211              		.global	__aeabi_dadd
- 212              		.global	__aeabi_dcmplt
- 213              		.global	__aeabi_ddiv
- 214              		.section	.text.DeltaKinematics_forward,"ax",%progbits
- 215              		.align	1
- 216              		.global	DeltaKinematics_forward
- 217              		.syntax unified
- 218              		.thumb
- 219              		.thumb_func
- 221              	DeltaKinematics_forward:
- 222              	.LVL13:
- 223              	.LFB244:
-  49:cooneo_Drivers/math/dk.c **** 
+  44:cooneo_Drivers/math/dk.c ****         // printf("x: %f (%.2f, %.2f)\n", dk->x, dk->xMin, dk->xMax);
+  45:cooneo_Drivers/math/dk.c ****         // printf("y: %f (%.2f, %.2f)\n", dk->y, dk->yMin, dk->yMax);
+  46:cooneo_Drivers/math/dk.c ****         // printf("z: %f (%.2f, %.2f)\n", dk->z, dk->zMin, dk->zMax);
+  47:cooneo_Drivers/math/dk.c ****         // printf("thetaA: %f (%.2f, %.2f)\n", dk->a, dk->thetaAMin, dk->thetaAMax);
+  48:cooneo_Drivers/math/dk.c ****         // printf("thetaB: %f (%.2f, %.2f)\n", dk->b, dk->thetaBMin, dk->thetaBMax);
+  49:cooneo_Drivers/math/dk.c ****         // printf("thetaC: %f (%.2f, %.2f)\n", dk->c, dk->thetaCMin, dk->thetaCMax);
   50:cooneo_Drivers/math/dk.c **** 
-  51:cooneo_Drivers/math/dk.c **** // Constants
-  52:cooneo_Drivers/math/dk.c **** const double sqrt3 = 1.7320508075688772935274463415059;
-  53:cooneo_Drivers/math/dk.c **** const double pi = 3.1415926535897932384626433832795; // PI
-  54:cooneo_Drivers/math/dk.c **** const double sin120 = sqrt3 / 2.0;
-  55:cooneo_Drivers/math/dk.c **** const double cos120 = -0.5;
-  56:cooneo_Drivers/math/dk.c **** const double tan60 = sqrt3;
-  57:cooneo_Drivers/math/dk.c **** const double sin30 = 0.5;
-  58:cooneo_Drivers/math/dk.c **** const double tan30 = 1.0 / sqrt3;
-  59:cooneo_Drivers/math/dk.c **** 
-  60:cooneo_Drivers/math/dk.c **** const int non_existing_point_error = -2;
-  61:cooneo_Drivers/math/dk.c **** const int no_error = 1;
-  62:cooneo_Drivers/math/dk.c **** 
-  63:cooneo_Drivers/math/dk.c **** int DeltaKinematics_forward(DeltaKinematics *dk, double thetaA, double thetaB, double thetaC) {
- 224              		.loc 1 63 95 is_stmt 1 view -0
- 225              		.cfi_startproc
- 226              		@ args = 0, pretend = 0, frame = 104
- 227              		@ frame_needed = 0, uses_anonymous_args = 0
-  64:cooneo_Drivers/math/dk.c ****     // Check for a valid pointer
-  65:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
- 228              		.loc 1 65 5 view .LVU26
- 229              		.loc 1 65 8 is_stmt 0 view .LVU27
- 230 0000 0028     		cmp	r0, #0
- 231 0002 00F0DE82 		beq	.L11
-  63:cooneo_Drivers/math/dk.c ****     // Check for a valid pointer
- 232              		.loc 1 63 95 view .LVU28
- 233 0006 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
- 234              	.LCFI4:
- 235              		.cfi_def_cfa_offset 36
- 236              		.cfi_offset 4, -36
- 237              		.cfi_offset 5, -32
- 238              		.cfi_offset 6, -28
- 239              		.cfi_offset 7, -24
- 240              		.cfi_offset 8, -20
-ARM GAS  /tmp/ccQ9HSto.s 			page 7
+  51:cooneo_Drivers/math/dk.c ****     }
+  52:cooneo_Drivers/math/dk.c **** }
+  73              		.loc 1 52 1 view .LVU18
+  74 0036 7047     		bx	lr
+  75              	.L4:
+  76              		.align	3
+  77              	.L3:
+  78 0038 00000000 		.word	0
+  79 003c 00C05D40 		.word	1079885824
+  80 0040 00006D40 		.word	1080885248
+  81 0044 00007540 		.word	1081409536
+  82 0048 00005E40 		.word	1079902208
+  83              		.cfi_endproc
+  84              	.LFE243:
+  86              		.global	__aeabi_dsub
+  87              		.global	__aeabi_dmul
+  88              		.global	__aeabi_dadd
+  89              		.global	__aeabi_dcmplt
+  90              		.global	__aeabi_ddiv
+  91              		.section	.text.DeltaKinematics_forward,"ax",%progbits
+  92              		.align	1
+  93              		.global	DeltaKinematics_forward
+  94              		.syntax unified
+  95              		.thumb
+  96              		.thumb_func
+  98              	DeltaKinematics_forward:
+  99              	.LVL2:
+ 100              	.LFB244:
+  53:cooneo_Drivers/math/dk.c **** 
+  54:cooneo_Drivers/math/dk.c **** 
+  55:cooneo_Drivers/math/dk.c **** // Constants
+  56:cooneo_Drivers/math/dk.c **** const double sqrt3 = 1.7320508075688772935274463415059;
+  57:cooneo_Drivers/math/dk.c **** const double pi = 3.1415926535897932384626433832795; // PI
+  58:cooneo_Drivers/math/dk.c **** const double sin120 = sqrt3 / 2.0;
+  59:cooneo_Drivers/math/dk.c **** const double cos120 = -0.5;
+  60:cooneo_Drivers/math/dk.c **** const double tan60 = sqrt3;
+  61:cooneo_Drivers/math/dk.c **** const double sin30 = 0.5;
+  62:cooneo_Drivers/math/dk.c **** const double tan30 = 1.0 / sqrt3;
+  63:cooneo_Drivers/math/dk.c **** 
+  64:cooneo_Drivers/math/dk.c **** const int non_existing_point_error = -2;
+  65:cooneo_Drivers/math/dk.c **** const int no_error = 1;
+  66:cooneo_Drivers/math/dk.c **** 
+  67:cooneo_Drivers/math/dk.c **** int DeltaKinematics_forward(DeltaKinematics *dk, double thetaA, double thetaB, double thetaC) {
+ 101              		.loc 1 67 95 is_stmt 1 view -0
+ 102              		.cfi_startproc
+ 103              		@ args = 0, pretend = 0, frame = 104
+ 104              		@ frame_needed = 0, uses_anonymous_args = 0
+  68:cooneo_Drivers/math/dk.c ****     // Check for a valid pointer
+  69:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
+ 105              		.loc 1 69 5 view .LVU20
+ARM GAS  /tmp/ccizZaUb.s 			page 4
 
 
- 241              		.cfi_offset 9, -16
- 242              		.cfi_offset 10, -12
- 243              		.cfi_offset 11, -8
- 244              		.cfi_offset 14, -4
- 245 000a 2DED068B 		vpush.64	{d8, d9, d10}
- 246              	.LCFI5:
- 247              		.cfi_def_cfa_offset 60
- 248              		.cfi_offset 80, -60
- 249              		.cfi_offset 81, -56
- 250              		.cfi_offset 82, -52
- 251              		.cfi_offset 83, -48
- 252              		.cfi_offset 84, -44
- 253              		.cfi_offset 85, -40
- 254 000e 9BB0     		sub	sp, sp, #108
- 255              	.LCFI6:
- 256              		.cfi_def_cfa_offset 168
- 257 0010 59EC108B 		vmov	r8, r9, d0
- 258 0014 57EC116B 		vmov	r6, r7, d1
- 259 0018 55EC124B 		vmov	r4, r5, d2
-  66:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
-  67:cooneo_Drivers/math/dk.c ****     }
-  68:cooneo_Drivers/math/dk.c **** 
-  69:cooneo_Drivers/math/dk.c ****     // Implement the logic as the C++ forward method
-  70:cooneo_Drivers/math/dk.c ****     double t = (dk->BassTri - dk->PlatformTri) * tan30 / 2.0;
- 260              		.loc 1 70 5 is_stmt 1 view .LVU29
- 261              		.loc 1 70 29 is_stmt 0 view .LVU30
- 262 001c D0E90623 		ldrd	r2, [r0, #24]
- 263 0020 0F90     		str	r0, [sp, #60]
- 264 0022 D0E90401 		ldrd	r0, [r0, #16]
- 265              	.LVL14:
- 266              		.loc 1 70 29 view .LVU31
- 267 0026 FFF7FEFF 		bl	__aeabi_dsub
- 268              	.LVL15:
- 269              		.loc 1 70 48 view .LVU32
- 270 002a D8A3     		adr	r3, .L17+28
- 271 002c D3E90023 		ldrd	r2, [r3]
- 272 0030 FFF7FEFF 		bl	__aeabi_dmul
- 273              	.LVL16:
- 274              		.loc 1 70 12 view .LVU33
- 275 0034 0022     		movs	r2, #0
- 276 0036 D44B     		ldr	r3, .L17+24
- 277 0038 FFF7FEFF 		bl	__aeabi_dmul
- 278              	.LVL17:
- 279 003c 8246     		mov	r10, r0
- 280 003e 8B46     		mov	fp, r1
- 281              	.LVL18:
-  71:cooneo_Drivers/math/dk.c ****     double dtr = pi / 180.0;
- 282              		.loc 1 71 5 is_stmt 1 view .LVU34
+ 106              		.loc 1 69 8 is_stmt 0 view .LVU21
+ 107 0000 0028     		cmp	r0, #0
+ 108 0002 00F0DE82 		beq	.L7
+  67:cooneo_Drivers/math/dk.c ****     // Check for a valid pointer
+ 109              		.loc 1 67 95 view .LVU22
+ 110 0006 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 111              	.LCFI0:
+ 112              		.cfi_def_cfa_offset 36
+ 113              		.cfi_offset 4, -36
+ 114              		.cfi_offset 5, -32
+ 115              		.cfi_offset 6, -28
+ 116              		.cfi_offset 7, -24
+ 117              		.cfi_offset 8, -20
+ 118              		.cfi_offset 9, -16
+ 119              		.cfi_offset 10, -12
+ 120              		.cfi_offset 11, -8
+ 121              		.cfi_offset 14, -4
+ 122 000a 2DED068B 		vpush.64	{d8, d9, d10}
+ 123              	.LCFI1:
+ 124              		.cfi_def_cfa_offset 60
+ 125              		.cfi_offset 80, -60
+ 126              		.cfi_offset 81, -56
+ 127              		.cfi_offset 82, -52
+ 128              		.cfi_offset 83, -48
+ 129              		.cfi_offset 84, -44
+ 130              		.cfi_offset 85, -40
+ 131 000e 9BB0     		sub	sp, sp, #108
+ 132              	.LCFI2:
+ 133              		.cfi_def_cfa_offset 168
+ 134 0010 59EC108B 		vmov	r8, r9, d0
+ 135 0014 57EC116B 		vmov	r6, r7, d1
+ 136 0018 55EC124B 		vmov	r4, r5, d2
+  70:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
+  71:cooneo_Drivers/math/dk.c ****     }
   72:cooneo_Drivers/math/dk.c **** 
-  73:cooneo_Drivers/math/dk.c ****     thetaA *= dtr;
- 283              		.loc 1 73 5 view .LVU35
- 284              		.loc 1 73 12 is_stmt 0 view .LVU36
- 285 0040 CBA3     		adr	r3, .L17
- 286 0042 D3E90023 		ldrd	r2, [r3]
- 287 0046 4046     		mov	r0, r8
- 288 0048 4946     		mov	r1, r9
- 289 004a FFF7FEFF 		bl	__aeabi_dmul
-ARM GAS  /tmp/ccQ9HSto.s 			page 8
+  73:cooneo_Drivers/math/dk.c ****     // Implement the logic as the C++ forward method
+  74:cooneo_Drivers/math/dk.c ****     double t = (dk->BassTri - dk->PlatformTri) * tan30 / 2.0;
+ 137              		.loc 1 74 5 is_stmt 1 view .LVU23
+ 138              		.loc 1 74 29 is_stmt 0 view .LVU24
+ 139 001c D0E90623 		ldrd	r2, [r0, #24]
+ 140 0020 0F90     		str	r0, [sp, #60]
+ 141 0022 D0E90401 		ldrd	r0, [r0, #16]
+ 142              	.LVL3:
+ 143              		.loc 1 74 29 view .LVU25
+ 144 0026 FFF7FEFF 		bl	__aeabi_dsub
+ 145              	.LVL4:
+ 146              		.loc 1 74 48 view .LVU26
+ 147 002a D8A3     		adr	r3, .L13+28
+ 148 002c D3E90023 		ldrd	r2, [r3]
+ 149 0030 FFF7FEFF 		bl	__aeabi_dmul
+ 150              	.LVL5:
+ 151              		.loc 1 74 12 view .LVU27
+ 152 0034 0022     		movs	r2, #0
+ 153 0036 D44B     		ldr	r3, .L13+24
+ 154 0038 FFF7FEFF 		bl	__aeabi_dmul
+ 155              	.LVL6:
+ 156 003c 8246     		mov	r10, r0
+ARM GAS  /tmp/ccizZaUb.s 			page 5
 
 
- 290              	.LVL19:
- 291 004e 41EC1A0B 		vmov	d10, r0, r1
- 292              	.LVL20:
-  74:cooneo_Drivers/math/dk.c ****     thetaB *= dtr;
- 293              		.loc 1 74 5 is_stmt 1 view .LVU37
- 294              		.loc 1 74 12 is_stmt 0 view .LVU38
- 295 0052 C7A3     		adr	r3, .L17
- 296 0054 D3E90023 		ldrd	r2, [r3]
- 297 0058 3046     		mov	r0, r6
- 298              	.LVL21:
- 299              		.loc 1 74 12 view .LVU39
- 300 005a 3946     		mov	r1, r7
- 301 005c FFF7FEFF 		bl	__aeabi_dmul
- 302              	.LVL22:
- 303 0060 41EC190B 		vmov	d9, r0, r1
- 304              	.LVL23:
-  75:cooneo_Drivers/math/dk.c ****     thetaC *= dtr;
- 305              		.loc 1 75 5 is_stmt 1 view .LVU40
- 306              		.loc 1 75 12 is_stmt 0 view .LVU41
- 307 0064 C2A3     		adr	r3, .L17
- 308 0066 D3E90023 		ldrd	r2, [r3]
- 309 006a 2046     		mov	r0, r4
- 310              	.LVL24:
- 311              		.loc 1 75 12 view .LVU42
- 312 006c 2946     		mov	r1, r5
- 313 006e FFF7FEFF 		bl	__aeabi_dmul
- 314              	.LVL25:
- 315 0072 41EC180B 		vmov	d8, r0, r1
- 316              	.LVL26:
+ 157 003e 8B46     		mov	fp, r1
+ 158              	.LVL7:
+  75:cooneo_Drivers/math/dk.c ****     double dtr = pi / 180.0;
+ 159              		.loc 1 75 5 is_stmt 1 view .LVU28
   76:cooneo_Drivers/math/dk.c **** 
-  77:cooneo_Drivers/math/dk.c ****     double y1 = -(t + dk->ArmLength * cos(thetaA));
- 317              		.loc 1 77 5 is_stmt 1 view .LVU43
- 318              		.loc 1 77 25 is_stmt 0 view .LVU44
- 319 0076 0F9E     		ldr	r6, [sp, #60]
- 320 0078 D6E90067 		ldrd	r6, [r6]
- 321              		.loc 1 77 39 view .LVU45
- 322 007c B0EE4A0A 		vmov.f32	s0, s20
- 323 0080 F0EE6A0A 		vmov.f32	s1, s21
- 324 0084 FFF7FEFF 		bl	cos
- 325              	.LVL27:
- 326              		.loc 1 77 39 view .LVU46
- 327 0088 53EC102B 		vmov	r2, r3, d0
- 328              		.loc 1 77 37 discriminator 1 view .LVU47
- 329 008c 3046     		mov	r0, r6
- 330 008e 3946     		mov	r1, r7
- 331 0090 FFF7FEFF 		bl	__aeabi_dmul
- 332              	.LVL28:
- 333              		.loc 1 77 21 discriminator 1 view .LVU48
- 334 0094 5246     		mov	r2, r10
- 335 0096 5B46     		mov	r3, fp
- 336 0098 FFF7FEFF 		bl	__aeabi_dadd
- 337              	.LVL29:
- 338 009c 8046     		mov	r8, r0
- 339 009e 8946     		mov	r9, r1
- 340              		.loc 1 77 12 discriminator 1 view .LVU49
- 341 00a0 9FEDB57B 		vldr.64	d7, .L17+8
- 342 00a4 8DED087B 		vstr.64	d7, [sp, #32]
-ARM GAS  /tmp/ccQ9HSto.s 			page 9
+  77:cooneo_Drivers/math/dk.c ****     thetaA *= dtr;
+ 160              		.loc 1 77 5 view .LVU29
+ 161              		.loc 1 77 12 is_stmt 0 view .LVU30
+ 162 0040 CBA3     		adr	r3, .L13
+ 163 0042 D3E90023 		ldrd	r2, [r3]
+ 164 0046 4046     		mov	r0, r8
+ 165 0048 4946     		mov	r1, r9
+ 166 004a FFF7FEFF 		bl	__aeabi_dmul
+ 167              	.LVL8:
+ 168 004e 41EC1A0B 		vmov	d10, r0, r1
+ 169              	.LVL9:
+  78:cooneo_Drivers/math/dk.c ****     thetaB *= dtr;
+ 170              		.loc 1 78 5 is_stmt 1 view .LVU31
+ 171              		.loc 1 78 12 is_stmt 0 view .LVU32
+ 172 0052 C7A3     		adr	r3, .L13
+ 173 0054 D3E90023 		ldrd	r2, [r3]
+ 174 0058 3046     		mov	r0, r6
+ 175              	.LVL10:
+ 176              		.loc 1 78 12 view .LVU33
+ 177 005a 3946     		mov	r1, r7
+ 178 005c FFF7FEFF 		bl	__aeabi_dmul
+ 179              	.LVL11:
+ 180 0060 41EC190B 		vmov	d9, r0, r1
+ 181              	.LVL12:
+  79:cooneo_Drivers/math/dk.c ****     thetaC *= dtr;
+ 182              		.loc 1 79 5 is_stmt 1 view .LVU34
+ 183              		.loc 1 79 12 is_stmt 0 view .LVU35
+ 184 0064 C2A3     		adr	r3, .L13
+ 185 0066 D3E90023 		ldrd	r2, [r3]
+ 186 006a 2046     		mov	r0, r4
+ 187              	.LVL13:
+ 188              		.loc 1 79 12 view .LVU36
+ 189 006c 2946     		mov	r1, r5
+ 190 006e FFF7FEFF 		bl	__aeabi_dmul
+ 191              	.LVL14:
+ 192 0072 41EC180B 		vmov	d8, r0, r1
+ 193              	.LVL15:
+  80:cooneo_Drivers/math/dk.c **** 
+  81:cooneo_Drivers/math/dk.c ****     double y1 = -(t + dk->ArmLength * cos(thetaA));
+ 194              		.loc 1 81 5 is_stmt 1 view .LVU37
+ 195              		.loc 1 81 25 is_stmt 0 view .LVU38
+ 196 0076 0F9E     		ldr	r6, [sp, #60]
+ 197 0078 D6E90067 		ldrd	r6, [r6]
+ 198              		.loc 1 81 39 view .LVU39
+ 199 007c B0EE4A0A 		vmov.f32	s0, s20
+ 200 0080 F0EE6A0A 		vmov.f32	s1, s21
+ 201 0084 FFF7FEFF 		bl	cos
+ 202              	.LVL16:
+ 203              		.loc 1 81 39 view .LVU40
+ 204 0088 53EC102B 		vmov	r2, r3, d0
+ 205              		.loc 1 81 37 discriminator 1 view .LVU41
+ 206 008c 3046     		mov	r0, r6
+ARM GAS  /tmp/ccizZaUb.s 			page 6
 
 
- 343 00a8 0890     		str	r0, [sp, #32]
- 344 00aa 01F10043 		add	r3, r1, #-2147483648
- 345 00ae 0993     		str	r3, [sp, #36]
- 346              	.LVL30:
-  78:cooneo_Drivers/math/dk.c ****     double z1 = -dk->ArmLength * sin(thetaA);
- 347              		.loc 1 78 5 is_stmt 1 view .LVU50
- 348              		.loc 1 78 17 is_stmt 0 view .LVU51
- 349 00b0 3446     		mov	r4, r6
- 350 00b2 07F10045 		add	r5, r7, #-2147483648
- 351              		.loc 1 78 34 view .LVU52
- 352 00b6 B0EE4A0A 		vmov.f32	s0, s20
- 353 00ba F0EE6A0A 		vmov.f32	s1, s21
- 354 00be FFF7FEFF 		bl	sin
- 355              	.LVL31:
- 356 00c2 53EC102B 		vmov	r2, r3, d0
- 357              		.loc 1 78 12 discriminator 1 view .LVU53
- 358 00c6 3046     		mov	r0, r6
- 359 00c8 2946     		mov	r1, r5
- 360 00ca FFF7FEFF 		bl	__aeabi_dmul
- 361              	.LVL32:
- 362 00ce CDE90001 		strd	r0, [sp]
- 363              	.LVL33:
-  79:cooneo_Drivers/math/dk.c **** 
-  80:cooneo_Drivers/math/dk.c ****     double y2 = (t + dk->ArmLength * cos(thetaB)) * sin30;
- 364              		.loc 1 80 5 is_stmt 1 view .LVU54
- 365              		.loc 1 80 38 is_stmt 0 view .LVU55
- 366 00d2 B0EE490A 		vmov.f32	s0, s18
- 367 00d6 F0EE690A 		vmov.f32	s1, s19
- 368 00da FFF7FEFF 		bl	cos
- 369              	.LVL34:
- 370              		.loc 1 80 38 view .LVU56
- 371 00de 53EC102B 		vmov	r2, r3, d0
- 372              		.loc 1 80 36 discriminator 1 view .LVU57
- 373 00e2 3046     		mov	r0, r6
- 374 00e4 3946     		mov	r1, r7
- 375 00e6 FFF7FEFF 		bl	__aeabi_dmul
- 376              	.LVL35:
- 377              		.loc 1 80 20 discriminator 1 view .LVU58
- 378 00ea 5246     		mov	r2, r10
- 379 00ec 5B46     		mov	r3, fp
- 380 00ee FFF7FEFF 		bl	__aeabi_dadd
- 381              	.LVL36:
- 382              		.loc 1 80 12 discriminator 1 view .LVU59
- 383 00f2 0022     		movs	r2, #0
- 384 00f4 A44B     		ldr	r3, .L17+24
- 385 00f6 FFF7FEFF 		bl	__aeabi_dmul
- 386              	.LVL37:
- 387 00fa 0246     		mov	r2, r0
- 388 00fc 0B46     		mov	r3, r1
- 389 00fe CDE90C23 		strd	r2, [sp, #48]
- 390              	.LVL38:
-  81:cooneo_Drivers/math/dk.c ****     double x2 = y2 * tan60;
- 391              		.loc 1 81 5 is_stmt 1 view .LVU60
- 392              		.loc 1 81 12 is_stmt 0 view .LVU61
- 393 0102 9FA3     		adr	r3, .L17+16
- 394 0104 D3E90023 		ldrd	r2, [r3]
- 395              	.LVL39:
-ARM GAS  /tmp/ccQ9HSto.s 			page 10
-
-
- 396              		.loc 1 81 12 view .LVU62
- 397 0108 FFF7FEFF 		bl	__aeabi_dmul
- 398              	.LVL40:
- 399 010c CDE90201 		strd	r0, [sp, #8]
- 400              	.LVL41:
-  82:cooneo_Drivers/math/dk.c ****     double z2 = -dk->ArmLength * sin(thetaB);
- 401              		.loc 1 82 5 is_stmt 1 view .LVU63
- 402              		.loc 1 82 34 is_stmt 0 view .LVU64
- 403 0110 B0EE490A 		vmov.f32	s0, s18
- 404 0114 F0EE690A 		vmov.f32	s1, s19
- 405 0118 FFF7FEFF 		bl	sin
- 406              	.LVL42:
- 407              		.loc 1 82 34 view .LVU65
- 408 011c 53EC102B 		vmov	r2, r3, d0
- 409              		.loc 1 82 12 discriminator 1 view .LVU66
- 410 0120 3046     		mov	r0, r6
- 411 0122 2946     		mov	r1, r5
- 412 0124 FFF7FEFF 		bl	__aeabi_dmul
- 413              	.LVL43:
- 414 0128 CDE90601 		strd	r0, [sp, #24]
- 415              	.LVL44:
+ 207 008e 3946     		mov	r1, r7
+ 208 0090 FFF7FEFF 		bl	__aeabi_dmul
+ 209              	.LVL17:
+ 210              		.loc 1 81 21 discriminator 1 view .LVU42
+ 211 0094 5246     		mov	r2, r10
+ 212 0096 5B46     		mov	r3, fp
+ 213 0098 FFF7FEFF 		bl	__aeabi_dadd
+ 214              	.LVL18:
+ 215 009c 8046     		mov	r8, r0
+ 216 009e 8946     		mov	r9, r1
+ 217              		.loc 1 81 12 discriminator 1 view .LVU43
+ 218 00a0 9FEDB57B 		vldr.64	d7, .L13+8
+ 219 00a4 8DED087B 		vstr.64	d7, [sp, #32]
+ 220 00a8 0890     		str	r0, [sp, #32]
+ 221 00aa 01F10043 		add	r3, r1, #-2147483648
+ 222 00ae 0993     		str	r3, [sp, #36]
+ 223              	.LVL19:
+  82:cooneo_Drivers/math/dk.c ****     double z1 = -dk->ArmLength * sin(thetaA);
+ 224              		.loc 1 82 5 is_stmt 1 view .LVU44
+ 225              		.loc 1 82 17 is_stmt 0 view .LVU45
+ 226 00b0 3446     		mov	r4, r6
+ 227 00b2 07F10045 		add	r5, r7, #-2147483648
+ 228              		.loc 1 82 34 view .LVU46
+ 229 00b6 B0EE4A0A 		vmov.f32	s0, s20
+ 230 00ba F0EE6A0A 		vmov.f32	s1, s21
+ 231 00be FFF7FEFF 		bl	sin
+ 232              	.LVL20:
+ 233 00c2 53EC102B 		vmov	r2, r3, d0
+ 234              		.loc 1 82 12 discriminator 1 view .LVU47
+ 235 00c6 3046     		mov	r0, r6
+ 236 00c8 2946     		mov	r1, r5
+ 237 00ca FFF7FEFF 		bl	__aeabi_dmul
+ 238              	.LVL21:
+ 239 00ce CDE90001 		strd	r0, [sp]
+ 240              	.LVL22:
   83:cooneo_Drivers/math/dk.c **** 
-  84:cooneo_Drivers/math/dk.c ****     double y3 = (t + dk->ArmLength * cos(thetaC)) * sin30;
- 416              		.loc 1 84 5 is_stmt 1 view .LVU67
- 417              		.loc 1 84 38 is_stmt 0 view .LVU68
- 418 012c B0EE480A 		vmov.f32	s0, s16
- 419 0130 F0EE680A 		vmov.f32	s1, s17
- 420 0134 FFF7FEFF 		bl	cos
- 421              	.LVL45:
- 422              		.loc 1 84 38 view .LVU69
- 423 0138 53EC102B 		vmov	r2, r3, d0
- 424              		.loc 1 84 36 discriminator 1 view .LVU70
- 425 013c 3046     		mov	r0, r6
- 426 013e 3946     		mov	r1, r7
- 427 0140 FFF7FEFF 		bl	__aeabi_dmul
- 428              	.LVL46:
- 429              		.loc 1 84 20 discriminator 1 view .LVU71
- 430 0144 5246     		mov	r2, r10
- 431 0146 5B46     		mov	r3, fp
- 432 0148 FFF7FEFF 		bl	__aeabi_dadd
- 433              	.LVL47:
- 434              		.loc 1 84 12 discriminator 1 view .LVU72
- 435 014c 0022     		movs	r2, #0
- 436 014e 8E4B     		ldr	r3, .L17+24
- 437 0150 FFF7FEFF 		bl	__aeabi_dmul
- 438              	.LVL48:
- 439 0154 0646     		mov	r6, r0
- 440 0156 0F46     		mov	r7, r1
- 441              	.LVL49:
-  85:cooneo_Drivers/math/dk.c ****     double x3 = -y3 * tan60;
- 442              		.loc 1 85 5 is_stmt 1 view .LVU73
- 443              		.loc 1 85 17 is_stmt 0 view .LVU74
- 444 0158 01F10041 		add	r1, r1, #-2147483648
- 445              		.loc 1 85 12 view .LVU75
- 446 015c 88A3     		adr	r3, .L17+16
- 447 015e D3E90023 		ldrd	r2, [r3]
- 448 0162 FFF7FEFF 		bl	__aeabi_dmul
-ARM GAS  /tmp/ccQ9HSto.s 			page 11
+  84:cooneo_Drivers/math/dk.c ****     double y2 = (t + dk->ArmLength * cos(thetaB)) * sin30;
+ 241              		.loc 1 84 5 is_stmt 1 view .LVU48
+ 242              		.loc 1 84 38 is_stmt 0 view .LVU49
+ 243 00d2 B0EE490A 		vmov.f32	s0, s18
+ 244 00d6 F0EE690A 		vmov.f32	s1, s19
+ 245 00da FFF7FEFF 		bl	cos
+ 246              	.LVL23:
+ 247              		.loc 1 84 38 view .LVU50
+ 248 00de 53EC102B 		vmov	r2, r3, d0
+ 249              		.loc 1 84 36 discriminator 1 view .LVU51
+ 250 00e2 3046     		mov	r0, r6
+ 251 00e4 3946     		mov	r1, r7
+ 252 00e6 FFF7FEFF 		bl	__aeabi_dmul
+ 253              	.LVL24:
+ 254              		.loc 1 84 20 discriminator 1 view .LVU52
+ 255 00ea 5246     		mov	r2, r10
+ 256 00ec 5B46     		mov	r3, fp
+ 257 00ee FFF7FEFF 		bl	__aeabi_dadd
+ 258              	.LVL25:
+ 259              		.loc 1 84 12 discriminator 1 view .LVU53
+ 260 00f2 0022     		movs	r2, #0
+ARM GAS  /tmp/ccizZaUb.s 			page 7
 
 
- 449              	.LVL50:
- 450 0166 CDE90401 		strd	r0, [sp, #16]
- 451              	.LVL51:
-  86:cooneo_Drivers/math/dk.c ****     double z3 = -dk->ArmLength * sin(thetaC);
- 452              		.loc 1 86 5 is_stmt 1 view .LVU76
- 453              		.loc 1 86 34 is_stmt 0 view .LVU77
- 454 016a B0EE480A 		vmov.f32	s0, s16
- 455 016e F0EE680A 		vmov.f32	s1, s17
- 456 0172 FFF7FEFF 		bl	sin
- 457              	.LVL52:
- 458              		.loc 1 86 34 view .LVU78
- 459 0176 53EC102B 		vmov	r2, r3, d0
- 460              		.loc 1 86 12 discriminator 1 view .LVU79
- 461 017a 2046     		mov	r0, r4
- 462 017c 2946     		mov	r1, r5
- 463 017e FFF7FEFF 		bl	__aeabi_dmul
- 464              	.LVL53:
- 465 0182 8246     		mov	r10, r0
- 466              	.LVL54:
- 467              		.loc 1 86 12 discriminator 1 view .LVU80
- 468 0184 8B46     		mov	fp, r1
- 469              	.LVL55:
+ 261 00f4 A44B     		ldr	r3, .L13+24
+ 262 00f6 FFF7FEFF 		bl	__aeabi_dmul
+ 263              	.LVL26:
+ 264 00fa 0246     		mov	r2, r0
+ 265 00fc 0B46     		mov	r3, r1
+ 266 00fe CDE90C23 		strd	r2, [sp, #48]
+ 267              	.LVL27:
+  85:cooneo_Drivers/math/dk.c ****     double x2 = y2 * tan60;
+ 268              		.loc 1 85 5 is_stmt 1 view .LVU54
+ 269              		.loc 1 85 12 is_stmt 0 view .LVU55
+ 270 0102 9FA3     		adr	r3, .L13+16
+ 271 0104 D3E90023 		ldrd	r2, [r3]
+ 272              	.LVL28:
+ 273              		.loc 1 85 12 view .LVU56
+ 274 0108 FFF7FEFF 		bl	__aeabi_dmul
+ 275              	.LVL29:
+ 276 010c CDE90201 		strd	r0, [sp, #8]
+ 277              	.LVL30:
+  86:cooneo_Drivers/math/dk.c ****     double z2 = -dk->ArmLength * sin(thetaB);
+ 278              		.loc 1 86 5 is_stmt 1 view .LVU57
+ 279              		.loc 1 86 34 is_stmt 0 view .LVU58
+ 280 0110 B0EE490A 		vmov.f32	s0, s18
+ 281 0114 F0EE690A 		vmov.f32	s1, s19
+ 282 0118 FFF7FEFF 		bl	sin
+ 283              	.LVL31:
+ 284              		.loc 1 86 34 view .LVU59
+ 285 011c 53EC102B 		vmov	r2, r3, d0
+ 286              		.loc 1 86 12 discriminator 1 view .LVU60
+ 287 0120 3046     		mov	r0, r6
+ 288 0122 2946     		mov	r1, r5
+ 289 0124 FFF7FEFF 		bl	__aeabi_dmul
+ 290              	.LVL32:
+ 291 0128 CDE90601 		strd	r0, [sp, #24]
+ 292              	.LVL33:
   87:cooneo_Drivers/math/dk.c **** 
-  88:cooneo_Drivers/math/dk.c ****     double dnm = (y2 - y1) * x3 - (y3 - y1) * x2;
- 470              		.loc 1 88 5 is_stmt 1 view .LVU81
- 471              		.loc 1 88 22 is_stmt 0 view .LVU82
- 472 0186 DDE90C23 		ldrd	r2, [sp, #48]
- 473 018a 4046     		mov	r0, r8
- 474 018c 4946     		mov	r1, r9
- 475 018e FFF7FEFF 		bl	__aeabi_dadd
- 476              	.LVL56:
- 477 0192 0246     		mov	r2, r0
- 478 0194 0B46     		mov	r3, r1
- 479 0196 CDE91023 		strd	r2, [sp, #64]
- 480              		.loc 1 88 28 view .LVU83
- 481 019a DDE90423 		ldrd	r2, [sp, #16]
- 482 019e FFF7FEFF 		bl	__aeabi_dmul
- 483              	.LVL57:
- 484 01a2 0446     		mov	r4, r0
- 485 01a4 0D46     		mov	r5, r1
- 486              		.loc 1 88 39 view .LVU84
- 487 01a6 3246     		mov	r2, r6
- 488 01a8 3B46     		mov	r3, r7
- 489 01aa 4046     		mov	r0, r8
- 490 01ac 4946     		mov	r1, r9
- 491 01ae FFF7FEFF 		bl	__aeabi_dadd
- 492              	.LVL58:
- 493 01b2 0246     		mov	r2, r0
- 494 01b4 0B46     		mov	r3, r1
- 495 01b6 CDE91223 		strd	r2, [sp, #72]
- 496              		.loc 1 88 45 view .LVU85
- 497 01ba DDE90223 		ldrd	r2, [sp, #8]
- 498 01be FFF7FEFF 		bl	__aeabi_dmul
- 499              	.LVL59:
- 500 01c2 0246     		mov	r2, r0
- 501 01c4 0B46     		mov	r3, r1
- 502              		.loc 1 88 12 view .LVU86
-ARM GAS  /tmp/ccQ9HSto.s 			page 12
+  88:cooneo_Drivers/math/dk.c ****     double y3 = (t + dk->ArmLength * cos(thetaC)) * sin30;
+ 293              		.loc 1 88 5 is_stmt 1 view .LVU61
+ 294              		.loc 1 88 38 is_stmt 0 view .LVU62
+ 295 012c B0EE480A 		vmov.f32	s0, s16
+ 296 0130 F0EE680A 		vmov.f32	s1, s17
+ 297 0134 FFF7FEFF 		bl	cos
+ 298              	.LVL34:
+ 299              		.loc 1 88 38 view .LVU63
+ 300 0138 53EC102B 		vmov	r2, r3, d0
+ 301              		.loc 1 88 36 discriminator 1 view .LVU64
+ 302 013c 3046     		mov	r0, r6
+ 303 013e 3946     		mov	r1, r7
+ 304 0140 FFF7FEFF 		bl	__aeabi_dmul
+ 305              	.LVL35:
+ 306              		.loc 1 88 20 discriminator 1 view .LVU65
+ 307 0144 5246     		mov	r2, r10
+ 308 0146 5B46     		mov	r3, fp
+ 309 0148 FFF7FEFF 		bl	__aeabi_dadd
+ 310              	.LVL36:
+ 311              		.loc 1 88 12 discriminator 1 view .LVU66
+ 312 014c 0022     		movs	r2, #0
+ 313 014e 8E4B     		ldr	r3, .L13+24
+ARM GAS  /tmp/ccizZaUb.s 			page 8
 
 
- 503 01c6 2046     		mov	r0, r4
- 504 01c8 2946     		mov	r1, r5
- 505 01ca FFF7FEFF 		bl	__aeabi_dsub
- 506              	.LVL60:
- 507 01ce CDE90A01 		strd	r0, [sp, #40]
- 508              	.LVL61:
-  89:cooneo_Drivers/math/dk.c **** 
-  90:cooneo_Drivers/math/dk.c ****     double w1 = y1 * y1 + z1 * z1;
- 509              		.loc 1 90 5 is_stmt 1 view .LVU87
- 510              		.loc 1 90 20 is_stmt 0 view .LVU88
- 511 01d2 4246     		mov	r2, r8
- 512 01d4 4B46     		mov	r3, r9
- 513 01d6 4046     		mov	r0, r8
- 514              	.LVL62:
- 515              		.loc 1 90 20 view .LVU89
- 516 01d8 4946     		mov	r1, r9
- 517 01da FFF7FEFF 		bl	__aeabi_dmul
- 518              	.LVL63:
- 519 01de 0446     		mov	r4, r0
- 520 01e0 0D46     		mov	r5, r1
- 521              		.loc 1 90 30 view .LVU90
- 522 01e2 DDE90089 		ldrd	r8, [sp]
- 523 01e6 4246     		mov	r2, r8
- 524 01e8 4B46     		mov	r3, r9
- 525 01ea 4046     		mov	r0, r8
- 526 01ec 4946     		mov	r1, r9
- 527 01ee FFF7FEFF 		bl	__aeabi_dmul
- 528              	.LVL64:
- 529 01f2 0A46     		mov	r2, r1
- 530 01f4 0146     		mov	r1, r0
- 531              		.loc 1 90 12 view .LVU91
- 532 01f6 CDE91412 		strd	r1, [sp, #80]
- 533 01fa 1346     		mov	r3, r2
- 534 01fc 0246     		mov	r2, r0
- 535 01fe 2046     		mov	r0, r4
- 536 0200 2946     		mov	r1, r5
- 537 0202 FFF7FEFF 		bl	__aeabi_dadd
- 538              	.LVL65:
- 539 0206 CDE91601 		strd	r0, [sp, #88]
- 540              	.LVL66:
-  91:cooneo_Drivers/math/dk.c ****     double w2 = x2 * x2 + y2 * y2 + z2 * z2;
- 541              		.loc 1 91 5 is_stmt 1 view .LVU92
- 542              		.loc 1 91 20 is_stmt 0 view .LVU93
- 543 020a DDE90245 		ldrd	r4, [sp, #8]
- 544 020e 2246     		mov	r2, r4
- 545 0210 2B46     		mov	r3, r5
- 546 0212 2046     		mov	r0, r4
- 547              	.LVL67:
- 548              		.loc 1 91 20 view .LVU94
- 549 0214 2946     		mov	r1, r5
- 550 0216 FFF7FEFF 		bl	__aeabi_dmul
- 551              	.LVL68:
- 552 021a 0446     		mov	r4, r0
- 553 021c 0D46     		mov	r5, r1
- 554              		.loc 1 91 30 view .LVU95
- 555 021e DDE90C01 		ldrd	r0, [sp, #48]
- 556 0222 0246     		mov	r2, r0
-ARM GAS  /tmp/ccQ9HSto.s 			page 13
+ 314 0150 FFF7FEFF 		bl	__aeabi_dmul
+ 315              	.LVL37:
+ 316 0154 0646     		mov	r6, r0
+ 317 0156 0F46     		mov	r7, r1
+ 318              	.LVL38:
+  89:cooneo_Drivers/math/dk.c ****     double x3 = -y3 * tan60;
+ 319              		.loc 1 89 5 is_stmt 1 view .LVU67
+ 320              		.loc 1 89 17 is_stmt 0 view .LVU68
+ 321 0158 01F10041 		add	r1, r1, #-2147483648
+ 322              		.loc 1 89 12 view .LVU69
+ 323 015c 88A3     		adr	r3, .L13+16
+ 324 015e D3E90023 		ldrd	r2, [r3]
+ 325 0162 FFF7FEFF 		bl	__aeabi_dmul
+ 326              	.LVL39:
+ 327 0166 CDE90401 		strd	r0, [sp, #16]
+ 328              	.LVL40:
+  90:cooneo_Drivers/math/dk.c ****     double z3 = -dk->ArmLength * sin(thetaC);
+ 329              		.loc 1 90 5 is_stmt 1 view .LVU70
+ 330              		.loc 1 90 34 is_stmt 0 view .LVU71
+ 331 016a B0EE480A 		vmov.f32	s0, s16
+ 332 016e F0EE680A 		vmov.f32	s1, s17
+ 333 0172 FFF7FEFF 		bl	sin
+ 334              	.LVL41:
+ 335              		.loc 1 90 34 view .LVU72
+ 336 0176 53EC102B 		vmov	r2, r3, d0
+ 337              		.loc 1 90 12 discriminator 1 view .LVU73
+ 338 017a 2046     		mov	r0, r4
+ 339 017c 2946     		mov	r1, r5
+ 340 017e FFF7FEFF 		bl	__aeabi_dmul
+ 341              	.LVL42:
+ 342 0182 8246     		mov	r10, r0
+ 343              	.LVL43:
+ 344              		.loc 1 90 12 discriminator 1 view .LVU74
+ 345 0184 8B46     		mov	fp, r1
+ 346              	.LVL44:
+  91:cooneo_Drivers/math/dk.c **** 
+  92:cooneo_Drivers/math/dk.c ****     double dnm = (y2 - y1) * x3 - (y3 - y1) * x2;
+ 347              		.loc 1 92 5 is_stmt 1 view .LVU75
+ 348              		.loc 1 92 22 is_stmt 0 view .LVU76
+ 349 0186 DDE90C23 		ldrd	r2, [sp, #48]
+ 350 018a 4046     		mov	r0, r8
+ 351 018c 4946     		mov	r1, r9
+ 352 018e FFF7FEFF 		bl	__aeabi_dadd
+ 353              	.LVL45:
+ 354 0192 0246     		mov	r2, r0
+ 355 0194 0B46     		mov	r3, r1
+ 356 0196 CDE91023 		strd	r2, [sp, #64]
+ 357              		.loc 1 92 28 view .LVU77
+ 358 019a DDE90423 		ldrd	r2, [sp, #16]
+ 359 019e FFF7FEFF 		bl	__aeabi_dmul
+ 360              	.LVL46:
+ 361 01a2 0446     		mov	r4, r0
+ 362 01a4 0D46     		mov	r5, r1
+ 363              		.loc 1 92 39 view .LVU78
+ 364 01a6 3246     		mov	r2, r6
+ 365 01a8 3B46     		mov	r3, r7
+ 366 01aa 4046     		mov	r0, r8
+ARM GAS  /tmp/ccizZaUb.s 			page 9
 
 
- 557 0224 0B46     		mov	r3, r1
- 558 0226 FFF7FEFF 		bl	__aeabi_dmul
- 559              	.LVL69:
- 560 022a 0246     		mov	r2, r0
- 561 022c 0B46     		mov	r3, r1
- 562              		.loc 1 91 25 view .LVU96
- 563 022e 2046     		mov	r0, r4
- 564 0230 2946     		mov	r1, r5
- 565 0232 FFF7FEFF 		bl	__aeabi_dadd
- 566              	.LVL70:
- 567 0236 0446     		mov	r4, r0
- 568 0238 0D46     		mov	r5, r1
- 569              		.loc 1 91 40 view .LVU97
- 570 023a DDE90689 		ldrd	r8, [sp, #24]
- 571 023e 4246     		mov	r2, r8
- 572 0240 4B46     		mov	r3, r9
- 573 0242 4046     		mov	r0, r8
- 574 0244 4946     		mov	r1, r9
- 575 0246 FFF7FEFF 		bl	__aeabi_dmul
- 576              	.LVL71:
- 577 024a 0246     		mov	r2, r0
- 578 024c 0B46     		mov	r3, r1
- 579              		.loc 1 91 12 view .LVU98
- 580 024e 2046     		mov	r0, r4
- 581 0250 2946     		mov	r1, r5
- 582 0252 FFF7FEFF 		bl	__aeabi_dadd
- 583              	.LVL72:
- 584 0256 8046     		mov	r8, r0
- 585 0258 8946     		mov	r9, r1
- 586              	.LVL73:
-  92:cooneo_Drivers/math/dk.c ****     double w3 = x3 * x3 + y3 * y3 + z3 * z3;
- 587              		.loc 1 92 5 is_stmt 1 view .LVU99
- 588              		.loc 1 92 20 is_stmt 0 view .LVU100
- 589 025a DDE90445 		ldrd	r4, [sp, #16]
- 590 025e 2246     		mov	r2, r4
- 591 0260 2B46     		mov	r3, r5
- 592 0262 2046     		mov	r0, r4
- 593 0264 2946     		mov	r1, r5
- 594 0266 FFF7FEFF 		bl	__aeabi_dmul
- 595              	.LVL74:
- 596 026a 0446     		mov	r4, r0
- 597 026c 0D46     		mov	r5, r1
- 598              		.loc 1 92 30 view .LVU101
- 599 026e 3246     		mov	r2, r6
- 600 0270 3B46     		mov	r3, r7
- 601 0272 3046     		mov	r0, r6
- 602 0274 3946     		mov	r1, r7
- 603 0276 FFF7FEFF 		bl	__aeabi_dmul
- 604              	.LVL75:
- 605 027a 0246     		mov	r2, r0
- 606 027c 0B46     		mov	r3, r1
- 607              		.loc 1 92 25 view .LVU102
- 608 027e 2046     		mov	r0, r4
- 609 0280 2946     		mov	r1, r5
- 610 0282 FFF7FEFF 		bl	__aeabi_dadd
- 611              	.LVL76:
- 612 0286 0446     		mov	r4, r0
-ARM GAS  /tmp/ccQ9HSto.s 			page 14
-
-
- 613 0288 0D46     		mov	r5, r1
- 614              		.loc 1 92 40 view .LVU103
- 615 028a 5246     		mov	r2, r10
- 616 028c 5B46     		mov	r3, fp
- 617 028e 5046     		mov	r0, r10
- 618 0290 5946     		mov	r1, fp
- 619 0292 FFF7FEFF 		bl	__aeabi_dmul
- 620              	.LVL77:
- 621 0296 0246     		mov	r2, r0
- 622 0298 0B46     		mov	r3, r1
- 623              		.loc 1 92 12 view .LVU104
- 624 029a 2046     		mov	r0, r4
- 625 029c 2946     		mov	r1, r5
- 626 029e FFF7FEFF 		bl	__aeabi_dadd
- 627              	.LVL78:
- 628 02a2 CDE91801 		strd	r0, [sp, #96]
- 629              	.LVL79:
+ 367 01ac 4946     		mov	r1, r9
+ 368 01ae FFF7FEFF 		bl	__aeabi_dadd
+ 369              	.LVL47:
+ 370 01b2 0246     		mov	r2, r0
+ 371 01b4 0B46     		mov	r3, r1
+ 372 01b6 CDE91223 		strd	r2, [sp, #72]
+ 373              		.loc 1 92 45 view .LVU79
+ 374 01ba DDE90223 		ldrd	r2, [sp, #8]
+ 375 01be FFF7FEFF 		bl	__aeabi_dmul
+ 376              	.LVL48:
+ 377 01c2 0246     		mov	r2, r0
+ 378 01c4 0B46     		mov	r3, r1
+ 379              		.loc 1 92 12 view .LVU80
+ 380 01c6 2046     		mov	r0, r4
+ 381 01c8 2946     		mov	r1, r5
+ 382 01ca FFF7FEFF 		bl	__aeabi_dsub
+ 383              	.LVL49:
+ 384 01ce CDE90A01 		strd	r0, [sp, #40]
+ 385              	.LVL50:
   93:cooneo_Drivers/math/dk.c **** 
-  94:cooneo_Drivers/math/dk.c ****     // x = (a1*z + b1)/dnm
-  95:cooneo_Drivers/math/dk.c ****     double a1 = (z2 - z1) * (y3 - y1) - (z3 - z1) * (y2 - y1);
- 630              		.loc 1 95 5 is_stmt 1 view .LVU105
- 631              		.loc 1 95 21 is_stmt 0 view .LVU106
- 632 02a6 DDE90023 		ldrd	r2, [sp]
- 633 02aa DDE90601 		ldrd	r0, [sp, #24]
- 634              	.LVL80:
- 635              		.loc 1 95 21 view .LVU107
- 636 02ae FFF7FEFF 		bl	__aeabi_dsub
- 637              	.LVL81:
- 638 02b2 0646     		mov	r6, r0
- 639              	.LVL82:
- 640              		.loc 1 95 21 view .LVU108
- 641 02b4 0F46     		mov	r7, r1
- 642              		.loc 1 95 27 view .LVU109
- 643 02b6 0246     		mov	r2, r0
- 644 02b8 0B46     		mov	r3, r1
- 645 02ba DDE91201 		ldrd	r0, [sp, #72]
- 646 02be FFF7FEFF 		bl	__aeabi_dmul
- 647              	.LVL83:
- 648 02c2 0446     		mov	r4, r0
- 649 02c4 0D46     		mov	r5, r1
- 650              		.loc 1 95 45 view .LVU110
- 651 02c6 DDE90023 		ldrd	r2, [sp]
- 652 02ca 5046     		mov	r0, r10
- 653 02cc 5946     		mov	r1, fp
- 654 02ce FFF7FEFF 		bl	__aeabi_dsub
- 655              	.LVL84:
- 656 02d2 8246     		mov	r10, r0
- 657              	.LVL85:
- 658              		.loc 1 95 45 view .LVU111
- 659 02d4 8B46     		mov	fp, r1
- 660              		.loc 1 95 51 view .LVU112
- 661 02d6 0246     		mov	r2, r0
- 662 02d8 0B46     		mov	r3, r1
- 663 02da DDE91001 		ldrd	r0, [sp, #64]
- 664 02de FFF7FEFF 		bl	__aeabi_dmul
- 665              	.LVL86:
- 666 02e2 0246     		mov	r2, r0
-ARM GAS  /tmp/ccQ9HSto.s 			page 15
+  94:cooneo_Drivers/math/dk.c ****     double w1 = y1 * y1 + z1 * z1;
+ 386              		.loc 1 94 5 is_stmt 1 view .LVU81
+ 387              		.loc 1 94 20 is_stmt 0 view .LVU82
+ 388 01d2 4246     		mov	r2, r8
+ 389 01d4 4B46     		mov	r3, r9
+ 390 01d6 4046     		mov	r0, r8
+ 391              	.LVL51:
+ 392              		.loc 1 94 20 view .LVU83
+ 393 01d8 4946     		mov	r1, r9
+ 394 01da FFF7FEFF 		bl	__aeabi_dmul
+ 395              	.LVL52:
+ 396 01de 0446     		mov	r4, r0
+ 397 01e0 0D46     		mov	r5, r1
+ 398              		.loc 1 94 30 view .LVU84
+ 399 01e2 DDE90089 		ldrd	r8, [sp]
+ 400 01e6 4246     		mov	r2, r8
+ 401 01e8 4B46     		mov	r3, r9
+ 402 01ea 4046     		mov	r0, r8
+ 403 01ec 4946     		mov	r1, r9
+ 404 01ee FFF7FEFF 		bl	__aeabi_dmul
+ 405              	.LVL53:
+ 406 01f2 0A46     		mov	r2, r1
+ 407 01f4 0146     		mov	r1, r0
+ 408              		.loc 1 94 12 view .LVU85
+ 409 01f6 CDE91412 		strd	r1, [sp, #80]
+ 410 01fa 1346     		mov	r3, r2
+ 411 01fc 0246     		mov	r2, r0
+ 412 01fe 2046     		mov	r0, r4
+ 413 0200 2946     		mov	r1, r5
+ 414 0202 FFF7FEFF 		bl	__aeabi_dadd
+ 415              	.LVL54:
+ 416 0206 CDE91601 		strd	r0, [sp, #88]
+ 417              	.LVL55:
+  95:cooneo_Drivers/math/dk.c ****     double w2 = x2 * x2 + y2 * y2 + z2 * z2;
+ 418              		.loc 1 95 5 is_stmt 1 view .LVU86
+ 419              		.loc 1 95 20 is_stmt 0 view .LVU87
+ 420 020a DDE90245 		ldrd	r4, [sp, #8]
+ARM GAS  /tmp/ccizZaUb.s 			page 10
 
 
- 667 02e4 0B46     		mov	r3, r1
- 668              		.loc 1 95 12 view .LVU113
- 669 02e6 2046     		mov	r0, r4
- 670 02e8 2946     		mov	r1, r5
- 671 02ea FFF7FEFF 		bl	__aeabi_dsub
- 672              	.LVL87:
- 673 02ee CDE90C01 		strd	r0, [sp, #48]
- 674              	.LVL88:
-  96:cooneo_Drivers/math/dk.c ****     double b1 = -((w2 - w1) * (y3 - y1) - (w3 - w1) * (y2 - y1)) / 2.0;
- 675              		.loc 1 96 5 is_stmt 1 view .LVU114
- 676              		.loc 1 96 23 is_stmt 0 view .LVU115
- 677 02f2 DDE91645 		ldrd	r4, [sp, #88]
- 678 02f6 2246     		mov	r2, r4
- 679 02f8 2B46     		mov	r3, r5
- 680 02fa 4046     		mov	r0, r8
- 681              	.LVL89:
- 682              		.loc 1 96 23 view .LVU116
- 683 02fc 4946     		mov	r1, r9
- 684 02fe FFF7FEFF 		bl	__aeabi_dsub
- 685              	.LVL90:
- 686 0302 8046     		mov	r8, r0
- 687              	.LVL91:
- 688              		.loc 1 96 23 view .LVU117
- 689 0304 8946     		mov	r9, r1
- 690              		.loc 1 96 29 view .LVU118
- 691 0306 0246     		mov	r2, r0
- 692 0308 0B46     		mov	r3, r1
- 693 030a DDE91201 		ldrd	r0, [sp, #72]
- 694 030e FFF7FEFF 		bl	__aeabi_dmul
- 695              	.LVL92:
- 696 0312 CDE90601 		strd	r0, [sp, #24]
- 697              	.LVL93:
- 698              		.loc 1 96 47 view .LVU119
- 699 0316 2246     		mov	r2, r4
- 700 0318 2B46     		mov	r3, r5
- 701 031a DDE91801 		ldrd	r0, [sp, #96]
- 702 031e FFF7FEFF 		bl	__aeabi_dsub
- 703              	.LVL94:
- 704 0322 0446     		mov	r4, r0
- 705 0324 0D46     		mov	r5, r1
- 706              		.loc 1 96 53 view .LVU120
- 707 0326 0246     		mov	r2, r0
- 708 0328 0B46     		mov	r3, r1
- 709 032a DDE91001 		ldrd	r0, [sp, #64]
- 710 032e FFF7FEFF 		bl	__aeabi_dmul
- 711              	.LVL95:
- 712 0332 0246     		mov	r2, r0
- 713 0334 0B46     		mov	r3, r1
- 714              		.loc 1 96 41 view .LVU121
- 715 0336 DDE90601 		ldrd	r0, [sp, #24]
- 716 033a FFF7FEFF 		bl	__aeabi_dsub
- 717              	.LVL96:
- 718              		.loc 1 96 17 view .LVU122
- 719 033e 01F10041 		add	r1, r1, #-2147483648
- 720              		.loc 1 96 12 view .LVU123
- 721 0342 0022     		movs	r2, #0
- 722 0344 104B     		ldr	r3, .L17+24
-ARM GAS  /tmp/ccQ9HSto.s 			page 16
+ 421 020e 2246     		mov	r2, r4
+ 422 0210 2B46     		mov	r3, r5
+ 423 0212 2046     		mov	r0, r4
+ 424              	.LVL56:
+ 425              		.loc 1 95 20 view .LVU88
+ 426 0214 2946     		mov	r1, r5
+ 427 0216 FFF7FEFF 		bl	__aeabi_dmul
+ 428              	.LVL57:
+ 429 021a 0446     		mov	r4, r0
+ 430 021c 0D46     		mov	r5, r1
+ 431              		.loc 1 95 30 view .LVU89
+ 432 021e DDE90C01 		ldrd	r0, [sp, #48]
+ 433 0222 0246     		mov	r2, r0
+ 434 0224 0B46     		mov	r3, r1
+ 435 0226 FFF7FEFF 		bl	__aeabi_dmul
+ 436              	.LVL58:
+ 437 022a 0246     		mov	r2, r0
+ 438 022c 0B46     		mov	r3, r1
+ 439              		.loc 1 95 25 view .LVU90
+ 440 022e 2046     		mov	r0, r4
+ 441 0230 2946     		mov	r1, r5
+ 442 0232 FFF7FEFF 		bl	__aeabi_dadd
+ 443              	.LVL59:
+ 444 0236 0446     		mov	r4, r0
+ 445 0238 0D46     		mov	r5, r1
+ 446              		.loc 1 95 40 view .LVU91
+ 447 023a DDE90689 		ldrd	r8, [sp, #24]
+ 448 023e 4246     		mov	r2, r8
+ 449 0240 4B46     		mov	r3, r9
+ 450 0242 4046     		mov	r0, r8
+ 451 0244 4946     		mov	r1, r9
+ 452 0246 FFF7FEFF 		bl	__aeabi_dmul
+ 453              	.LVL60:
+ 454 024a 0246     		mov	r2, r0
+ 455 024c 0B46     		mov	r3, r1
+ 456              		.loc 1 95 12 view .LVU92
+ 457 024e 2046     		mov	r0, r4
+ 458 0250 2946     		mov	r1, r5
+ 459 0252 FFF7FEFF 		bl	__aeabi_dadd
+ 460              	.LVL61:
+ 461 0256 8046     		mov	r8, r0
+ 462 0258 8946     		mov	r9, r1
+ 463              	.LVL62:
+  96:cooneo_Drivers/math/dk.c ****     double w3 = x3 * x3 + y3 * y3 + z3 * z3;
+ 464              		.loc 1 96 5 is_stmt 1 view .LVU93
+ 465              		.loc 1 96 20 is_stmt 0 view .LVU94
+ 466 025a DDE90445 		ldrd	r4, [sp, #16]
+ 467 025e 2246     		mov	r2, r4
+ 468 0260 2B46     		mov	r3, r5
+ 469 0262 2046     		mov	r0, r4
+ 470 0264 2946     		mov	r1, r5
+ 471 0266 FFF7FEFF 		bl	__aeabi_dmul
+ 472              	.LVL63:
+ 473 026a 0446     		mov	r4, r0
+ 474 026c 0D46     		mov	r5, r1
+ 475              		.loc 1 96 30 view .LVU95
+ 476 026e 3246     		mov	r2, r6
+ARM GAS  /tmp/ccizZaUb.s 			page 11
 
 
- 723 0346 FFF7FEFF 		bl	__aeabi_dmul
- 724              	.LVL97:
- 725 034a CDE90601 		strd	r0, [sp, #24]
- 726              	.LVL98:
+ 477 0270 3B46     		mov	r3, r7
+ 478 0272 3046     		mov	r0, r6
+ 479 0274 3946     		mov	r1, r7
+ 480 0276 FFF7FEFF 		bl	__aeabi_dmul
+ 481              	.LVL64:
+ 482 027a 0246     		mov	r2, r0
+ 483 027c 0B46     		mov	r3, r1
+ 484              		.loc 1 96 25 view .LVU96
+ 485 027e 2046     		mov	r0, r4
+ 486 0280 2946     		mov	r1, r5
+ 487 0282 FFF7FEFF 		bl	__aeabi_dadd
+ 488              	.LVL65:
+ 489 0286 0446     		mov	r4, r0
+ 490 0288 0D46     		mov	r5, r1
+ 491              		.loc 1 96 40 view .LVU97
+ 492 028a 5246     		mov	r2, r10
+ 493 028c 5B46     		mov	r3, fp
+ 494 028e 5046     		mov	r0, r10
+ 495 0290 5946     		mov	r1, fp
+ 496 0292 FFF7FEFF 		bl	__aeabi_dmul
+ 497              	.LVL66:
+ 498 0296 0246     		mov	r2, r0
+ 499 0298 0B46     		mov	r3, r1
+ 500              		.loc 1 96 12 view .LVU98
+ 501 029a 2046     		mov	r0, r4
+ 502 029c 2946     		mov	r1, r5
+ 503 029e FFF7FEFF 		bl	__aeabi_dadd
+ 504              	.LVL67:
+ 505 02a2 CDE91801 		strd	r0, [sp, #96]
+ 506              	.LVL68:
   97:cooneo_Drivers/math/dk.c **** 
-  98:cooneo_Drivers/math/dk.c ****     // y = (a2*z + b2)/dnm;
-  99:cooneo_Drivers/math/dk.c ****     double a2 = -(z2 - z1) * x3 + (z3 - z1) * x2;
- 727              		.loc 1 99 5 is_stmt 1 view .LVU124
- 728              		.loc 1 99 17 is_stmt 0 view .LVU125
- 729 034e 3046     		mov	r0, r6
- 730              	.LVL99:
- 731              		.loc 1 99 17 view .LVU126
- 732 0350 07F10041 		add	r1, r7, #-2147483648
- 733              		.loc 1 99 28 view .LVU127
- 734 0354 DDE90423 		ldrd	r2, [sp, #16]
- 735 0358 FFF7FEFF 		bl	__aeabi_dmul
- 736              	.LVL100:
- 737 035c 0646     		mov	r6, r0
- 738 035e 0F46     		mov	r7, r1
- 739              		.loc 1 99 45 view .LVU128
- 740 0360 DDE90223 		ldrd	r2, [sp, #8]
- 741 0364 5046     		mov	r0, r10
- 742 0366 5946     		mov	r1, fp
- 743 0368 FFF7FEFF 		bl	__aeabi_dmul
- 744              	.LVL101:
- 745 036c 0246     		mov	r2, r0
- 746 036e 11E0     		b	.L18
- 747              	.L19:
- 748              		.align	3
- 749              	.L17:
- 750 0370 399D52A2 		.word	-1571644103
- 751 0374 46DF913F 		.word	1066524486
- 752 0378 00000000 		.word	0
- 753 037c 00000000 		.word	0
- 754 0380 AA4C58E8 		.word	-396866390
- 755 0384 7AB6FB3F 		.word	1073460858
- 756 0388 0000E03F 		.word	1071644672
- 757 038c 1D339045 		.word	1167078173
- 758 0390 A779E23F 		.word	1071806887
- 759              	.L18:
- 760 0394 0B46     		mov	r3, r1
- 761              		.loc 1 99 12 view .LVU129
- 762 0396 3046     		mov	r0, r6
- 763 0398 3946     		mov	r1, r7
- 764 039a FFF7FEFF 		bl	__aeabi_dadd
- 765              	.LVL102:
- 766 039e 8246     		mov	r10, r0
- 767 03a0 8B46     		mov	fp, r1
- 768              	.LVL103:
- 100:cooneo_Drivers/math/dk.c ****     double b2 = ((w2 - w1) * x3 - (w3 - w1) * x2) / 2.0;
- 769              		.loc 1 100 5 is_stmt 1 view .LVU130
- 770              		.loc 1 100 28 is_stmt 0 view .LVU131
- 771 03a2 DDE90423 		ldrd	r2, [sp, #16]
- 772 03a6 4046     		mov	r0, r8
- 773 03a8 4946     		mov	r1, r9
- 774 03aa FFF7FEFF 		bl	__aeabi_dmul
- 775              	.LVL104:
-ARM GAS  /tmp/ccQ9HSto.s 			page 17
+  98:cooneo_Drivers/math/dk.c ****     // x = (a1*z + b1)/dnm
+  99:cooneo_Drivers/math/dk.c ****     double a1 = (z2 - z1) * (y3 - y1) - (z3 - z1) * (y2 - y1);
+ 507              		.loc 1 99 5 is_stmt 1 view .LVU99
+ 508              		.loc 1 99 21 is_stmt 0 view .LVU100
+ 509 02a6 DDE90023 		ldrd	r2, [sp]
+ 510 02aa DDE90601 		ldrd	r0, [sp, #24]
+ 511              	.LVL69:
+ 512              		.loc 1 99 21 view .LVU101
+ 513 02ae FFF7FEFF 		bl	__aeabi_dsub
+ 514              	.LVL70:
+ 515 02b2 0646     		mov	r6, r0
+ 516              	.LVL71:
+ 517              		.loc 1 99 21 view .LVU102
+ 518 02b4 0F46     		mov	r7, r1
+ 519              		.loc 1 99 27 view .LVU103
+ 520 02b6 0246     		mov	r2, r0
+ 521 02b8 0B46     		mov	r3, r1
+ 522 02ba DDE91201 		ldrd	r0, [sp, #72]
+ 523 02be FFF7FEFF 		bl	__aeabi_dmul
+ 524              	.LVL72:
+ 525 02c2 0446     		mov	r4, r0
+ 526 02c4 0D46     		mov	r5, r1
+ 527              		.loc 1 99 45 view .LVU104
+ 528 02c6 DDE90023 		ldrd	r2, [sp]
+ 529 02ca 5046     		mov	r0, r10
+ 530 02cc 5946     		mov	r1, fp
+ARM GAS  /tmp/ccizZaUb.s 			page 12
 
 
- 776 03ae 0646     		mov	r6, r0
- 777 03b0 0F46     		mov	r7, r1
- 778              		.loc 1 100 45 view .LVU132
- 779 03b2 DDE90223 		ldrd	r2, [sp, #8]
- 780 03b6 2046     		mov	r0, r4
- 781 03b8 2946     		mov	r1, r5
- 782 03ba FFF7FEFF 		bl	__aeabi_dmul
- 783              	.LVL105:
- 784 03be 0246     		mov	r2, r0
- 785 03c0 0B46     		mov	r3, r1
- 786              		.loc 1 100 33 view .LVU133
- 787 03c2 3046     		mov	r0, r6
- 788 03c4 3946     		mov	r1, r7
- 789 03c6 FFF7FEFF 		bl	__aeabi_dsub
- 790              	.LVL106:
- 791              		.loc 1 100 12 view .LVU134
- 792 03ca 0022     		movs	r2, #0
- 793 03cc 804B     		ldr	r3, .L20
- 794 03ce FFF7FEFF 		bl	__aeabi_dmul
- 795              	.LVL107:
- 796 03d2 CDE90201 		strd	r0, [sp, #8]
- 797              	.LVL108:
+ 531 02ce FFF7FEFF 		bl	__aeabi_dsub
+ 532              	.LVL73:
+ 533 02d2 8246     		mov	r10, r0
+ 534              	.LVL74:
+ 535              		.loc 1 99 45 view .LVU105
+ 536 02d4 8B46     		mov	fp, r1
+ 537              		.loc 1 99 51 view .LVU106
+ 538 02d6 0246     		mov	r2, r0
+ 539 02d8 0B46     		mov	r3, r1
+ 540 02da DDE91001 		ldrd	r0, [sp, #64]
+ 541 02de FFF7FEFF 		bl	__aeabi_dmul
+ 542              	.LVL75:
+ 543 02e2 0246     		mov	r2, r0
+ 544 02e4 0B46     		mov	r3, r1
+ 545              		.loc 1 99 12 view .LVU107
+ 546 02e6 2046     		mov	r0, r4
+ 547 02e8 2946     		mov	r1, r5
+ 548 02ea FFF7FEFF 		bl	__aeabi_dsub
+ 549              	.LVL76:
+ 550 02ee CDE90C01 		strd	r0, [sp, #48]
+ 551              	.LVL77:
+ 100:cooneo_Drivers/math/dk.c ****     double b1 = -((w2 - w1) * (y3 - y1) - (w3 - w1) * (y2 - y1)) / 2.0;
+ 552              		.loc 1 100 5 is_stmt 1 view .LVU108
+ 553              		.loc 1 100 23 is_stmt 0 view .LVU109
+ 554 02f2 DDE91645 		ldrd	r4, [sp, #88]
+ 555 02f6 2246     		mov	r2, r4
+ 556 02f8 2B46     		mov	r3, r5
+ 557 02fa 4046     		mov	r0, r8
+ 558              	.LVL78:
+ 559              		.loc 1 100 23 view .LVU110
+ 560 02fc 4946     		mov	r1, r9
+ 561 02fe FFF7FEFF 		bl	__aeabi_dsub
+ 562              	.LVL79:
+ 563 0302 8046     		mov	r8, r0
+ 564              	.LVL80:
+ 565              		.loc 1 100 23 view .LVU111
+ 566 0304 8946     		mov	r9, r1
+ 567              		.loc 1 100 29 view .LVU112
+ 568 0306 0246     		mov	r2, r0
+ 569 0308 0B46     		mov	r3, r1
+ 570 030a DDE91201 		ldrd	r0, [sp, #72]
+ 571 030e FFF7FEFF 		bl	__aeabi_dmul
+ 572              	.LVL81:
+ 573 0312 CDE90601 		strd	r0, [sp, #24]
+ 574              	.LVL82:
+ 575              		.loc 1 100 47 view .LVU113
+ 576 0316 2246     		mov	r2, r4
+ 577 0318 2B46     		mov	r3, r5
+ 578 031a DDE91801 		ldrd	r0, [sp, #96]
+ 579 031e FFF7FEFF 		bl	__aeabi_dsub
+ 580              	.LVL83:
+ 581 0322 0446     		mov	r4, r0
+ 582 0324 0D46     		mov	r5, r1
+ 583              		.loc 1 100 53 view .LVU114
+ 584 0326 0246     		mov	r2, r0
+ 585 0328 0B46     		mov	r3, r1
+ 586 032a DDE91001 		ldrd	r0, [sp, #64]
+ARM GAS  /tmp/ccizZaUb.s 			page 13
+
+
+ 587 032e FFF7FEFF 		bl	__aeabi_dmul
+ 588              	.LVL84:
+ 589 0332 0246     		mov	r2, r0
+ 590 0334 0B46     		mov	r3, r1
+ 591              		.loc 1 100 41 view .LVU115
+ 592 0336 DDE90601 		ldrd	r0, [sp, #24]
+ 593 033a FFF7FEFF 		bl	__aeabi_dsub
+ 594              	.LVL85:
+ 595              		.loc 1 100 17 view .LVU116
+ 596 033e 01F10041 		add	r1, r1, #-2147483648
+ 597              		.loc 1 100 12 view .LVU117
+ 598 0342 0022     		movs	r2, #0
+ 599 0344 104B     		ldr	r3, .L13+24
+ 600 0346 FFF7FEFF 		bl	__aeabi_dmul
+ 601              	.LVL86:
+ 602 034a CDE90601 		strd	r0, [sp, #24]
+ 603              	.LVL87:
  101:cooneo_Drivers/math/dk.c **** 
- 102:cooneo_Drivers/math/dk.c ****     // a*z^2 + b*z + c = 0
- 103:cooneo_Drivers/math/dk.c ****     double aV = a1 * a1 + a2 * a2 + dnm * dnm;
- 798              		.loc 1 103 5 is_stmt 1 view .LVU135
- 799              		.loc 1 103 20 is_stmt 0 view .LVU136
- 800 03d6 DDE90C67 		ldrd	r6, [sp, #48]
- 801 03da 3246     		mov	r2, r6
- 802 03dc 3B46     		mov	r3, r7
- 803 03de 3046     		mov	r0, r6
- 804              	.LVL109:
- 805              		.loc 1 103 20 view .LVU137
- 806 03e0 3946     		mov	r1, r7
- 807 03e2 FFF7FEFF 		bl	__aeabi_dmul
- 808              	.LVL110:
- 809 03e6 0446     		mov	r4, r0
- 810 03e8 0D46     		mov	r5, r1
- 811              		.loc 1 103 30 view .LVU138
- 812 03ea 5246     		mov	r2, r10
- 813 03ec 5B46     		mov	r3, fp
- 814 03ee 5046     		mov	r0, r10
- 815 03f0 5946     		mov	r1, fp
- 816 03f2 FFF7FEFF 		bl	__aeabi_dmul
- 817              	.LVL111:
- 818 03f6 0246     		mov	r2, r0
- 819 03f8 0B46     		mov	r3, r1
- 820              		.loc 1 103 25 view .LVU139
- 821 03fa 2046     		mov	r0, r4
- 822 03fc 2946     		mov	r1, r5
- 823 03fe FFF7FEFF 		bl	__aeabi_dadd
- 824              	.LVL112:
- 825 0402 0446     		mov	r4, r0
- 826 0404 0D46     		mov	r5, r1
- 827              		.loc 1 103 41 view .LVU140
- 828 0406 DDE90A89 		ldrd	r8, [sp, #40]
- 829 040a 4246     		mov	r2, r8
-ARM GAS  /tmp/ccQ9HSto.s 			page 18
+ 102:cooneo_Drivers/math/dk.c ****     // y = (a2*z + b2)/dnm;
+ 103:cooneo_Drivers/math/dk.c ****     double a2 = -(z2 - z1) * x3 + (z3 - z1) * x2;
+ 604              		.loc 1 103 5 is_stmt 1 view .LVU118
+ 605              		.loc 1 103 17 is_stmt 0 view .LVU119
+ 606 034e 3046     		mov	r0, r6
+ 607              	.LVL88:
+ 608              		.loc 1 103 17 view .LVU120
+ 609 0350 07F10041 		add	r1, r7, #-2147483648
+ 610              		.loc 1 103 28 view .LVU121
+ 611 0354 DDE90423 		ldrd	r2, [sp, #16]
+ 612 0358 FFF7FEFF 		bl	__aeabi_dmul
+ 613              	.LVL89:
+ 614 035c 0646     		mov	r6, r0
+ 615 035e 0F46     		mov	r7, r1
+ 616              		.loc 1 103 45 view .LVU122
+ 617 0360 DDE90223 		ldrd	r2, [sp, #8]
+ 618 0364 5046     		mov	r0, r10
+ 619 0366 5946     		mov	r1, fp
+ 620 0368 FFF7FEFF 		bl	__aeabi_dmul
+ 621              	.LVL90:
+ 622 036c 0246     		mov	r2, r0
+ 623 036e 11E0     		b	.L14
+ 624              	.L15:
+ 625              		.align	3
+ 626              	.L13:
+ 627 0370 399D52A2 		.word	-1571644103
+ 628 0374 46DF913F 		.word	1066524486
+ 629 0378 00000000 		.word	0
+ 630 037c 00000000 		.word	0
+ 631 0380 AA4C58E8 		.word	-396866390
+ 632 0384 7AB6FB3F 		.word	1073460858
+ 633 0388 0000E03F 		.word	1071644672
+ 634 038c 1D339045 		.word	1167078173
+ 635 0390 A779E23F 		.word	1071806887
+ 636              	.L14:
+ 637 0394 0B46     		mov	r3, r1
+ 638              		.loc 1 103 12 view .LVU123
+ 639 0396 3046     		mov	r0, r6
+ 640 0398 3946     		mov	r1, r7
+ARM GAS  /tmp/ccizZaUb.s 			page 14
 
 
- 830 040c 4B46     		mov	r3, r9
- 831 040e 4046     		mov	r0, r8
- 832 0410 4946     		mov	r1, r9
- 833 0412 FFF7FEFF 		bl	__aeabi_dmul
- 834              	.LVL113:
- 835 0416 0246     		mov	r2, r0
- 836 0418 0B46     		mov	r3, r1
- 837              		.loc 1 103 12 view .LVU141
- 838 041a CDE91023 		strd	r2, [sp, #64]
- 839 041e 2046     		mov	r0, r4
- 840 0420 2946     		mov	r1, r5
- 841 0422 FFF7FEFF 		bl	__aeabi_dadd
- 842              	.LVL114:
- 843 0426 CDE90401 		strd	r0, [sp, #16]
- 844              	.LVL115:
- 104:cooneo_Drivers/math/dk.c ****     double bV = 2.0 * (a1 * b1 + a2 * (b2 - y1 * dnm) - z1 * dnm * dnm);
- 845              		.loc 1 104 5 is_stmt 1 view .LVU142
- 846              		.loc 1 104 27 is_stmt 0 view .LVU143
- 847 042a DDE90623 		ldrd	r2, [sp, #24]
- 848 042e 3046     		mov	r0, r6
- 849              	.LVL116:
- 850              		.loc 1 104 27 view .LVU144
- 851 0430 3946     		mov	r1, r7
- 852 0432 FFF7FEFF 		bl	__aeabi_dmul
- 853              	.LVL117:
- 854 0436 0646     		mov	r6, r0
- 855 0438 0F46     		mov	r7, r1
- 856              		.loc 1 104 48 view .LVU145
- 857 043a 4246     		mov	r2, r8
- 858 043c 4B46     		mov	r3, r9
- 859 043e DDE90801 		ldrd	r0, [sp, #32]
- 860 0442 FFF7FEFF 		bl	__aeabi_dmul
- 861              	.LVL118:
- 862 0446 0246     		mov	r2, r0
- 863 0448 0B46     		mov	r3, r1
- 864              		.loc 1 104 43 view .LVU146
- 865 044a DDE90201 		ldrd	r0, [sp, #8]
- 866 044e FFF7FEFF 		bl	__aeabi_dsub
- 867              	.LVL119:
- 868 0452 0446     		mov	r4, r0
- 869 0454 0D46     		mov	r5, r1
- 870              		.loc 1 104 37 view .LVU147
- 871 0456 5246     		mov	r2, r10
- 872 0458 5B46     		mov	r3, fp
- 873 045a FFF7FEFF 		bl	__aeabi_dmul
- 874              	.LVL120:
- 875 045e 0246     		mov	r2, r0
- 876 0460 0B46     		mov	r3, r1
- 877              		.loc 1 104 32 view .LVU148
- 878 0462 3046     		mov	r0, r6
- 879 0464 3946     		mov	r1, r7
- 880 0466 FFF7FEFF 		bl	__aeabi_dadd
- 881              	.LVL121:
- 882 046a 0646     		mov	r6, r0
- 883 046c 0F46     		mov	r7, r1
- 884              		.loc 1 104 60 view .LVU149
- 885 046e 4246     		mov	r2, r8
-ARM GAS  /tmp/ccQ9HSto.s 			page 19
+ 641 039a FFF7FEFF 		bl	__aeabi_dadd
+ 642              	.LVL91:
+ 643 039e 8246     		mov	r10, r0
+ 644 03a0 8B46     		mov	fp, r1
+ 645              	.LVL92:
+ 104:cooneo_Drivers/math/dk.c ****     double b2 = ((w2 - w1) * x3 - (w3 - w1) * x2) / 2.0;
+ 646              		.loc 1 104 5 is_stmt 1 view .LVU124
+ 647              		.loc 1 104 28 is_stmt 0 view .LVU125
+ 648 03a2 DDE90423 		ldrd	r2, [sp, #16]
+ 649 03a6 4046     		mov	r0, r8
+ 650 03a8 4946     		mov	r1, r9
+ 651 03aa FFF7FEFF 		bl	__aeabi_dmul
+ 652              	.LVL93:
+ 653 03ae 0646     		mov	r6, r0
+ 654 03b0 0F46     		mov	r7, r1
+ 655              		.loc 1 104 45 view .LVU126
+ 656 03b2 DDE90223 		ldrd	r2, [sp, #8]
+ 657 03b6 2046     		mov	r0, r4
+ 658 03b8 2946     		mov	r1, r5
+ 659 03ba FFF7FEFF 		bl	__aeabi_dmul
+ 660              	.LVL94:
+ 661 03be 0246     		mov	r2, r0
+ 662 03c0 0B46     		mov	r3, r1
+ 663              		.loc 1 104 33 view .LVU127
+ 664 03c2 3046     		mov	r0, r6
+ 665 03c4 3946     		mov	r1, r7
+ 666 03c6 FFF7FEFF 		bl	__aeabi_dsub
+ 667              	.LVL95:
+ 668              		.loc 1 104 12 view .LVU128
+ 669 03ca 0022     		movs	r2, #0
+ 670 03cc 804B     		ldr	r3, .L16
+ 671 03ce FFF7FEFF 		bl	__aeabi_dmul
+ 672              	.LVL96:
+ 673 03d2 CDE90201 		strd	r0, [sp, #8]
+ 674              	.LVL97:
+ 105:cooneo_Drivers/math/dk.c **** 
+ 106:cooneo_Drivers/math/dk.c ****     // a*z^2 + b*z + c = 0
+ 107:cooneo_Drivers/math/dk.c ****     double aV = a1 * a1 + a2 * a2 + dnm * dnm;
+ 675              		.loc 1 107 5 is_stmt 1 view .LVU129
+ 676              		.loc 1 107 20 is_stmt 0 view .LVU130
+ 677 03d6 DDE90C67 		ldrd	r6, [sp, #48]
+ 678 03da 3246     		mov	r2, r6
+ 679 03dc 3B46     		mov	r3, r7
+ 680 03de 3046     		mov	r0, r6
+ 681              	.LVL98:
+ 682              		.loc 1 107 20 view .LVU131
+ 683 03e0 3946     		mov	r1, r7
+ 684 03e2 FFF7FEFF 		bl	__aeabi_dmul
+ 685              	.LVL99:
+ 686 03e6 0446     		mov	r4, r0
+ 687 03e8 0D46     		mov	r5, r1
+ 688              		.loc 1 107 30 view .LVU132
+ 689 03ea 5246     		mov	r2, r10
+ 690 03ec 5B46     		mov	r3, fp
+ 691 03ee 5046     		mov	r0, r10
+ 692 03f0 5946     		mov	r1, fp
+ 693 03f2 FFF7FEFF 		bl	__aeabi_dmul
+ARM GAS  /tmp/ccizZaUb.s 			page 15
 
 
- 886 0470 4B46     		mov	r3, r9
- 887 0472 DDE90001 		ldrd	r0, [sp]
- 888 0476 FFF7FEFF 		bl	__aeabi_dmul
- 889              	.LVL122:
- 890              		.loc 1 104 66 view .LVU150
- 891 047a 4246     		mov	r2, r8
- 892 047c 4B46     		mov	r3, r9
- 893 047e FFF7FEFF 		bl	__aeabi_dmul
- 894              	.LVL123:
- 895 0482 0246     		mov	r2, r0
- 896 0484 0B46     		mov	r3, r1
- 897              		.loc 1 104 55 view .LVU151
- 898 0486 3046     		mov	r0, r6
- 899 0488 3946     		mov	r1, r7
- 900 048a FFF7FEFF 		bl	__aeabi_dsub
- 901              	.LVL124:
- 902 048e 0246     		mov	r2, r0
- 903 0490 0B46     		mov	r3, r1
- 904              		.loc 1 104 12 view .LVU152
- 905 0492 FFF7FEFF 		bl	__aeabi_dadd
- 906              	.LVL125:
- 907 0496 8046     		mov	r8, r0
- 908 0498 8946     		mov	r9, r1
- 909              	.LVL126:
- 105:cooneo_Drivers/math/dk.c ****     double cV = (b2 - y1 * dnm) * (b2 - y1 * dnm) + b1 * b1 + dnm * dnm * (z1 * z1 - dk->RodLength 
- 910              		.loc 1 105 5 is_stmt 1 view .LVU153
- 911              		.loc 1 105 33 is_stmt 0 view .LVU154
- 912 049a 2246     		mov	r2, r4
- 913 049c 2B46     		mov	r3, r5
- 914 049e 2046     		mov	r0, r4
- 915 04a0 2946     		mov	r1, r5
- 916 04a2 FFF7FEFF 		bl	__aeabi_dmul
- 917              	.LVL127:
- 918 04a6 0446     		mov	r4, r0
- 919 04a8 0D46     		mov	r5, r1
- 920              		.loc 1 105 56 view .LVU155
- 921 04aa DDE90667 		ldrd	r6, [sp, #24]
- 922 04ae 3246     		mov	r2, r6
- 923 04b0 3B46     		mov	r3, r7
- 924 04b2 3046     		mov	r0, r6
- 925 04b4 3946     		mov	r1, r7
- 926 04b6 FFF7FEFF 		bl	__aeabi_dmul
- 927              	.LVL128:
- 928 04ba 0246     		mov	r2, r0
- 929 04bc 0B46     		mov	r3, r1
- 930              		.loc 1 105 51 view .LVU156
- 931 04be 2046     		mov	r0, r4
- 932 04c0 2946     		mov	r1, r5
- 933 04c2 FFF7FEFF 		bl	__aeabi_dadd
- 934              	.LVL129:
- 935 04c6 0446     		mov	r4, r0
- 936 04c8 0D46     		mov	r5, r1
- 937              		.loc 1 105 88 view .LVU157
- 938 04ca 0F9E     		ldr	r6, [sp, #60]
- 939 04cc D6E90201 		ldrd	r0, [r6, #8]
- 940              		.loc 1 105 100 view .LVU158
- 941 04d0 0246     		mov	r2, r0
-ARM GAS  /tmp/ccQ9HSto.s 			page 20
+ 694              	.LVL100:
+ 695 03f6 0246     		mov	r2, r0
+ 696 03f8 0B46     		mov	r3, r1
+ 697              		.loc 1 107 25 view .LVU133
+ 698 03fa 2046     		mov	r0, r4
+ 699 03fc 2946     		mov	r1, r5
+ 700 03fe FFF7FEFF 		bl	__aeabi_dadd
+ 701              	.LVL101:
+ 702 0402 0446     		mov	r4, r0
+ 703 0404 0D46     		mov	r5, r1
+ 704              		.loc 1 107 41 view .LVU134
+ 705 0406 DDE90A89 		ldrd	r8, [sp, #40]
+ 706 040a 4246     		mov	r2, r8
+ 707 040c 4B46     		mov	r3, r9
+ 708 040e 4046     		mov	r0, r8
+ 709 0410 4946     		mov	r1, r9
+ 710 0412 FFF7FEFF 		bl	__aeabi_dmul
+ 711              	.LVL102:
+ 712 0416 0246     		mov	r2, r0
+ 713 0418 0B46     		mov	r3, r1
+ 714              		.loc 1 107 12 view .LVU135
+ 715 041a CDE91023 		strd	r2, [sp, #64]
+ 716 041e 2046     		mov	r0, r4
+ 717 0420 2946     		mov	r1, r5
+ 718 0422 FFF7FEFF 		bl	__aeabi_dadd
+ 719              	.LVL103:
+ 720 0426 CDE90401 		strd	r0, [sp, #16]
+ 721              	.LVL104:
+ 108:cooneo_Drivers/math/dk.c ****     double bV = 2.0 * (a1 * b1 + a2 * (b2 - y1 * dnm) - z1 * dnm * dnm);
+ 722              		.loc 1 108 5 is_stmt 1 view .LVU136
+ 723              		.loc 1 108 27 is_stmt 0 view .LVU137
+ 724 042a DDE90623 		ldrd	r2, [sp, #24]
+ 725 042e 3046     		mov	r0, r6
+ 726              	.LVL105:
+ 727              		.loc 1 108 27 view .LVU138
+ 728 0430 3946     		mov	r1, r7
+ 729 0432 FFF7FEFF 		bl	__aeabi_dmul
+ 730              	.LVL106:
+ 731 0436 0646     		mov	r6, r0
+ 732 0438 0F46     		mov	r7, r1
+ 733              		.loc 1 108 48 view .LVU139
+ 734 043a 4246     		mov	r2, r8
+ 735 043c 4B46     		mov	r3, r9
+ 736 043e DDE90801 		ldrd	r0, [sp, #32]
+ 737 0442 FFF7FEFF 		bl	__aeabi_dmul
+ 738              	.LVL107:
+ 739 0446 0246     		mov	r2, r0
+ 740 0448 0B46     		mov	r3, r1
+ 741              		.loc 1 108 43 view .LVU140
+ 742 044a DDE90201 		ldrd	r0, [sp, #8]
+ 743 044e FFF7FEFF 		bl	__aeabi_dsub
+ 744              	.LVL108:
+ 745 0452 0446     		mov	r4, r0
+ 746 0454 0D46     		mov	r5, r1
+ 747              		.loc 1 108 37 view .LVU141
+ 748 0456 5246     		mov	r2, r10
+ 749 0458 5B46     		mov	r3, fp
+ARM GAS  /tmp/ccizZaUb.s 			page 16
 
 
- 942 04d2 0B46     		mov	r3, r1
- 943 04d4 FFF7FEFF 		bl	__aeabi_dmul
- 944              	.LVL130:
- 945 04d8 0246     		mov	r2, r0
- 946 04da 0B46     		mov	r3, r1
- 947              		.loc 1 105 84 view .LVU159
- 948 04dc DDE91401 		ldrd	r0, [sp, #80]
- 949 04e0 FFF7FEFF 		bl	__aeabi_dsub
- 950              	.LVL131:
- 951 04e4 0246     		mov	r2, r0
- 952 04e6 0B46     		mov	r3, r1
- 953              		.loc 1 105 73 view .LVU160
- 954 04e8 DDE91001 		ldrd	r0, [sp, #64]
- 955 04ec FFF7FEFF 		bl	__aeabi_dmul
- 956              	.LVL132:
- 957 04f0 0246     		mov	r2, r0
- 958 04f2 0B46     		mov	r3, r1
- 959              		.loc 1 105 12 view .LVU161
- 960 04f4 2046     		mov	r0, r4
- 961 04f6 2946     		mov	r1, r5
- 962 04f8 FFF7FEFF 		bl	__aeabi_dadd
- 963              	.LVL133:
- 964 04fc 0646     		mov	r6, r0
- 965 04fe 0F46     		mov	r7, r1
- 966              	.LVL134:
- 106:cooneo_Drivers/math/dk.c **** 
- 107:cooneo_Drivers/math/dk.c ****     // discriminant
- 108:cooneo_Drivers/math/dk.c ****     double dV = bV * bV - 4.0 * aV * cV;
- 967              		.loc 1 108 5 is_stmt 1 view .LVU162
- 968              		.loc 1 108 20 is_stmt 0 view .LVU163
- 969 0500 4246     		mov	r2, r8
- 970 0502 4B46     		mov	r3, r9
- 971 0504 4046     		mov	r0, r8
- 972 0506 4946     		mov	r1, r9
- 973 0508 FFF7FEFF 		bl	__aeabi_dmul
- 974              	.LVL135:
- 975 050c 0446     		mov	r4, r0
- 976 050e 0D46     		mov	r5, r1
- 977              		.loc 1 108 31 view .LVU164
- 978 0510 0022     		movs	r2, #0
- 979 0512 304B     		ldr	r3, .L20+4
- 980 0514 DDE90401 		ldrd	r0, [sp, #16]
- 981 0518 FFF7FEFF 		bl	__aeabi_dmul
- 982              	.LVL136:
- 983              		.loc 1 108 36 view .LVU165
- 984 051c 3246     		mov	r2, r6
- 985 051e 3B46     		mov	r3, r7
- 986 0520 FFF7FEFF 		bl	__aeabi_dmul
- 987              	.LVL137:
- 988 0524 0246     		mov	r2, r0
- 989 0526 0B46     		mov	r3, r1
- 990              		.loc 1 108 12 view .LVU166
- 991 0528 2046     		mov	r0, r4
- 992 052a 2946     		mov	r1, r5
- 993 052c FFF7FEFF 		bl	__aeabi_dsub
- 994              	.LVL138:
- 995 0530 0246     		mov	r2, r0
-ARM GAS  /tmp/ccQ9HSto.s 			page 21
+ 750 045a FFF7FEFF 		bl	__aeabi_dmul
+ 751              	.LVL109:
+ 752 045e 0246     		mov	r2, r0
+ 753 0460 0B46     		mov	r3, r1
+ 754              		.loc 1 108 32 view .LVU142
+ 755 0462 3046     		mov	r0, r6
+ 756 0464 3946     		mov	r1, r7
+ 757 0466 FFF7FEFF 		bl	__aeabi_dadd
+ 758              	.LVL110:
+ 759 046a 0646     		mov	r6, r0
+ 760 046c 0F46     		mov	r7, r1
+ 761              		.loc 1 108 60 view .LVU143
+ 762 046e 4246     		mov	r2, r8
+ 763 0470 4B46     		mov	r3, r9
+ 764 0472 DDE90001 		ldrd	r0, [sp]
+ 765 0476 FFF7FEFF 		bl	__aeabi_dmul
+ 766              	.LVL111:
+ 767              		.loc 1 108 66 view .LVU144
+ 768 047a 4246     		mov	r2, r8
+ 769 047c 4B46     		mov	r3, r9
+ 770 047e FFF7FEFF 		bl	__aeabi_dmul
+ 771              	.LVL112:
+ 772 0482 0246     		mov	r2, r0
+ 773 0484 0B46     		mov	r3, r1
+ 774              		.loc 1 108 55 view .LVU145
+ 775 0486 3046     		mov	r0, r6
+ 776 0488 3946     		mov	r1, r7
+ 777 048a FFF7FEFF 		bl	__aeabi_dsub
+ 778              	.LVL113:
+ 779 048e 0246     		mov	r2, r0
+ 780 0490 0B46     		mov	r3, r1
+ 781              		.loc 1 108 12 view .LVU146
+ 782 0492 FFF7FEFF 		bl	__aeabi_dadd
+ 783              	.LVL114:
+ 784 0496 8046     		mov	r8, r0
+ 785 0498 8946     		mov	r9, r1
+ 786              	.LVL115:
+ 109:cooneo_Drivers/math/dk.c ****     double cV = (b2 - y1 * dnm) * (b2 - y1 * dnm) + b1 * b1 + dnm * dnm * (z1 * z1 - dk->RodLength 
+ 787              		.loc 1 109 5 is_stmt 1 view .LVU147
+ 788              		.loc 1 109 33 is_stmt 0 view .LVU148
+ 789 049a 2246     		mov	r2, r4
+ 790 049c 2B46     		mov	r3, r5
+ 791 049e 2046     		mov	r0, r4
+ 792 04a0 2946     		mov	r1, r5
+ 793 04a2 FFF7FEFF 		bl	__aeabi_dmul
+ 794              	.LVL116:
+ 795 04a6 0446     		mov	r4, r0
+ 796 04a8 0D46     		mov	r5, r1
+ 797              		.loc 1 109 56 view .LVU149
+ 798 04aa DDE90667 		ldrd	r6, [sp, #24]
+ 799 04ae 3246     		mov	r2, r6
+ 800 04b0 3B46     		mov	r3, r7
+ 801 04b2 3046     		mov	r0, r6
+ 802 04b4 3946     		mov	r1, r7
+ 803 04b6 FFF7FEFF 		bl	__aeabi_dmul
+ 804              	.LVL117:
+ 805 04ba 0246     		mov	r2, r0
+ARM GAS  /tmp/ccizZaUb.s 			page 17
 
 
- 996 0532 0B46     		mov	r3, r1
- 997 0534 43EC182B 		vmov	d8, r2, r3
- 998              	.LVL139:
- 109:cooneo_Drivers/math/dk.c ****     if (dV < 0.0) {
- 999              		.loc 1 109 5 is_stmt 1 view .LVU167
- 1000              		.loc 1 109 8 is_stmt 0 view .LVU168
- 1001 0538 0022     		movs	r2, #0
- 1002              	.LVL140:
- 1003              		.loc 1 109 8 view .LVU169
- 1004 053a 0023     		movs	r3, #0
- 1005 053c FFF7FEFF 		bl	__aeabi_dcmplt
- 1006              	.LVL141:
- 1007 0540 0028     		cmp	r0, #0
- 1008 0542 41D1     		bne	.L12
- 110:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // non-existing point. return error,x,y,z
- 111:cooneo_Drivers/math/dk.c ****     }
- 112:cooneo_Drivers/math/dk.c **** 
- 113:cooneo_Drivers/math/dk.c ****     dk->z = -0.5 * (bV + sqrt(dV)) / aV;
- 1009              		.loc 1 113 5 is_stmt 1 view .LVU170
- 1010              		.loc 1 113 26 is_stmt 0 view .LVU171
- 1011 0544 B0EE480A 		vmov.f32	s0, s16
- 1012 0548 F0EE680A 		vmov.f32	s1, s17
- 1013 054c FFF7FEFF 		bl	sqrt
- 1014              	.LVL142:
- 1015 0550 51EC100B 		vmov	r0, r1, d0
- 1016              		.loc 1 113 24 discriminator 1 view .LVU172
- 1017 0554 4246     		mov	r2, r8
- 1018 0556 4B46     		mov	r3, r9
- 1019 0558 FFF7FEFF 		bl	__aeabi_dadd
- 1020              	.LVL143:
- 1021              		.loc 1 113 18 discriminator 1 view .LVU173
- 1022 055c 0022     		movs	r2, #0
- 1023 055e 1E4B     		ldr	r3, .L20+8
- 1024 0560 FFF7FEFF 		bl	__aeabi_dmul
- 1025              	.LVL144:
- 1026              		.loc 1 113 36 discriminator 1 view .LVU174
- 1027 0564 DDE90423 		ldrd	r2, [sp, #16]
- 1028 0568 FFF7FEFF 		bl	__aeabi_ddiv
- 1029              	.LVL145:
- 1030 056c 0446     		mov	r4, r0
- 1031 056e 0D46     		mov	r5, r1
- 1032              		.loc 1 113 11 discriminator 1 view .LVU175
- 1033 0570 0F9E     		ldr	r6, [sp, #60]
- 1034              	.LVL146:
- 1035              		.loc 1 113 11 discriminator 1 view .LVU176
- 1036 0572 C6E90C45 		strd	r4, [r6, #48]
- 114:cooneo_Drivers/math/dk.c ****     dk->x = (a1 * dk->z + b1) / dnm;
- 1037              		.loc 1 114 5 is_stmt 1 view .LVU177
- 1038              		.loc 1 114 17 is_stmt 0 view .LVU178
- 1039 0576 DDE90C23 		ldrd	r2, [sp, #48]
- 1040 057a FFF7FEFF 		bl	__aeabi_dmul
- 1041              	.LVL147:
- 1042              		.loc 1 114 25 view .LVU179
- 1043 057e DDE90623 		ldrd	r2, [sp, #24]
- 1044 0582 FFF7FEFF 		bl	__aeabi_dadd
- 1045              	.LVL148:
- 1046              		.loc 1 114 31 view .LVU180
-ARM GAS  /tmp/ccQ9HSto.s 			page 22
+ 806 04bc 0B46     		mov	r3, r1
+ 807              		.loc 1 109 51 view .LVU150
+ 808 04be 2046     		mov	r0, r4
+ 809 04c0 2946     		mov	r1, r5
+ 810 04c2 FFF7FEFF 		bl	__aeabi_dadd
+ 811              	.LVL118:
+ 812 04c6 0446     		mov	r4, r0
+ 813 04c8 0D46     		mov	r5, r1
+ 814              		.loc 1 109 88 view .LVU151
+ 815 04ca 0F9E     		ldr	r6, [sp, #60]
+ 816 04cc D6E90201 		ldrd	r0, [r6, #8]
+ 817              		.loc 1 109 100 view .LVU152
+ 818 04d0 0246     		mov	r2, r0
+ 819 04d2 0B46     		mov	r3, r1
+ 820 04d4 FFF7FEFF 		bl	__aeabi_dmul
+ 821              	.LVL119:
+ 822 04d8 0246     		mov	r2, r0
+ 823 04da 0B46     		mov	r3, r1
+ 824              		.loc 1 109 84 view .LVU153
+ 825 04dc DDE91401 		ldrd	r0, [sp, #80]
+ 826 04e0 FFF7FEFF 		bl	__aeabi_dsub
+ 827              	.LVL120:
+ 828 04e4 0246     		mov	r2, r0
+ 829 04e6 0B46     		mov	r3, r1
+ 830              		.loc 1 109 73 view .LVU154
+ 831 04e8 DDE91001 		ldrd	r0, [sp, #64]
+ 832 04ec FFF7FEFF 		bl	__aeabi_dmul
+ 833              	.LVL121:
+ 834 04f0 0246     		mov	r2, r0
+ 835 04f2 0B46     		mov	r3, r1
+ 836              		.loc 1 109 12 view .LVU155
+ 837 04f4 2046     		mov	r0, r4
+ 838 04f6 2946     		mov	r1, r5
+ 839 04f8 FFF7FEFF 		bl	__aeabi_dadd
+ 840              	.LVL122:
+ 841 04fc 0646     		mov	r6, r0
+ 842 04fe 0F46     		mov	r7, r1
+ 843              	.LVL123:
+ 110:cooneo_Drivers/math/dk.c **** 
+ 111:cooneo_Drivers/math/dk.c ****     // discriminant
+ 112:cooneo_Drivers/math/dk.c ****     double dV = bV * bV - 4.0 * aV * cV;
+ 844              		.loc 1 112 5 is_stmt 1 view .LVU156
+ 845              		.loc 1 112 20 is_stmt 0 view .LVU157
+ 846 0500 4246     		mov	r2, r8
+ 847 0502 4B46     		mov	r3, r9
+ 848 0504 4046     		mov	r0, r8
+ 849 0506 4946     		mov	r1, r9
+ 850 0508 FFF7FEFF 		bl	__aeabi_dmul
+ 851              	.LVL124:
+ 852 050c 0446     		mov	r4, r0
+ 853 050e 0D46     		mov	r5, r1
+ 854              		.loc 1 112 31 view .LVU158
+ 855 0510 0022     		movs	r2, #0
+ 856 0512 304B     		ldr	r3, .L16+4
+ 857 0514 DDE90401 		ldrd	r0, [sp, #16]
+ 858 0518 FFF7FEFF 		bl	__aeabi_dmul
+ 859              	.LVL125:
+ARM GAS  /tmp/ccizZaUb.s 			page 18
 
 
- 1047 0586 DDE90A89 		ldrd	r8, [sp, #40]
- 1048              	.LVL149:
- 1049              		.loc 1 114 31 view .LVU181
- 1050 058a 4246     		mov	r2, r8
- 1051 058c 4B46     		mov	r3, r9
- 1052 058e FFF7FEFF 		bl	__aeabi_ddiv
- 1053              	.LVL150:
- 1054              		.loc 1 114 11 view .LVU182
- 1055 0592 C6E90801 		strd	r0, [r6, #32]
- 115:cooneo_Drivers/math/dk.c ****     dk->y = (a2 * dk->z + b2) / dnm;
- 1056              		.loc 1 115 5 is_stmt 1 view .LVU183
- 1057              		.loc 1 115 17 is_stmt 0 view .LVU184
- 1058 0596 5246     		mov	r2, r10
- 1059 0598 5B46     		mov	r3, fp
- 1060 059a 2046     		mov	r0, r4
- 1061 059c 2946     		mov	r1, r5
- 1062 059e FFF7FEFF 		bl	__aeabi_dmul
- 1063              	.LVL151:
- 1064              		.loc 1 115 25 view .LVU185
- 1065 05a2 DDE90223 		ldrd	r2, [sp, #8]
- 1066 05a6 FFF7FEFF 		bl	__aeabi_dadd
- 1067              	.LVL152:
- 1068              		.loc 1 115 31 view .LVU186
- 1069 05aa 4246     		mov	r2, r8
- 1070 05ac 4B46     		mov	r3, r9
- 1071 05ae FFF7FEFF 		bl	__aeabi_ddiv
- 1072              	.LVL153:
- 1073              		.loc 1 115 11 view .LVU187
- 1074 05b2 C6E90A01 		strd	r0, [r6, #40]
+ 860              		.loc 1 112 36 view .LVU159
+ 861 051c 3246     		mov	r2, r6
+ 862 051e 3B46     		mov	r3, r7
+ 863 0520 FFF7FEFF 		bl	__aeabi_dmul
+ 864              	.LVL126:
+ 865 0524 0246     		mov	r2, r0
+ 866 0526 0B46     		mov	r3, r1
+ 867              		.loc 1 112 12 view .LVU160
+ 868 0528 2046     		mov	r0, r4
+ 869 052a 2946     		mov	r1, r5
+ 870 052c FFF7FEFF 		bl	__aeabi_dsub
+ 871              	.LVL127:
+ 872 0530 0246     		mov	r2, r0
+ 873 0532 0B46     		mov	r3, r1
+ 874 0534 43EC182B 		vmov	d8, r2, r3
+ 875              	.LVL128:
+ 113:cooneo_Drivers/math/dk.c ****     if (dV < 0.0) {
+ 876              		.loc 1 113 5 is_stmt 1 view .LVU161
+ 877              		.loc 1 113 8 is_stmt 0 view .LVU162
+ 878 0538 0022     		movs	r2, #0
+ 879              	.LVL129:
+ 880              		.loc 1 113 8 view .LVU163
+ 881 053a 0023     		movs	r3, #0
+ 882 053c FFF7FEFF 		bl	__aeabi_dcmplt
+ 883              	.LVL130:
+ 884 0540 0028     		cmp	r0, #0
+ 885 0542 41D1     		bne	.L8
+ 114:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // non-existing point. return error,x,y,z
+ 115:cooneo_Drivers/math/dk.c ****     }
  116:cooneo_Drivers/math/dk.c **** 
- 117:cooneo_Drivers/math/dk.c ****     // Return value based on success or failure
- 118:cooneo_Drivers/math/dk.c ****     return no_error; // or return non_existing_point_error based on calculation results
- 1075              		.loc 1 118 5 is_stmt 1 view .LVU188
- 1076              		.loc 1 118 12 is_stmt 0 view .LVU189
- 1077 05b6 0120     		movs	r0, #1
- 1078              	.L9:
- 119:cooneo_Drivers/math/dk.c **** }
- 1079              		.loc 1 119 1 view .LVU190
- 1080 05b8 1BB0     		add	sp, sp, #108
- 1081              	.LCFI7:
- 1082              		.cfi_def_cfa_offset 60
- 1083              	.LVL154:
- 1084              		.loc 1 119 1 view .LVU191
- 1085              		@ sp needed
- 1086 05ba BDEC068B 		vldm	sp!, {d8-d10}
- 1087              	.LCFI8:
- 1088              		.cfi_restore 84
- 1089              		.cfi_restore 85
- 1090              		.cfi_restore 82
- 1091              		.cfi_restore 83
- 1092              		.cfi_restore 80
- 1093              		.cfi_restore 81
- 1094              		.cfi_def_cfa_offset 36
- 1095              	.LVL155:
- 1096              		.loc 1 119 1 view .LVU192
- 1097 05be BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
- 1098              	.LVL156:
-ARM GAS  /tmp/ccQ9HSto.s 			page 23
+ 117:cooneo_Drivers/math/dk.c ****     dk->z = -0.5 * (bV + sqrt(dV)) / aV;
+ 886              		.loc 1 117 5 is_stmt 1 view .LVU164
+ 887              		.loc 1 117 26 is_stmt 0 view .LVU165
+ 888 0544 B0EE480A 		vmov.f32	s0, s16
+ 889 0548 F0EE680A 		vmov.f32	s1, s17
+ 890 054c FFF7FEFF 		bl	sqrt
+ 891              	.LVL131:
+ 892 0550 51EC100B 		vmov	r0, r1, d0
+ 893              		.loc 1 117 24 discriminator 1 view .LVU166
+ 894 0554 4246     		mov	r2, r8
+ 895 0556 4B46     		mov	r3, r9
+ 896 0558 FFF7FEFF 		bl	__aeabi_dadd
+ 897              	.LVL132:
+ 898              		.loc 1 117 18 discriminator 1 view .LVU167
+ 899 055c 0022     		movs	r2, #0
+ 900 055e 1E4B     		ldr	r3, .L16+8
+ 901 0560 FFF7FEFF 		bl	__aeabi_dmul
+ 902              	.LVL133:
+ 903              		.loc 1 117 36 discriminator 1 view .LVU168
+ 904 0564 DDE90423 		ldrd	r2, [sp, #16]
+ 905 0568 FFF7FEFF 		bl	__aeabi_ddiv
+ 906              	.LVL134:
+ 907 056c 0446     		mov	r4, r0
+ 908 056e 0D46     		mov	r5, r1
+ 909              		.loc 1 117 11 discriminator 1 view .LVU169
+ 910 0570 0F9E     		ldr	r6, [sp, #60]
+ 911              	.LVL135:
+ARM GAS  /tmp/ccizZaUb.s 			page 19
 
 
- 1099              	.L11:
- 1100              	.LCFI9:
- 1101              		.cfi_def_cfa_offset 0
- 1102              		.cfi_restore 4
- 1103              		.cfi_restore 5
- 1104              		.cfi_restore 6
- 1105              		.cfi_restore 7
- 1106              		.cfi_restore 8
- 1107              		.cfi_restore 9
- 1108              		.cfi_restore 10
- 1109              		.cfi_restore 11
- 1110              		.cfi_restore 14
-  66:cooneo_Drivers/math/dk.c ****     }
- 1111              		.loc 1 66 16 view .LVU193
- 1112 05c2 6FF00100 		mvn	r0, #1
- 1113              	.LVL157:
- 1114              		.loc 1 119 1 view .LVU194
- 1115 05c6 7047     		bx	lr
- 1116              	.LVL158:
- 1117              	.L12:
- 1118              	.LCFI10:
- 1119              		.cfi_def_cfa_offset 168
- 1120              		.cfi_offset 4, -36
- 1121              		.cfi_offset 5, -32
- 1122              		.cfi_offset 6, -28
- 1123              		.cfi_offset 7, -24
- 1124              		.cfi_offset 8, -20
- 1125              		.cfi_offset 9, -16
- 1126              		.cfi_offset 10, -12
- 1127              		.cfi_offset 11, -8
- 1128              		.cfi_offset 14, -4
- 1129              		.cfi_offset 80, -60
- 1130              		.cfi_offset 81, -56
- 1131              		.cfi_offset 82, -52
- 1132              		.cfi_offset 83, -48
- 1133              		.cfi_offset 84, -44
- 1134              		.cfi_offset 85, -40
- 110:cooneo_Drivers/math/dk.c ****     }
- 1135              		.loc 1 110 16 view .LVU195
- 1136 05c8 6FF00100 		mvn	r0, #1
- 1137 05cc F4E7     		b	.L9
- 1138              	.L21:
- 1139 05ce 00BF     		.align	2
- 1140              	.L20:
- 1141 05d0 0000E03F 		.word	1071644672
- 1142 05d4 00001040 		.word	1074790400
- 1143 05d8 0000E0BF 		.word	-1075838976
- 1144              		.cfi_endproc
- 1145              	.LFE244:
- 1147              		.section	.text.DeltaKinematics_calcAngleYZ,"ax",%progbits
- 1148              		.align	1
- 1149              		.global	DeltaKinematics_calcAngleYZ
- 1150              		.syntax unified
- 1151              		.thumb
- 1152              		.thumb_func
- 1154              	DeltaKinematics_calcAngleYZ:
- 1155              	.LVL159:
-ARM GAS  /tmp/ccQ9HSto.s 			page 24
-
-
- 1156              	.LFB245:
+ 912              		.loc 1 117 11 discriminator 1 view .LVU170
+ 913 0572 C6E90C45 		strd	r4, [r6, #48]
+ 118:cooneo_Drivers/math/dk.c ****     dk->x = (a1 * dk->z + b1) / dnm;
+ 914              		.loc 1 118 5 is_stmt 1 view .LVU171
+ 915              		.loc 1 118 17 is_stmt 0 view .LVU172
+ 916 0576 DDE90C23 		ldrd	r2, [sp, #48]
+ 917 057a FFF7FEFF 		bl	__aeabi_dmul
+ 918              	.LVL136:
+ 919              		.loc 1 118 25 view .LVU173
+ 920 057e DDE90623 		ldrd	r2, [sp, #24]
+ 921 0582 FFF7FEFF 		bl	__aeabi_dadd
+ 922              	.LVL137:
+ 923              		.loc 1 118 31 view .LVU174
+ 924 0586 DDE90A89 		ldrd	r8, [sp, #40]
+ 925              	.LVL138:
+ 926              		.loc 1 118 31 view .LVU175
+ 927 058a 4246     		mov	r2, r8
+ 928 058c 4B46     		mov	r3, r9
+ 929 058e FFF7FEFF 		bl	__aeabi_ddiv
+ 930              	.LVL139:
+ 931              		.loc 1 118 11 view .LVU176
+ 932 0592 C6E90801 		strd	r0, [r6, #32]
+ 119:cooneo_Drivers/math/dk.c ****     dk->y = (a2 * dk->z + b2) / dnm;
+ 933              		.loc 1 119 5 is_stmt 1 view .LVU177
+ 934              		.loc 1 119 17 is_stmt 0 view .LVU178
+ 935 0596 5246     		mov	r2, r10
+ 936 0598 5B46     		mov	r3, fp
+ 937 059a 2046     		mov	r0, r4
+ 938 059c 2946     		mov	r1, r5
+ 939 059e FFF7FEFF 		bl	__aeabi_dmul
+ 940              	.LVL140:
+ 941              		.loc 1 119 25 view .LVU179
+ 942 05a2 DDE90223 		ldrd	r2, [sp, #8]
+ 943 05a6 FFF7FEFF 		bl	__aeabi_dadd
+ 944              	.LVL141:
+ 945              		.loc 1 119 31 view .LVU180
+ 946 05aa 4246     		mov	r2, r8
+ 947 05ac 4B46     		mov	r3, r9
+ 948 05ae FFF7FEFF 		bl	__aeabi_ddiv
+ 949              	.LVL142:
+ 950              		.loc 1 119 11 view .LVU181
+ 951 05b2 C6E90A01 		strd	r0, [r6, #40]
  120:cooneo_Drivers/math/dk.c **** 
- 121:cooneo_Drivers/math/dk.c **** int DeltaKinematics_calcAngleYZ(DeltaKinematics *dk, double *Angle, double x0, double y0, double z0
- 1157              		.loc 1 121 102 is_stmt 1 view -0
- 1158              		.cfi_startproc
- 1159              		@ args = 0, pretend = 0, frame = 24
- 1160              		@ frame_needed = 0, uses_anonymous_args = 0
- 122:cooneo_Drivers/math/dk.c ****     if (dk == NULL || Angle == NULL) {
- 1161              		.loc 1 122 5 view .LVU197
- 1162              		.loc 1 122 8 is_stmt 0 view .LVU198
- 1163 0000 0028     		cmp	r0, #0
- 1164 0002 00F02A81 		beq	.L24
- 121:cooneo_Drivers/math/dk.c ****     if (dk == NULL || Angle == NULL) {
- 1165              		.loc 1 121 102 view .LVU199
- 1166 0006 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
- 1167              	.LCFI11:
- 1168              		.cfi_def_cfa_offset 36
- 1169              		.cfi_offset 4, -36
- 1170              		.cfi_offset 5, -32
- 1171              		.cfi_offset 6, -28
- 1172              		.cfi_offset 7, -24
- 1173              		.cfi_offset 8, -20
- 1174              		.cfi_offset 9, -16
- 1175              		.cfi_offset 10, -12
- 1176              		.cfi_offset 11, -8
- 1177              		.cfi_offset 14, -4
- 1178 000a 2DED028B 		vpush.64	{d8}
- 1179              	.LCFI12:
- 1180              		.cfi_def_cfa_offset 44
- 1181              		.cfi_offset 80, -44
- 1182              		.cfi_offset 81, -40
- 1183 000e 87B0     		sub	sp, sp, #28
- 1184              	.LCFI13:
- 1185              		.cfi_def_cfa_offset 72
- 1186 0010 57EC106B 		vmov	r6, r7, d0
- 1187 0014 59EC118B 		vmov	r8, r9, d1
- 1188 0018 55EC124B 		vmov	r4, r5, d2
- 1189 001c 8246     		mov	r10, r0
- 1190              		.loc 1 122 20 discriminator 1 view .LVU200
- 1191 001e 0591     		str	r1, [sp, #20]
- 1192 0020 0029     		cmp	r1, #0
- 1193 0022 00F01D81 		beq	.L25
- 123:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
- 124:cooneo_Drivers/math/dk.c ****     }
- 125:cooneo_Drivers/math/dk.c **** 
- 126:cooneo_Drivers/math/dk.c ****     double y1 = -0.5 * tan30 * dk->BassTri;
- 1194              		.loc 1 126 5 is_stmt 1 view .LVU201
- 1195              		.loc 1 126 12 is_stmt 0 view .LVU202
- 1196 0026 96A3     		adr	r3, .L31+16
- 1197 0028 D3E90023 		ldrd	r2, [r3]
- 1198 002c D0E90401 		ldrd	r0, [r0, #16]
- 1199              	.LVL160:
- 1200              		.loc 1 126 12 view .LVU203
- 1201 0030 FFF7FEFF 		bl	__aeabi_dmul
- 1202              	.LVL161:
- 1203              		.loc 1 126 12 view .LVU204
- 1204 0034 CDE90001 		strd	r0, [sp]
-ARM GAS  /tmp/ccQ9HSto.s 			page 25
+ 121:cooneo_Drivers/math/dk.c ****     // Return value based on success or failure
+ 122:cooneo_Drivers/math/dk.c ****     return no_error; // or return non_existing_point_error based on calculation results
+ 952              		.loc 1 122 5 is_stmt 1 view .LVU182
+ 953              		.loc 1 122 12 is_stmt 0 view .LVU183
+ 954 05b6 0120     		movs	r0, #1
+ 955              	.L5:
+ 123:cooneo_Drivers/math/dk.c **** }
+ 956              		.loc 1 123 1 view .LVU184
+ 957 05b8 1BB0     		add	sp, sp, #108
+ 958              	.LCFI3:
+ 959              		.cfi_def_cfa_offset 60
+ 960              	.LVL143:
+ 961              		.loc 1 123 1 view .LVU185
+ 962              		@ sp needed
+ARM GAS  /tmp/ccizZaUb.s 			page 20
 
 
- 1205              	.LVL162:
- 127:cooneo_Drivers/math/dk.c ****     y0 -= 0.5 * tan30 * dk->PlatformTri;
- 1206              		.loc 1 127 5 is_stmt 1 view .LVU205
- 1207              		.loc 1 127 23 is_stmt 0 view .LVU206
- 1208 0038 93A3     		adr	r3, .L31+24
- 1209 003a D3E90023 		ldrd	r2, [r3]
- 1210 003e DAE90601 		ldrd	r0, [r10, #24]
- 1211              	.LVL163:
- 1212              		.loc 1 127 23 view .LVU207
- 1213 0042 FFF7FEFF 		bl	__aeabi_dmul
- 1214              	.LVL164:
- 1215 0046 0246     		mov	r2, r0
- 1216 0048 0B46     		mov	r3, r1
- 1217              		.loc 1 127 8 view .LVU208
- 1218 004a 4046     		mov	r0, r8
- 1219 004c 4946     		mov	r1, r9
- 1220 004e FFF7FEFF 		bl	__aeabi_dsub
- 1221              	.LVL165:
- 1222 0052 8046     		mov	r8, r0
- 1223              	.LVL166:
- 1224              		.loc 1 127 8 view .LVU209
- 1225 0054 8946     		mov	r9, r1
- 1226              	.LVL167:
- 128:cooneo_Drivers/math/dk.c **** 
- 129:cooneo_Drivers/math/dk.c ****     double aV = (x0 * x0 + y0 * y0 + z0 * z0 + dk->ArmLength * dk->ArmLength - dk->RodLength * dk->
- 1227              		.loc 1 129 5 is_stmt 1 view .LVU210
- 1228              		.loc 1 129 21 is_stmt 0 view .LVU211
- 1229 0056 3246     		mov	r2, r6
- 1230 0058 3B46     		mov	r3, r7
- 1231 005a 3046     		mov	r0, r6
- 1232 005c 3946     		mov	r1, r7
- 1233 005e FFF7FEFF 		bl	__aeabi_dmul
- 1234              	.LVL168:
- 1235 0062 0646     		mov	r6, r0
- 1236              	.LVL169:
- 1237              		.loc 1 129 21 view .LVU212
- 1238 0064 0F46     		mov	r7, r1
- 1239              		.loc 1 129 31 view .LVU213
- 1240 0066 4246     		mov	r2, r8
- 1241 0068 4B46     		mov	r3, r9
- 1242 006a CDE90289 		strd	r8, [sp, #8]
- 1243 006e 4046     		mov	r0, r8
- 1244 0070 4946     		mov	r1, r9
- 1245 0072 FFF7FEFF 		bl	__aeabi_dmul
- 1246              	.LVL170:
- 1247 0076 0246     		mov	r2, r0
- 1248 0078 0B46     		mov	r3, r1
- 1249              		.loc 1 129 26 view .LVU214
- 1250 007a 3046     		mov	r0, r6
- 1251 007c 3946     		mov	r1, r7
- 1252 007e FFF7FEFF 		bl	__aeabi_dadd
- 1253              	.LVL171:
- 1254 0082 0646     		mov	r6, r0
- 1255 0084 0F46     		mov	r7, r1
- 1256              		.loc 1 129 41 view .LVU215
- 1257 0086 2246     		mov	r2, r4
- 1258 0088 2B46     		mov	r3, r5
-ARM GAS  /tmp/ccQ9HSto.s 			page 26
+ 963 05ba BDEC068B 		vldm	sp!, {d8-d10}
+ 964              	.LCFI4:
+ 965              		.cfi_restore 84
+ 966              		.cfi_restore 85
+ 967              		.cfi_restore 82
+ 968              		.cfi_restore 83
+ 969              		.cfi_restore 80
+ 970              		.cfi_restore 81
+ 971              		.cfi_def_cfa_offset 36
+ 972              	.LVL144:
+ 973              		.loc 1 123 1 view .LVU186
+ 974 05be BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 975              	.LVL145:
+ 976              	.L7:
+ 977              	.LCFI5:
+ 978              		.cfi_def_cfa_offset 0
+ 979              		.cfi_restore 4
+ 980              		.cfi_restore 5
+ 981              		.cfi_restore 6
+ 982              		.cfi_restore 7
+ 983              		.cfi_restore 8
+ 984              		.cfi_restore 9
+ 985              		.cfi_restore 10
+ 986              		.cfi_restore 11
+ 987              		.cfi_restore 14
+  70:cooneo_Drivers/math/dk.c ****     }
+ 988              		.loc 1 70 16 view .LVU187
+ 989 05c2 6FF00100 		mvn	r0, #1
+ 990              	.LVL146:
+ 991              		.loc 1 123 1 view .LVU188
+ 992 05c6 7047     		bx	lr
+ 993              	.LVL147:
+ 994              	.L8:
+ 995              	.LCFI6:
+ 996              		.cfi_def_cfa_offset 168
+ 997              		.cfi_offset 4, -36
+ 998              		.cfi_offset 5, -32
+ 999              		.cfi_offset 6, -28
+ 1000              		.cfi_offset 7, -24
+ 1001              		.cfi_offset 8, -20
+ 1002              		.cfi_offset 9, -16
+ 1003              		.cfi_offset 10, -12
+ 1004              		.cfi_offset 11, -8
+ 1005              		.cfi_offset 14, -4
+ 1006              		.cfi_offset 80, -60
+ 1007              		.cfi_offset 81, -56
+ 1008              		.cfi_offset 82, -52
+ 1009              		.cfi_offset 83, -48
+ 1010              		.cfi_offset 84, -44
+ 1011              		.cfi_offset 85, -40
+ 114:cooneo_Drivers/math/dk.c ****     }
+ 1012              		.loc 1 114 16 view .LVU189
+ 1013 05c8 6FF00100 		mvn	r0, #1
+ 1014 05cc F4E7     		b	.L5
+ 1015              	.L17:
+ 1016 05ce 00BF     		.align	2
+ 1017              	.L16:
+ARM GAS  /tmp/ccizZaUb.s 			page 21
 
 
- 1259 008a 2046     		mov	r0, r4
- 1260 008c 2946     		mov	r1, r5
- 1261 008e FFF7FEFF 		bl	__aeabi_dmul
- 1262              	.LVL172:
- 1263 0092 0246     		mov	r2, r0
- 1264 0094 0B46     		mov	r3, r1
- 1265              		.loc 1 129 36 view .LVU216
- 1266 0096 3046     		mov	r0, r6
- 1267 0098 3946     		mov	r1, r7
- 1268 009a FFF7FEFF 		bl	__aeabi_dadd
- 1269              	.LVL173:
- 1270 009e 0646     		mov	r6, r0
- 1271 00a0 0F46     		mov	r7, r1
- 1272              		.loc 1 129 50 view .LVU217
- 1273 00a2 DAE90089 		ldrd	r8, [r10]
- 1274              	.LVL174:
- 1275              		.loc 1 129 62 view .LVU218
- 1276 00a6 4246     		mov	r2, r8
- 1277 00a8 4B46     		mov	r3, r9
- 1278 00aa 4046     		mov	r0, r8
- 1279 00ac 4946     		mov	r1, r9
- 1280 00ae FFF7FEFF 		bl	__aeabi_dmul
- 1281              	.LVL175:
- 1282 00b2 0246     		mov	r2, r0
- 1283 00b4 0B46     		mov	r3, r1
- 1284              		.loc 1 129 46 view .LVU219
- 1285 00b6 3046     		mov	r0, r6
- 1286 00b8 3946     		mov	r1, r7
- 1287 00ba FFF7FEFF 		bl	__aeabi_dadd
- 1288              	.LVL176:
- 1289 00be 0646     		mov	r6, r0
- 1290 00c0 0F46     		mov	r7, r1
- 1291              		.loc 1 129 82 view .LVU220
- 1292 00c2 DAE90201 		ldrd	r0, [r10, #8]
- 1293              		.loc 1 129 94 view .LVU221
- 1294 00c6 0246     		mov	r2, r0
- 1295 00c8 0B46     		mov	r3, r1
- 1296 00ca FFF7FEFF 		bl	__aeabi_dmul
- 1297              	.LVL177:
- 1298 00ce 0246     		mov	r2, r0
- 1299 00d0 0B46     		mov	r3, r1
- 1300              		.loc 1 129 78 view .LVU222
- 1301 00d2 3046     		mov	r0, r6
- 1302 00d4 3946     		mov	r1, r7
- 1303 00d6 FFF7FEFF 		bl	__aeabi_dsub
- 1304              	.LVL178:
- 1305 00da 0646     		mov	r6, r0
- 1306 00dc 0F46     		mov	r7, r1
- 1307              		.loc 1 129 115 view .LVU223
- 1308 00de DDE90001 		ldrd	r0, [sp]
- 1309 00e2 0246     		mov	r2, r0
- 1310 00e4 0B46     		mov	r3, r1
- 1311 00e6 FFF7FEFF 		bl	__aeabi_dmul
- 1312              	.LVL179:
- 1313 00ea 0246     		mov	r2, r0
- 1314 00ec 0B46     		mov	r3, r1
- 1315              		.loc 1 129 110 view .LVU224
-ARM GAS  /tmp/ccQ9HSto.s 			page 27
+ 1018 05d0 0000E03F 		.word	1071644672
+ 1019 05d4 00001040 		.word	1074790400
+ 1020 05d8 0000E0BF 		.word	-1075838976
+ 1021              		.cfi_endproc
+ 1022              	.LFE244:
+ 1024              		.global	__aeabi_dcmpeq
+ 1025              		.section	.text.DeltaKinematics_calcAngleYZ,"ax",%progbits
+ 1026              		.align	1
+ 1027              		.global	DeltaKinematics_calcAngleYZ
+ 1028              		.syntax unified
+ 1029              		.thumb
+ 1030              		.thumb_func
+ 1032              	DeltaKinematics_calcAngleYZ:
+ 1033              	.LVL148:
+ 1034              	.LFB245:
+ 124:cooneo_Drivers/math/dk.c **** 
+ 125:cooneo_Drivers/math/dk.c **** int DeltaKinematics_calcAngleYZ(DeltaKinematics *dk, double *Angle, double x0, double y0, double z0
+ 1035              		.loc 1 125 102 is_stmt 1 view -0
+ 1036              		.cfi_startproc
+ 1037              		@ args = 0, pretend = 0, frame = 24
+ 1038              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126:cooneo_Drivers/math/dk.c ****     
+ 127:cooneo_Drivers/math/dk.c ****     if (dk == NULL || Angle == NULL) {
+ 1039              		.loc 1 127 5 view .LVU191
+ 1040              		.loc 1 127 8 is_stmt 0 view .LVU192
+ 1041 0000 0028     		cmp	r0, #0
+ 1042 0002 00F03381 		beq	.L20
+ 125:cooneo_Drivers/math/dk.c ****     
+ 1043              		.loc 1 125 102 view .LVU193
+ 1044 0006 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1045              	.LCFI7:
+ 1046              		.cfi_def_cfa_offset 36
+ 1047              		.cfi_offset 4, -36
+ 1048              		.cfi_offset 5, -32
+ 1049              		.cfi_offset 6, -28
+ 1050              		.cfi_offset 7, -24
+ 1051              		.cfi_offset 8, -20
+ 1052              		.cfi_offset 9, -16
+ 1053              		.cfi_offset 10, -12
+ 1054              		.cfi_offset 11, -8
+ 1055              		.cfi_offset 14, -4
+ 1056 000a 2DED028B 		vpush.64	{d8}
+ 1057              	.LCFI8:
+ 1058              		.cfi_def_cfa_offset 44
+ 1059              		.cfi_offset 80, -44
+ 1060              		.cfi_offset 81, -40
+ 1061 000e 87B0     		sub	sp, sp, #28
+ 1062              	.LCFI9:
+ 1063              		.cfi_def_cfa_offset 72
+ 1064 0010 57EC106B 		vmov	r6, r7, d0
+ 1065 0014 59EC118B 		vmov	r8, r9, d1
+ 1066 0018 55EC124B 		vmov	r4, r5, d2
+ 1067 001c 8246     		mov	r10, r0
+ 1068              		.loc 1 127 20 discriminator 1 view .LVU194
+ 1069 001e 0391     		str	r1, [sp, #12]
+ 1070 0020 0029     		cmp	r1, #0
+ 1071 0022 00F02681 		beq	.L21
+ARM GAS  /tmp/ccizZaUb.s 			page 22
 
 
- 1316 00ee 3046     		mov	r0, r6
- 1317 00f0 3946     		mov	r1, r7
- 1318 00f2 FFF7FEFF 		bl	__aeabi_dsub
- 1319              	.LVL180:
- 1320 00f6 0646     		mov	r6, r0
- 1321 00f8 0F46     		mov	r7, r1
- 1322              		.loc 1 129 128 view .LVU225
- 1323 00fa 2246     		mov	r2, r4
- 1324 00fc 2B46     		mov	r3, r5
- 1325 00fe 2046     		mov	r0, r4
- 1326 0100 2946     		mov	r1, r5
- 1327 0102 FFF7FEFF 		bl	__aeabi_dadd
- 1328              	.LVL181:
- 1329 0106 0246     		mov	r2, r0
- 1330 0108 0B46     		mov	r3, r1
- 1331              		.loc 1 129 12 view .LVU226
- 1332 010a 3046     		mov	r0, r6
- 1333 010c 3946     		mov	r1, r7
- 1334 010e FFF7FEFF 		bl	__aeabi_ddiv
- 1335              	.LVL182:
- 1336 0112 8246     		mov	r10, r0
- 1337              	.LVL183:
- 1338              		.loc 1 129 12 view .LVU227
- 1339 0114 8B46     		mov	fp, r1
- 1340              	.LVL184:
- 130:cooneo_Drivers/math/dk.c ****     double bV = (y1 - y0) / z0;
- 1341              		.loc 1 130 5 is_stmt 1 view .LVU228
- 1342              		.loc 1 130 21 is_stmt 0 view .LVU229
- 1343 0116 DDE90223 		ldrd	r2, [sp, #8]
- 1344 011a DDE90001 		ldrd	r0, [sp]
- 1345 011e FFF7FEFF 		bl	__aeabi_dsub
- 1346              	.LVL185:
- 1347              		.loc 1 130 12 view .LVU230
- 1348 0122 2246     		mov	r2, r4
- 1349 0124 2B46     		mov	r3, r5
- 1350 0126 FFF7FEFF 		bl	__aeabi_ddiv
- 1351              	.LVL186:
- 1352 012a 0646     		mov	r6, r0
- 1353 012c 0F46     		mov	r7, r1
- 1354              	.LVL187:
- 131:cooneo_Drivers/math/dk.c **** 
- 132:cooneo_Drivers/math/dk.c ****     double dV = -(aV + bV * y1) * (aV + bV * y1) + dk->ArmLength * (bV * bV * dk->ArmLength + dk->A
- 1355              		.loc 1 132 5 is_stmt 1 view .LVU231
- 1356              		.loc 1 132 27 is_stmt 0 view .LVU232
- 1357 012e 0246     		mov	r2, r0
- 1358 0130 0B46     		mov	r3, r1
- 1359 0132 DDE90001 		ldrd	r0, [sp]
- 1360 0136 FFF7FEFF 		bl	__aeabi_dmul
- 1361              	.LVL188:
- 1362              		.loc 1 132 22 view .LVU233
- 1363 013a 5246     		mov	r2, r10
- 1364 013c 5B46     		mov	r3, fp
- 1365 013e FFF7FEFF 		bl	__aeabi_dadd
- 1366              	.LVL189:
- 1367              		.loc 1 132 17 view .LVU234
- 1368 0142 0246     		mov	r2, r0
- 1369 0144 01F10043 		add	r3, r1, #-2147483648
-ARM GAS  /tmp/ccQ9HSto.s 			page 28
-
-
- 1370              		.loc 1 132 33 view .LVU235
- 1371 0148 FFF7FEFF 		bl	__aeabi_dmul
- 1372              	.LVL190:
- 1373 014c 0446     		mov	r4, r0
- 1374              	.LVL191:
- 1375              		.loc 1 132 33 view .LVU236
- 1376 014e 0D46     		mov	r5, r1
- 1377              		.loc 1 132 72 view .LVU237
- 1378 0150 3246     		mov	r2, r6
- 1379 0152 3B46     		mov	r3, r7
- 1380 0154 3046     		mov	r0, r6
- 1381 0156 3946     		mov	r1, r7
- 1382 0158 FFF7FEFF 		bl	__aeabi_dmul
- 1383              	.LVL192:
- 1384              		.loc 1 132 77 view .LVU238
- 1385 015c CDE90201 		strd	r0, [sp, #8]
- 1386              	.LVL193:
- 1387              		.loc 1 132 77 view .LVU239
- 1388 0160 0246     		mov	r2, r0
- 1389 0162 0B46     		mov	r3, r1
- 1390 0164 4046     		mov	r0, r8
- 1391 0166 4946     		mov	r1, r9
- 1392 0168 FFF7FEFF 		bl	__aeabi_dmul
- 1393              	.LVL194:
- 1394 016c 0246     		mov	r2, r0
- 1395 016e 0B46     		mov	r3, r1
- 1396              		.loc 1 132 93 view .LVU240
- 1397 0170 4046     		mov	r0, r8
- 1398 0172 4946     		mov	r1, r9
- 1399 0174 FFF7FEFF 		bl	__aeabi_dadd
- 1400              	.LVL195:
- 1401 0178 0246     		mov	r2, r0
- 1402 017a 0B46     		mov	r3, r1
- 1403              		.loc 1 132 66 view .LVU241
- 1404 017c 4046     		mov	r0, r8
- 1405 017e 4946     		mov	r1, r9
- 1406 0180 FFF7FEFF 		bl	__aeabi_dmul
- 1407              	.LVL196:
- 1408 0184 0246     		mov	r2, r0
- 1409 0186 0B46     		mov	r3, r1
- 1410              		.loc 1 132 12 view .LVU242
- 1411 0188 2046     		mov	r0, r4
- 1412 018a 2946     		mov	r1, r5
- 1413 018c FFF7FEFF 		bl	__aeabi_dadd
- 1414              	.LVL197:
- 1415 0190 0246     		mov	r2, r0
- 1416 0192 0B46     		mov	r3, r1
- 1417 0194 43EC182B 		vmov	d8, r2, r3
- 1418              	.LVL198:
- 133:cooneo_Drivers/math/dk.c ****     if (dV < 0) {
- 1419              		.loc 1 133 5 is_stmt 1 view .LVU243
- 1420              		.loc 1 133 8 is_stmt 0 view .LVU244
- 1421 0198 0022     		movs	r2, #0
- 1422              	.LVL199:
- 1423              		.loc 1 133 8 view .LVU245
- 1424 019a 0023     		movs	r3, #0
- 1425 019c FFF7FEFF 		bl	__aeabi_dcmplt
-ARM GAS  /tmp/ccQ9HSto.s 			page 29
-
-
- 1426              	.LVL200:
- 1427 01a0 0028     		cmp	r0, #0
- 1428 01a2 60D1     		bne	.L26
- 134:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // non-existing point. return error, theta
- 135:cooneo_Drivers/math/dk.c ****     }
- 136:cooneo_Drivers/math/dk.c **** 
- 137:cooneo_Drivers/math/dk.c ****     double yj = (y1 - aV * bV - sqrt(dV)) / (bV * bV + 1); // choosing outer point
- 1429              		.loc 1 137 5 is_stmt 1 view .LVU246
- 1430              		.loc 1 137 26 is_stmt 0 view .LVU247
- 1431 01a4 3246     		mov	r2, r6
- 1432 01a6 3B46     		mov	r3, r7
- 1433 01a8 5046     		mov	r0, r10
- 1434 01aa 5946     		mov	r1, fp
- 1435 01ac FFF7FEFF 		bl	__aeabi_dmul
- 1436              	.LVL201:
- 1437 01b0 0246     		mov	r2, r0
- 1438 01b2 0B46     		mov	r3, r1
- 1439              		.loc 1 137 21 view .LVU248
- 1440 01b4 DDE90089 		ldrd	r8, [sp]
- 1441 01b8 4046     		mov	r0, r8
- 1442 01ba 4946     		mov	r1, r9
- 1443 01bc FFF7FEFF 		bl	__aeabi_dsub
- 1444              	.LVL202:
- 1445 01c0 0446     		mov	r4, r0
- 1446 01c2 0D46     		mov	r5, r1
- 1447              		.loc 1 137 33 view .LVU249
- 1448 01c4 B0EE480A 		vmov.f32	s0, s16
- 1449 01c8 F0EE680A 		vmov.f32	s1, s17
- 1450 01cc FFF7FEFF 		bl	sqrt
- 1451              	.LVL203:
- 1452 01d0 53EC102B 		vmov	r2, r3, d0
- 1453              		.loc 1 137 31 discriminator 1 view .LVU250
- 1454 01d4 2046     		mov	r0, r4
- 1455 01d6 2946     		mov	r1, r5
- 1456 01d8 FFF7FEFF 		bl	__aeabi_dsub
- 1457              	.LVL204:
- 1458 01dc 0446     		mov	r4, r0
- 1459 01de 0D46     		mov	r5, r1
- 1460              		.loc 1 137 54 discriminator 1 view .LVU251
- 1461 01e0 0022     		movs	r2, #0
- 1462 01e2 254B     		ldr	r3, .L31+8
- 1463 01e4 DDE90201 		ldrd	r0, [sp, #8]
- 1464 01e8 FFF7FEFF 		bl	__aeabi_dadd
- 1465              	.LVL205:
- 1466 01ec 0246     		mov	r2, r0
- 1467 01ee 0B46     		mov	r3, r1
- 1468              		.loc 1 137 12 discriminator 1 view .LVU252
- 1469 01f0 2046     		mov	r0, r4
- 1470 01f2 2946     		mov	r1, r5
- 1471 01f4 FFF7FEFF 		bl	__aeabi_ddiv
- 1472              	.LVL206:
- 1473 01f8 0446     		mov	r4, r0
- 1474 01fa 0D46     		mov	r5, r1
- 1475              	.LVL207:
- 138:cooneo_Drivers/math/dk.c ****     double zj = aV + bV * yj;
- 1476              		.loc 1 138 5 is_stmt 1 view .LVU253
- 1477              		.loc 1 138 25 is_stmt 0 view .LVU254
-ARM GAS  /tmp/ccQ9HSto.s 			page 30
-
-
- 1478 01fc 0246     		mov	r2, r0
- 1479 01fe 0B46     		mov	r3, r1
- 1480 0200 3046     		mov	r0, r6
- 1481 0202 3946     		mov	r1, r7
- 1482 0204 FFF7FEFF 		bl	__aeabi_dmul
- 1483              	.LVL208:
- 1484              		.loc 1 138 12 view .LVU255
- 1485 0208 5246     		mov	r2, r10
- 1486 020a 5B46     		mov	r3, fp
- 1487 020c FFF7FEFF 		bl	__aeabi_dadd
- 1488              	.LVL209:
- 1489 0210 0646     		mov	r6, r0
- 1490              	.LVL210:
- 1491              		.loc 1 138 12 view .LVU256
- 1492 0212 0F46     		mov	r7, r1
- 1493              	.LVL211:
- 139:cooneo_Drivers/math/dk.c ****     *Angle = atan2(-zj, (y1 - yj)) * 180.0 / pi;
- 1494              		.loc 1 139 5 is_stmt 1 view .LVU257
- 1495              		.loc 1 139 14 is_stmt 0 view .LVU258
- 1496 0214 2246     		mov	r2, r4
- 1497 0216 2B46     		mov	r3, r5
- 1498 0218 4046     		mov	r0, r8
- 1499 021a 4946     		mov	r1, r9
- 1500 021c FFF7FEFF 		bl	__aeabi_dsub
- 1501              	.LVL212:
- 1502 0220 3246     		mov	r2, r6
- 1503 0222 07F10043 		add	r3, r7, #-2147483648
- 1504 0226 41EC110B 		vmov	d1, r0, r1
- 1505 022a 43EC102B 		vmov	d0, r2, r3
- 1506 022e FFF7FEFF 		bl	atan2
- 1507              	.LVL213:
- 1508 0232 51EC100B 		vmov	r0, r1, d0
- 1509              		.loc 1 139 36 discriminator 1 view .LVU259
- 1510 0236 0022     		movs	r2, #0
- 1511 0238 104B     		ldr	r3, .L31+12
- 1512 023a FFF7FEFF 		bl	__aeabi_dmul
- 1513              	.LVL214:
- 1514              		.loc 1 139 44 discriminator 1 view .LVU260
- 1515 023e 0CA3     		adr	r3, .L31
- 1516 0240 D3E90023 		ldrd	r2, [r3]
- 1517 0244 FFF7FEFF 		bl	__aeabi_ddiv
- 1518              	.LVL215:
- 1519              		.loc 1 139 12 discriminator 1 view .LVU261
- 1520 0248 059B     		ldr	r3, [sp, #20]
- 1521 024a C3E90001 		strd	r0, [r3]
- 140:cooneo_Drivers/math/dk.c **** 
- 141:cooneo_Drivers/math/dk.c ****     return no_error; // return error, theta
- 1522              		.loc 1 141 5 is_stmt 1 view .LVU262
- 1523              		.loc 1 141 12 is_stmt 0 view .LVU263
- 1524 024e 0120     		movs	r0, #1
- 1525              	.LVL216:
- 1526              	.L22:
- 142:cooneo_Drivers/math/dk.c **** }
- 1527              		.loc 1 142 1 view .LVU264
- 1528 0250 07B0     		add	sp, sp, #28
- 1529              	.LCFI14:
- 1530              		.cfi_def_cfa_offset 44
-ARM GAS  /tmp/ccQ9HSto.s 			page 31
-
-
- 1531              		@ sp needed
- 1532 0252 BDEC028B 		vldm	sp!, {d8}
- 1533              	.LCFI15:
- 1534              		.cfi_restore 80
- 1535              		.cfi_restore 81
- 1536              		.cfi_def_cfa_offset 36
- 1537 0256 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
- 1538              	.LVL217:
- 1539              	.L24:
- 1540              	.LCFI16:
- 1541              		.cfi_def_cfa_offset 0
- 1542              		.cfi_restore 4
- 1543              		.cfi_restore 5
- 1544              		.cfi_restore 6
- 1545              		.cfi_restore 7
- 1546              		.cfi_restore 8
- 1547              		.cfi_restore 9
- 1548              		.cfi_restore 10
- 1549              		.cfi_restore 11
- 1550              		.cfi_restore 14
- 123:cooneo_Drivers/math/dk.c ****     }
- 1551              		.loc 1 123 16 view .LVU265
- 1552 025a 6FF00100 		mvn	r0, #1
- 1553              	.LVL218:
- 1554              		.loc 1 142 1 view .LVU266
- 1555 025e 7047     		bx	lr
- 1556              	.LVL219:
- 1557              	.L25:
- 1558              	.LCFI17:
- 1559              		.cfi_def_cfa_offset 72
- 1560              		.cfi_offset 4, -36
- 1561              		.cfi_offset 5, -32
- 1562              		.cfi_offset 6, -28
- 1563              		.cfi_offset 7, -24
- 1564              		.cfi_offset 8, -20
- 1565              		.cfi_offset 9, -16
- 1566              		.cfi_offset 10, -12
- 1567              		.cfi_offset 11, -8
- 1568              		.cfi_offset 14, -4
- 1569              		.cfi_offset 80, -44
- 1570              		.cfi_offset 81, -40
- 123:cooneo_Drivers/math/dk.c ****     }
- 1571              		.loc 1 123 16 view .LVU267
- 1572 0260 6FF00100 		mvn	r0, #1
- 1573              	.LVL220:
- 123:cooneo_Drivers/math/dk.c ****     }
- 1574              		.loc 1 123 16 view .LVU268
- 1575 0264 F4E7     		b	.L22
- 1576              	.LVL221:
- 1577              	.L26:
+ 128:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
+ 129:cooneo_Drivers/math/dk.c ****     }
+ 130:cooneo_Drivers/math/dk.c **** 
+ 131:cooneo_Drivers/math/dk.c ****     // 确保 z0 不为零，以避免除以零的错误
+ 132:cooneo_Drivers/math/dk.c ****     if (z0 == 0) {
+ 1072              		.loc 1 132 5 is_stmt 1 view .LVU195
+ 1073              		.loc 1 132 8 is_stmt 0 view .LVU196
+ 1074 0026 0022     		movs	r2, #0
+ 1075 0028 0023     		movs	r3, #0
+ 1076 002a 2046     		mov	r0, r4
+ 1077              	.LVL149:
+ 1078              		.loc 1 132 8 view .LVU197
+ 1079 002c 2946     		mov	r1, r5
+ 1080              	.LVL150:
+ 1081              		.loc 1 132 8 view .LVU198
+ 1082 002e FFF7FEFF 		bl	__aeabi_dcmpeq
+ 1083              	.LVL151:
+ 1084              		.loc 1 132 8 view .LVU199
+ 1085 0032 0028     		cmp	r0, #0
+ 1086 0034 40F02081 		bne	.L22
+ 133:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // 返回适当的错误代码
  134:cooneo_Drivers/math/dk.c ****     }
- 1578              		.loc 1 134 16 view .LVU269
- 1579 0266 6FF00100 		mvn	r0, #1
- 1580 026a F1E7     		b	.L22
- 1581              	.L32:
- 1582 026c AFF30080 		.align	3
- 1583              	.L31:
-ARM GAS  /tmp/ccQ9HSto.s 			page 32
+ 135:cooneo_Drivers/math/dk.c **** 
+ 136:cooneo_Drivers/math/dk.c ****     double y1 = -0.5 * tan30 * dk->BassTri;
+ 1087              		.loc 1 136 5 is_stmt 1 view .LVU200
+ 1088              		.loc 1 136 12 is_stmt 0 view .LVU201
+ 1089 0038 97A3     		adr	r3, .L28+16
+ 1090 003a D3E90023 		ldrd	r2, [r3]
+ 1091 003e DAE90401 		ldrd	r0, [r10, #16]
+ 1092 0042 FFF7FEFF 		bl	__aeabi_dmul
+ 1093              	.LVL152:
+ 1094 0046 CDE90001 		strd	r0, [sp]
+ 1095              	.LVL153:
+ 137:cooneo_Drivers/math/dk.c ****     y0 -= 0.5 * tan30 * dk->PlatformTri;
+ 1096              		.loc 1 137 5 is_stmt 1 view .LVU202
+ 1097              		.loc 1 137 23 is_stmt 0 view .LVU203
+ 1098 004a 95A3     		adr	r3, .L28+24
+ 1099 004c D3E90023 		ldrd	r2, [r3]
+ 1100 0050 DAE90601 		ldrd	r0, [r10, #24]
+ 1101              	.LVL154:
+ 1102              		.loc 1 137 23 view .LVU204
+ 1103 0054 FFF7FEFF 		bl	__aeabi_dmul
+ 1104              	.LVL155:
+ 1105 0058 0246     		mov	r2, r0
+ 1106 005a 0B46     		mov	r3, r1
+ 1107              		.loc 1 137 8 view .LVU205
+ 1108 005c 4046     		mov	r0, r8
+ 1109 005e 4946     		mov	r1, r9
+ 1110 0060 FFF7FEFF 		bl	__aeabi_dsub
+ 1111              	.LVL156:
+ 1112 0064 8046     		mov	r8, r0
+ 1113              	.LVL157:
+ 1114              		.loc 1 137 8 view .LVU206
+ 1115 0066 8946     		mov	r9, r1
+ 1116              	.LVL158:
+ 138:cooneo_Drivers/math/dk.c **** 
+ 139:cooneo_Drivers/math/dk.c ****     double aV = (x0 * x0 + y0 * y0 + z0 * z0 + dk->ArmLength * dk->ArmLength - dk->RodLength * dk->
+ARM GAS  /tmp/ccizZaUb.s 			page 23
 
 
- 1584 0270 182D4454 		.word	1413754136
- 1585 0274 FB210940 		.word	1074340347
- 1586 0278 0000F03F 		.word	1072693248
- 1587 027c 00806640 		.word	1080459264
- 1588 0280 1D339045 		.word	1167078173
- 1589 0284 A779D2BF 		.word	-1076725337
- 1590 0288 1D339045 		.word	1167078173
- 1591 028c A779D23F 		.word	1070758311
- 1592              		.cfi_endproc
- 1593              	.LFE245:
- 1595              		.section	.text.DeltaKinematics_inverse,"ax",%progbits
- 1596              		.align	1
- 1597              		.global	DeltaKinematics_inverse
- 1598              		.syntax unified
- 1599              		.thumb
- 1600              		.thumb_func
- 1602              	DeltaKinematics_inverse:
- 1603              	.LVL222:
- 1604              	.LFB246:
- 143:cooneo_Drivers/math/dk.c **** 
- 144:cooneo_Drivers/math/dk.c **** int DeltaKinematics_inverse(DeltaKinematics *dk, double x0, double y0, double z0) {
- 1605              		.loc 1 144 83 is_stmt 1 view -0
- 1606              		.cfi_startproc
- 1607              		@ args = 0, pretend = 0, frame = 8
- 1608              		@ frame_needed = 0, uses_anonymous_args = 0
- 145:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
- 1609              		.loc 1 145 5 view .LVU271
- 1610              		.loc 1 145 8 is_stmt 0 view .LVU272
- 1611 0000 0028     		cmp	r0, #0
- 1612 0002 00F08480 		beq	.L35
- 144:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
- 1613              		.loc 1 144 83 view .LVU273
- 1614 0006 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
- 1615              	.LCFI18:
- 1616              		.cfi_def_cfa_offset 32
- 1617              		.cfi_offset 4, -32
- 1618              		.cfi_offset 5, -28
- 1619              		.cfi_offset 6, -24
- 1620              		.cfi_offset 7, -20
- 1621              		.cfi_offset 8, -16
- 1622              		.cfi_offset 9, -12
- 1623              		.cfi_offset 10, -8
- 1624              		.cfi_offset 14, -4
- 1625 000a 2DED068B 		vpush.64	{d8, d9, d10}
- 1626              	.LCFI19:
- 1627              		.cfi_def_cfa_offset 56
- 1628              		.cfi_offset 80, -56
- 1629              		.cfi_offset 81, -52
- 1630              		.cfi_offset 82, -48
- 1631              		.cfi_offset 83, -44
- 1632              		.cfi_offset 84, -40
- 1633              		.cfi_offset 85, -36
- 1634 000e 82B0     		sub	sp, sp, #8
- 1635              	.LCFI20:
- 1636              		.cfi_def_cfa_offset 64
- 1637 0010 B0EE408A 		vmov.f32	s16, s0
- 1638 0014 F0EE608A 		vmov.f32	s17, s1
-ARM GAS  /tmp/ccQ9HSto.s 			page 33
+ 1117              		.loc 1 139 5 is_stmt 1 view .LVU207
+ 1118              		.loc 1 139 21 is_stmt 0 view .LVU208
+ 1119 0068 3246     		mov	r2, r6
+ 1120 006a 3B46     		mov	r3, r7
+ 1121 006c 3046     		mov	r0, r6
+ 1122 006e 3946     		mov	r1, r7
+ 1123 0070 FFF7FEFF 		bl	__aeabi_dmul
+ 1124              	.LVL159:
+ 1125 0074 0646     		mov	r6, r0
+ 1126              	.LVL160:
+ 1127              		.loc 1 139 21 view .LVU209
+ 1128 0076 0F46     		mov	r7, r1
+ 1129              		.loc 1 139 31 view .LVU210
+ 1130 0078 4246     		mov	r2, r8
+ 1131 007a 4B46     		mov	r3, r9
+ 1132 007c CDE90489 		strd	r8, [sp, #16]
+ 1133 0080 4046     		mov	r0, r8
+ 1134 0082 4946     		mov	r1, r9
+ 1135 0084 FFF7FEFF 		bl	__aeabi_dmul
+ 1136              	.LVL161:
+ 1137 0088 0246     		mov	r2, r0
+ 1138 008a 0B46     		mov	r3, r1
+ 1139              		.loc 1 139 26 view .LVU211
+ 1140 008c 3046     		mov	r0, r6
+ 1141 008e 3946     		mov	r1, r7
+ 1142 0090 FFF7FEFF 		bl	__aeabi_dadd
+ 1143              	.LVL162:
+ 1144 0094 0646     		mov	r6, r0
+ 1145 0096 0F46     		mov	r7, r1
+ 1146              		.loc 1 139 41 view .LVU212
+ 1147 0098 2246     		mov	r2, r4
+ 1148 009a 2B46     		mov	r3, r5
+ 1149 009c 2046     		mov	r0, r4
+ 1150 009e 2946     		mov	r1, r5
+ 1151 00a0 FFF7FEFF 		bl	__aeabi_dmul
+ 1152              	.LVL163:
+ 1153 00a4 0246     		mov	r2, r0
+ 1154 00a6 0B46     		mov	r3, r1
+ 1155              		.loc 1 139 36 view .LVU213
+ 1156 00a8 3046     		mov	r0, r6
+ 1157 00aa 3946     		mov	r1, r7
+ 1158 00ac FFF7FEFF 		bl	__aeabi_dadd
+ 1159              	.LVL164:
+ 1160 00b0 0646     		mov	r6, r0
+ 1161 00b2 0F46     		mov	r7, r1
+ 1162              		.loc 1 139 50 view .LVU214
+ 1163 00b4 DAE90089 		ldrd	r8, [r10]
+ 1164              	.LVL165:
+ 1165              		.loc 1 139 62 view .LVU215
+ 1166 00b8 4246     		mov	r2, r8
+ 1167 00ba 4B46     		mov	r3, r9
+ 1168 00bc 4046     		mov	r0, r8
+ 1169 00be 4946     		mov	r1, r9
+ 1170 00c0 FFF7FEFF 		bl	__aeabi_dmul
+ 1171              	.LVL166:
+ 1172 00c4 0246     		mov	r2, r0
+ 1173 00c6 0B46     		mov	r3, r1
+ARM GAS  /tmp/ccizZaUb.s 			page 24
 
 
- 1639 0018 B0EE419A 		vmov.f32	s18, s2
- 1640 001c F0EE619A 		vmov.f32	s19, s3
- 1641 0020 B0EE42AA 		vmov.f32	s20, s4
- 1642 0024 F0EE62AA 		vmov.f32	s21, s5
- 1643 0028 8246     		mov	r10, r0
- 146:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
- 147:cooneo_Drivers/math/dk.c ****     }
- 148:cooneo_Drivers/math/dk.c **** 
- 149:cooneo_Drivers/math/dk.c ****     dk->a = 0;
- 1644              		.loc 1 149 5 is_stmt 1 view .LVU274
- 1645              		.loc 1 149 11 is_stmt 0 view .LVU275
- 1646 002a 0022     		movs	r2, #0
- 1647 002c 0023     		movs	r3, #0
- 1648 002e C0E90E23 		strd	r2, [r0, #56]
- 150:cooneo_Drivers/math/dk.c ****     dk->b = 0;
- 1649              		.loc 1 150 5 is_stmt 1 view .LVU276
- 1650              		.loc 1 150 11 is_stmt 0 view .LVU277
- 1651 0032 C0E91023 		strd	r2, [r0, #64]
- 151:cooneo_Drivers/math/dk.c ****     dk->c = 0;
- 1652              		.loc 1 151 5 is_stmt 1 view .LVU278
- 1653              		.loc 1 151 11 is_stmt 0 view .LVU279
- 1654 0036 C0E91223 		strd	r2, [r0, #72]
- 152:cooneo_Drivers/math/dk.c **** 
- 153:cooneo_Drivers/math/dk.c ****     int error = DeltaKinematics_calcAngleYZ(dk, &(dk->a), x0, y0, z0);
- 1655              		.loc 1 153 5 is_stmt 1 view .LVU280
- 1656              		.loc 1 153 17 is_stmt 0 view .LVU281
- 1657 003a 00F13801 		add	r1, r0, #56
- 1658 003e FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
- 1659              	.LVL223:
- 154:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
- 1660              		.loc 1 154 5 is_stmt 1 view .LVU282
- 1661              		.loc 1 154 8 is_stmt 0 view .LVU283
- 1662 0042 0128     		cmp	r0, #1
- 1663 0044 04D0     		beq	.L40
- 1664              	.LVL224:
- 1665              	.L33:
- 155:cooneo_Drivers/math/dk.c **** 
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 157:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
+ 1174              		.loc 1 139 46 view .LVU216
+ 1175 00c8 3046     		mov	r0, r6
+ 1176 00ca 3946     		mov	r1, r7
+ 1177 00cc FFF7FEFF 		bl	__aeabi_dadd
+ 1178              	.LVL167:
+ 1179 00d0 0646     		mov	r6, r0
+ 1180 00d2 0F46     		mov	r7, r1
+ 1181              		.loc 1 139 82 view .LVU217
+ 1182 00d4 DAE90201 		ldrd	r0, [r10, #8]
+ 1183              		.loc 1 139 94 view .LVU218
+ 1184 00d8 0246     		mov	r2, r0
+ 1185 00da 0B46     		mov	r3, r1
+ 1186 00dc FFF7FEFF 		bl	__aeabi_dmul
+ 1187              	.LVL168:
+ 1188 00e0 0246     		mov	r2, r0
+ 1189 00e2 0B46     		mov	r3, r1
+ 1190              		.loc 1 139 78 view .LVU219
+ 1191 00e4 3046     		mov	r0, r6
+ 1192 00e6 3946     		mov	r1, r7
+ 1193 00e8 FFF7FEFF 		bl	__aeabi_dsub
+ 1194              	.LVL169:
+ 1195 00ec 0646     		mov	r6, r0
+ 1196 00ee 0F46     		mov	r7, r1
+ 1197              		.loc 1 139 115 view .LVU220
+ 1198 00f0 DDE90001 		ldrd	r0, [sp]
+ 1199 00f4 0246     		mov	r2, r0
+ 1200 00f6 0B46     		mov	r3, r1
+ 1201 00f8 FFF7FEFF 		bl	__aeabi_dmul
+ 1202              	.LVL170:
+ 1203 00fc 0246     		mov	r2, r0
+ 1204 00fe 0B46     		mov	r3, r1
+ 1205              		.loc 1 139 110 view .LVU221
+ 1206 0100 3046     		mov	r0, r6
+ 1207 0102 3946     		mov	r1, r7
+ 1208 0104 FFF7FEFF 		bl	__aeabi_dsub
+ 1209              	.LVL171:
+ 1210 0108 0646     		mov	r6, r0
+ 1211 010a 0F46     		mov	r7, r1
+ 1212              		.loc 1 139 128 view .LVU222
+ 1213 010c 2246     		mov	r2, r4
+ 1214 010e 2B46     		mov	r3, r5
+ 1215 0110 2046     		mov	r0, r4
+ 1216 0112 2946     		mov	r1, r5
+ 1217 0114 FFF7FEFF 		bl	__aeabi_dadd
+ 1218              	.LVL172:
+ 1219 0118 0246     		mov	r2, r0
+ 1220 011a 0B46     		mov	r3, r1
+ 1221              		.loc 1 139 12 view .LVU223
+ 1222 011c 3046     		mov	r0, r6
+ 1223 011e 3946     		mov	r1, r7
+ 1224 0120 FFF7FEFF 		bl	__aeabi_ddiv
+ 1225              	.LVL173:
+ 1226 0124 8246     		mov	r10, r0
+ 1227              	.LVL174:
+ 1228              		.loc 1 139 12 view .LVU224
+ 1229 0126 8B46     		mov	fp, r1
+ 1230              	.LVL175:
+ARM GAS  /tmp/ccizZaUb.s 			page 25
+
+
+ 140:cooneo_Drivers/math/dk.c ****     double bV = (y1 - y0) / z0;
+ 1231              		.loc 1 140 5 is_stmt 1 view .LVU225
+ 1232              		.loc 1 140 21 is_stmt 0 view .LVU226
+ 1233 0128 DDE90423 		ldrd	r2, [sp, #16]
+ 1234 012c DDE90001 		ldrd	r0, [sp]
+ 1235 0130 FFF7FEFF 		bl	__aeabi_dsub
+ 1236              	.LVL176:
+ 1237              		.loc 1 140 12 view .LVU227
+ 1238 0134 2246     		mov	r2, r4
+ 1239 0136 2B46     		mov	r3, r5
+ 1240 0138 FFF7FEFF 		bl	__aeabi_ddiv
+ 1241              	.LVL177:
+ 1242 013c 0646     		mov	r6, r0
+ 1243 013e 0F46     		mov	r7, r1
+ 1244              	.LVL178:
+ 141:cooneo_Drivers/math/dk.c **** 
+ 142:cooneo_Drivers/math/dk.c ****     double dV = -(aV + bV * y1) * (aV + bV * y1) + dk->ArmLength * (bV * bV * dk->ArmLength + dk->A
+ 1245              		.loc 1 142 5 is_stmt 1 view .LVU228
+ 1246              		.loc 1 142 27 is_stmt 0 view .LVU229
+ 1247 0140 0246     		mov	r2, r0
+ 1248 0142 0B46     		mov	r3, r1
+ 1249 0144 DDE90001 		ldrd	r0, [sp]
+ 1250 0148 FFF7FEFF 		bl	__aeabi_dmul
+ 1251              	.LVL179:
+ 1252              		.loc 1 142 22 view .LVU230
+ 1253 014c 5246     		mov	r2, r10
+ 1254 014e 5B46     		mov	r3, fp
+ 1255 0150 FFF7FEFF 		bl	__aeabi_dadd
+ 1256              	.LVL180:
+ 1257              		.loc 1 142 17 view .LVU231
+ 1258 0154 0246     		mov	r2, r0
+ 1259 0156 01F10043 		add	r3, r1, #-2147483648
+ 1260              		.loc 1 142 33 view .LVU232
+ 1261 015a FFF7FEFF 		bl	__aeabi_dmul
+ 1262              	.LVL181:
+ 1263 015e 0446     		mov	r4, r0
+ 1264              	.LVL182:
+ 1265              		.loc 1 142 33 view .LVU233
+ 1266 0160 0D46     		mov	r5, r1
+ 1267              		.loc 1 142 72 view .LVU234
+ 1268 0162 3246     		mov	r2, r6
+ 1269 0164 3B46     		mov	r3, r7
+ 1270 0166 3046     		mov	r0, r6
+ 1271 0168 3946     		mov	r1, r7
+ 1272 016a FFF7FEFF 		bl	__aeabi_dmul
+ 1273              	.LVL183:
+ 1274              		.loc 1 142 77 view .LVU235
+ 1275 016e CDE90401 		strd	r0, [sp, #16]
+ 1276              	.LVL184:
+ 1277              		.loc 1 142 77 view .LVU236
+ 1278 0172 0246     		mov	r2, r0
+ 1279 0174 0B46     		mov	r3, r1
+ 1280 0176 4046     		mov	r0, r8
+ 1281 0178 4946     		mov	r1, r9
+ 1282 017a FFF7FEFF 		bl	__aeabi_dmul
+ 1283              	.LVL185:
+ 1284 017e 0246     		mov	r2, r0
+ARM GAS  /tmp/ccizZaUb.s 			page 26
+
+
+ 1285 0180 0B46     		mov	r3, r1
+ 1286              		.loc 1 142 93 view .LVU237
+ 1287 0182 4046     		mov	r0, r8
+ 1288 0184 4946     		mov	r1, r9
+ 1289 0186 FFF7FEFF 		bl	__aeabi_dadd
+ 1290              	.LVL186:
+ 1291 018a 0246     		mov	r2, r0
+ 1292 018c 0B46     		mov	r3, r1
+ 1293              		.loc 1 142 66 view .LVU238
+ 1294 018e 4046     		mov	r0, r8
+ 1295 0190 4946     		mov	r1, r9
+ 1296 0192 FFF7FEFF 		bl	__aeabi_dmul
+ 1297              	.LVL187:
+ 1298 0196 0246     		mov	r2, r0
+ 1299 0198 0B46     		mov	r3, r1
+ 1300              		.loc 1 142 12 view .LVU239
+ 1301 019a 2046     		mov	r0, r4
+ 1302 019c 2946     		mov	r1, r5
+ 1303 019e FFF7FEFF 		bl	__aeabi_dadd
+ 1304              	.LVL188:
+ 1305 01a2 0246     		mov	r2, r0
+ 1306 01a4 0B46     		mov	r3, r1
+ 1307 01a6 43EC182B 		vmov	d8, r2, r3
+ 1308              	.LVL189:
+ 143:cooneo_Drivers/math/dk.c ****     if (dV < 0) {
+ 1309              		.loc 1 143 5 is_stmt 1 view .LVU240
+ 1310              		.loc 1 143 8 is_stmt 0 view .LVU241
+ 1311 01aa 0022     		movs	r2, #0
+ 1312              	.LVL190:
+ 1313              		.loc 1 143 8 view .LVU242
+ 1314 01ac 0023     		movs	r3, #0
+ 1315 01ae FFF7FEFF 		bl	__aeabi_dcmplt
+ 1316              	.LVL191:
+ 1317 01b2 0028     		cmp	r0, #0
+ 1318 01b4 63D1     		bne	.L23
+ 144:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // non-existing point. return error, theta
+ 145:cooneo_Drivers/math/dk.c ****     }
+ 146:cooneo_Drivers/math/dk.c **** 
+ 147:cooneo_Drivers/math/dk.c ****     double yj = (y1 - aV * bV - sqrt(dV)) / (bV * bV + 1); // choosing outer point
+ 1319              		.loc 1 147 5 is_stmt 1 view .LVU243
+ 1320              		.loc 1 147 26 is_stmt 0 view .LVU244
+ 1321 01b6 3246     		mov	r2, r6
+ 1322 01b8 3B46     		mov	r3, r7
+ 1323 01ba 5046     		mov	r0, r10
+ 1324 01bc 5946     		mov	r1, fp
+ 1325 01be FFF7FEFF 		bl	__aeabi_dmul
+ 1326              	.LVL192:
+ 1327 01c2 0246     		mov	r2, r0
+ 1328 01c4 0B46     		mov	r3, r1
+ 1329              		.loc 1 147 21 view .LVU245
+ 1330 01c6 DDE90089 		ldrd	r8, [sp]
+ 1331 01ca 4046     		mov	r0, r8
+ 1332 01cc 4946     		mov	r1, r9
+ 1333 01ce FFF7FEFF 		bl	__aeabi_dsub
+ 1334              	.LVL193:
+ 1335 01d2 0446     		mov	r4, r0
+ 1336 01d4 0D46     		mov	r5, r1
+ARM GAS  /tmp/ccizZaUb.s 			page 27
+
+
+ 1337              		.loc 1 147 33 view .LVU246
+ 1338 01d6 B0EE480A 		vmov.f32	s0, s16
+ 1339 01da F0EE680A 		vmov.f32	s1, s17
+ 1340 01de FFF7FEFF 		bl	sqrt
+ 1341              	.LVL194:
+ 1342 01e2 53EC102B 		vmov	r2, r3, d0
+ 1343              		.loc 1 147 31 discriminator 1 view .LVU247
+ 1344 01e6 2046     		mov	r0, r4
+ 1345 01e8 2946     		mov	r1, r5
+ 1346 01ea FFF7FEFF 		bl	__aeabi_dsub
+ 1347              	.LVL195:
+ 1348 01ee 0446     		mov	r4, r0
+ 1349 01f0 0D46     		mov	r5, r1
+ 1350              		.loc 1 147 54 discriminator 1 view .LVU248
+ 1351 01f2 0022     		movs	r2, #0
+ 1352 01f4 264B     		ldr	r3, .L28+8
+ 1353 01f6 DDE90401 		ldrd	r0, [sp, #16]
+ 1354 01fa FFF7FEFF 		bl	__aeabi_dadd
+ 1355              	.LVL196:
+ 1356 01fe 0246     		mov	r2, r0
+ 1357 0200 0B46     		mov	r3, r1
+ 1358              		.loc 1 147 12 discriminator 1 view .LVU249
+ 1359 0202 2046     		mov	r0, r4
+ 1360 0204 2946     		mov	r1, r5
+ 1361 0206 FFF7FEFF 		bl	__aeabi_ddiv
+ 1362              	.LVL197:
+ 1363 020a 0446     		mov	r4, r0
+ 1364 020c 0D46     		mov	r5, r1
+ 1365              	.LVL198:
+ 148:cooneo_Drivers/math/dk.c ****     double zj = aV + bV * yj;
+ 1366              		.loc 1 148 5 is_stmt 1 view .LVU250
+ 1367              		.loc 1 148 25 is_stmt 0 view .LVU251
+ 1368 020e 0246     		mov	r2, r0
+ 1369 0210 0B46     		mov	r3, r1
+ 1370 0212 3046     		mov	r0, r6
+ 1371 0214 3946     		mov	r1, r7
+ 1372 0216 FFF7FEFF 		bl	__aeabi_dmul
+ 1373              	.LVL199:
+ 1374              		.loc 1 148 12 view .LVU252
+ 1375 021a 5246     		mov	r2, r10
+ 1376 021c 5B46     		mov	r3, fp
+ 1377 021e FFF7FEFF 		bl	__aeabi_dadd
+ 1378              	.LVL200:
+ 1379 0222 0646     		mov	r6, r0
+ 1380              	.LVL201:
+ 1381              		.loc 1 148 12 view .LVU253
+ 1382 0224 0F46     		mov	r7, r1
+ 1383              	.LVL202:
+ 149:cooneo_Drivers/math/dk.c ****     *Angle = atan2(-zj, (y1 - yj)) * 180.0 / pi;
+ 1384              		.loc 1 149 5 is_stmt 1 view .LVU254
+ 1385              		.loc 1 149 14 is_stmt 0 view .LVU255
+ 1386 0226 2246     		mov	r2, r4
+ 1387 0228 2B46     		mov	r3, r5
+ 1388 022a 4046     		mov	r0, r8
+ 1389 022c 4946     		mov	r1, r9
+ 1390 022e FFF7FEFF 		bl	__aeabi_dsub
+ 1391              	.LVL203:
+ARM GAS  /tmp/ccizZaUb.s 			page 28
+
+
+ 1392 0232 3246     		mov	r2, r6
+ 1393 0234 07F10043 		add	r3, r7, #-2147483648
+ 1394 0238 41EC110B 		vmov	d1, r0, r1
+ 1395 023c 43EC102B 		vmov	d0, r2, r3
+ 1396 0240 FFF7FEFF 		bl	atan2
+ 1397              	.LVL204:
+ 1398 0244 51EC100B 		vmov	r0, r1, d0
+ 1399              		.loc 1 149 36 discriminator 1 view .LVU256
+ 1400 0248 0022     		movs	r2, #0
+ 1401 024a 124B     		ldr	r3, .L28+12
+ 1402 024c FFF7FEFF 		bl	__aeabi_dmul
+ 1403              	.LVL205:
+ 1404              		.loc 1 149 44 discriminator 1 view .LVU257
+ 1405 0250 0DA3     		adr	r3, .L28
+ 1406 0252 D3E90023 		ldrd	r2, [r3]
+ 1407 0256 FFF7FEFF 		bl	__aeabi_ddiv
+ 1408              	.LVL206:
+ 1409              		.loc 1 149 12 discriminator 1 view .LVU258
+ 1410 025a 039B     		ldr	r3, [sp, #12]
+ 1411 025c C3E90001 		strd	r0, [r3]
+ 150:cooneo_Drivers/math/dk.c **** 
+ 151:cooneo_Drivers/math/dk.c ****     return no_error; // return error, theta
+ 1412              		.loc 1 151 5 is_stmt 1 view .LVU259
+ 1413              		.loc 1 151 12 is_stmt 0 view .LVU260
+ 1414 0260 0120     		movs	r0, #1
+ 1415              	.LVL207:
+ 1416              	.L18:
+ 152:cooneo_Drivers/math/dk.c **** }
+ 1417              		.loc 1 152 1 view .LVU261
+ 1418 0262 07B0     		add	sp, sp, #28
+ 1419              	.LCFI10:
+ 1420              		.cfi_def_cfa_offset 44
+ 1421              		@ sp needed
+ 1422 0264 BDEC028B 		vldm	sp!, {d8}
+ 1423              	.LCFI11:
+ 1424              		.cfi_restore 80
+ 1425              		.cfi_restore 81
+ 1426              		.cfi_def_cfa_offset 36
+ 1427 0268 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1428              	.LVL208:
+ 1429              	.L20:
+ 1430              	.LCFI12:
+ 1431              		.cfi_def_cfa_offset 0
+ 1432              		.cfi_restore 4
+ 1433              		.cfi_restore 5
+ 1434              		.cfi_restore 6
+ 1435              		.cfi_restore 7
+ 1436              		.cfi_restore 8
+ 1437              		.cfi_restore 9
+ 1438              		.cfi_restore 10
+ 1439              		.cfi_restore 11
+ 1440              		.cfi_restore 14
+ 128:cooneo_Drivers/math/dk.c ****     }
+ 1441              		.loc 1 128 16 view .LVU262
+ 1442 026c 6FF00100 		mvn	r0, #1
+ 1443              	.LVL209:
+ 1444              		.loc 1 152 1 view .LVU263
+ARM GAS  /tmp/ccizZaUb.s 			page 29
+
+
+ 1445 0270 7047     		bx	lr
+ 1446              	.LVL210:
+ 1447              	.L21:
+ 1448              	.LCFI13:
+ 1449              		.cfi_def_cfa_offset 72
+ 1450              		.cfi_offset 4, -36
+ 1451              		.cfi_offset 5, -32
+ 1452              		.cfi_offset 6, -28
+ 1453              		.cfi_offset 7, -24
+ 1454              		.cfi_offset 8, -20
+ 1455              		.cfi_offset 9, -16
+ 1456              		.cfi_offset 10, -12
+ 1457              		.cfi_offset 11, -8
+ 1458              		.cfi_offset 14, -4
+ 1459              		.cfi_offset 80, -44
+ 1460              		.cfi_offset 81, -40
+ 128:cooneo_Drivers/math/dk.c ****     }
+ 1461              		.loc 1 128 16 view .LVU264
+ 1462 0272 6FF00100 		mvn	r0, #1
+ 1463              	.LVL211:
+ 128:cooneo_Drivers/math/dk.c ****     }
+ 1464              		.loc 1 128 16 view .LVU265
+ 1465 0276 F4E7     		b	.L18
+ 1466              	.LVL212:
+ 1467              	.L22:
+ 133:cooneo_Drivers/math/dk.c ****     }
+ 1468              		.loc 1 133 16 view .LVU266
+ 1469 0278 6FF00100 		mvn	r0, #1
+ 1470 027c F1E7     		b	.L18
+ 1471              	.LVL213:
+ 1472              	.L23:
+ 144:cooneo_Drivers/math/dk.c ****     }
+ 1473              		.loc 1 144 16 view .LVU267
+ 1474 027e 6FF00100 		mvn	r0, #1
+ 1475 0282 EEE7     		b	.L18
+ 1476              	.L29:
+ 1477 0284 AFF30080 		.align	3
+ 1478              	.L28:
+ 1479 0288 182D4454 		.word	1413754136
+ 1480 028c FB210940 		.word	1074340347
+ 1481 0290 0000F03F 		.word	1072693248
+ 1482 0294 00806640 		.word	1080459264
+ 1483 0298 1D339045 		.word	1167078173
+ 1484 029c A779D2BF 		.word	-1076725337
+ 1485 02a0 1D339045 		.word	1167078173
+ 1486 02a4 A779D23F 		.word	1070758311
+ 1487              		.cfi_endproc
+ 1488              	.LFE245:
+ 1490              		.section	.text.DeltaKinematics_inverse,"ax",%progbits
+ 1491              		.align	1
+ 1492              		.global	DeltaKinematics_inverse
+ 1493              		.syntax unified
+ 1494              		.thumb
+ 1495              		.thumb_func
+ 1497              	DeltaKinematics_inverse:
+ 1498              	.LVL214:
+ 1499              	.LFB246:
+ARM GAS  /tmp/ccizZaUb.s 			page 30
+
+
+ 153:cooneo_Drivers/math/dk.c **** 
+ 154:cooneo_Drivers/math/dk.c **** int DeltaKinematics_inverse(DeltaKinematics *dk, double x0, double y0, double z0) {
+ 1500              		.loc 1 154 83 is_stmt 1 view -0
+ 1501              		.cfi_startproc
+ 1502              		@ args = 0, pretend = 0, frame = 8
+ 1503              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
+ 1504              		.loc 1 155 5 view .LVU269
+ 1505              		.loc 1 155 8 is_stmt 0 view .LVU270
+ 1506 0000 0028     		cmp	r0, #0
+ 1507 0002 7BD0     		beq	.L32
+ 154:cooneo_Drivers/math/dk.c ****     if (dk == NULL) {
+ 1508              		.loc 1 154 83 view .LVU271
+ 1509 0004 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 1510              	.LCFI14:
+ 1511              		.cfi_def_cfa_offset 32
+ 1512              		.cfi_offset 4, -32
+ 1513              		.cfi_offset 5, -28
+ 1514              		.cfi_offset 6, -24
+ 1515              		.cfi_offset 7, -20
+ 1516              		.cfi_offset 8, -16
+ 1517              		.cfi_offset 9, -12
+ 1518              		.cfi_offset 10, -8
+ 1519              		.cfi_offset 14, -4
+ 1520 0008 2DED068B 		vpush.64	{d8, d9, d10}
+ 1521              	.LCFI15:
+ 1522              		.cfi_def_cfa_offset 56
+ 1523              		.cfi_offset 80, -56
+ 1524              		.cfi_offset 81, -52
+ 1525              		.cfi_offset 82, -48
+ 1526              		.cfi_offset 83, -44
+ 1527              		.cfi_offset 84, -40
+ 1528              		.cfi_offset 85, -36
+ 1529 000c 82B0     		sub	sp, sp, #8
+ 1530              	.LCFI16:
+ 1531              		.cfi_def_cfa_offset 64
+ 1532 000e B0EE408A 		vmov.f32	s16, s0
+ 1533 0012 F0EE608A 		vmov.f32	s17, s1
+ 1534 0016 B0EE419A 		vmov.f32	s18, s2
+ 1535 001a F0EE619A 		vmov.f32	s19, s3
+ 1536 001e B0EE42AA 		vmov.f32	s20, s4
+ 1537 0022 F0EE62AA 		vmov.f32	s21, s5
+ 1538 0026 8246     		mov	r10, r0
+ 156:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
+ 157:cooneo_Drivers/math/dk.c ****     }
  158:cooneo_Drivers/math/dk.c **** 
- 159:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
- 160:cooneo_Drivers/math/dk.c ****     
- 161:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
- 162:cooneo_Drivers/math/dk.c **** }...
- 1666              		.loc 1 162 1 view .LVU284
- 1667 0046 02B0     		add	sp, sp, #8
- 1668              	.LCFI21:
- 1669              		.cfi_remember_state
- 1670              		.cfi_def_cfa_offset 56
- 1671              		@ sp needed
- 1672 0048 BDEC068B 		vldm	sp!, {d8-d10}
- 1673              	.LCFI22:
- 1674              		.cfi_restore 84
- 1675              		.cfi_restore 85
+ 159:cooneo_Drivers/math/dk.c ****     // dk->a = 0;
+ 160:cooneo_Drivers/math/dk.c ****     // dk->b = 0;
+ 161:cooneo_Drivers/math/dk.c ****     // dk->c = 0;
+ 162:cooneo_Drivers/math/dk.c **** 
+ 163:cooneo_Drivers/math/dk.c ****     int error = DeltaKinematics_calcAngleYZ(dk, &(dk->a), x0, y0, z0);
+ 1539              		.loc 1 163 5 is_stmt 1 view .LVU272
+ 1540              		.loc 1 163 17 is_stmt 0 view .LVU273
+ 1541 0028 00F13801 		add	r1, r0, #56
+ 1542 002c FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
+ 1543              	.LVL215:
+ 164:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
+ARM GAS  /tmp/ccizZaUb.s 			page 31
+
+
+ 1544              		.loc 1 164 5 is_stmt 1 view .LVU274
+ 1545              		.loc 1 164 8 is_stmt 0 view .LVU275
+ 1546 0030 0128     		cmp	r0, #1
+ 1547 0032 04D0     		beq	.L37
+ 1548              	.LVL216:
+ 1549              	.L30:
+ 165:cooneo_Drivers/math/dk.c **** 
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 167:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
+ 168:cooneo_Drivers/math/dk.c **** 
+ 169:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
+ 170:cooneo_Drivers/math/dk.c ****     
+ 171:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
+ 172:cooneo_Drivers/math/dk.c **** }...
+ 1550              		.loc 1 172 1 view .LVU276
+ 1551 0034 02B0     		add	sp, sp, #8
+ 1552              	.LCFI17:
+ 1553              		.cfi_remember_state
+ 1554              		.cfi_def_cfa_offset 56
+ 1555              		@ sp needed
+ 1556 0036 BDEC068B 		vldm	sp!, {d8-d10}
+ 1557              	.LCFI18:
+ 1558              		.cfi_restore 84
+ 1559              		.cfi_restore 85
+ 1560              		.cfi_restore 82
+ 1561              		.cfi_restore 83
+ 1562              		.cfi_restore 80
+ 1563              		.cfi_restore 81
+ 1564              		.cfi_def_cfa_offset 32
+ 1565              	.LVL217:
+ 1566              		.loc 1 172 1 view .LVU277
+ 1567 003a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1568              	.LVL218:
+ 1569              	.L37:
+ 1570              	.LCFI19:
+ 1571              		.cfi_restore_state
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1572              		.loc 1 166 5 is_stmt 1 view .LVU278
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1573              		.loc 1 166 58 is_stmt 0 view .LVU279
+ 1574 003e 0022     		movs	r2, #0
+ 1575 0040 334B     		ldr	r3, .L38+8
+ 1576 0042 51EC180B 		vmov	r0, r1, d8
+ 1577              	.LVL219:
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1578              		.loc 1 166 58 view .LVU280
+ 1579 0046 FFF7FEFF 		bl	__aeabi_dmul
+ 1580              	.LVL220:
+ 1581 004a CDE90001 		strd	r0, [sp]
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1582              		.loc 1 166 72 view .LVU281
+ 1583 004e 2EA3     		adr	r3, .L38
+ 1584 0050 D3E90023 		ldrd	r2, [r3]
+ 1585 0054 51EC190B 		vmov	r0, r1, d9
+ 1586 0058 FFF7FEFF 		bl	__aeabi_dmul
+ 1587              	.LVL221:
+ 1588 005c 0446     		mov	r4, r0
+ARM GAS  /tmp/ccizZaUb.s 			page 32
+
+
+ 1589 005e 0D46     		mov	r5, r1
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1590              		.loc 1 166 85 view .LVU282
+ 1591 0060 0022     		movs	r2, #0
+ 1592 0062 2B4B     		ldr	r3, .L38+8
+ 1593 0064 51EC190B 		vmov	r0, r1, d9
+ 1594 0068 FFF7FEFF 		bl	__aeabi_dmul
+ 1595              	.LVL222:
+ 1596 006c 0646     		mov	r6, r0
+ 1597 006e 0F46     		mov	r7, r1
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1598              		.loc 1 166 99 view .LVU283
+ 1599 0070 25A3     		adr	r3, .L38
+ 1600 0072 D3E90023 		ldrd	r2, [r3]
+ 1601 0076 51EC180B 		vmov	r0, r1, d8
+ 1602 007a FFF7FEFF 		bl	__aeabi_dmul
+ 1603              	.LVL223:
+ 1604 007e 8046     		mov	r8, r0
+ 1605 0080 8946     		mov	r9, r1
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1606              		.loc 1 166 13 view .LVU284
+ 1607 0082 0246     		mov	r2, r0
+ 1608 0084 0B46     		mov	r3, r1
+ 1609 0086 3046     		mov	r0, r6
+ 1610 0088 3946     		mov	r1, r7
+ 1611 008a FFF7FEFF 		bl	__aeabi_dsub
+ 1612              	.LVL224:
+ 1613 008e 41EC180B 		vmov	d8, r0, r1
+ 1614              	.LVL225:
+ 166:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
+ 1615              		.loc 1 166 13 view .LVU285
+ 1616 0092 2246     		mov	r2, r4
+ 1617 0094 2B46     		mov	r3, r5
+ 1618 0096 DDE90001 		ldrd	r0, [sp]
+ 1619 009a FFF7FEFF 		bl	__aeabi_dadd
+ 1620              	.LVL226:
+ 1621 009e B0EE4A2A 		vmov.f32	s4, s20
+ 1622 00a2 F0EE6A2A 		vmov.f32	s5, s21
+ 1623 00a6 B0EE481A 		vmov.f32	s2, s16
+ 1624 00aa F0EE681A 		vmov.f32	s3, s17
+ 1625 00ae 41EC100B 		vmov	d0, r0, r1
+ 1626 00b2 0AF14001 		add	r1, r10, #64
+ 1627 00b6 5046     		mov	r0, r10
+ 1628 00b8 FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
+ 1629              	.LVL227:
+ 167:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
+ 1630              		.loc 1 167 5 is_stmt 1 view .LVU286
+ 167:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
+ 1631              		.loc 1 167 8 is_stmt 0 view .LVU287
+ 1632 00bc 0128     		cmp	r0, #1
+ 1633 00be B9D1     		bne	.L30
+ 169:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
+ 1634              		.loc 1 169 5 is_stmt 1 view .LVU288
+ 169:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
+ 1635              		.loc 1 169 13 is_stmt 0 view .LVU289
+ 1636 00c0 4246     		mov	r2, r8
+ 1637 00c2 4B46     		mov	r3, r9
+ARM GAS  /tmp/ccizZaUb.s 			page 33
+
+
+ 1638 00c4 3046     		mov	r0, r6
+ 1639              	.LVL228:
+ 169:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
+ 1640              		.loc 1 169 13 view .LVU290
+ 1641 00c6 3946     		mov	r1, r7
+ 1642 00c8 FFF7FEFF 		bl	__aeabi_dadd
+ 1643              	.LVL229:
+ 1644 00cc 41EC180B 		vmov	d8, r0, r1
+ 1645 00d0 2246     		mov	r2, r4
+ 1646 00d2 2B46     		mov	r3, r5
+ 1647 00d4 DDE90001 		ldrd	r0, [sp]
+ 1648 00d8 FFF7FEFF 		bl	__aeabi_dsub
+ 1649              	.LVL230:
+ 1650 00dc B0EE4A2A 		vmov.f32	s4, s20
+ 1651 00e0 F0EE6A2A 		vmov.f32	s5, s21
+ 1652 00e4 B0EE481A 		vmov.f32	s2, s16
+ 1653 00e8 F0EE681A 		vmov.f32	s3, s17
+ 1654 00ec 41EC100B 		vmov	d0, r0, r1
+ 1655 00f0 0AF14801 		add	r1, r10, #72
+ 1656 00f4 5046     		mov	r0, r10
+ 1657 00f6 FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
+ 1658              	.LVL231:
+ 171:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
+ 1659              		.loc 1 171 5 is_stmt 1 view .LVU291
+ 171:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
+ 1660              		.loc 1 171 12 is_stmt 0 view .LVU292
+ 1661 00fa 9BE7     		b	.L30
+ 1662              	.LVL232:
+ 1663              	.L32:
+ 1664              	.LCFI20:
+ 1665              		.cfi_def_cfa_offset 0
+ 1666              		.cfi_restore 4
+ 1667              		.cfi_restore 5
+ 1668              		.cfi_restore 6
+ 1669              		.cfi_restore 7
+ 1670              		.cfi_restore 8
+ 1671              		.cfi_restore 9
+ 1672              		.cfi_restore 10
+ 1673              		.cfi_restore 14
+ 1674              		.cfi_restore 80
+ 1675              		.cfi_restore 81
  1676              		.cfi_restore 82
  1677              		.cfi_restore 83
- 1678              		.cfi_restore 80
-ARM GAS  /tmp/ccQ9HSto.s 			page 34
+ 1678              		.cfi_restore 84
+ 1679              		.cfi_restore 85
+ 156:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
+ 1680              		.loc 1 156 16 view .LVU293
+ 1681 00fc 6FF00100 		mvn	r0, #1
+ 1682              	.LVL233:
+ 1683              		.loc 1 172 1 view .LVU294
+ 1684 0100 7047     		bx	lr
+ 1685              	.L39:
+ 1686 0102 00BFAFF3 		.align	3
+ 1686      0080
+ 1687              	.L38:
+ 1688 0108 AA4C58E8 		.word	-396866390
+ 1689 010c 7AB6EB3F 		.word	1072412282
+ARM GAS  /tmp/ccizZaUb.s 			page 34
 
 
- 1679              		.cfi_restore 81
- 1680              		.cfi_def_cfa_offset 32
- 1681              	.LVL225:
- 1682              		.loc 1 162 1 view .LVU285
- 1683 004c BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
- 1684              	.LVL226:
- 1685              	.L40:
- 1686              	.LCFI23:
- 1687              		.cfi_restore_state
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1688              		.loc 1 156 5 is_stmt 1 view .LVU286
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1689              		.loc 1 156 58 is_stmt 0 view .LVU287
- 1690 0050 0022     		movs	r2, #0
- 1691 0052 334B     		ldr	r3, .L41+8
- 1692 0054 51EC180B 		vmov	r0, r1, d8
- 1693              	.LVL227:
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1694              		.loc 1 156 58 view .LVU288
- 1695 0058 FFF7FEFF 		bl	__aeabi_dmul
- 1696              	.LVL228:
- 1697 005c CDE90001 		strd	r0, [sp]
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1698              		.loc 1 156 72 view .LVU289
- 1699 0060 2DA3     		adr	r3, .L41
- 1700 0062 D3E90023 		ldrd	r2, [r3]
- 1701 0066 51EC190B 		vmov	r0, r1, d9
- 1702 006a FFF7FEFF 		bl	__aeabi_dmul
- 1703              	.LVL229:
- 1704 006e 0446     		mov	r4, r0
- 1705 0070 0D46     		mov	r5, r1
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1706              		.loc 1 156 85 view .LVU290
- 1707 0072 0022     		movs	r2, #0
- 1708 0074 2A4B     		ldr	r3, .L41+8
- 1709 0076 51EC190B 		vmov	r0, r1, d9
- 1710 007a FFF7FEFF 		bl	__aeabi_dmul
- 1711              	.LVL230:
- 1712 007e 0646     		mov	r6, r0
- 1713 0080 0F46     		mov	r7, r1
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1714              		.loc 1 156 99 view .LVU291
- 1715 0082 25A3     		adr	r3, .L41
- 1716 0084 D3E90023 		ldrd	r2, [r3]
- 1717 0088 51EC180B 		vmov	r0, r1, d8
- 1718 008c FFF7FEFF 		bl	__aeabi_dmul
- 1719              	.LVL231:
- 1720 0090 8046     		mov	r8, r0
- 1721 0092 8946     		mov	r9, r1
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1722              		.loc 1 156 13 view .LVU292
- 1723 0094 0246     		mov	r2, r0
- 1724 0096 0B46     		mov	r3, r1
- 1725 0098 3046     		mov	r0, r6
- 1726 009a 3946     		mov	r1, r7
- 1727 009c FFF7FEFF 		bl	__aeabi_dsub
- 1728              	.LVL232:
-ARM GAS  /tmp/ccQ9HSto.s 			page 35
+ 1690 0110 0000E0BF 		.word	-1075838976
+ 1691              		.cfi_endproc
+ 1692              	.LFE246:
+ 1694              		.global	no_error
+ 1695              		.section	.rodata.no_error,"a"
+ 1696              		.align	2
+ 1699              	no_error:
+ 1700 0000 01000000 		.word	1
+ 1701              		.global	non_existing_point_error
+ 1702              		.section	.rodata.non_existing_point_error,"a"
+ 1703              		.align	2
+ 1706              	non_existing_point_error:
+ 1707 0000 FEFFFFFF 		.word	-2
+ 1708              		.global	tan30
+ 1709              		.section	.rodata.tan30,"a"
+ 1710              		.align	3
+ 1713              	tan30:
+ 1714 0000 1D339045 		.word	1167078173
+ 1715 0004 A779E23F 		.word	1071806887
+ 1716              		.global	sin30
+ 1717              		.section	.rodata.sin30,"a"
+ 1718              		.align	3
+ 1721              	sin30:
+ 1722 0000 00000000 		.word	0
+ 1723 0004 0000E03F 		.word	1071644672
+ 1724              		.global	tan60
+ 1725              		.section	.rodata.tan60,"a"
+ 1726              		.align	3
+ 1729              	tan60:
+ 1730 0000 AA4C58E8 		.word	-396866390
+ 1731 0004 7AB6FB3F 		.word	1073460858
+ 1732              		.global	cos120
+ 1733              		.section	.rodata.cos120,"a"
+ 1734              		.align	3
+ 1737              	cos120:
+ 1738 0000 00000000 		.word	0
+ 1739 0004 0000E0BF 		.word	-1075838976
+ 1740              		.global	sin120
+ 1741              		.section	.rodata.sin120,"a"
+ 1742              		.align	3
+ 1745              	sin120:
+ 1746 0000 AA4C58E8 		.word	-396866390
+ 1747 0004 7AB6EB3F 		.word	1072412282
+ 1748              		.global	pi
+ 1749              		.section	.rodata.pi,"a"
+ 1750              		.align	3
+ 1753              	pi:
+ 1754 0000 182D4454 		.word	1413754136
+ 1755 0004 FB210940 		.word	1074340347
+ 1756              		.global	sqrt3
+ 1757              		.section	.rodata.sqrt3,"a"
+ 1758              		.align	3
+ 1761              	sqrt3:
+ 1762 0000 AA4C58E8 		.word	-396866390
+ 1763 0004 7AB6FB3F 		.word	1073460858
+ 1764              		.text
+ 1765              	.Letext0:
+ARM GAS  /tmp/ccizZaUb.s 			page 35
 
 
- 1729 00a0 41EC180B 		vmov	d8, r0, r1
- 1730              	.LVL233:
- 156:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->b), x0 * cos120 + y0 * sin120, y0 * cos120 - x0 *
- 1731              		.loc 1 156 13 view .LVU293
- 1732 00a4 2246     		mov	r2, r4
- 1733 00a6 2B46     		mov	r3, r5
- 1734 00a8 DDE90001 		ldrd	r0, [sp]
- 1735 00ac FFF7FEFF 		bl	__aeabi_dadd
- 1736              	.LVL234:
- 1737 00b0 B0EE4A2A 		vmov.f32	s4, s20
- 1738 00b4 F0EE6A2A 		vmov.f32	s5, s21
- 1739 00b8 B0EE481A 		vmov.f32	s2, s16
- 1740 00bc F0EE681A 		vmov.f32	s3, s17
- 1741 00c0 41EC100B 		vmov	d0, r0, r1
- 1742 00c4 0AF14001 		add	r1, r10, #64
- 1743 00c8 5046     		mov	r0, r10
- 1744 00ca FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
- 1745              	.LVL235:
- 157:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
- 1746              		.loc 1 157 5 is_stmt 1 view .LVU294
- 157:cooneo_Drivers/math/dk.c ****     if (error != no_error) return error;
- 1747              		.loc 1 157 8 is_stmt 0 view .LVU295
- 1748 00ce 0128     		cmp	r0, #1
- 1749 00d0 B9D1     		bne	.L33
- 159:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
- 1750              		.loc 1 159 5 is_stmt 1 view .LVU296
- 159:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
- 1751              		.loc 1 159 13 is_stmt 0 view .LVU297
- 1752 00d2 4246     		mov	r2, r8
- 1753 00d4 4B46     		mov	r3, r9
- 1754 00d6 3046     		mov	r0, r6
- 1755              	.LVL236:
- 159:cooneo_Drivers/math/dk.c ****     error = DeltaKinematics_calcAngleYZ(dk, &(dk->c), x0 * cos120 - y0 * sin120, y0 * cos120 + x0 *
- 1756              		.loc 1 159 13 view .LVU298
- 1757 00d8 3946     		mov	r1, r7
- 1758 00da FFF7FEFF 		bl	__aeabi_dadd
- 1759              	.LVL237:
- 1760 00de 41EC180B 		vmov	d8, r0, r1
- 1761 00e2 2246     		mov	r2, r4
- 1762 00e4 2B46     		mov	r3, r5
- 1763 00e6 DDE90001 		ldrd	r0, [sp]
- 1764 00ea FFF7FEFF 		bl	__aeabi_dsub
- 1765              	.LVL238:
- 1766 00ee B0EE4A2A 		vmov.f32	s4, s20
- 1767 00f2 F0EE6A2A 		vmov.f32	s5, s21
- 1768 00f6 B0EE481A 		vmov.f32	s2, s16
- 1769 00fa F0EE681A 		vmov.f32	s3, s17
- 1770 00fe 41EC100B 		vmov	d0, r0, r1
- 1771 0102 0AF14801 		add	r1, r10, #72
- 1772 0106 5046     		mov	r0, r10
- 1773 0108 FFF7FEFF 		bl	DeltaKinematics_calcAngleYZ
- 1774              	.LVL239:
- 161:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
- 1775              		.loc 1 161 5 is_stmt 1 view .LVU299
- 161:cooneo_Drivers/math/dk.c ****     return error; // or no_error if all calculations are successful
- 1776              		.loc 1 161 12 is_stmt 0 view .LVU300
- 1777 010c 9BE7     		b	.L33
-ARM GAS  /tmp/ccQ9HSto.s 			page 36
-
-
- 1778              	.LVL240:
- 1779              	.L35:
- 1780              	.LCFI24:
- 1781              		.cfi_def_cfa_offset 0
- 1782              		.cfi_restore 4
- 1783              		.cfi_restore 5
- 1784              		.cfi_restore 6
- 1785              		.cfi_restore 7
- 1786              		.cfi_restore 8
- 1787              		.cfi_restore 9
- 1788              		.cfi_restore 10
- 1789              		.cfi_restore 14
- 1790              		.cfi_restore 80
- 1791              		.cfi_restore 81
- 1792              		.cfi_restore 82
- 1793              		.cfi_restore 83
- 1794              		.cfi_restore 84
- 1795              		.cfi_restore 85
- 146:cooneo_Drivers/math/dk.c ****         return non_existing_point_error; // Or other error code for invalid pointer
- 1796              		.loc 1 146 16 view .LVU301
- 1797 010e 6FF00100 		mvn	r0, #1
- 1798              	.LVL241:
- 1799              		.loc 1 162 1 view .LVU302
- 1800 0112 7047     		bx	lr
- 1801              	.L42:
- 1802 0114 AFF30080 		.align	3
- 1803              	.L41:
- 1804 0118 AA4C58E8 		.word	-396866390
- 1805 011c 7AB6EB3F 		.word	1072412282
- 1806 0120 0000E0BF 		.word	-1075838976
- 1807              		.cfi_endproc
- 1808              	.LFE246:
- 1810              		.global	no_error
- 1811              		.section	.rodata.no_error,"a"
- 1812              		.align	2
- 1815              	no_error:
- 1816 0000 01000000 		.word	1
- 1817              		.global	non_existing_point_error
- 1818              		.section	.rodata.non_existing_point_error,"a"
- 1819              		.align	2
- 1822              	non_existing_point_error:
- 1823 0000 FEFFFFFF 		.word	-2
- 1824              		.global	tan30
- 1825              		.section	.rodata.tan30,"a"
- 1826              		.align	3
- 1829              	tan30:
- 1830 0000 1D339045 		.word	1167078173
- 1831 0004 A779E23F 		.word	1071806887
- 1832              		.global	sin30
- 1833              		.section	.rodata.sin30,"a"
- 1834              		.align	3
- 1837              	sin30:
- 1838 0000 00000000 		.word	0
- 1839 0004 0000E03F 		.word	1071644672
- 1840              		.global	tan60
- 1841              		.section	.rodata.tan60,"a"
- 1842              		.align	3
-ARM GAS  /tmp/ccQ9HSto.s 			page 37
-
-
- 1845              	tan60:
- 1846 0000 AA4C58E8 		.word	-396866390
- 1847 0004 7AB6FB3F 		.word	1073460858
- 1848              		.global	cos120
- 1849              		.section	.rodata.cos120,"a"
- 1850              		.align	3
- 1853              	cos120:
- 1854 0000 00000000 		.word	0
- 1855 0004 0000E0BF 		.word	-1075838976
- 1856              		.global	sin120
- 1857              		.section	.rodata.sin120,"a"
- 1858              		.align	3
- 1861              	sin120:
- 1862 0000 AA4C58E8 		.word	-396866390
- 1863 0004 7AB6EB3F 		.word	1072412282
- 1864              		.global	pi
- 1865              		.section	.rodata.pi,"a"
- 1866              		.align	3
- 1869              	pi:
- 1870 0000 182D4454 		.word	1413754136
- 1871 0004 FB210940 		.word	1074340347
- 1872              		.global	sqrt3
- 1873              		.section	.rodata.sqrt3,"a"
- 1874              		.align	3
- 1877              	sqrt3:
- 1878 0000 AA4C58E8 		.word	-396866390
- 1879 0004 7AB6FB3F 		.word	1073460858
- 1880              		.text
- 1881              	.Letext0:
- 1882              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 1883              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 1884              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 1885              		.file 5 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
- 1886              		.file 6 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
- 1887              		.file 7 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos_
- 1888              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_acti
- 1889              		.file 9 "cooneo_Drivers/math/dk.h"
- 1890              		.file 10 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchai
- 1891              		.file 11 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchai
-ARM GAS  /tmp/ccQ9HSto.s 			page 38
+ 1766              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1767              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1768              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 1769              		.file 5 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/type
+ 1770              		.file 6 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/time
+ 1771              		.file 7 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos_
+ 1772              		.file 8 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_acti
+ 1773              		.file 9 "cooneo_Drivers/math/dk.h"
+ 1774              		.file 10 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchai
+ARM GAS  /tmp/ccizZaUb.s 			page 36
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 dk.c
-     /tmp/ccQ9HSto.s:21     .rodata.DeltaKinematics_Init.str1.4:00000000 $d
-     /tmp/ccQ9HSto.s:52     .text.DeltaKinematics_Init:00000000 $t
-     /tmp/ccQ9HSto.s:58     .text.DeltaKinematics_Init:00000000 DeltaKinematics_Init
-     /tmp/ccQ9HSto.s:191    .text.DeltaKinematics_Init:000000f8 $d
-     /tmp/ccQ9HSto.s:215    .text.DeltaKinematics_forward:00000000 $t
-     /tmp/ccQ9HSto.s:221    .text.DeltaKinematics_forward:00000000 DeltaKinematics_forward
-     /tmp/ccQ9HSto.s:750    .text.DeltaKinematics_forward:00000370 $d
-     /tmp/ccQ9HSto.s:760    .text.DeltaKinematics_forward:00000394 $t
-     /tmp/ccQ9HSto.s:1141   .text.DeltaKinematics_forward:000005d0 $d
-     /tmp/ccQ9HSto.s:1148   .text.DeltaKinematics_calcAngleYZ:00000000 $t
-     /tmp/ccQ9HSto.s:1154   .text.DeltaKinematics_calcAngleYZ:00000000 DeltaKinematics_calcAngleYZ
-     /tmp/ccQ9HSto.s:1584   .text.DeltaKinematics_calcAngleYZ:00000270 $d
-     /tmp/ccQ9HSto.s:1596   .text.DeltaKinematics_inverse:00000000 $t
-     /tmp/ccQ9HSto.s:1602   .text.DeltaKinematics_inverse:00000000 DeltaKinematics_inverse
-     /tmp/ccQ9HSto.s:1804   .text.DeltaKinematics_inverse:00000118 $d
-     /tmp/ccQ9HSto.s:1815   .rodata.no_error:00000000 no_error
-     /tmp/ccQ9HSto.s:1812   .rodata.no_error:00000000 $d
-     /tmp/ccQ9HSto.s:1822   .rodata.non_existing_point_error:00000000 non_existing_point_error
-     /tmp/ccQ9HSto.s:1819   .rodata.non_existing_point_error:00000000 $d
-     /tmp/ccQ9HSto.s:1829   .rodata.tan30:00000000 tan30
-     /tmp/ccQ9HSto.s:1826   .rodata.tan30:00000000 $d
-     /tmp/ccQ9HSto.s:1837   .rodata.sin30:00000000 sin30
-     /tmp/ccQ9HSto.s:1834   .rodata.sin30:00000000 $d
-     /tmp/ccQ9HSto.s:1845   .rodata.tan60:00000000 tan60
-     /tmp/ccQ9HSto.s:1842   .rodata.tan60:00000000 $d
-     /tmp/ccQ9HSto.s:1853   .rodata.cos120:00000000 cos120
-     /tmp/ccQ9HSto.s:1850   .rodata.cos120:00000000 $d
-     /tmp/ccQ9HSto.s:1861   .rodata.sin120:00000000 sin120
-     /tmp/ccQ9HSto.s:1858   .rodata.sin120:00000000 $d
-     /tmp/ccQ9HSto.s:1869   .rodata.pi:00000000 pi
-     /tmp/ccQ9HSto.s:1866   .rodata.pi:00000000 $d
-     /tmp/ccQ9HSto.s:1877   .rodata.sqrt3:00000000 sqrt3
-     /tmp/ccQ9HSto.s:1874   .rodata.sqrt3:00000000 $d
+     /tmp/ccizZaUb.s:21     .text.DeltaKinematics_Init:00000000 $t
+     /tmp/ccizZaUb.s:27     .text.DeltaKinematics_Init:00000000 DeltaKinematics_Init
+     /tmp/ccizZaUb.s:78     .text.DeltaKinematics_Init:00000038 $d
+     /tmp/ccizZaUb.s:92     .text.DeltaKinematics_forward:00000000 $t
+     /tmp/ccizZaUb.s:98     .text.DeltaKinematics_forward:00000000 DeltaKinematics_forward
+     /tmp/ccizZaUb.s:627    .text.DeltaKinematics_forward:00000370 $d
+     /tmp/ccizZaUb.s:637    .text.DeltaKinematics_forward:00000394 $t
+     /tmp/ccizZaUb.s:1018   .text.DeltaKinematics_forward:000005d0 $d
+     /tmp/ccizZaUb.s:1026   .text.DeltaKinematics_calcAngleYZ:00000000 $t
+     /tmp/ccizZaUb.s:1032   .text.DeltaKinematics_calcAngleYZ:00000000 DeltaKinematics_calcAngleYZ
+     /tmp/ccizZaUb.s:1479   .text.DeltaKinematics_calcAngleYZ:00000288 $d
+     /tmp/ccizZaUb.s:1491   .text.DeltaKinematics_inverse:00000000 $t
+     /tmp/ccizZaUb.s:1497   .text.DeltaKinematics_inverse:00000000 DeltaKinematics_inverse
+     /tmp/ccizZaUb.s:1688   .text.DeltaKinematics_inverse:00000108 $d
+     /tmp/ccizZaUb.s:1699   .rodata.no_error:00000000 no_error
+     /tmp/ccizZaUb.s:1696   .rodata.no_error:00000000 $d
+     /tmp/ccizZaUb.s:1706   .rodata.non_existing_point_error:00000000 non_existing_point_error
+     /tmp/ccizZaUb.s:1703   .rodata.non_existing_point_error:00000000 $d
+     /tmp/ccizZaUb.s:1713   .rodata.tan30:00000000 tan30
+     /tmp/ccizZaUb.s:1710   .rodata.tan30:00000000 $d
+     /tmp/ccizZaUb.s:1721   .rodata.sin30:00000000 sin30
+     /tmp/ccizZaUb.s:1718   .rodata.sin30:00000000 $d
+     /tmp/ccizZaUb.s:1729   .rodata.tan60:00000000 tan60
+     /tmp/ccizZaUb.s:1726   .rodata.tan60:00000000 $d
+     /tmp/ccizZaUb.s:1737   .rodata.cos120:00000000 cos120
+     /tmp/ccizZaUb.s:1734   .rodata.cos120:00000000 $d
+     /tmp/ccizZaUb.s:1745   .rodata.sin120:00000000 sin120
+     /tmp/ccizZaUb.s:1742   .rodata.sin120:00000000 $d
+     /tmp/ccizZaUb.s:1753   .rodata.pi:00000000 pi
+     /tmp/ccizZaUb.s:1750   .rodata.pi:00000000 $d
+     /tmp/ccizZaUb.s:1761   .rodata.sqrt3:00000000 sqrt3
+     /tmp/ccizZaUb.s:1758   .rodata.sqrt3:00000000 $d
 
 UNDEFINED SYMBOLS
-printf
 __aeabi_dsub
 __aeabi_dmul
 __aeabi_dadd
@@ -2249,4 +2097,5 @@ __aeabi_ddiv
 cos
 sin
 sqrt
+__aeabi_dcmpeq
 atan2

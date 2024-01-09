@@ -15,6 +15,10 @@ void DeltaKinematics_Init(DeltaKinematics *dk, double _ArmLength, double _RodLen
         dk->BassTri = 119;
         dk->PlatformTri = 120;
 
+        dk->a = 0;
+        dk->b = 0;
+        dk->c = 0;
+
         // // 计算 x, y, z 的范围
         // dk->xMin = -dk->ArmLength * sin(dk->a) * cos(dk->b);
         // dk->xMax = dk->ArmLength * sin(dk->a) * cos(dk->b);
@@ -33,16 +37,16 @@ void DeltaKinematics_Init(DeltaKinematics *dk, double _ArmLength, double _RodLen
 
         // 打印初始化结果
 
-        printf("ArmLength: %f\n", dk->ArmLength);
-        printf("RodLength: %f\n", dk->RodLength);
-        printf("BassTri: %f\n", dk->BassTri);
-        printf("PlatformTri: %f\n", dk->PlatformTri);
-        printf("x: %f (%.2f, %.2f)\n", dk->x, dk->xMin, dk->xMax);
-        printf("y: %f (%.2f, %.2f)\n", dk->y, dk->yMin, dk->yMax);
-        printf("z: %f (%.2f, %.2f)\n", dk->z, dk->zMin, dk->zMax);
-        printf("thetaA: %f (%.2f, %.2f)\n", dk->a, dk->thetaAMin, dk->thetaAMax);
-        printf("thetaB: %f (%.2f, %.2f)\n", dk->b, dk->thetaBMin, dk->thetaBMax);
-        printf("thetaC: %f (%.2f, %.2f)\n", dk->c, dk->thetaCMin, dk->thetaCMax);
+        // printf("ArmLength: %f\n", dk->ArmLength);
+        // printf("RodLength: %f\n", dk->RodLength);
+        // printf("BassTri: %f\n", dk->BassTri);
+        // printf("PlatformTri: %f\n", dk->PlatformTri);
+        // printf("x: %f (%.2f, %.2f)\n", dk->x, dk->xMin, dk->xMax);
+        // printf("y: %f (%.2f, %.2f)\n", dk->y, dk->yMin, dk->yMax);
+        // printf("z: %f (%.2f, %.2f)\n", dk->z, dk->zMin, dk->zMax);
+        // printf("thetaA: %f (%.2f, %.2f)\n", dk->a, dk->thetaAMin, dk->thetaAMax);
+        // printf("thetaB: %f (%.2f, %.2f)\n", dk->b, dk->thetaBMin, dk->thetaBMax);
+        // printf("thetaC: %f (%.2f, %.2f)\n", dk->c, dk->thetaCMin, dk->thetaCMax);
 
     }
 }
@@ -119,8 +123,14 @@ int DeltaKinematics_forward(DeltaKinematics *dk, double thetaA, double thetaB, d
 }
 
 int DeltaKinematics_calcAngleYZ(DeltaKinematics *dk, double *Angle, double x0, double y0, double z0) {
+    
     if (dk == NULL || Angle == NULL) {
         return non_existing_point_error; // Or other error code for invalid pointer
+    }
+
+    // 确保 z0 不为零，以避免除以零的错误
+    if (z0 == 0) {
+        return non_existing_point_error; // 返回适当的错误代码
     }
 
     double y1 = -0.5 * tan30 * dk->BassTri;
@@ -146,9 +156,9 @@ int DeltaKinematics_inverse(DeltaKinematics *dk, double x0, double y0, double z0
         return non_existing_point_error; // Or other error code for invalid pointer
     }
 
-    dk->a = 0;
-    dk->b = 0;
-    dk->c = 0;
+    // dk->a = 0;
+    // dk->b = 0;
+    // dk->c = 0;
 
     int error = DeltaKinematics_calcAngleYZ(dk, &(dk->a), x0, y0, z0);
     if (error != no_error) return error;
