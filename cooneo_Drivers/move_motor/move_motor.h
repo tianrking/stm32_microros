@@ -1,5 +1,5 @@
-#ifndef __STEP_MOTOR_H__
-#define __STEP_MOTOR_H__
+#ifndef __MOVE_MOTOR_H__
+#define __MOVE_MOTOR_H__
 
 #ifdef __cplusplus
 extern "C" {

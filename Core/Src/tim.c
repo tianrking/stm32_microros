@@ -165,18 +165,18 @@ void MX_TIM9_Init(void)
 
   /* USER CODE END TIM9_Init 1 */
   htim9.Instance = TIM9;
-  htim9.Init.Prescaler = 0;
+  htim9.Init.Prescaler = 168-1;
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim9.Init.Period = 65535;
+  htim9.Init.Period = 100-1;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim9.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim9) != HAL_OK)
   {
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim9, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
@@ -240,6 +240,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
   /* USER CODE END TIM9_MspInit 0 */
     /* TIM9 clock enable */
     __HAL_RCC_TIM9_CLK_ENABLE();
+
+    /* TIM9 interrupt Init */
+    HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
   /* USER CODE BEGIN TIM9_MspInit 1 */
 
   /* USER CODE END TIM9_MspInit 1 */
@@ -373,6 +377,9 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim_pwmHandle)
   /* USER CODE END TIM9_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM9_CLK_DISABLE();
+
+    /* TIM9 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(TIM1_BRK_TIM9_IRQn);
   /* USER CODE BEGIN TIM9_MspDeInit 1 */
 
   /* USER CODE END TIM9_MspDeInit 1 */

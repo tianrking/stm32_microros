@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccyLdBQy.s 			page 1
+ARM GAS  /tmp/ccmGTdv1.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
   27:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_INPUT_PULSES, parseInputPulses},
   28:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_POSITION_ERROR, parsePositionError},
   29:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_ENABLE_STATUS, parseEnableStatus},
-ARM GAS  /tmp/ccyLdBQy.s 			page 2
+ARM GAS  /tmp/ccmGTdv1.s 			page 2
 
 
   30:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     {READ_STALL_FLAG, parseStallFlag},
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
   66              		@ args = 0, pretend = 0, frame = 0
   67              		@ frame_needed = 0, uses_anonymous_args = 0
   68              		@ link register save eliminated.
-ARM GAS  /tmp/ccyLdBQy.s 			page 3
+ARM GAS  /tmp/ccmGTdv1.s 			page 3
 
 
   50:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // Assuming data[1] and data[2] are the bytes representing the encoder value
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  109 0006 1360     		str	r3, [r2]
  110              	.LVL5:
   66:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     // TODO: Add the logic to handle or display the input pulses
-ARM GAS  /tmp/ccyLdBQy.s 			page 4
+ARM GAS  /tmp/ccmGTdv1.s 			page 4
 
 
   67:cooneo_Drivers/emm_motor/emm_motor_rsp.c **** }
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  158              		.thumb
  159              		.thumb_func
  161              	parseEnableStatus:
-ARM GAS  /tmp/ccyLdBQy.s 			page 5
+ARM GAS  /tmp/ccmGTdv1.s 			page 5
 
 
  162              	.LVL8:
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  205              		.loc 1 89 7 is_stmt 0 view .LVU36
  206 0000 024A     		ldr	r2, .L17
  207 0002 1368     		ldr	r3, [r2]
-ARM GAS  /tmp/ccyLdBQy.s 			page 6
+ARM GAS  /tmp/ccmGTdv1.s 			page 6
 
 
  208 0004 0133     		adds	r3, r3, #1
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  244              		.global	dispatchParser
  245              		.syntax unified
  246              		.thumb
-ARM GAS  /tmp/ccyLdBQy.s 			page 7
+ARM GAS  /tmp/ccmGTdv1.s 			page 7
 
 
  247              		.thumb_func
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  120:cooneo_Drivers/emm_motor/emm_motor_rsp.c ****     for (int i = 0; i < sizeof(commandParsers) / sizeof(CommandParser); ++i) {
  289              		.loc 1 120 73 is_stmt 0 discriminator 2 view .LVU56
  290 0018 F6E7     		b	.L22
-ARM GAS  /tmp/ccyLdBQy.s 			page 8
+ARM GAS  /tmp/ccmGTdv1.s 			page 8
 
 
  291              	.L30:
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  339              		.global	HAL_UART_RxCpltCallback
  340              		.syntax unified
  341              		.thumb
-ARM GAS  /tmp/ccyLdBQy.s 			page 9
+ARM GAS  /tmp/ccmGTdv1.s 			page 9
 
 
  342              		.thumb_func
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  384 0020 1B68     		ldr	r3, [r3]
  385              		.loc 1 140 12 view .LVU82
  386 0022 092B     		cmp	r3, #9
-ARM GAS  /tmp/ccyLdBQy.s 			page 10
+ARM GAS  /tmp/ccmGTdv1.s 			page 10
 
 
  387 0024 11D8     		bhi	.L35
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  429 0052 0649     		ldr	r1, .L43+16
  430 0054 2046     		mov	r0, r4
  431 0056 FFF7FEFF 		bl	HAL_UART_Receive_IT
-ARM GAS  /tmp/ccyLdBQy.s 			page 11
+ARM GAS  /tmp/ccmGTdv1.s 			page 11
 
 
  432              	.LVL28:
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  497              		.align	2
  500              	e5:
  501 0000 00000000 		.space	4
-ARM GAS  /tmp/ccyLdBQy.s 			page 12
+ARM GAS  /tmp/ccmGTdv1.s 			page 12
 
 
  502              		.global	e4
@@ -716,66 +716,66 @@ ARM GAS  /tmp/ccyLdBQy.s 			page 1
  564              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
  565              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
  566              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
-ARM GAS  /tmp/ccyLdBQy.s 			page 13
+ARM GAS  /tmp/ccmGTdv1.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 emm_motor_rsp.c
-     /tmp/ccyLdBQy.s:21     .text.parseMotorRealTimePosition:00000000 $t
-     /tmp/ccyLdBQy.s:27     .text.parseMotorRealTimePosition:00000000 parseMotorRealTimePosition
-     /tmp/ccyLdBQy.s:50     .text.parseMotorRealTimePosition:0000000c $d
-     /tmp/ccyLdBQy.s:528    .bss.e1:00000000 e1
-     /tmp/ccyLdBQy.s:55     .text.parseEncoderValue:00000000 $t
-     /tmp/ccyLdBQy.s:61     .text.parseEncoderValue:00000000 parseEncoderValue
-     /tmp/ccyLdBQy.s:83     .text.parseEncoderValue:0000000c $d
-     /tmp/ccyLdBQy.s:521    .bss.e2:00000000 e2
-     /tmp/ccyLdBQy.s:88     .text.parseInputPulses:00000000 $t
-     /tmp/ccyLdBQy.s:94     .text.parseInputPulses:00000000 parseInputPulses
-     /tmp/ccyLdBQy.s:116    .text.parseInputPulses:0000000c $d
-     /tmp/ccyLdBQy.s:514    .bss.e3:00000000 e3
-     /tmp/ccyLdBQy.s:121    .text.parsePositionError:00000000 $t
-     /tmp/ccyLdBQy.s:127    .text.parsePositionError:00000000 parsePositionError
-     /tmp/ccyLdBQy.s:150    .text.parsePositionError:0000000c $d
-     /tmp/ccyLdBQy.s:507    .bss.e4:00000000 e4
-     /tmp/ccyLdBQy.s:155    .text.parseEnableStatus:00000000 $t
-     /tmp/ccyLdBQy.s:161    .text.parseEnableStatus:00000000 parseEnableStatus
-     /tmp/ccyLdBQy.s:183    .text.parseEnableStatus:0000000c $d
-     /tmp/ccyLdBQy.s:500    .bss.e5:00000000 e5
-     /tmp/ccyLdBQy.s:188    .text.parseStallFlag:00000000 $t
-     /tmp/ccyLdBQy.s:194    .text.parseStallFlag:00000000 parseStallFlag
-     /tmp/ccyLdBQy.s:216    .text.parseStallFlag:0000000c $d
-     /tmp/ccyLdBQy.s:493    .bss.e6:00000000 e6
-     /tmp/ccyLdBQy.s:221    .text.handleError:00000000 $t
-     /tmp/ccyLdBQy.s:227    .text.handleError:00000000 handleError
-     /tmp/ccyLdBQy.s:243    .text.dispatchParser:00000000 $t
-     /tmp/ccyLdBQy.s:249    .text.dispatchParser:00000000 dispatchParser
-     /tmp/ccyLdBQy.s:332    .text.dispatchParser:00000034 $d
-     /tmp/ccyLdBQy.s:535    .data.commandParsers:00000000 commandParsers
-     /tmp/ccyLdBQy.s:486    .bss.ee:00000000 ee
-     /tmp/ccyLdBQy.s:338    .text.HAL_UART_RxCpltCallback:00000000 $t
-     /tmp/ccyLdBQy.s:344    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
-     /tmp/ccyLdBQy.s:440    .text.HAL_UART_RxCpltCallback:0000005c $d
-     /tmp/ccyLdBQy.s:473    .bss.eee:00000000 eee
-     /tmp/ccyLdBQy.s:466    .bss.eee1:00000000 eee1
-     /tmp/ccyLdBQy.s:459    .bss.currentLength.1:00000000 currentLength.1
-     /tmp/ccyLdBQy.s:479    .bss.dataBuffer:00000000 dataBuffer
-     /tmp/ccyLdBQy.s:453    .bss.receivedData.0:00000000 receivedData.0
-     /tmp/ccyLdBQy.s:450    .bss.receivedData.0:00000000 $d
-     /tmp/ccyLdBQy.s:456    .bss.currentLength.1:00000000 $d
-     /tmp/ccyLdBQy.s:463    .bss.eee1:00000000 $d
-     /tmp/ccyLdBQy.s:470    .bss.eee:00000000 $d
-     /tmp/ccyLdBQy.s:480    .bss.dataBuffer:00000000 $d
-     /tmp/ccyLdBQy.s:483    .bss.ee:00000000 $d
-     /tmp/ccyLdBQy.s:490    .bss.e6:00000000 $d
-     /tmp/ccyLdBQy.s:497    .bss.e5:00000000 $d
-     /tmp/ccyLdBQy.s:504    .bss.e4:00000000 $d
-     /tmp/ccyLdBQy.s:511    .bss.e3:00000000 $d
-     /tmp/ccyLdBQy.s:518    .bss.e2:00000000 $d
-     /tmp/ccyLdBQy.s:525    .bss.e1:00000000 $d
-     /tmp/ccyLdBQy.s:532    .data.commandParsers:00000000 $d
+     /tmp/ccmGTdv1.s:21     .text.parseMotorRealTimePosition:00000000 $t
+     /tmp/ccmGTdv1.s:27     .text.parseMotorRealTimePosition:00000000 parseMotorRealTimePosition
+     /tmp/ccmGTdv1.s:50     .text.parseMotorRealTimePosition:0000000c $d
+     /tmp/ccmGTdv1.s:528    .bss.e1:00000000 e1
+     /tmp/ccmGTdv1.s:55     .text.parseEncoderValue:00000000 $t
+     /tmp/ccmGTdv1.s:61     .text.parseEncoderValue:00000000 parseEncoderValue
+     /tmp/ccmGTdv1.s:83     .text.parseEncoderValue:0000000c $d
+     /tmp/ccmGTdv1.s:521    .bss.e2:00000000 e2
+     /tmp/ccmGTdv1.s:88     .text.parseInputPulses:00000000 $t
+     /tmp/ccmGTdv1.s:94     .text.parseInputPulses:00000000 parseInputPulses
+     /tmp/ccmGTdv1.s:116    .text.parseInputPulses:0000000c $d
+     /tmp/ccmGTdv1.s:514    .bss.e3:00000000 e3
+     /tmp/ccmGTdv1.s:121    .text.parsePositionError:00000000 $t
+     /tmp/ccmGTdv1.s:127    .text.parsePositionError:00000000 parsePositionError
+     /tmp/ccmGTdv1.s:150    .text.parsePositionError:0000000c $d
+     /tmp/ccmGTdv1.s:507    .bss.e4:00000000 e4
+     /tmp/ccmGTdv1.s:155    .text.parseEnableStatus:00000000 $t
+     /tmp/ccmGTdv1.s:161    .text.parseEnableStatus:00000000 parseEnableStatus
+     /tmp/ccmGTdv1.s:183    .text.parseEnableStatus:0000000c $d
+     /tmp/ccmGTdv1.s:500    .bss.e5:00000000 e5
+     /tmp/ccmGTdv1.s:188    .text.parseStallFlag:00000000 $t
+     /tmp/ccmGTdv1.s:194    .text.parseStallFlag:00000000 parseStallFlag
+     /tmp/ccmGTdv1.s:216    .text.parseStallFlag:0000000c $d
+     /tmp/ccmGTdv1.s:493    .bss.e6:00000000 e6
+     /tmp/ccmGTdv1.s:221    .text.handleError:00000000 $t
+     /tmp/ccmGTdv1.s:227    .text.handleError:00000000 handleError
+     /tmp/ccmGTdv1.s:243    .text.dispatchParser:00000000 $t
+     /tmp/ccmGTdv1.s:249    .text.dispatchParser:00000000 dispatchParser
+     /tmp/ccmGTdv1.s:332    .text.dispatchParser:00000034 $d
+     /tmp/ccmGTdv1.s:535    .data.commandParsers:00000000 commandParsers
+     /tmp/ccmGTdv1.s:486    .bss.ee:00000000 ee
+     /tmp/ccmGTdv1.s:338    .text.HAL_UART_RxCpltCallback:00000000 $t
+     /tmp/ccmGTdv1.s:344    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+     /tmp/ccmGTdv1.s:440    .text.HAL_UART_RxCpltCallback:0000005c $d
+     /tmp/ccmGTdv1.s:473    .bss.eee:00000000 eee
+     /tmp/ccmGTdv1.s:466    .bss.eee1:00000000 eee1
+     /tmp/ccmGTdv1.s:459    .bss.currentLength.1:00000000 currentLength.1
+     /tmp/ccmGTdv1.s:479    .bss.dataBuffer:00000000 dataBuffer
+     /tmp/ccmGTdv1.s:453    .bss.receivedData.0:00000000 receivedData.0
+     /tmp/ccmGTdv1.s:450    .bss.receivedData.0:00000000 $d
+     /tmp/ccmGTdv1.s:456    .bss.currentLength.1:00000000 $d
+     /tmp/ccmGTdv1.s:463    .bss.eee1:00000000 $d
+     /tmp/ccmGTdv1.s:470    .bss.eee:00000000 $d
+     /tmp/ccmGTdv1.s:480    .bss.dataBuffer:00000000 $d
+     /tmp/ccmGTdv1.s:483    .bss.ee:00000000 $d
+     /tmp/ccmGTdv1.s:490    .bss.e6:00000000 $d
+     /tmp/ccmGTdv1.s:497    .bss.e5:00000000 $d
+     /tmp/ccmGTdv1.s:504    .bss.e4:00000000 $d
+     /tmp/ccmGTdv1.s:511    .bss.e3:00000000 $d
+     /tmp/ccmGTdv1.s:518    .bss.e2:00000000 $d
+     /tmp/ccmGTdv1.s:525    .bss.e1:00000000 $d
+     /tmp/ccmGTdv1.s:532    .data.commandParsers:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_UART_Receive_IT
-ARM GAS  /tmp/ccyLdBQy.s 			page 14
+ARM GAS  /tmp/ccmGTdv1.s 			page 14
 
 

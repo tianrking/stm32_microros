@@ -114,6 +114,8 @@ int main(void)
   // Begin receiving in interrupt mode
   uint8_t dataBuffer; 
   HAL_UART_Receive_IT(&huart1, &dataBuffer, 1);
+  HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
   /* USER CODE END 2 */
 
   /* Init scheduler */

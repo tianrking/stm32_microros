@@ -88,27 +88,27 @@ void wheel_speeds_callback(const void *msgin);
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[7000];
+uint32_t defaultTaskBuffer[ 7000 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .cb_mem = &defaultTaskControlBlock,
-    .cb_size = sizeof(defaultTaskControlBlock),
-    .stack_mem = &defaultTaskBuffer[0],
-    .stack_size = sizeof(defaultTaskBuffer),
-    .priority = (osPriority_t)osPriorityNormal,
+  .name = "defaultTask",
+  .cb_mem = &defaultTaskControlBlock,
+  .cb_size = sizeof(defaultTaskControlBlock),
+  .stack_mem = &defaultTaskBuffer[0],
+  .stack_size = sizeof(defaultTaskBuffer),
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for PWM_Task */
 osThreadId_t PWM_TaskHandle;
-uint32_t pwmcontroltaskBuffer[3000];
+uint32_t pwmcontroltaskBuffer[ 3000 ];
 osStaticThreadDef_t pwmcontroltaskControlBlock;
 const osThreadAttr_t PWM_Task_attributes = {
-    .name = "PWM_Task",
-    .cb_mem = &pwmcontroltaskControlBlock,
-    .cb_size = sizeof(pwmcontroltaskControlBlock),
-    .stack_mem = &pwmcontroltaskBuffer[0],
-    .stack_size = sizeof(pwmcontroltaskBuffer),
-    .priority = (osPriority_t)osPriorityLow,
+  .name = "PWM_Task",
+  .cb_mem = &pwmcontroltaskControlBlock,
+  .cb_size = sizeof(pwmcontroltaskControlBlock),
+  .stack_mem = &pwmcontroltaskBuffer[0],
+  .stack_size = sizeof(pwmcontroltaskBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -127,12 +127,11 @@ void StartTask02(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
-{
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -167,6 +166,7 @@ void MX_FREERTOS_Init(void)
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -190,6 +190,9 @@ int xx, yy, zz;
 double currentZ,currentX,currentY = 0; // 当前存储的 zz 值
 double lastZ,lastX,lastY = 0;    // 上一次的 zz 值
 double aa,bb,cc;
+
+
+int tid,ta,last_ta,taa;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -390,8 +393,10 @@ void StartTask02(void *argument)
   // static int pre = 84;
   // static int delayTime = 2000;
   DeltaKinematics_Init(&dk, 232, 336, 119, 120);
+  HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_2);
   /* Infinite loop */
-  DeltaKinematics_Init(&dk, 232, 336, 119, 120); // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
+  //DeltaKinematics_Init(&dk, 232, 336, 119, 120); // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
   for (;;)
   {
 
@@ -439,17 +444,33 @@ void StartTask02(void *argument)
     // lastZ = currentZ;
     // lastY = currentY;
     // lastX = currentX;
-    // // dk->ArmLength = 232;
-    // // emm_ReadMotorRealTimePosition(2);
-    // // emm_ReadEncoderValue(2);  //f1
+    // dk->ArmLength = 232;
+    // emm_ReadMotorRealTimePosition(2);
+    // emm_ReadEncoderValue(2);  //f1
 
-      emm_ControlMotorToAngle(1, aa);
-      osDelay(2);
-      emm_ControlMotorToAngle(2, aa); // 0-90
-      osDelay(2);
-      emm_ControlMotorToAngle(3, aa);
-      osDelay(2);
-      osDelay(2000);
+      // emm_ControlMotorToAngle(1, aa);
+      // osDelay(2);
+      // emm_ControlMotorToAngle(2, aa); // 0-90
+      // osDelay(2);
+      // emm_ControlMotorToAngle(3, aa);
+      // osDelay(2);
+      //osDelay(2000);
+    // ta = taa;
+    // if(last_ta != ta){
+    //   step_motor_angle_control(tid,ta);
+    //   last_ta = ta;
+    // }
+    // TIM9->CCR1 = ta;
+    // TIM9->CCR2 = taa;
+    taa = ta;
+    if(taa == 1)
+    {
+      // StartPWM();
+      StartMotorPWM(0, 90.0f); // 启动电机0，转动90度
+      StartMotorPWM(1, 45.0f); // 启动电机1，转动45度
+      ta = 0;
+    }
+    
   }
   /* USER CODE END StartTask02 */
 }
@@ -506,3 +527,4 @@ void status_set_callback(const void *msgin)
 }
 
 /* USER CODE END Application */
+
