@@ -88,27 +88,27 @@ void wheel_speeds_callback(const void *msgin);
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[ 7000 ];
+uint32_t defaultTaskBuffer[7000];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
-  .cb_mem = &defaultTaskControlBlock,
-  .cb_size = sizeof(defaultTaskControlBlock),
-  .stack_mem = &defaultTaskBuffer[0],
-  .stack_size = sizeof(defaultTaskBuffer),
-  .priority = (osPriority_t) osPriorityNormal,
+    .name = "defaultTask",
+    .cb_mem = &defaultTaskControlBlock,
+    .cb_size = sizeof(defaultTaskControlBlock),
+    .stack_mem = &defaultTaskBuffer[0],
+    .stack_size = sizeof(defaultTaskBuffer),
+    .priority = (osPriority_t)osPriorityNormal,
 };
 /* Definitions for PWM_Task */
 osThreadId_t PWM_TaskHandle;
-uint32_t pwmcontroltaskBuffer[ 3000 ];
+uint32_t pwmcontroltaskBuffer[3000];
 osStaticThreadDef_t pwmcontroltaskControlBlock;
 const osThreadAttr_t PWM_Task_attributes = {
-  .name = "PWM_Task",
-  .cb_mem = &pwmcontroltaskControlBlock,
-  .cb_size = sizeof(pwmcontroltaskControlBlock),
-  .stack_mem = &pwmcontroltaskBuffer[0],
-  .stack_size = sizeof(pwmcontroltaskBuffer),
-  .priority = (osPriority_t) osPriorityLow,
+    .name = "PWM_Task",
+    .cb_mem = &pwmcontroltaskControlBlock,
+    .cb_size = sizeof(pwmcontroltaskControlBlock),
+    .stack_mem = &pwmcontroltaskBuffer[0],
+    .stack_size = sizeof(pwmcontroltaskBuffer),
+    .priority = (osPriority_t)osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,6 +119,7 @@ int desiredSpeed = 10;
 double desiredAngle;
 
 #define no_error 1
+#define M_PI 3.1415926
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -127,11 +128,12 @@ void StartTask02(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
-void MX_FREERTOS_Init(void) {
+ * @brief  FreeRTOS initialization
+ * @param  None
+ * @retval None
+ */
+void MX_FREERTOS_Init(void)
+{
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -166,7 +168,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
-
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -187,12 +188,12 @@ DeltaKinematics dk;
 int uu1, uu2, uu3;
 int xx, yy, zz;
 
-double currentZ,currentX,currentY = 0; // 当前存储的 zz 值
-double lastZ,lastX,lastY = 0;    // 上一次的 zz 值
-double aa,bb,cc;
+double currentZ, currentX, currentY = 0; // 当前存储的 zz 值
+double lastZ, lastX, lastY = 0;          // 上一次的 zz 值
+double aa, bb, cc;
 
-
-int tid,ta,last_ta,taa;
+int tid, ta, last_ta, taa;
+int gg;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -200,7 +201,7 @@ void StartDefaultTask(void *argument)
   // LCD_Init();
   rmw_uros_set_custom_transport(
       true,
-      (void *)&huart2,
+      (void *)&huart1,
       cubemx_transport_open,
       cubemx_transport_close,
       cubemx_transport_write,
@@ -386,17 +387,17 @@ void StartTask02(void *argument)
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 
-  TIM4->CCR1 = 100; // PD12
-  TIM4->CCR2 = 400; // PD13
-  TIM4->CCR3 = 600; // PD14
-  TIM4->CCR4 = 800; // PD15
+  // TIM4->CCR1 = 100; // PD12
+  // TIM4->CCR2 = 400; // PD13
+  // TIM4->CCR3 = 600; // PD14
+  // TIM4->CCR4 = 800; // PD15
   // static int pre = 84;
   // static int delayTime = 2000;
   DeltaKinematics_Init(&dk, 232, 336, 119, 120);
   HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_2);
   /* Infinite loop */
-  //DeltaKinematics_Init(&dk, 232, 336, 119, 120); // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
+  // DeltaKinematics_Init(&dk, 232, 336, 119, 120); // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
   for (;;)
   {
 
@@ -420,60 +421,125 @@ void StartTask02(void *argument)
     //         dk->BassTri = 119;
     //         dk->PlatformTri = 120;
 
-    // DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
-    // currentZ = zz;
-    // currentY = yy;
-    // currentX = xx;
-    
-    // if (lastZ != currentZ ||
-    //     lastY != currentY ||
-    //     lastX != currentX
-    //     )
-    // {
-    //   DeltaKinematics_inverse(&dk, currentX, currentY, currentZ);
+    // // // DeltaKinematics_Init(&dk, 232, 336, 119, 120);  // 使用默认的杆长、臂长、底座三角形边长和平台三角形边长
+    currentZ = zz;
+    currentY = yy;
+    currentX = xx;
 
-    //   emm_ControlMotorToAngle(1, dk.a);
-    //   osDelay(2);
-    //   emm_ControlMotorToAngle(2, dk.b); // 0-360
-    //   osDelay(2);
-    //   emm_ControlMotorToAngle(3, dk.c);
-    //   osDelay(2);
-    // }
-    // // emm_ControlMotorToAngle(3,desiredAngle);
+    const float radius = 30.0; // 圆的半径
+    const float z = -140.0;    // Z坐标固定值
+    float angle;
 
-    // lastZ = currentZ;
-    // lastY = currentY;
-    // lastX = currentX;
-    // dk->ArmLength = 232;
-    // emm_ReadMotorRealTimePosition(2);
-    // emm_ReadEncoderValue(2);  //f1
-
-      // emm_ControlMotorToAngle(1, aa);
-      // osDelay(2);
-      // emm_ControlMotorToAngle(2, aa); // 0-90
-      // osDelay(2);
-      // emm_ControlMotorToAngle(3, aa);
-      // osDelay(2);
-      //osDelay(2000);
-    // ta = taa;
-    // if(last_ta != ta){
-    //   step_motor_angle_control(tid,ta);
-    //   last_ta = ta;
-    // }
-    // TIM9->CCR1 = ta;
-    // TIM9->CCR2 = taa;
-    taa = ta;
-    if(taa == 1)
+    if (lastZ != currentZ ||
+        lastY != currentY ||
+        lastX != currentX)
     {
-      // StartPWM();
-      StartMotorPWM(0, 90.0f); // 启动电机0，转动90度
-      StartMotorPWM(1, 45.0f); // 启动电机1，转动45度
-      ta = 0;
+      DeltaKinematics_inverse(&dk, currentX, currentY, currentZ);
+      // Set_Servo_Angle(0, dk.a);
+      // Set_Servo_Angle(1, dk.b);
+      // Set_Servo_Angle(2, dk.c);
+
+      // emm_ControlMotorToAngle(1, dk.a);
+      // osDelay(2);
+      // emm_ControlMotorToAngle(2, dk.b); // 0-360
+      // osDelay(2);
+      // emm_ControlMotorToAngle(3, dk.c);
+      // osDelay(2);
+      // if (gg == 1)
+      // {
+      // for (angle = 0.0; angle <= 360.0; angle += 30.0)
+      // {
+      //   float x = radius * cos(angle * M_PI / 180.0); // 计算X坐标
+      //   float y = radius * sin(angle * M_PI / 180.0); // 计算Y坐标
+
+      //   // 调用DeltaKinematics_inverse来计算并设置关节角度
+      //   DeltaKinematics_inverse(&dk, x, y, z);
+      //   Set_Servo_Angle(0, dk.a);
+      //   Set_Servo_Angle(1, dk.b);
+      //   Set_Servo_Angle(2, dk.c);
+      //   osDelay(200);
+
+      //   // 这里可能需要添加一些延时或同步机制来实际移动Delta机器人
+      // }
+      // }
     }
-    
+
+    lastZ = currentZ;
+    lastY = currentY;
+    lastX = currentX;
+
+    if (gg == 1)
+    {
+      for (angle = 0.0; angle <= 360.0; angle += 12.0)
+      {
+        float x = radius * cos(angle * M_PI / 180.0); // 计算X坐标
+        float y = radius * sin(angle * M_PI / 180.0); // 计算Y坐标
+
+        // 调用DeltaKinematics_inverse来计算并设置关节角度
+        DeltaKinematics_inverse(&dk, x, y, -140);
+        Set_Servo_Angle(0, dk.a);
+        Set_Servo_Angle(1, dk.b);
+        Set_Servo_Angle(2, dk.c);
+        osDelay(50);
+
+        // 这里可能需要添加一些延时或同步机制来实际移动Delta机器人
+      }
+
+      DeltaKinematics_inverse(&dk, 0, 0, -160);
+      Set_Servo_Angle(0, dk.a);
+      Set_Servo_Angle(1, dk.b);
+      Set_Servo_Angle(2, dk.c);
+
+      osDelay(1000);
+
+      DeltaKinematics_inverse(&dk, 0, 0, -100);
+      Set_Servo_Angle(0, dk.a);
+      Set_Servo_Angle(1, dk.b);
+      Set_Servo_Angle(2, dk.c);
+      osDelay(1000);
+    }
   }
-  /* USER CODE END StartTask02 */
+  // // // emm_ControlMotorToAngle(3,desiredAngle);
+  // dk->ArmLength = 232;
+  // emm_ReadMotorRealTimePosition(2);
+  // emm_ReadEncoderValue(2);  //f1
+
+  // emm_ControlMotorToAngle(1, aa);
+  // osDelay(2);
+  // emm_ControlMotorToAngle(2, aa); // 0-90
+  // osDelay(2);
+  // emm_ControlMotorToAngle(3, aa);
+  // osDelay(2);
+  // osDelay(2000);
+  // ta = taa;
+  // if(last_ta != ta){
+  //   step_motor_angle_control(tid,ta);
+  //   last_ta = ta;
+  // }
+  // TIM9->CCR1 = ta;
+  // TIM9->CCR2 = taa;
+  //   taa = ta;
+  //   if(taa == 1)
+  //   {
+  //     // StartPWM();
+  //     StartMotorPWM(0, 90.0f); // 启动电机0，转动90度
+  //     StartMotorPWM(1, 45.0f); // 启动电机1，转动45度
+  //     ta = 0;
+  //   }
+
+  //      // 设置每个舵机的角度
+  //  Set_Servo_Angle(0, zz); // 第一个舵机设置为90度s
+  //  Set_Servo_Angle(1, zz); // 第二个舵机设置为45度
+  //  Set_Servo_Angle(2, zz); // 第三个舵机设置为135度
+
+  // TIM4->CCR1 = zz;
+  // TIM4->CCR2 = zz;
+  // TIM4->CCR3 = zz;
+  // TIM4->CCR4 = zz;
+  // /
+  // TIM5->CCR3 = zz;
 }
+/* USER CODE END StartTask02 */
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
@@ -527,4 +593,3 @@ void status_set_callback(const void *msgin)
 }
 
 /* USER CODE END Application */
-

@@ -68,10 +68,7 @@ extern TIM_HandleTypeDef htim9;
 extern TIM_HandleTypeDef htim14;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
-extern DMA_HandleTypeDef hdma_usart2_rx;
-extern DMA_HandleTypeDef hdma_usart2_tx;
 extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart2;
 extern TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN EV */
@@ -177,34 +174,6 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles DMA1 stream5 global interrupt.
-  */
-void DMA1_Stream5_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream5_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream5_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart2_rx);
-  /* USER CODE BEGIN DMA1_Stream5_IRQn 1 */
-
-  /* USER CODE END DMA1_Stream5_IRQn 1 */
-}
-
-/**
-  * @brief This function handles DMA1 stream6 global interrupt.
-  */
-void DMA1_Stream6_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream6_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream6_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart2_tx);
-  /* USER CODE BEGIN DMA1_Stream6_IRQn 1 */
-
-  /* USER CODE END DMA1_Stream6_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM1 break interrupt and TIM9 global interrupt.
   */
 void TIM1_BRK_TIM9_IRQHandler(void)
@@ -244,47 +213,6 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
-}
-
-/**
-  * @brief This function handles USART2 global interrupt.
-  */
-void USART2_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART2_IRQn 0 */
-    // 检查是否收到了数据
-  // if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE)) {
-  //     // 读取接收到的数据
-  //     uint8_t receivedChar = (uint8_t)(huart2.Instance->DR & 0xFF);
-
-  //     // 根据当前模式处理数据
-  //     if (currentMode == MODE_NORMAL) {
-  //         // 如果收到特殊字符，则切换模式
-  //         if (receivedChar == MODE_SWITCH_CHAR) {
-  //             currentMode = MODE_MICRO_ROS;
-  //             // 进行micro-ROS模式相关初始化
-  //             // ...
-  //         } else {
-  //             // 处理普通通信数据
-  //             // ...
-  //         }
-  //     } else if (currentMode == MODE_MICRO_ROS) {
-  //         // 如果收到特殊字符，则切换模式
-  //         if (receivedChar == MODE_SWITCH_CHAR) {
-  //             currentMode = MODE_NORMAL;
-  //             // 清理micro-ROS模式相关资源
-  //             // ...
-  //         } else {
-  //             // 将数据传递给micro-ROS处理
-  //             // ...
-  //         }
-  //     }
-  // }
-  /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
-  /* USER CODE BEGIN USART2_IRQn 1 */
-
-  /* USER CODE END USART2_IRQn 1 */
 }
 
 /**

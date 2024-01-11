@@ -1,5 +1,4 @@
-build/dk.o: cooneo_Drivers/math/dk.c cooneo_Drivers/math/dk.h \
- cooneo_Drivers/include.h \
+build/servo.o: cooneo_Drivers/servo/servo.c cooneo_Drivers/include.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  Core/Inc/FreeRTOSConfig.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
@@ -199,7 +198,6 @@ build/dk.o: cooneo_Drivers/math/dk.c cooneo_Drivers/math/dk.h \
  cooneo_Drivers/spi_bus/spi_240_240.h \
  cooneo_Drivers/emm_motor/emm_motor.h \
  cooneo_Drivers/emm_motor/emm_motor_rsp.h
-cooneo_Drivers/math/dk.h:
 cooneo_Drivers/include.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:

@@ -95,7 +95,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_USART2_UART_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_CAN1_Init();
@@ -109,6 +108,7 @@ int main(void)
   MX_UART5_Init();
   MX_USART3_UART_Init();
   MX_TIM14_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   //LCD_Init();
   // Begin receiving in interrupt mode
@@ -116,6 +116,8 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &dataBuffer, 1);
   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
+
+  Servos_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

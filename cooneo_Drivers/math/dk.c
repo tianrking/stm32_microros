@@ -10,10 +10,15 @@ void DeltaKinematics_Init(DeltaKinematics *dk, double _ArmLength, double _RodLen
         // dk->BassTri = _BassTri;  //119
         // dk->PlatformTri = _PlatformTri; //120
 
-        dk->ArmLength = 232;
-        dk->RodLength = 336;
-        dk->BassTri = 119;
-        dk->PlatformTri = 120;
+        // dk->ArmLength = 232;  //77.7
+        // dk->RodLength = 336;  //120
+        // dk->BassTri = 119;    // 65.6
+        // dk->PlatformTri = 120;  //65
+
+        dk->ArmLength = 77.7;  //77.7
+        dk->RodLength = 120;  //120
+        dk->BassTri = 65.6;    // 65.6
+        dk->PlatformTri = 65;  //65
 
         dk->a = 0;
         dk->b = 0;

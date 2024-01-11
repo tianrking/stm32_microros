@@ -24,6 +24,7 @@ extern "C" {
 
 #include "move_motor.h"
 #include "step_motor.h"
+#include "servo.h"
 
 #include "mc_include.h"
 #include "spi_240_240.h"
