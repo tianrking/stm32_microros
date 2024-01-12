@@ -118,6 +118,7 @@ int main(void)
   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
 
   Servos_Init();
+  control_motor_init();
   /* USER CODE END 2 */
 
   /* Init scheduler */

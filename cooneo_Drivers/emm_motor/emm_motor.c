@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "math.h"
 double motorAngles[3] = {0.0, 0.0, 0.0};  
 
 // 触发部分

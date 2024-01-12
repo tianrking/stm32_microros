@@ -88,27 +88,27 @@ void wheel_speeds_callback(const void *msgin);
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[7000];
+uint32_t defaultTaskBuffer[ 7000 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .cb_mem = &defaultTaskControlBlock,
-    .cb_size = sizeof(defaultTaskControlBlock),
-    .stack_mem = &defaultTaskBuffer[0],
-    .stack_size = sizeof(defaultTaskBuffer),
-    .priority = (osPriority_t)osPriorityNormal,
+  .name = "defaultTask",
+  .cb_mem = &defaultTaskControlBlock,
+  .cb_size = sizeof(defaultTaskControlBlock),
+  .stack_mem = &defaultTaskBuffer[0],
+  .stack_size = sizeof(defaultTaskBuffer),
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for PWM_Task */
 osThreadId_t PWM_TaskHandle;
-uint32_t pwmcontroltaskBuffer[3000];
+uint32_t pwmcontroltaskBuffer[ 3000 ];
 osStaticThreadDef_t pwmcontroltaskControlBlock;
 const osThreadAttr_t PWM_Task_attributes = {
-    .name = "PWM_Task",
-    .cb_mem = &pwmcontroltaskControlBlock,
-    .cb_size = sizeof(pwmcontroltaskControlBlock),
-    .stack_mem = &pwmcontroltaskBuffer[0],
-    .stack_size = sizeof(pwmcontroltaskBuffer),
-    .priority = (osPriority_t)osPriorityLow,
+  .name = "PWM_Task",
+  .cb_mem = &pwmcontroltaskControlBlock,
+  .cb_size = sizeof(pwmcontroltaskControlBlock),
+  .stack_mem = &pwmcontroltaskBuffer[0],
+  .stack_size = sizeof(pwmcontroltaskBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,7 +119,7 @@ int desiredSpeed = 10;
 double desiredAngle;
 
 #define no_error 1
-#define M_PI 3.1415926
+// #define M_PI 3.1415926
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -127,13 +127,57 @@ void StartTask02(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
-/**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
+/* Hook prototypes */
+void configureTimerForRunTimeStats(void);
+unsigned long getRunTimeCounterValue(void);
+void vApplicationIdleHook(void);
+void vApplicationTickHook(void);
+
+/* USER CODE BEGIN 1 */
+/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
+__weak void configureTimerForRunTimeStats(void)
 {
+
+}
+
+__weak unsigned long getRunTimeCounterValue(void)
+{
+return 0;
+}
+/* USER CODE END 1 */
+
+/* USER CODE BEGIN 2 */
+void vApplicationIdleHook( void )
+{
+   /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+   to 1 in FreeRTOSConfig.h. It will be called on each iteration of the idle
+   task. It is essential that code added to this hook function never attempts
+   to block in any way (for example, call xQueueReceive() with a block time
+   specified, or call vTaskDelay()). If the application makes use of the
+   vTaskDelete() API function (as this demo application does) then it is also
+   important that vApplicationIdleHook() is permitted to return to its calling
+   function, because it is the responsibility of the idle task to clean up
+   memory allocated by the kernel to any task that has since been deleted. */
+}
+/* USER CODE END 2 */
+
+/* USER CODE BEGIN 3 */
+void vApplicationTickHook( void )
+{
+   /* This function will be called by each tick interrupt if
+   configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h. User code can be
+   added here, but the tick hook is called from an interrupt context, so
+   code must not attempt to block, and only the interrupt safe FreeRTOS API
+   functions can be used (those that end in FromISR()). */
+}
+/* USER CODE END 3 */
+
+/**
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -168,6 +212,7 @@ void MX_FREERTOS_Init(void)
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -193,7 +238,8 @@ double lastZ, lastX, lastY = 0;          // 上一次的 zz 值
 double aa, bb, cc;
 
 int tid, ta, last_ta, taa;
-int gg;
+int gg = 1;
+int mspeed=0;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -428,6 +474,7 @@ void StartTask02(void *argument)
 
     const float radius = 30.0; // 圆的半径
     const float z = -140.0;    // Z坐标固定值
+    (void)z;
     float angle;
 
     if (lastZ != currentZ ||
@@ -470,35 +517,49 @@ void StartTask02(void *argument)
 
     if (gg == 1)
     {
-      for (angle = 0.0; angle <= 360.0; angle += 12.0)
-      {
-        float x = radius * cos(angle * M_PI / 180.0); // 计算X坐标
-        float y = radius * sin(angle * M_PI / 180.0); // 计算Y坐标
+      // for (angle = 0.0; angle <= 360.0; angle += 12.0)
+      // {
+      //   float x = radius * cos(angle * M_PI / 180.0); // 计算X坐标
+      //   float y = radius * sin(angle * M_PI / 180.0); // 计算Y坐标
 
-        // 调用DeltaKinematics_inverse来计算并设置关节角度
-        DeltaKinematics_inverse(&dk, x, y, -140);
-        Set_Servo_Angle(0, dk.a);
-        Set_Servo_Angle(1, dk.b);
-        Set_Servo_Angle(2, dk.c);
-        osDelay(50);
+      //   // 调用DeltaKinematics_inverse来计算并设置关节角度
+      //   DeltaKinematics_inverse(&dk, x, y, -140);
+      //   Set_Servo_Angle(0, dk.a);
+      //   Set_Servo_Angle(1, dk.b);
+      //   Set_Servo_Angle(2, dk.c);
+      //   osDelay(50);
 
-        // 这里可能需要添加一些延时或同步机制来实际移动Delta机器人
-      }
+      //   // 这里可能需要添加一些延时或同步机制来实际移动Delta机器人
+      // }
 
-      DeltaKinematics_inverse(&dk, 0, 0, -160);
-      Set_Servo_Angle(0, dk.a);
-      Set_Servo_Angle(1, dk.b);
-      Set_Servo_Angle(2, dk.c);
+      // DeltaKinematics_inverse(&dk, 0, 0, -160);
+      // Set_Servo_Angle(0, dk.a);
+      // Set_Servo_Angle(1, dk.b);
+      // Set_Servo_Angle(2, dk.c);
 
-      osDelay(1000);
+      // osDelay(1000);
 
-      DeltaKinematics_inverse(&dk, 0, 0, -100);
-      Set_Servo_Angle(0, dk.a);
-      Set_Servo_Angle(1, dk.b);
-      Set_Servo_Angle(2, dk.c);
-      osDelay(1000);
+      // DeltaKinematics_inverse(&dk, 0, 0, -100);
+      // Set_Servo_Angle(0, dk.a);
+      // Set_Servo_Angle(1, dk.b);
+      // Set_Servo_Angle(2, dk.c);
+      // osDelay(1000);
+
+
+      // // control_motor_speed(0,30);
+      // // control_motor_speed(1,880);
+      control_motor_speed(0,mspeed);
+      control_motor_speed(1,mspeed);
+
+      // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_SET);
+      // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+      // TIM3->CCR1 = mspeed;
+      // TIM3->CCR2 = mspeed;
     }
   }
+
+  // char taskListBuffer[500];
+  // vTaskList(taskListBuffer);
   // // // emm_ControlMotorToAngle(3,desiredAngle);
   // dk->ArmLength = 232;
   // emm_ReadMotorRealTimePosition(2);
@@ -539,7 +600,8 @@ void StartTask02(void *argument)
   // /
   // TIM5->CCR3 = zz;
 }
-/* USER CODE END StartTask02 */
+  /* USER CODE END StartTask02 */
+
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
@@ -589,7 +651,9 @@ void status_set_callback(const void *msgin)
   // current_state_msg.data = desired_state;
 
   rcl_ret_t ret = rcl_publish(&current_state_publisher, msg, NULL);
+  (void)ret;
   //  这里可能需要发布当前状态，根据具体情况来调用 publish_current_state(current_state);
 }
 
 /* USER CODE END Application */
+

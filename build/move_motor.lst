@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccjI6g1S.s 			page 1
+ARM GAS  /tmp/ccJtyvHy.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   28:cooneo_Drivers/move_motor/move_motor.c **** // B7 B6
   29:cooneo_Drivers/move_motor/move_motor.c **** 
   30:cooneo_Drivers/move_motor/move_motor.c **** // PWMD PC9
-ARM GAS  /tmp/ccjI6g1S.s 			page 2
+ARM GAS  /tmp/ccJtyvHy.s 			page 2
 
 
   31:cooneo_Drivers/move_motor/move_motor.c **** // DIN1 PB14
@@ -71,8 +71,8 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   38:cooneo_Drivers/move_motor/move_motor.c ****     // 示例电机初始化，确保正确设置所有参数
   39:cooneo_Drivers/move_motor/move_motor.c ****     {&htim3, TIM_CHANNEL_1, GPIOC, GPIO_PIN_0, GPIOC, GPIO_PIN_1},  // 电机A
   40:cooneo_Drivers/move_motor/move_motor.c ****     {&htim3, TIM_CHANNEL_2, GPIOC, GPIO_PIN_2, GPIOC, GPIO_PIN_3},
-  41:cooneo_Drivers/move_motor/move_motor.c ****     {&htim3, TIM_CHANNEL_3, GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13},
-  42:cooneo_Drivers/move_motor/move_motor.c ****     {&htim3, TIM_CHANNEL_4, GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15},
+  41:cooneo_Drivers/move_motor/move_motor.c ****     // {&htim3, TIM_CHANNEL_3, GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13},
+  42:cooneo_Drivers/move_motor/move_motor.c ****     // {&htim3, TIM_CHANNEL_4, GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15},
   43:cooneo_Drivers/move_motor/move_motor.c ****     // ...根据需要添加更多电机
   44:cooneo_Drivers/move_motor/move_motor.c **** };
   45:cooneo_Drivers/move_motor/move_motor.c **** 
@@ -88,7 +88,7 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   37              		.cfi_offset 14, -4
   47:cooneo_Drivers/move_motor/move_motor.c ****     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
   38              		.loc 1 47 5 view .LVU1
-  39 0002 094C     		ldr	r4, .L3
+  39 0002 054C     		ldr	r4, .L3
   40 0004 0021     		movs	r1, #0
   41 0006 2046     		mov	r0, r4
   42 0008 FFF7FEFF 		bl	HAL_TIM_PWM_Start
@@ -99,107 +99,97 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   46 000e 2046     		mov	r0, r4
   47 0010 FFF7FEFF 		bl	HAL_TIM_PWM_Start
   48              	.LVL1:
-  49:cooneo_Drivers/move_motor/move_motor.c ****     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
-  49              		.loc 1 49 5 view .LVU3
-  50 0014 0821     		movs	r1, #8
-  51 0016 2046     		mov	r0, r4
-  52 0018 FFF7FEFF 		bl	HAL_TIM_PWM_Start
-  53              	.LVL2:
-  50:cooneo_Drivers/move_motor/move_motor.c ****     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
-  54              		.loc 1 50 5 view .LVU4
-  55 001c 0C21     		movs	r1, #12
-  56 001e 2046     		mov	r0, r4
-  57 0020 FFF7FEFF 		bl	HAL_TIM_PWM_Start
-  58              	.LVL3:
+  49:cooneo_Drivers/move_motor/move_motor.c ****     // HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
+  50:cooneo_Drivers/move_motor/move_motor.c ****     // HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
   51:cooneo_Drivers/move_motor/move_motor.c ****     return ; 
-  59              		.loc 1 51 5 view .LVU5
+  49              		.loc 1 51 5 view .LVU3
   52:cooneo_Drivers/move_motor/move_motor.c **** }
-  60              		.loc 1 52 1 is_stmt 0 view .LVU6
-  61 0024 10BD     		pop	{r4, pc}
-  62              	.L4:
-  63 0026 00BF     		.align	2
-ARM GAS  /tmp/ccjI6g1S.s 			page 3
+  50              		.loc 1 52 1 is_stmt 0 view .LVU4
+  51 0014 10BD     		pop	{r4, pc}
+  52              	.L4:
+  53 0016 00BF     		.align	2
+  54              	.L3:
+  55 0018 00000000 		.word	htim3
+  56              		.cfi_endproc
+  57              	.LFE243:
+  59              		.section	.text.control_motor_speed,"ax",%progbits
+  60              		.align	1
+  61              		.global	control_motor_speed
+  62              		.syntax unified
+  63              		.thumb
+  64              		.thumb_func
+ARM GAS  /tmp/ccJtyvHy.s 			page 3
 
 
-  64              	.L3:
-  65 0028 00000000 		.word	htim3
-  66              		.cfi_endproc
-  67              	.LFE243:
-  69              		.section	.text.control_motor_speed,"ax",%progbits
-  70              		.align	1
-  71              		.global	control_motor_speed
-  72              		.syntax unified
-  73              		.thumb
-  74              		.thumb_func
-  76              	control_motor_speed:
-  77              	.LVL4:
-  78              	.LFB244:
+  66              	control_motor_speed:
+  67              	.LVL2:
+  68              	.LFB244:
   53:cooneo_Drivers/move_motor/move_motor.c **** 
-  54:cooneo_Drivers/move_motor/move_motor.c **** void control_motor_speed(uint8_t motor_id, float speed) {
-  79              		.loc 1 54 57 is_stmt 1 view -0
-  80              		.cfi_startproc
-  81              		@ args = 0, pretend = 0, frame = 0
-  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  54:cooneo_Drivers/move_motor/move_motor.c **** void control_motor_speed(uint8_t motor_id, float speed) {  //pwm 0-1000 speed 0-100
+  69              		.loc 1 54 57 is_stmt 1 view -0
+  70              		.cfi_startproc
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
   55:cooneo_Drivers/move_motor/move_motor.c ****     if (motor_id >= sizeof(motors) / sizeof(motors[0])) {
-  83              		.loc 1 55 5 view .LVU8
-  84              		.loc 1 55 8 is_stmt 0 view .LVU9
-  85 0000 0328     		cmp	r0, #3
-  86 0002 5AD8     		bhi	.L16
+  73              		.loc 1 55 5 view .LVU6
+  74              		.loc 1 55 8 is_stmt 0 view .LVU7
+  75 0000 0128     		cmp	r0, #1
+  76 0002 5AD8     		bhi	.L16
   54:cooneo_Drivers/move_motor/move_motor.c ****     if (motor_id >= sizeof(motors) / sizeof(motors[0])) {
-  87              		.loc 1 54 57 view .LVU10
-  88 0004 38B5     		push	{r3, r4, r5, lr}
-  89              	.LCFI1:
-  90              		.cfi_def_cfa_offset 16
-  91              		.cfi_offset 3, -16
-  92              		.cfi_offset 4, -12
-  93              		.cfi_offset 5, -8
-  94              		.cfi_offset 14, -4
-  95 0006 2DED028B 		vpush.64	{d8}
-  96              	.LCFI2:
-  97              		.cfi_def_cfa_offset 24
-  98              		.cfi_offset 80, -24
-  99              		.cfi_offset 81, -20
- 100 000a 0446     		mov	r4, r0
- 101 000c B0EE408A 		vmov.f32	s16, s0
+  77              		.loc 1 54 57 view .LVU8
+  78 0004 38B5     		push	{r3, r4, r5, lr}
+  79              	.LCFI1:
+  80              		.cfi_def_cfa_offset 16
+  81              		.cfi_offset 3, -16
+  82              		.cfi_offset 4, -12
+  83              		.cfi_offset 5, -8
+  84              		.cfi_offset 14, -4
+  85 0006 2DED028B 		vpush.64	{d8}
+  86              	.LCFI2:
+  87              		.cfi_def_cfa_offset 24
+  88              		.cfi_offset 80, -24
+  89              		.cfi_offset 81, -20
+  90 000a 0446     		mov	r4, r0
+  91 000c B0EE408A 		vmov.f32	s16, s0
   56:cooneo_Drivers/move_motor/move_motor.c ****         // 如果ID不合法，则返回或处理错误
   57:cooneo_Drivers/move_motor/move_motor.c ****         return;
   58:cooneo_Drivers/move_motor/move_motor.c ****     }
   59:cooneo_Drivers/move_motor/move_motor.c ****     
   60:cooneo_Drivers/move_motor/move_motor.c ****     // 获取对应电机的配置
   61:cooneo_Drivers/move_motor/move_motor.c ****     MotorControl* motor = &motors[motor_id];
- 102              		.loc 1 61 5 is_stmt 1 view .LVU11
- 103              	.LVL5:
+  92              		.loc 1 61 5 is_stmt 1 view .LVU9
+  93              	.LVL3:
   62:cooneo_Drivers/move_motor/move_motor.c **** 
   63:cooneo_Drivers/move_motor/move_motor.c ****     // 根据速度的正负设置GPIO控制方向
   64:cooneo_Drivers/move_motor/move_motor.c ****     if(speed >= 0) {
- 104              		.loc 1 64 5 view .LVU12
- 105              		.loc 1 64 7 is_stmt 0 view .LVU13
- 106 0010 B5EEC00A 		vcmpe.f32	s0, #0
- 107 0014 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
- 108 0018 2DDB     		blt	.L14
+  94              		.loc 1 64 5 view .LVU10
+  95              		.loc 1 64 7 is_stmt 0 view .LVU11
+  96 0010 B5EEC00A 		vcmpe.f32	s0, #0
+  97 0014 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  98 0018 2DDB     		blt	.L14
   65:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction1, motor->gpio_pin_direction1, GPIO_PIN_SET);
-ARM GAS  /tmp/ccjI6g1S.s 			page 4
+  99              		.loc 1 65 9 is_stmt 1 view .LVU12
+ 100 001a 00EB4003 		add	r3, r0, r0, lsl #1
+ 101 001e 274D     		ldr	r5, .L21
+ 102 0020 05EBC305 		add	r5, r5, r3, lsl #3
+ 103 0024 0122     		movs	r2, #1
+ 104 0026 A989     		ldrh	r1, [r5, #12]
+ 105 0028 A868     		ldr	r0, [r5, #8]
+ 106              	.LVL4:
+ 107              		.loc 1 65 9 is_stmt 0 view .LVU13
+ 108 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  /tmp/ccJtyvHy.s 			page 4
 
 
- 109              		.loc 1 65 9 is_stmt 1 view .LVU14
- 110 001a 00EB4003 		add	r3, r0, r0, lsl #1
- 111 001e 274D     		ldr	r5, .L21
- 112 0020 05EBC305 		add	r5, r5, r3, lsl #3
- 113 0024 0122     		movs	r2, #1
- 114 0026 A989     		ldrh	r1, [r5, #12]
- 115 0028 A868     		ldr	r0, [r5, #8]
- 116              	.LVL6:
- 117              		.loc 1 65 9 is_stmt 0 view .LVU15
- 118 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
- 119              	.LVL7:
+ 109              	.LVL5:
   66:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction2, motor->gpio_pin_direction2, GPIO_PIN_RESET);
- 120              		.loc 1 66 9 is_stmt 1 view .LVU16
- 121 002e 0022     		movs	r2, #0
- 122 0030 A98A     		ldrh	r1, [r5, #20]
- 123 0032 2869     		ldr	r0, [r5, #16]
- 124 0034 FFF7FEFF 		bl	HAL_GPIO_WritePin
- 125              	.LVL8:
- 126              	.L9:
+ 110              		.loc 1 66 9 is_stmt 1 view .LVU14
+ 111 002e 0022     		movs	r2, #0
+ 112 0030 A98A     		ldrh	r1, [r5, #20]
+ 113 0032 2869     		ldr	r0, [r5, #16]
+ 114 0034 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 115              	.LVL6:
+ 116              	.L9:
   67:cooneo_Drivers/move_motor/move_motor.c ****     } else {
   68:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction1, motor->gpio_pin_direction1, GPIO_PIN_RESET);
   69:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction2, motor->gpio_pin_direction2, GPIO_PIN_SET);
@@ -208,142 +198,142 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   72:cooneo_Drivers/move_motor/move_motor.c **** 
   73:cooneo_Drivers/move_motor/move_motor.c ****     // 根据速度绝对值设置PWM占空比（0.0到100.0之间）
   74:cooneo_Drivers/move_motor/move_motor.c ****     uint32_t pulse_length = (uint32_t)(((motor->htim->Init.Period + 1) * speed) / 100.0f);
- 127              		.loc 1 74 5 view .LVU17
- 128              		.loc 1 74 47 is_stmt 0 view .LVU18
- 129 0038 204A     		ldr	r2, .L21
- 130 003a 04EB4403 		add	r3, r4, r4, lsl #1
- 131 003e 52F83310 		ldr	r1, [r2, r3, lsl #3]
- 132              		.loc 1 74 59 view .LVU19
- 133 0042 CB68     		ldr	r3, [r1, #12]
- 134              		.loc 1 74 67 view .LVU20
- 135 0044 0133     		adds	r3, r3, #1
- 136              		.loc 1 74 72 view .LVU21
- 137 0046 07EE903A 		vmov	s15, r3	@ int
- 138 004a F8EE677A 		vcvt.f32.u32	s15, s15
- 139 004e 27EE880A 		vmul.f32	s0, s15, s16
- 140              		.loc 1 74 81 view .LVU22
- 141 0052 9FED1B7A 		vldr.32	s14, .L21+4
- 142 0056 C0EE077A 		vdiv.f32	s15, s0, s14
- 143              		.loc 1 74 14 view .LVU23
- 144 005a FCEEE77A 		vcvt.u32.f32	s15, s15
- 145              	.LVL9:
+ 117              		.loc 1 74 5 view .LVU15
+ 118              		.loc 1 74 47 is_stmt 0 view .LVU16
+ 119 0038 204A     		ldr	r2, .L21
+ 120 003a 04EB4403 		add	r3, r4, r4, lsl #1
+ 121 003e 52F83310 		ldr	r1, [r2, r3, lsl #3]
+ 122              		.loc 1 74 59 view .LVU17
+ 123 0042 CB68     		ldr	r3, [r1, #12]
+ 124              		.loc 1 74 67 view .LVU18
+ 125 0044 0133     		adds	r3, r3, #1
+ 126 0046 07EE903A 		vmov	s15, r3	@ int
+ 127              		.loc 1 74 72 view .LVU19
+ 128 004a F8EE677A 		vcvt.f32.u32	s15, s15
+ 129 004e 67EE887A 		vmul.f32	s15, s15, s16
+ 130              		.loc 1 74 81 view .LVU20
+ 131 0052 DFED1B6A 		vldr.32	s13, .L21+4
+ 132 0056 87EEA67A 		vdiv.f32	s14, s15, s13
+ 133              		.loc 1 74 14 view .LVU21
+ 134 005a BCEEC77A 		vcvt.u32.f32	s14, s14
+ 135              	.LVL7:
   75:cooneo_Drivers/move_motor/move_motor.c ****     __HAL_TIM_SET_COMPARE(motor->htim, motor->pwm_channel, pulse_length);
- 146              		.loc 1 75 5 is_stmt 1 view .LVU24
- 147 005e 04EB4404 		add	r4, r4, r4, lsl #1
- 148              	.LVL10:
- 149              		.loc 1 75 5 is_stmt 0 view .LVU25
- 150 0062 02EBC402 		add	r2, r2, r4, lsl #3
- 151 0066 5368     		ldr	r3, [r2, #4]
- 152 0068 BBB9     		cbnz	r3, .L10
- 153              		.loc 1 75 5 discriminator 1 view .LVU26
- 154 006a 0B68     		ldr	r3, [r1]
- 155 006c C3ED0D7A 		vstr.32	s15, [r3, #52]	@ int
-ARM GAS  /tmp/ccjI6g1S.s 			page 5
-
-
- 156              	.L5:
+ 136              		.loc 1 75 5 is_stmt 1 view .LVU22
+ 137 005e 04EB4404 		add	r4, r4, r4, lsl #1
+ 138              	.LVL8:
+ 139              		.loc 1 75 5 is_stmt 0 view .LVU23
+ 140 0062 02EBC402 		add	r2, r2, r4, lsl #3
+ 141 0066 5368     		ldr	r3, [r2, #4]
+ 142 0068 BBB9     		cbnz	r3, .L10
+ 143              		.loc 1 75 5 discriminator 1 view .LVU24
+ 144 006a 0B68     		ldr	r3, [r1]
+ 145 006c 83ED0D7A 		vstr.32	s14, [r3, #52]	@ int
+ 146              	.L5:
   76:cooneo_Drivers/move_motor/move_motor.c **** }
- 157              		.loc 1 76 1 view .LVU27
- 158 0070 BDEC028B 		vldm	sp!, {d8}
- 159              	.LCFI3:
- 160              		.cfi_remember_state
- 161              		.cfi_restore 80
- 162              		.cfi_restore 81
- 163              		.cfi_def_cfa_offset 16
- 164              	.LVL11:
- 165              		.loc 1 76 1 view .LVU28
- 166 0074 38BD     		pop	{r3, r4, r5, pc}
- 167              	.LVL12:
- 168              	.L14:
- 169              	.LCFI4:
- 170              		.cfi_restore_state
+ 147              		.loc 1 76 1 view .LVU25
+ 148 0070 BDEC028B 		vldm	sp!, {d8}
+ 149              	.LCFI3:
+ 150              		.cfi_remember_state
+ 151              		.cfi_restore 80
+ 152              		.cfi_restore 81
+ 153              		.cfi_def_cfa_offset 16
+ 154              	.LVL9:
+ARM GAS  /tmp/ccJtyvHy.s 			page 5
+
+
+ 155              		.loc 1 76 1 view .LVU26
+ 156 0074 38BD     		pop	{r3, r4, r5, pc}
+ 157              	.LVL10:
+ 158              	.L14:
+ 159              	.LCFI4:
+ 160              		.cfi_restore_state
   68:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction2, motor->gpio_pin_direction2, GPIO_PIN_SET);
- 171              		.loc 1 68 9 is_stmt 1 view .LVU29
- 172 0076 00EB4003 		add	r3, r0, r0, lsl #1
- 173 007a 104D     		ldr	r5, .L21
- 174 007c 05EBC305 		add	r5, r5, r3, lsl #3
- 175 0080 0022     		movs	r2, #0
- 176 0082 A989     		ldrh	r1, [r5, #12]
- 177 0084 A868     		ldr	r0, [r5, #8]
- 178              	.LVL13:
+ 161              		.loc 1 68 9 is_stmt 1 view .LVU27
+ 162 0076 00EB4003 		add	r3, r0, r0, lsl #1
+ 163 007a 104D     		ldr	r5, .L21
+ 164 007c 05EBC305 		add	r5, r5, r3, lsl #3
+ 165 0080 0022     		movs	r2, #0
+ 166 0082 A989     		ldrh	r1, [r5, #12]
+ 167 0084 A868     		ldr	r0, [r5, #8]
+ 168              	.LVL11:
   68:cooneo_Drivers/move_motor/move_motor.c ****         HAL_GPIO_WritePin(motor->gpio_port_direction2, motor->gpio_pin_direction2, GPIO_PIN_SET);
- 179              		.loc 1 68 9 is_stmt 0 view .LVU30
- 180 0086 FFF7FEFF 		bl	HAL_GPIO_WritePin
- 181              	.LVL14:
+ 169              		.loc 1 68 9 is_stmt 0 view .LVU28
+ 170 0086 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 171              	.LVL12:
   69:cooneo_Drivers/move_motor/move_motor.c ****         speed = -speed;  // 速度转为正值，用于下面设置PWM
- 182              		.loc 1 69 9 is_stmt 1 view .LVU31
- 183 008a 0122     		movs	r2, #1
- 184 008c A98A     		ldrh	r1, [r5, #20]
- 185 008e 2869     		ldr	r0, [r5, #16]
- 186 0090 FFF7FEFF 		bl	HAL_GPIO_WritePin
- 187              	.LVL15:
+ 172              		.loc 1 69 9 is_stmt 1 view .LVU29
+ 173 008a 0122     		movs	r2, #1
+ 174 008c A98A     		ldrh	r1, [r5, #20]
+ 175 008e 2869     		ldr	r0, [r5, #16]
+ 176 0090 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 177              	.LVL13:
   70:cooneo_Drivers/move_motor/move_motor.c ****     }
- 188              		.loc 1 70 9 view .LVU32
+ 178              		.loc 1 70 9 view .LVU30
   70:cooneo_Drivers/move_motor/move_motor.c ****     }
- 189              		.loc 1 70 15 is_stmt 0 view .LVU33
- 190 0094 B1EE488A 		vneg.f32	s16, s16
- 191              	.LVL16:
+ 179              		.loc 1 70 15 is_stmt 0 view .LVU31
+ 180 0094 B1EE488A 		vneg.f32	s16, s16
+ 181              	.LVL14:
   70:cooneo_Drivers/move_motor/move_motor.c ****     }
- 192              		.loc 1 70 15 view .LVU34
- 193 0098 CEE7     		b	.L9
- 194              	.LVL17:
- 195              	.L10:
+ 182              		.loc 1 70 15 view .LVU32
+ 183 0098 CEE7     		b	.L9
+ 184              	.LVL15:
+ 185              	.L10:
   75:cooneo_Drivers/move_motor/move_motor.c **** }
- 196              		.loc 1 75 5 discriminator 2 view .LVU35
- 197 009a 042B     		cmp	r3, #4
- 198 009c 05D0     		beq	.L19
+ 186              		.loc 1 75 5 discriminator 2 view .LVU33
+ 187 009a 042B     		cmp	r3, #4
+ 188 009c 05D0     		beq	.L19
   75:cooneo_Drivers/move_motor/move_motor.c **** }
- 199              		.loc 1 75 5 discriminator 4 view .LVU36
- 200 009e 082B     		cmp	r3, #8
- 201 00a0 07D0     		beq	.L20
+ 189              		.loc 1 75 5 discriminator 4 view .LVU34
+ 190 009e 082B     		cmp	r3, #8
+ 191 00a0 07D0     		beq	.L20
   75:cooneo_Drivers/move_motor/move_motor.c **** }
- 202              		.loc 1 75 5 discriminator 7 view .LVU37
-ARM GAS  /tmp/ccjI6g1S.s 			page 6
+ 192              		.loc 1 75 5 discriminator 7 view .LVU35
+ 193 00a2 0B68     		ldr	r3, [r1]
+ 194 00a4 83ED107A 		vstr.32	s14, [r3, #64]	@ int
+ 195 00a8 E2E7     		b	.L5
+ 196              	.L19:
+  75:cooneo_Drivers/move_motor/move_motor.c **** }
+ 197              		.loc 1 75 5 discriminator 3 view .LVU36
+ 198 00aa 0B68     		ldr	r3, [r1]
+ 199 00ac 83ED0E7A 		vstr.32	s14, [r3, #56]	@ int
+ 200 00b0 DEE7     		b	.L5
+ 201              	.L20:
+ARM GAS  /tmp/ccJtyvHy.s 			page 6
 
 
- 203 00a2 0B68     		ldr	r3, [r1]
- 204 00a4 C3ED107A 		vstr.32	s15, [r3, #64]	@ int
- 205 00a8 E2E7     		b	.L5
- 206              	.L19:
   75:cooneo_Drivers/move_motor/move_motor.c **** }
- 207              		.loc 1 75 5 discriminator 3 view .LVU38
- 208 00aa 0B68     		ldr	r3, [r1]
- 209 00ac C3ED0E7A 		vstr.32	s15, [r3, #56]	@ int
- 210 00b0 DEE7     		b	.L5
- 211              	.L20:
+ 202              		.loc 1 75 5 discriminator 6 view .LVU37
+ 203 00b2 0B68     		ldr	r3, [r1]
+ 204 00b4 83ED0F7A 		vstr.32	s14, [r3, #60]	@ int
+ 205 00b8 DAE7     		b	.L5
+ 206              	.LVL16:
+ 207              	.L16:
+ 208              	.LCFI5:
+ 209              		.cfi_def_cfa_offset 0
+ 210              		.cfi_restore 3
+ 211              		.cfi_restore 4
+ 212              		.cfi_restore 5
+ 213              		.cfi_restore 14
+ 214              		.cfi_restore 80
+ 215              		.cfi_restore 81
   75:cooneo_Drivers/move_motor/move_motor.c **** }
- 212              		.loc 1 75 5 discriminator 6 view .LVU39
- 213 00b2 0B68     		ldr	r3, [r1]
- 214 00b4 C3ED0F7A 		vstr.32	s15, [r3, #60]	@ int
- 215 00b8 DAE7     		b	.L5
- 216              	.LVL18:
- 217              	.L16:
- 218              	.LCFI5:
- 219              		.cfi_def_cfa_offset 0
- 220              		.cfi_restore 3
- 221              		.cfi_restore 4
- 222              		.cfi_restore 5
- 223              		.cfi_restore 14
- 224              		.cfi_restore 80
- 225              		.cfi_restore 81
-  75:cooneo_Drivers/move_motor/move_motor.c **** }
- 226              		.loc 1 75 5 discriminator 6 view .LVU40
- 227 00ba 7047     		bx	lr
- 228              	.L22:
- 229              		.align	2
- 230              	.L21:
- 231 00bc 00000000 		.word	motors
- 232 00c0 0000C842 		.word	1120403456
- 233              		.cfi_endproc
- 234              	.LFE244:
- 236              		.section	.text.EXTIx_IRQHandler,"ax",%progbits
- 237              		.align	1
- 238              		.global	EXTIx_IRQHandler
- 239              		.syntax unified
- 240              		.thumb
- 241              		.thumb_func
- 243              	EXTIx_IRQHandler:
- 244              	.LFB245:
+ 216              		.loc 1 75 5 discriminator 6 view .LVU38
+ 217 00ba 7047     		bx	lr
+ 218              	.L22:
+ 219              		.align	2
+ 220              	.L21:
+ 221 00bc 00000000 		.word	motors
+ 222 00c0 0000C842 		.word	1120403456
+ 223              		.cfi_endproc
+ 224              	.LFE244:
+ 226              		.section	.text.EXTIx_IRQHandler,"ax",%progbits
+ 227              		.align	1
+ 228              		.global	EXTIx_IRQHandler
+ 229              		.syntax unified
+ 230              		.thumb
+ 231              		.thumb_func
+ 233              	EXTIx_IRQHandler:
+ 234              	.LFB245:
   77:cooneo_Drivers/move_motor/move_motor.c **** 
   78:cooneo_Drivers/move_motor/move_motor.c **** 
   79:cooneo_Drivers/move_motor/move_motor.c **** volatile int32_t encoder_ticks = 0;
@@ -351,16 +341,13 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   81:cooneo_Drivers/move_motor/move_motor.c **** #define ENCODER_PIN_B 7
   82:cooneo_Drivers/move_motor/move_motor.c **** // EXTI LineX Interrupt Handler，替换X为你的外部中断编号
   83:cooneo_Drivers/move_motor/move_motor.c **** void EXTIx_IRQHandler(void) {
- 245              		.loc 1 83 29 is_stmt 1 view -0
- 246              		.cfi_startproc
- 247              		@ args = 0, pretend = 0, frame = 0
- 248              		@ frame_needed = 0, uses_anonymous_args = 0
- 249              		@ link register save eliminated.
+ 235              		.loc 1 83 29 is_stmt 1 view -0
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 0
+ 238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 239              		@ link register save eliminated.
   84:cooneo_Drivers/move_motor/move_motor.c ****     // 确定是哪个引脚触发了中断，并处理编码器的A和B状态来确定方向
   85:cooneo_Drivers/move_motor/move_motor.c ****     // ...[处理编码器逻辑]...
-ARM GAS  /tmp/ccjI6g1S.s 			page 7
-
-
   86:cooneo_Drivers/move_motor/move_motor.c ****     
   87:cooneo_Drivers/move_motor/move_motor.c ****     // encoder_ticks++;  // 或在某些条件下进行自增或自减
   88:cooneo_Drivers/move_motor/move_motor.c **** 
@@ -368,177 +355,164 @@ ARM GAS  /tmp/ccjI6g1S.s 			page 1
   90:cooneo_Drivers/move_motor/move_motor.c ****     // __HAL_GPIO_EXTI_CLEAR_IT(ENCODER_PIN_A);  // 根据实际情况修改
   91:cooneo_Drivers/move_motor/move_motor.c ****     // __HAL_GPIO_EXTI_CLEAR_IT(ENCODER_PIN_B);  // 根据实际情况修改
   92:cooneo_Drivers/move_motor/move_motor.c **** }
- 250              		.loc 1 92 1 view .LVU42
- 251 0000 7047     		bx	lr
- 252              		.cfi_endproc
- 253              	.LFE245:
- 255              		.section	.text.calculate_speed,"ax",%progbits
- 256              		.align	1
- 257              		.global	calculate_speed
- 258              		.syntax unified
- 259              		.thumb
- 260              		.thumb_func
- 262              	calculate_speed:
- 263              	.LVL19:
- 264              	.LFB246:
+ 240              		.loc 1 92 1 view .LVU40
+ 241 0000 7047     		bx	lr
+ 242              		.cfi_endproc
+ARM GAS  /tmp/ccJtyvHy.s 			page 7
+
+
+ 243              	.LFE245:
+ 245              		.section	.text.calculate_speed,"ax",%progbits
+ 246              		.align	1
+ 247              		.global	calculate_speed
+ 248              		.syntax unified
+ 249              		.thumb
+ 250              		.thumb_func
+ 252              	calculate_speed:
+ 253              	.LVL17:
+ 254              	.LFB246:
   93:cooneo_Drivers/move_motor/move_motor.c **** 
   94:cooneo_Drivers/move_motor/move_motor.c **** int factor = 1;
   95:cooneo_Drivers/move_motor/move_motor.c **** float calculate_speed(uint32_t delta_ticks, uint32_t delta_time) {
- 265              		.loc 1 95 66 view -0
- 266              		.cfi_startproc
- 267              		@ args = 0, pretend = 0, frame = 0
- 268              		@ frame_needed = 0, uses_anonymous_args = 0
- 269              		@ link register save eliminated.
- 270              		.loc 1 95 66 is_stmt 0 view .LVU44
- 271 0000 00EE100A 		vmov	s0, r0	@ int
- 272 0004 07EE901A 		vmov	s15, r1	@ int
+ 255              		.loc 1 95 66 view -0
+ 256              		.cfi_startproc
+ 257              		@ args = 0, pretend = 0, frame = 0
+ 258              		@ frame_needed = 0, uses_anonymous_args = 0
+ 259              		@ link register save eliminated.
+ 260              		.loc 1 95 66 is_stmt 0 view .LVU42
+ 261 0000 00EE100A 		vmov	s0, r0	@ int
+ 262 0004 07EE901A 		vmov	s15, r1	@ int
   96:cooneo_Drivers/move_motor/move_motor.c ****     // need fix
   97:cooneo_Drivers/move_motor/move_motor.c ****     float speed = (float)delta_ticks / delta_time;  // 示例计算
- 273              		.loc 1 97 5 is_stmt 1 view .LVU45
- 274              		.loc 1 97 19 is_stmt 0 view .LVU46
- 275 0008 B8EE400A 		vcvt.f32.u32	s0, s0
- 276              		.loc 1 97 38 view .LVU47
- 277 000c F8EE677A 		vcvt.f32.u32	s15, s15
- 278              	.LVL20:
+ 263              		.loc 1 97 5 is_stmt 1 view .LVU43
+ 264              		.loc 1 97 19 is_stmt 0 view .LVU44
+ 265 0008 B8EE400A 		vcvt.f32.u32	s0, s0
+ 266              		.loc 1 97 38 view .LVU45
+ 267 000c F8EE677A 		vcvt.f32.u32	s15, s15
+ 268              	.LVL18:
   98:cooneo_Drivers/move_motor/move_motor.c ****     return speed;
- 279              		.loc 1 98 5 is_stmt 1 view .LVU48
+ 269              		.loc 1 98 5 is_stmt 1 view .LVU46
   99:cooneo_Drivers/move_motor/move_motor.c **** }
- 280              		.loc 1 99 1 is_stmt 0 view .LVU49
- 281 0010 80EE270A 		vdiv.f32	s0, s0, s15
- 282              	.LVL21:
- 283              		.loc 1 99 1 view .LVU50
- 284 0014 7047     		bx	lr
- 285              		.cfi_endproc
- 286              	.LFE246:
- 288              		.section	.text.reset_encoder_ticks,"ax",%progbits
- 289              		.align	1
- 290              		.global	reset_encoder_ticks
- 291              		.syntax unified
- 292              		.thumb
- 293              		.thumb_func
- 295              	reset_encoder_ticks:
- 296              	.LFB247:
-ARM GAS  /tmp/ccjI6g1S.s 			page 8
-
-
+ 270              		.loc 1 99 1 is_stmt 0 view .LVU47
+ 271 0010 80EE270A 		vdiv.f32	s0, s0, s15
+ 272              	.LVL19:
+ 273              		.loc 1 99 1 view .LVU48
+ 274 0014 7047     		bx	lr
+ 275              		.cfi_endproc
+ 276              	.LFE246:
+ 278              		.section	.text.reset_encoder_ticks,"ax",%progbits
+ 279              		.align	1
+ 280              		.global	reset_encoder_ticks
+ 281              		.syntax unified
+ 282              		.thumb
+ 283              		.thumb_func
+ 285              	reset_encoder_ticks:
+ 286              	.LFB247:
  100:cooneo_Drivers/move_motor/move_motor.c **** 
  101:cooneo_Drivers/move_motor/move_motor.c **** 
  102:cooneo_Drivers/move_motor/move_motor.c **** void reset_encoder_ticks() {
- 297              		.loc 1 102 28 is_stmt 1 view -0
- 298              		.cfi_startproc
- 299              		@ args = 0, pretend = 0, frame = 0
- 300              		@ frame_needed = 0, uses_anonymous_args = 0
- 301              		@ link register save eliminated.
+ 287              		.loc 1 102 28 is_stmt 1 view -0
+ 288              		.cfi_startproc
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 291              		@ link register save eliminated.
  103:cooneo_Drivers/move_motor/move_motor.c ****     encoder_ticks = 0;
- 302              		.loc 1 103 5 view .LVU52
- 303              		.loc 1 103 19 is_stmt 0 view .LVU53
- 304 0000 014B     		ldr	r3, .L26
- 305 0002 0022     		movs	r2, #0
- 306 0004 1A60     		str	r2, [r3]
+ 292              		.loc 1 103 5 view .LVU50
+ARM GAS  /tmp/ccJtyvHy.s 			page 8
+
+
+ 293              		.loc 1 103 19 is_stmt 0 view .LVU51
+ 294 0000 014B     		ldr	r3, .L26
+ 295 0002 0022     		movs	r2, #0
+ 296 0004 1A60     		str	r2, [r3]
  104:cooneo_Drivers/move_motor/move_motor.c **** }
- 307              		.loc 1 104 1 view .LVU54
- 308 0006 7047     		bx	lr
- 309              	.L27:
- 310              		.align	2
- 311              	.L26:
- 312 0008 00000000 		.word	encoder_ticks
- 313              		.cfi_endproc
- 314              	.LFE247:
- 316              		.global	motor_speed
- 317              		.section	.bss.motor_speed,"aw",%nobits
- 318              		.align	2
- 321              	motor_speed:
- 322 0000 00000000 		.space	4
- 323              		.global	factor
- 324              		.section	.data.factor,"aw"
- 325              		.align	2
- 328              	factor:
- 329 0000 01000000 		.word	1
- 330              		.global	encoder_ticks
- 331              		.section	.bss.encoder_ticks,"aw",%nobits
- 332              		.align	2
- 335              	encoder_ticks:
- 336 0000 00000000 		.space	4
- 337              		.global	motors
- 338              		.section	.data.motors,"aw"
- 339              		.align	2
- 342              	motors:
- 343 0000 00000000 		.word	htim3
- 344 0004 00000000 		.word	0
- 345 0008 00080240 		.word	1073874944
- 346 000c 0100     		.short	1
- 347 000e 0000     		.space	2
- 348 0010 00080240 		.word	1073874944
- 349 0014 0200     		.short	2
- 350 0016 0000     		.space	2
- 351 0018 00000000 		.word	htim3
- 352 001c 04000000 		.word	4
- 353 0020 00080240 		.word	1073874944
- 354 0024 0400     		.short	4
- 355 0026 0000     		.space	2
- 356 0028 00080240 		.word	1073874944
- 357 002c 0800     		.short	8
-ARM GAS  /tmp/ccjI6g1S.s 			page 9
+ 297              		.loc 1 104 1 view .LVU52
+ 298 0006 7047     		bx	lr
+ 299              	.L27:
+ 300              		.align	2
+ 301              	.L26:
+ 302 0008 00000000 		.word	encoder_ticks
+ 303              		.cfi_endproc
+ 304              	.LFE247:
+ 306              		.global	motor_speed
+ 307              		.section	.bss.motor_speed,"aw",%nobits
+ 308              		.align	2
+ 311              	motor_speed:
+ 312 0000 00000000 		.space	4
+ 313              		.global	factor
+ 314              		.section	.data.factor,"aw"
+ 315              		.align	2
+ 318              	factor:
+ 319 0000 01000000 		.word	1
+ 320              		.global	encoder_ticks
+ 321              		.section	.bss.encoder_ticks,"aw",%nobits
+ 322              		.align	2
+ 325              	encoder_ticks:
+ 326 0000 00000000 		.space	4
+ 327              		.global	motors
+ 328              		.section	.data.motors,"aw"
+ 329              		.align	2
+ 332              	motors:
+ 333 0000 00000000 		.word	htim3
+ 334 0004 00000000 		.word	0
+ 335 0008 00080240 		.word	1073874944
+ 336 000c 0100     		.short	1
+ 337 000e 0000     		.space	2
+ 338 0010 00080240 		.word	1073874944
+ 339 0014 0200     		.short	2
+ 340 0016 0000     		.space	2
+ 341 0018 00000000 		.word	htim3
+ 342 001c 04000000 		.word	4
+ 343 0020 00080240 		.word	1073874944
+ 344 0024 0400     		.short	4
+ 345 0026 0000     		.space	2
+ 346 0028 00080240 		.word	1073874944
+ 347 002c 0800     		.short	8
+ 348 002e 0000     		.space	2
+ 349              		.text
+ 350              	.Letext0:
+ 351              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 352              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 353              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 354              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 355              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 356              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 357              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ARM GAS  /tmp/ccJtyvHy.s 			page 9
 
 
- 358 002e 0000     		.space	2
- 359 0030 00000000 		.word	htim3
- 360 0034 08000000 		.word	8
- 361 0038 00040240 		.word	1073873920
- 362 003c 0010     		.short	4096
- 363 003e 0000     		.space	2
- 364 0040 00040240 		.word	1073873920
- 365 0044 0020     		.short	8192
- 366 0046 0000     		.space	2
- 367 0048 00000000 		.word	htim3
- 368 004c 0C000000 		.word	12
- 369 0050 00040240 		.word	1073873920
- 370 0054 0040     		.short	16384
- 371 0056 0000     		.space	2
- 372 0058 00040240 		.word	1073873920
- 373 005c 0080     		.short	-32768
- 374 005e 0000     		.space	2
- 375              		.text
- 376              	.Letext0:
- 377              		.file 2 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 378              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 379              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 380              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 381              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 382              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 383              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 384              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 385              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
- 386              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 387              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
- 388              		.file 13 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 389              		.file 14 "Core/Inc/tim.h"
-ARM GAS  /tmp/ccjI6g1S.s 			page 10
+ 358              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 359              		.file 10 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
+ 360              		.file 11 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 361              		.file 12 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 362              		.file 13 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 363              		.file 14 "Core/Inc/tim.h"
+ARM GAS  /tmp/ccJtyvHy.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 move_motor.c
-     /tmp/ccjI6g1S.s:21     .text.control_motor_init:00000000 $t
-     /tmp/ccjI6g1S.s:27     .text.control_motor_init:00000000 control_motor_init
-     /tmp/ccjI6g1S.s:65     .text.control_motor_init:00000028 $d
-     /tmp/ccjI6g1S.s:70     .text.control_motor_speed:00000000 $t
-     /tmp/ccjI6g1S.s:76     .text.control_motor_speed:00000000 control_motor_speed
-     /tmp/ccjI6g1S.s:231    .text.control_motor_speed:000000bc $d
-     /tmp/ccjI6g1S.s:342    .data.motors:00000000 motors
-     /tmp/ccjI6g1S.s:237    .text.EXTIx_IRQHandler:00000000 $t
-     /tmp/ccjI6g1S.s:243    .text.EXTIx_IRQHandler:00000000 EXTIx_IRQHandler
-     /tmp/ccjI6g1S.s:256    .text.calculate_speed:00000000 $t
-     /tmp/ccjI6g1S.s:262    .text.calculate_speed:00000000 calculate_speed
-     /tmp/ccjI6g1S.s:289    .text.reset_encoder_ticks:00000000 $t
-     /tmp/ccjI6g1S.s:295    .text.reset_encoder_ticks:00000000 reset_encoder_ticks
-     /tmp/ccjI6g1S.s:312    .text.reset_encoder_ticks:00000008 $d
-     /tmp/ccjI6g1S.s:335    .bss.encoder_ticks:00000000 encoder_ticks
-     /tmp/ccjI6g1S.s:321    .bss.motor_speed:00000000 motor_speed
-     /tmp/ccjI6g1S.s:318    .bss.motor_speed:00000000 $d
-     /tmp/ccjI6g1S.s:328    .data.factor:00000000 factor
-     /tmp/ccjI6g1S.s:325    .data.factor:00000000 $d
-     /tmp/ccjI6g1S.s:332    .bss.encoder_ticks:00000000 $d
-     /tmp/ccjI6g1S.s:339    .data.motors:00000000 $d
+     /tmp/ccJtyvHy.s:21     .text.control_motor_init:00000000 $t
+     /tmp/ccJtyvHy.s:27     .text.control_motor_init:00000000 control_motor_init
+     /tmp/ccJtyvHy.s:55     .text.control_motor_init:00000018 $d
+     /tmp/ccJtyvHy.s:60     .text.control_motor_speed:00000000 $t
+     /tmp/ccJtyvHy.s:66     .text.control_motor_speed:00000000 control_motor_speed
+     /tmp/ccJtyvHy.s:221    .text.control_motor_speed:000000bc $d
+     /tmp/ccJtyvHy.s:332    .data.motors:00000000 motors
+     /tmp/ccJtyvHy.s:227    .text.EXTIx_IRQHandler:00000000 $t
+     /tmp/ccJtyvHy.s:233    .text.EXTIx_IRQHandler:00000000 EXTIx_IRQHandler
+     /tmp/ccJtyvHy.s:246    .text.calculate_speed:00000000 $t
+     /tmp/ccJtyvHy.s:252    .text.calculate_speed:00000000 calculate_speed
+     /tmp/ccJtyvHy.s:279    .text.reset_encoder_ticks:00000000 $t
+     /tmp/ccJtyvHy.s:285    .text.reset_encoder_ticks:00000000 reset_encoder_ticks
+     /tmp/ccJtyvHy.s:302    .text.reset_encoder_ticks:00000008 $d
+     /tmp/ccJtyvHy.s:325    .bss.encoder_ticks:00000000 encoder_ticks
+     /tmp/ccJtyvHy.s:311    .bss.motor_speed:00000000 motor_speed
+     /tmp/ccJtyvHy.s:308    .bss.motor_speed:00000000 $d
+     /tmp/ccJtyvHy.s:318    .data.factor:00000000 factor
+     /tmp/ccJtyvHy.s:315    .data.factor:00000000 $d
+     /tmp/ccJtyvHy.s:322    .bss.encoder_ticks:00000000 $d
+     /tmp/ccJtyvHy.s:329    .data.motors:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_TIM_PWM_Start

@@ -38,20 +38,20 @@ MotorControl motors[] = {
     // 示例电机初始化，确保正确设置所有参数
     {&htim3, TIM_CHANNEL_1, GPIOC, GPIO_PIN_0, GPIOC, GPIO_PIN_1},  // 电机A
     {&htim3, TIM_CHANNEL_2, GPIOC, GPIO_PIN_2, GPIOC, GPIO_PIN_3},
-    {&htim3, TIM_CHANNEL_3, GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13},
-    {&htim3, TIM_CHANNEL_4, GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15},
+    // {&htim3, TIM_CHANNEL_3, GPIOB, GPIO_PIN_12, GPIOB, GPIO_PIN_13},
+    // {&htim3, TIM_CHANNEL_4, GPIOB, GPIO_PIN_14, GPIOB, GPIO_PIN_15},
     // ...根据需要添加更多电机
 };
 
 void control_motor_init(void){
     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
-    HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
+    // HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_3);
+    // HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_4);
     return ; 
 }
 
-void control_motor_speed(uint8_t motor_id, float speed) {
+void control_motor_speed(uint8_t motor_id, float speed) {  //pwm 0-1000 speed 0-100
     if (motor_id >= sizeof(motors) / sizeof(motors[0])) {
         // 如果ID不合法，则返回或处理错误
         return;
