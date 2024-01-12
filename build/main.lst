@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccrUox4P.s 			page 1
+ARM GAS  /tmp/ccEWU4pc.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   27:Core/Src/main.c **** #include "tim.h"
   28:Core/Src/main.c **** #include "usart.h"
   29:Core/Src/main.c **** #include "gpio.h"
-ARM GAS  /tmp/ccrUox4P.s 			page 2
+ARM GAS  /tmp/ccEWU4pc.s 			page 2
 
 
   30:Core/Src/main.c **** 
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   84:Core/Src/main.c ****   /* USER CODE BEGIN Init */
   85:Core/Src/main.c **** 
   86:Core/Src/main.c ****   /* USER CODE END Init */
-ARM GAS  /tmp/ccrUox4P.s 			page 3
+ARM GAS  /tmp/ccEWU4pc.s 			page 3
 
 
   87:Core/Src/main.c **** 
@@ -151,8 +151,8 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  114:Core/Src/main.c ****   // Begin receiving in interrupt mode
  115:Core/Src/main.c ****   uint8_t dataBuffer; 
  116:Core/Src/main.c ****   HAL_UART_Receive_IT(&huart1, &dataBuffer, 1);
- 117:Core/Src/main.c ****   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
- 118:Core/Src/main.c ****   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
+ 117:Core/Src/main.c ****   // HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
+ 118:Core/Src/main.c ****   // HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
  119:Core/Src/main.c **** 
  120:Core/Src/main.c ****   Servos_Init();
  121:Core/Src/main.c ****   control_motor_init();
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  141:Core/Src/main.c **** 
  142:Core/Src/main.c ****   }
  143:Core/Src/main.c ****   /* USER CODE END 3 */
-ARM GAS  /tmp/ccrUox4P.s 			page 4
+ARM GAS  /tmp/ccEWU4pc.s 			page 4
 
 
  144:Core/Src/main.c **** }
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  198:Core/Src/main.c ****   * @note   This function is called  when TIM1 interrupt took place, inside
  199:Core/Src/main.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
  200:Core/Src/main.c ****   * a global variable "uwTick" used as application time base.
-ARM GAS  /tmp/ccrUox4P.s 			page 5
+ARM GAS  /tmp/ccEWU4pc.s 			page 5
 
 
  201:Core/Src/main.c ****   * @param  htim : TIM handle
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   69              		.thumb
   70              		.thumb_func
   72              	Error_Handler:
-ARM GAS  /tmp/ccrUox4P.s 			page 6
+ARM GAS  /tmp/ccEWU4pc.s 			page 6
 
 
   73              	.LFB242:
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
   35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
   36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
-ARM GAS  /tmp/ccrUox4P.s 			page 7
+ARM GAS  /tmp/ccEWU4pc.s 			page 7
 
 
   37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
   92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
   93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
-ARM GAS  /tmp/ccrUox4P.s 			page 8
+ARM GAS  /tmp/ccEWU4pc.s 			page 8
 
 
   94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
   89 0000 72B6     		cpsid i
   90              	@ 0 "" 2
   91              		.thumb
-ARM GAS  /tmp/ccrUox4P.s 			page 9
+ARM GAS  /tmp/ccEWU4pc.s 			page 9
 
 
   92              		.syntax unified
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  138              		.loc 1 157 3 is_stmt 1 view .LVU20
  139              	.LBB6:
  157:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-ARM GAS  /tmp/ccrUox4P.s 			page 10
+ARM GAS  /tmp/ccEWU4pc.s 			page 10
 
 
  140              		.loc 1 157 3 view .LVU21
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  165:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
  180              		.loc 1 165 3 is_stmt 1 view .LVU36
  165:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-ARM GAS  /tmp/ccrUox4P.s 			page 11
+ARM GAS  /tmp/ccEWU4pc.s 			page 11
 
 
  181              		.loc 1 165 41 is_stmt 0 view .LVU37
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  181:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
  217              		.loc 1 181 34 is_stmt 0 view .LVU56
  218 0070 0223     		movs	r3, #2
-ARM GAS  /tmp/ccrUox4P.s 			page 12
+ARM GAS  /tmp/ccEWU4pc.s 			page 12
 
 
  219 0072 0493     		str	r3, [sp, #16]
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  261 00a0 00700040 		.word	1073770496
  262              		.cfi_endproc
  263              	.LFE240:
-ARM GAS  /tmp/ccrUox4P.s 			page 13
+ARM GAS  /tmp/ccEWU4pc.s 			page 13
 
 
  265              		.section	.text.main,"ax",%progbits
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  310              		.loc 1 102 3 view .LVU78
  311 0024 FFF7FEFF 		bl	MX_SPI1_Init
  312              	.LVL17:
-ARM GAS  /tmp/ccrUox4P.s 			page 14
+ARM GAS  /tmp/ccEWU4pc.s 			page 14
 
 
  103:Core/Src/main.c ****   MX_ADC1_Init();
@@ -819,105 +819,88 @@ ARM GAS  /tmp/ccrUox4P.s 			page 1
  339              	.LVL26:
  115:Core/Src/main.c ****   HAL_UART_Receive_IT(&huart1, &dataBuffer, 1);
  340              		.loc 1 115 3 view .LVU88
- 116:Core/Src/main.c ****   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
+ 116:Core/Src/main.c ****   // HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_1);
  341              		.loc 1 116 3 view .LVU89
  342 004c 0122     		movs	r2, #1
  343 004e 0DF10701 		add	r1, sp, #7
- 344 0052 0B48     		ldr	r0, .L20
+ 344 0052 0748     		ldr	r0, .L20
  345 0054 FFF7FEFF 		bl	HAL_UART_Receive_IT
  346              	.LVL27:
- 117:Core/Src/main.c ****   HAL_TIM_PWM_Start_IT(&htim9, TIM_CHANNEL_2);
- 347              		.loc 1 117 3 view .LVU90
- 348 0058 0A4C     		ldr	r4, .L20+4
- 349 005a 0021     		movs	r1, #0
- 350 005c 2046     		mov	r0, r4
- 351 005e FFF7FEFF 		bl	HAL_TIM_PWM_Start_IT
- 352              	.LVL28:
- 118:Core/Src/main.c **** 
- 353              		.loc 1 118 3 view .LVU91
- 354 0062 0421     		movs	r1, #4
- 355 0064 2046     		mov	r0, r4
- 356 0066 FFF7FEFF 		bl	HAL_TIM_PWM_Start_IT
-ARM GAS  /tmp/ccrUox4P.s 			page 15
-
-
- 357              	.LVL29:
  120:Core/Src/main.c ****   control_motor_init();
- 358              		.loc 1 120 3 view .LVU92
- 359 006a FFF7FEFF 		bl	Servos_Init
- 360              	.LVL30:
+ 347              		.loc 1 120 3 view .LVU90
+ 348 0058 FFF7FEFF 		bl	Servos_Init
+ 349              	.LVL28:
  121:Core/Src/main.c ****   /* USER CODE END 2 */
- 361              		.loc 1 121 3 view .LVU93
- 362 006e FFF7FEFF 		bl	control_motor_init
- 363              	.LVL31:
+ 350              		.loc 1 121 3 view .LVU91
+ 351 005c FFF7FEFF 		bl	control_motor_init
+ 352              	.LVL29:
  125:Core/Src/main.c **** 
- 364              		.loc 1 125 3 view .LVU94
- 365 0072 FFF7FEFF 		bl	osKernelInitialize
- 366              	.LVL32:
+ 353              		.loc 1 125 3 view .LVU92
+ 354 0060 FFF7FEFF 		bl	osKernelInitialize
+ 355              	.LVL30:
+ARM GAS  /tmp/ccEWU4pc.s 			page 15
+
+
  128:Core/Src/main.c **** 
- 367              		.loc 1 128 3 view .LVU95
- 368 0076 FFF7FEFF 		bl	MX_FREERTOS_Init
- 369              	.LVL33:
+ 356              		.loc 1 128 3 view .LVU93
+ 357 0064 FFF7FEFF 		bl	MX_FREERTOS_Init
+ 358              	.LVL31:
  131:Core/Src/main.c **** 
- 370              		.loc 1 131 3 view .LVU96
- 371 007a FFF7FEFF 		bl	osKernelStart
- 372              	.LVL34:
- 373              	.L18:
+ 359              		.loc 1 131 3 view .LVU94
+ 360 0068 FFF7FEFF 		bl	osKernelStart
+ 361              	.LVL32:
+ 362              	.L18:
  136:Core/Src/main.c ****   {
- 374              		.loc 1 136 3 view .LVU97
+ 363              		.loc 1 136 3 view .LVU95
  142:Core/Src/main.c ****   /* USER CODE END 3 */
- 375              		.loc 1 142 3 view .LVU98
+ 364              		.loc 1 142 3 view .LVU96
  136:Core/Src/main.c ****   {
- 376              		.loc 1 136 9 view .LVU99
- 377 007e FEE7     		b	.L18
- 378              	.L21:
- 379              		.align	2
- 380              	.L20:
- 381 0080 00000000 		.word	huart1
- 382 0084 00000000 		.word	htim9
- 383              		.cfi_endproc
- 384              	.LFE239:
- 386              		.text
- 387              	.Letext0:
- 388              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 389              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
- 390              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 391              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 392              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
- 393              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
- 394              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 395              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 396              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 397              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 398              		.file 13 "Core/Inc/tim.h"
- 399              		.file 14 "Core/Inc/usart.h"
- 400              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 401              		.file 16 "Core/Inc/adc.h"
- 402              		.file 17 "Core/Inc/i2c.h"
- 403              		.file 18 "Core/Inc/spi.h"
- 404              		.file 19 "Core/Inc/can.h"
- 405              		.file 20 "Core/Inc/dma.h"
- 406              		.file 21 "Core/Inc/gpio.h"
-ARM GAS  /tmp/ccrUox4P.s 			page 16
-
-
- 407              		.file 22 "<built-in>"
-ARM GAS  /tmp/ccrUox4P.s 			page 17
+ 365              		.loc 1 136 9 view .LVU97
+ 366 006c FEE7     		b	.L18
+ 367              	.L21:
+ 368 006e 00BF     		.align	2
+ 369              	.L20:
+ 370 0070 00000000 		.word	huart1
+ 371              		.cfi_endproc
+ 372              	.LFE239:
+ 374              		.text
+ 375              	.Letext0:
+ 376              		.file 3 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 377              		.file 4 "/home/w0x7ce/Downloads/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi/arm-gnu-toolchain
+ 378              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 379              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 380              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
+ 381              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
+ 382              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 383              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 384              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 385              		.file 12 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 386              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 387              		.file 14 "Core/Inc/tim.h"
+ 388              		.file 15 "Core/Inc/usart.h"
+ 389              		.file 16 "Core/Inc/adc.h"
+ 390              		.file 17 "Core/Inc/i2c.h"
+ 391              		.file 18 "Core/Inc/spi.h"
+ 392              		.file 19 "Core/Inc/can.h"
+ 393              		.file 20 "Core/Inc/dma.h"
+ 394              		.file 21 "Core/Inc/gpio.h"
+ 395              		.file 22 "<built-in>"
+ARM GAS  /tmp/ccEWU4pc.s 			page 16
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-     /tmp/ccrUox4P.s:21     .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
-     /tmp/ccrUox4P.s:27     .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
-     /tmp/ccrUox4P.s:61     .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
-     /tmp/ccrUox4P.s:66     .text.Error_Handler:00000000 $t
-     /tmp/ccrUox4P.s:72     .text.Error_Handler:00000000 Error_Handler
-     /tmp/ccrUox4P.s:104    .text.SystemClock_Config:00000000 $t
-     /tmp/ccrUox4P.s:110    .text.SystemClock_Config:00000000 SystemClock_Config
-     /tmp/ccrUox4P.s:260    .text.SystemClock_Config:0000009c $d
-     /tmp/ccrUox4P.s:266    .text.main:00000000 $t
-     /tmp/ccrUox4P.s:272    .text.main:00000000 main
-     /tmp/ccrUox4P.s:381    .text.main:00000080 $d
+     /tmp/ccEWU4pc.s:21     .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+     /tmp/ccEWU4pc.s:27     .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+     /tmp/ccEWU4pc.s:61     .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+     /tmp/ccEWU4pc.s:66     .text.Error_Handler:00000000 $t
+     /tmp/ccEWU4pc.s:72     .text.Error_Handler:00000000 Error_Handler
+     /tmp/ccEWU4pc.s:104    .text.SystemClock_Config:00000000 $t
+     /tmp/ccEWU4pc.s:110    .text.SystemClock_Config:00000000 SystemClock_Config
+     /tmp/ccEWU4pc.s:260    .text.SystemClock_Config:0000009c $d
+     /tmp/ccEWU4pc.s:266    .text.main:00000000 $t
+     /tmp/ccEWU4pc.s:272    .text.main:00000000 main
+     /tmp/ccEWU4pc.s:370    .text.main:00000070 $d
 
 UNDEFINED SYMBOLS
 HAL_IncTick
@@ -942,11 +925,9 @@ MX_USART3_UART_Init
 MX_TIM14_Init
 MX_TIM5_Init
 HAL_UART_Receive_IT
-HAL_TIM_PWM_Start_IT
 Servos_Init
 control_motor_init
 osKernelInitialize
 MX_FREERTOS_Init
 osKernelStart
 huart1
-htim9
