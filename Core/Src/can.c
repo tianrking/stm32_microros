@@ -54,28 +54,28 @@ void MX_CAN_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN_Init 2 */
-//	CAN_FilterTypeDef sFilterConfig;
-//	sFilterConfig.FilterBank = 0; // 使用过滤器0
-//	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-//	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-//	sFilterConfig.FilterIdHigh = 0x0000; // 接收所有ID
-//	sFilterConfig.FilterIdLow = 0x0000;
-//	sFilterConfig.FilterMaskIdHigh = 0x0000;
-//	sFilterConfig.FilterMaskIdLow = 0x0000;
-//	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0; // 分配到FIFO 0
-//	sFilterConfig.FilterActivation = ENABLE;
-//	sFilterConfig.SlaveStartFilterBank = 14; // 如果是双CAN，则需要配置
+	CAN_FilterTypeDef sFilterConfig;
+	sFilterConfig.FilterBank = 0; // 使用过滤器0
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.FilterIdHigh = 0x0000; // 接收所有ID
+	sFilterConfig.FilterIdLow = 0x0000;
+	sFilterConfig.FilterMaskIdHigh = 0x0000;
+	sFilterConfig.FilterMaskIdLow = 0x0000;
+	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0; // 分配到FIFO 0
+	sFilterConfig.FilterActivation = ENABLE;
+	sFilterConfig.SlaveStartFilterBank = 14; // 如果是双CAN，则需要配置
 
-//	if (HAL_CAN_ConfigFilter(&hcan, &sFilterConfig) != HAL_OK) {
-//			// 错误处理
-//			Error_Handler();
-//	}
-	CAN_Filter_Configuration();
+	if (HAL_CAN_ConfigFilter(&hcan, &sFilterConfig) != HAL_OK) {
+			// 错误处理
+			Error_Handler();
+	}
+
 	if (HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
     // 错误处理
     Error_Handler();
 	}
-	
+	//	CAN_Filter_Configuration();
 	if (HAL_CAN_Start(&hcan) != HAL_OK) {
     // 错误处理
 	}
