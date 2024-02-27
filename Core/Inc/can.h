@@ -44,7 +44,7 @@ void A(void);
 bool EnqueueCANMessage(const CAN_TxHeaderTypeDef *TxHeader, const uint8_t *TxData);
 void ProcessCANQueue(void) ;
 void HandleCANRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo);
-void CAN_Filter_Configuration(void) ;
+void ConfigureCANFilters(void);
 /* USER CODE END Private defines */
 
 void MX_CAN_Init(void);

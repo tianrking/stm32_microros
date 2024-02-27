@@ -60,6 +60,7 @@ void SystemClock_Config(void);
 // 示例：发送一个CAN消息
 CAN_TxHeaderTypeDef myTxHeader;
 uint8_t myTxData[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+CAN_TxHeaderTypeDef txHeader;
 
 
 /* USER CODE END 0 */
@@ -97,6 +98,18 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+	
+		myTxHeader.DLC = 8; // 数据长度为8字节
+		myTxHeader.StdId = 0x123; // CAN标准ID
+		myTxHeader.IDE = CAN_ID_STD; // 使用标准标识符
+		myTxHeader.RTR = CAN_RTR_DATA; // 数据帧
+		
+	uint32_t txMailbox;
+
+	txHeader.StdId = 0x100;
+	txHeader.IDE = CAN_ID_STD;
+	txHeader.RTR = CAN_RTR_DATA;
+	txHeader.DLC = 8;
 
   /* USER CODE END 2 */
 
@@ -108,15 +121,22 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-		myTxHeader.DLC = 8; // 数据长度为8字节
-		myTxHeader.StdId = 0x123; // CAN标准ID
-		myTxHeader.IDE = CAN_ID_STD; // 使用标准标识符
-		myTxHeader.RTR = CAN_RTR_DATA; // 数据帧
-		myTxData[0]++;
-				if (!EnqueueCANMessage(&myTxHeader, myTxData)) {
-				// 队列已满，处理这种情况
-				// 例如，你可以打印一条消息或者等待一段时间后重试
+//		myTxHeader.DLC = 8; // 数据长度为8字节
+//		myTxHeader.StdId = 0x123; // CAN标准ID
+//		myTxHeader.IDE = CAN_ID_STD; // 使用标准标识符
+//		myTxHeader.RTR = CAN_RTR_DATA; // 数据帧
+//		myTxData[0]++;
+//				if (!EnqueueCANMessage(&myTxHeader, myTxData)) {
+//				// 队列已满，处理这种情况
+//				// 例如，你可以打印一条消息或者等待一段时间后重试
+//		}
+		
+		if (HAL_CAN_AddTxMessage(&hcan, &txHeader, myTxData, &txMailbox) != HAL_OK) {
+    // 错误处理
+    Error_Handler();
 		}
+		
+		
 		
 		ProcessCANQueue();
 		HAL_Delay(10);
