@@ -29,6 +29,11 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+typedef struct {
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+} CAN_MessageTypeDef;
 
 /* USER CODE END Includes */
 
@@ -36,6 +41,10 @@ extern CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN Private defines */
 void A(void);
+bool EnqueueCANMessage(const CAN_TxHeaderTypeDef *TxHeader, const uint8_t *TxData);
+void ProcessCANQueue(void) ;
+void HandleCANRxMessage(CAN_HandleTypeDef *hcan, uint32_t RxFifo);
+void ConfigureCANFilters(void);
 /* USER CODE END Private defines */
 
 void MX_CAN_Init(void);
