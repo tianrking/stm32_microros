@@ -1,0 +1,739 @@
+ARM GAS  /tmp/ccZYZv0U.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"robot_state.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.RobotState_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	RobotState_Init
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	RobotState_Init:
+  27              	.LFB133:
+  28              		.file 1 "Cus/ROBOT_STATE/robot_state.c"
+   1:Cus/ROBOT_STATE/robot_state.c **** #include "robot_state.h"
+   2:Cus/ROBOT_STATE/robot_state.c **** #include <stdio.h>
+   3:Cus/ROBOT_STATE/robot_state.c **** 
+   4:Cus/ROBOT_STATE/robot_state.c **** RobotState robotState;
+   5:Cus/ROBOT_STATE/robot_state.c **** 
+   6:Cus/ROBOT_STATE/robot_state.c **** void RobotState_Init(void) {
+  29              		.loc 1 6 28 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+   7:Cus/ROBOT_STATE/robot_state.c ****     // 初始化操作模式为 AT 指令模式
+   8:Cus/ROBOT_STATE/robot_state.c ****     robotState.operationMode = OP_MODE_UNSET;
+  34              		.loc 1 8 5 view .LVU1
+  35              		.loc 1 8 30 is_stmt 0 view .LVU2
+  36 0000 0949     		ldr	r1, .L2
+  37 0002 0023     		movs	r3, #0
+  38 0004 0A46     		mov	r2, r1
+  39 0006 02F8043B 		strb	r3, [r2], #4
+   9:Cus/ROBOT_STATE/robot_state.c **** 
+  10:Cus/ROBOT_STATE/robot_state.c ****     // 初始化左右轮子参数和控制模式
+  11:Cus/ROBOT_STATE/robot_state.c ****     robotState.leftWheel = (WheelParams){.diameter = 0.0, .pulses = 0, .maxSpeed = 0.0, .minSpeed =
+  40              		.loc 1 11 5 is_stmt 1 view .LVU3
+  41              		.loc 1 11 26 is_stmt 0 view .LVU4
+  42 000a 4B60     		str	r3, [r1, #4]
+  43 000c 5360     		str	r3, [r2, #4]
+  44 000e 9360     		str	r3, [r2, #8]
+  45 0010 D360     		str	r3, [r2, #12]
+  46 0012 1361     		str	r3, [r2, #16]
+  47 0014 5361     		str	r3, [r2, #20]
+ARM GAS  /tmp/ccZYZv0U.s 			page 2
+
+
+  48 0016 9361     		str	r3, [r2, #24]
+  12:Cus/ROBOT_STATE/robot_state.c ****     robotState.rightWheel = (WheelParams){.diameter = 0.0, .pulses = 0, .maxSpeed = 0.0, .minSpeed 
+  49              		.loc 1 12 5 is_stmt 1 view .LVU5
+  50              		.loc 1 12 27 is_stmt 0 view .LVU6
+  51 0018 0B62     		str	r3, [r1, #32]
+  52 001a 4B62     		str	r3, [r1, #36]
+  53 001c 8B62     		str	r3, [r1, #40]
+  54 001e CB62     		str	r3, [r1, #44]
+  55 0020 0B63     		str	r3, [r1, #48]
+  56 0022 4B63     		str	r3, [r1, #52]
+  57 0024 8B63     		str	r3, [r1, #56]
+  13:Cus/ROBOT_STATE/robot_state.c **** }
+  58              		.loc 1 13 1 view .LVU7
+  59 0026 7047     		bx	lr
+  60              	.L3:
+  61              		.align	2
+  62              	.L2:
+  63 0028 00000000 		.word	robotState
+  64              		.cfi_endproc
+  65              	.LFE133:
+  67              		.section	.rodata.RobotState_SetOperationMode.str1.4,"aMS",%progbits,1
+  68              		.align	2
+  69              	.LC0:
+  70 0000 4F706572 		.ascii	"Operation mode set to %d\012\000"
+  70      6174696F 
+  70      6E206D6F 
+  70      64652073 
+  70      65742074 
+  71              		.section	.text.RobotState_SetOperationMode,"ax",%progbits
+  72              		.align	1
+  73              		.global	RobotState_SetOperationMode
+  74              		.syntax unified
+  75              		.thumb
+  76              		.thumb_func
+  77              		.fpu fpv4-sp-d16
+  79              	RobotState_SetOperationMode:
+  80              	.LVL0:
+  81              	.LFB134:
+  14:Cus/ROBOT_STATE/robot_state.c **** 
+  15:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetOperationMode(OperationMode newMode) {
+  82              		.loc 1 15 57 is_stmt 1 view -0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		.loc 1 15 57 is_stmt 0 view .LVU9
+  87 0000 08B5     		push	{r3, lr}
+  88              	.LCFI0:
+  89              		.cfi_def_cfa_offset 8
+  90              		.cfi_offset 3, -8
+  91              		.cfi_offset 14, -4
+  92 0002 0146     		mov	r1, r0
+  16:Cus/ROBOT_STATE/robot_state.c ****     robotState.operationMode = newMode;
+  93              		.loc 1 16 5 is_stmt 1 view .LVU10
+  94              		.loc 1 16 30 is_stmt 0 view .LVU11
+  95 0004 024B     		ldr	r3, .L6
+  96 0006 1870     		strb	r0, [r3]
+  17:Cus/ROBOT_STATE/robot_state.c ****     printf("Operation mode set to %d\n", newMode);
+ARM GAS  /tmp/ccZYZv0U.s 			page 3
+
+
+  97              		.loc 1 17 5 is_stmt 1 view .LVU12
+  98 0008 0248     		ldr	r0, .L6+4
+  99              	.LVL1:
+ 100              		.loc 1 17 5 is_stmt 0 view .LVU13
+ 101 000a FFF7FEFF 		bl	printf
+ 102              	.LVL2:
+  18:Cus/ROBOT_STATE/robot_state.c **** }
+ 103              		.loc 1 18 1 view .LVU14
+ 104 000e 08BD     		pop	{r3, pc}
+ 105              	.L7:
+ 106              		.align	2
+ 107              	.L6:
+ 108 0010 00000000 		.word	robotState
+ 109 0014 00000000 		.word	.LC0
+ 110              		.cfi_endproc
+ 111              	.LFE134:
+ 113              		.section	.rodata.RobotState_SetWheelControlMode.str1.4,"aMS",%progbits,1
+ 114              		.align	2
+ 115              	.LC1:
+ 116 0000 4C656674 		.ascii	"Left wheel control mode set to %d\012\000"
+ 116      20776865 
+ 116      656C2063 
+ 116      6F6E7472 
+ 116      6F6C206D 
+ 117 0023 00       		.align	2
+ 118              	.LC2:
+ 119 0024 52696768 		.ascii	"Right wheel control mode set to %d\012\000"
+ 119      74207768 
+ 119      65656C20 
+ 119      636F6E74 
+ 119      726F6C20 
+ 120              		.align	2
+ 121              	.LC3:
+ 122 0048 4572726F 		.ascii	"Error: Invalid wheel identifier\000"
+ 122      723A2049 
+ 122      6E76616C 
+ 122      69642077 
+ 122      6865656C 
+ 123              		.section	.text.RobotState_SetWheelControlMode,"ax",%progbits
+ 124              		.align	1
+ 125              		.global	RobotState_SetWheelControlMode
+ 126              		.syntax unified
+ 127              		.thumb
+ 128              		.thumb_func
+ 129              		.fpu fpv4-sp-d16
+ 131              	RobotState_SetWheelControlMode:
+ 132              	.LVL3:
+ 133              	.LFB135:
+  19:Cus/ROBOT_STATE/robot_state.c **** 
+  20:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelControlMode(char wheel, MotorControlMode mode) {
+ 134              		.loc 1 20 72 is_stmt 1 view -0
+ 135              		.cfi_startproc
+ 136              		@ args = 0, pretend = 0, frame = 0
+ 137              		@ frame_needed = 0, uses_anonymous_args = 0
+ 138              		.loc 1 20 72 is_stmt 0 view .LVU16
+ 139 0000 08B5     		push	{r3, lr}
+ 140              	.LCFI1:
+ARM GAS  /tmp/ccZYZv0U.s 			page 4
+
+
+ 141              		.cfi_def_cfa_offset 8
+ 142              		.cfi_offset 3, -8
+ 143              		.cfi_offset 14, -4
+  21:Cus/ROBOT_STATE/robot_state.c ****     if (wheel == 'L') {
+ 144              		.loc 1 21 5 is_stmt 1 view .LVU17
+ 145              		.loc 1 21 8 is_stmt 0 view .LVU18
+ 146 0002 4C28     		cmp	r0, #76
+ 147 0004 05D0     		beq	.L13
+  22:Cus/ROBOT_STATE/robot_state.c ****         robotState.leftWheel.controlMode = mode;
+  23:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel control mode set to %d\n", mode);
+  24:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 148              		.loc 1 24 12 is_stmt 1 view .LVU19
+ 149              		.loc 1 24 15 is_stmt 0 view .LVU20
+ 150 0006 5228     		cmp	r0, #82
+ 151 0008 09D0     		beq	.L14
+  25:Cus/ROBOT_STATE/robot_state.c ****         robotState.rightWheel.controlMode = mode;
+  26:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel control mode set to %d\n", mode);
+  27:Cus/ROBOT_STATE/robot_state.c ****     } else {
+  28:Cus/ROBOT_STATE/robot_state.c ****         printf("Error: Invalid wheel identifier\n");
+ 152              		.loc 1 28 9 is_stmt 1 view .LVU21
+ 153 000a 0848     		ldr	r0, .L15
+ 154              	.LVL4:
+ 155              		.loc 1 28 9 is_stmt 0 view .LVU22
+ 156 000c FFF7FEFF 		bl	puts
+ 157              	.LVL5:
+ 158              	.L8:
+  29:Cus/ROBOT_STATE/robot_state.c ****     }
+  30:Cus/ROBOT_STATE/robot_state.c **** }
+ 159              		.loc 1 30 1 view .LVU23
+ 160 0010 08BD     		pop	{r3, pc}
+ 161              	.LVL6:
+ 162              	.L13:
+  22:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel control mode set to %d\n", mode);
+ 163              		.loc 1 22 9 is_stmt 1 view .LVU24
+  22:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel control mode set to %d\n", mode);
+ 164              		.loc 1 22 42 is_stmt 0 view .LVU25
+ 165 0012 074B     		ldr	r3, .L15+4
+ 166 0014 1977     		strb	r1, [r3, #28]
+  23:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 167              		.loc 1 23 9 is_stmt 1 view .LVU26
+ 168 0016 0748     		ldr	r0, .L15+8
+ 169              	.LVL7:
+  23:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 170              		.loc 1 23 9 is_stmt 0 view .LVU27
+ 171 0018 FFF7FEFF 		bl	printf
+ 172              	.LVL8:
+  23:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 173              		.loc 1 23 9 view .LVU28
+ 174 001c F8E7     		b	.L8
+ 175              	.LVL9:
+ 176              	.L14:
+  25:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel control mode set to %d\n", mode);
+ 177              		.loc 1 25 9 is_stmt 1 view .LVU29
+  25:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel control mode set to %d\n", mode);
+ 178              		.loc 1 25 43 is_stmt 0 view .LVU30
+ 179 001e 044B     		ldr	r3, .L15+4
+ 180 0020 83F83810 		strb	r1, [r3, #56]
+ARM GAS  /tmp/ccZYZv0U.s 			page 5
+
+
+  26:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 181              		.loc 1 26 9 is_stmt 1 view .LVU31
+ 182 0024 0448     		ldr	r0, .L15+12
+ 183              	.LVL10:
+  26:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 184              		.loc 1 26 9 is_stmt 0 view .LVU32
+ 185 0026 FFF7FEFF 		bl	printf
+ 186              	.LVL11:
+  26:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 187              		.loc 1 26 9 view .LVU33
+ 188 002a F1E7     		b	.L8
+ 189              	.L16:
+ 190              		.align	2
+ 191              	.L15:
+ 192 002c 48000000 		.word	.LC3
+ 193 0030 00000000 		.word	robotState
+ 194 0034 00000000 		.word	.LC1
+ 195 0038 24000000 		.word	.LC2
+ 196              		.cfi_endproc
+ 197              	.LFE135:
+ 199              		.section	.rodata.RobotState_SetWheelParams.str1.4,"aMS",%progbits,1
+ 200              		.align	2
+ 201              	.LC4:
+ 202 0000 4C656674 		.ascii	"Left wheel parameters updated\000"
+ 202      20776865 
+ 202      656C2070 
+ 202      6172616D 
+ 202      65746572 
+ 203 001e 0000     		.align	2
+ 204              	.LC5:
+ 205 0020 52696768 		.ascii	"Right wheel parameters updated\000"
+ 205      74207768 
+ 205      65656C20 
+ 205      70617261 
+ 205      6D657465 
+ 206              		.section	.text.RobotState_SetWheelParams,"ax",%progbits
+ 207              		.align	1
+ 208              		.global	RobotState_SetWheelParams
+ 209              		.syntax unified
+ 210              		.thumb
+ 211              		.thumb_func
+ 212              		.fpu fpv4-sp-d16
+ 214              	RobotState_SetWheelParams:
+ 215              	.LVL12:
+ 216              	.LFB136:
+  31:Cus/ROBOT_STATE/robot_state.c **** 
+  32:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelParams(char wheel, WheelParams params) {
+ 217              		.loc 1 32 64 is_stmt 1 view -0
+ 218              		.cfi_startproc
+ 219              		@ args = 32, pretend = 16, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221              		.loc 1 32 64 is_stmt 0 view .LVU35
+ 222 0000 84B0     		sub	sp, sp, #16
+ 223              	.LCFI2:
+ 224              		.cfi_def_cfa_offset 16
+ 225 0002 38B5     		push	{r3, r4, r5, lr}
+ 226              	.LCFI3:
+ARM GAS  /tmp/ccZYZv0U.s 			page 6
+
+
+ 227              		.cfi_def_cfa_offset 32
+ 228              		.cfi_offset 3, -32
+ 229              		.cfi_offset 4, -28
+ 230              		.cfi_offset 5, -24
+ 231              		.cfi_offset 14, -20
+ 232 0004 05AC     		add	r4, sp, #20
+ 233 0006 84E80E00 		stm	r4, {r1, r2, r3}
+  33:Cus/ROBOT_STATE/robot_state.c ****     if (wheel == 'L') {
+ 234              		.loc 1 33 5 is_stmt 1 view .LVU36
+ 235              		.loc 1 33 8 is_stmt 0 view .LVU37
+ 236 000a 4C28     		cmp	r0, #76
+ 237 000c 08D0     		beq	.L22
+  34:Cus/ROBOT_STATE/robot_state.c ****         robotState.leftWheel = params;
+  35:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel parameters updated\n");
+  36:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 238              		.loc 1 36 12 is_stmt 1 view .LVU38
+ 239              		.loc 1 36 15 is_stmt 0 view .LVU39
+ 240 000e 5228     		cmp	r0, #82
+ 241 0010 12D0     		beq	.L23
+  37:Cus/ROBOT_STATE/robot_state.c ****         robotState.rightWheel = params;
+  38:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel parameters updated\n");
+  39:Cus/ROBOT_STATE/robot_state.c ****     } else {
+  40:Cus/ROBOT_STATE/robot_state.c ****         printf("Error: Invalid wheel identifier\n");
+ 242              		.loc 1 40 9 is_stmt 1 view .LVU40
+ 243 0012 0F48     		ldr	r0, .L24
+ 244              	.LVL13:
+ 245              		.loc 1 40 9 is_stmt 0 view .LVU41
+ 246 0014 FFF7FEFF 		bl	puts
+ 247              	.LVL14:
+ 248              	.L17:
+  41:Cus/ROBOT_STATE/robot_state.c ****     }
+  42:Cus/ROBOT_STATE/robot_state.c **** }
+ 249              		.loc 1 42 1 view .LVU42
+ 250 0018 BDE83840 		pop	{r3, r4, r5, lr}
+ 251              	.LCFI4:
+ 252              		.cfi_remember_state
+ 253              		.cfi_restore 14
+ 254              		.cfi_restore 5
+ 255              		.cfi_restore 4
+ 256              		.cfi_restore 3
+ 257              		.cfi_def_cfa_offset 16
+ 258 001c 04B0     		add	sp, sp, #16
+ 259              	.LCFI5:
+ 260              		.cfi_def_cfa_offset 0
+ 261 001e 7047     		bx	lr
+ 262              	.LVL15:
+ 263              	.L22:
+ 264              	.LCFI6:
+ 265              		.cfi_restore_state
+  34:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel parameters updated\n");
+ 266              		.loc 1 34 9 is_stmt 1 view .LVU43
+  34:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel parameters updated\n");
+ 267              		.loc 1 34 30 is_stmt 0 view .LVU44
+ 268 0020 0C4C     		ldr	r4, .L24+4
+ 269 0022 05AD     		add	r5, sp, #20
+ 270 0024 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 271              	.LVL16:
+ARM GAS  /tmp/ccZYZv0U.s 			page 7
+
+
+  34:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel parameters updated\n");
+ 272              		.loc 1 34 30 view .LVU45
+ 273 0026 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 274 0028 95E80700 		ldm	r5, {r0, r1, r2}
+ 275 002c 84E80700 		stm	r4, {r0, r1, r2}
+  35:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 276              		.loc 1 35 9 is_stmt 1 view .LVU46
+ 277 0030 0948     		ldr	r0, .L24+8
+ 278 0032 FFF7FEFF 		bl	puts
+ 279              	.LVL17:
+ 280 0036 EFE7     		b	.L17
+ 281              	.LVL18:
+ 282              	.L23:
+  37:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel parameters updated\n");
+ 283              		.loc 1 37 9 view .LVU47
+  37:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel parameters updated\n");
+ 284              		.loc 1 37 31 is_stmt 0 view .LVU48
+ 285 0038 084C     		ldr	r4, .L24+12
+ 286 003a 05AD     		add	r5, sp, #20
+ 287 003c 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 288              	.LVL19:
+  37:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel parameters updated\n");
+ 289              		.loc 1 37 31 view .LVU49
+ 290 003e 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 291 0040 95E80700 		ldm	r5, {r0, r1, r2}
+ 292 0044 84E80700 		stm	r4, {r0, r1, r2}
+  38:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 293              		.loc 1 38 9 is_stmt 1 view .LVU50
+ 294 0048 0548     		ldr	r0, .L24+16
+ 295 004a FFF7FEFF 		bl	puts
+ 296              	.LVL20:
+ 297 004e E3E7     		b	.L17
+ 298              	.L25:
+ 299              		.align	2
+ 300              	.L24:
+ 301 0050 48000000 		.word	.LC3
+ 302 0054 04000000 		.word	robotState+4
+ 303 0058 00000000 		.word	.LC4
+ 304 005c 20000000 		.word	robotState+32
+ 305 0060 20000000 		.word	.LC5
+ 306              		.cfi_endproc
+ 307              	.LFE136:
+ 309              		.section	.rodata.RobotState_SetWheelSpeed.str1.4,"aMS",%progbits,1
+ 310              		.align	2
+ 311              	.LC6:
+ 312 0000 4C656674 		.ascii	"Left wheel speed set to %d\012\000"
+ 312      20776865 
+ 312      656C2073 
+ 312      70656564 
+ 312      20736574 
+ 313              		.align	2
+ 314              	.LC7:
+ 315 001c 52696768 		.ascii	"Right wheel speed set to %d\012\000"
+ 315      74207768 
+ 315      65656C20 
+ 315      73706565 
+ 315      64207365 
+ARM GAS  /tmp/ccZYZv0U.s 			page 8
+
+
+ 316              		.section	.text.RobotState_SetWheelSpeed,"ax",%progbits
+ 317              		.align	1
+ 318              		.global	RobotState_SetWheelSpeed
+ 319              		.syntax unified
+ 320              		.thumb
+ 321              		.thumb_func
+ 322              		.fpu fpv4-sp-d16
+ 324              	RobotState_SetWheelSpeed:
+ 325              	.LVL21:
+ 326              	.LFB137:
+  43:Cus/ROBOT_STATE/robot_state.c **** 
+  44:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelSpeed(char wheel, int speed) {
+ 327              		.loc 1 44 54 view -0
+ 328              		.cfi_startproc
+ 329              		@ args = 0, pretend = 0, frame = 0
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 331              		.loc 1 44 54 is_stmt 0 view .LVU52
+ 332 0000 08B5     		push	{r3, lr}
+ 333              	.LCFI7:
+ 334              		.cfi_def_cfa_offset 8
+ 335              		.cfi_offset 3, -8
+ 336              		.cfi_offset 14, -4
+  45:Cus/ROBOT_STATE/robot_state.c ****     if (wheel == 'L') {
+ 337              		.loc 1 45 5 is_stmt 1 view .LVU53
+ 338              		.loc 1 45 8 is_stmt 0 view .LVU54
+ 339 0002 4C28     		cmp	r0, #76
+ 340 0004 05D0     		beq	.L31
+  46:Cus/ROBOT_STATE/robot_state.c ****         robotState.leftWheel.exceptSpeed = speed;
+  47:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+  48:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 341              		.loc 1 48 12 is_stmt 1 view .LVU55
+ 342              		.loc 1 48 15 is_stmt 0 view .LVU56
+ 343 0006 5228     		cmp	r0, #82
+ 344 0008 09D0     		beq	.L32
+  49:Cus/ROBOT_STATE/robot_state.c ****         robotState.rightWheel.exceptSpeed = speed;
+  50:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+  51:Cus/ROBOT_STATE/robot_state.c ****     } else {
+  52:Cus/ROBOT_STATE/robot_state.c ****         printf("Error: Invalid wheel identifier\n");
+ 345              		.loc 1 52 9 is_stmt 1 view .LVU57
+ 346 000a 0848     		ldr	r0, .L33
+ 347              	.LVL22:
+ 348              		.loc 1 52 9 is_stmt 0 view .LVU58
+ 349 000c FFF7FEFF 		bl	puts
+ 350              	.LVL23:
+ 351              	.L26:
+  53:Cus/ROBOT_STATE/robot_state.c ****     }
+  54:Cus/ROBOT_STATE/robot_state.c **** }
+ 352              		.loc 1 54 1 view .LVU59
+ 353 0010 08BD     		pop	{r3, pc}
+ 354              	.LVL24:
+ 355              	.L31:
+  46:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+ 356              		.loc 1 46 9 is_stmt 1 view .LVU60
+  46:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+ 357              		.loc 1 46 42 is_stmt 0 view .LVU61
+ 358 0012 074B     		ldr	r3, .L33+4
+ 359 0014 5961     		str	r1, [r3, #20]
+ARM GAS  /tmp/ccZYZv0U.s 			page 9
+
+
+  47:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 360              		.loc 1 47 9 is_stmt 1 view .LVU62
+ 361 0016 0748     		ldr	r0, .L33+8
+ 362              	.LVL25:
+  47:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 363              		.loc 1 47 9 is_stmt 0 view .LVU63
+ 364 0018 FFF7FEFF 		bl	printf
+ 365              	.LVL26:
+  47:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 366              		.loc 1 47 9 view .LVU64
+ 367 001c F8E7     		b	.L26
+ 368              	.LVL27:
+ 369              	.L32:
+  49:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+ 370              		.loc 1 49 9 is_stmt 1 view .LVU65
+  49:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+ 371              		.loc 1 49 43 is_stmt 0 view .LVU66
+ 372 001e 044B     		ldr	r3, .L33+4
+ 373 0020 1963     		str	r1, [r3, #48]
+  50:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 374              		.loc 1 50 9 is_stmt 1 view .LVU67
+ 375 0022 0548     		ldr	r0, .L33+12
+ 376              	.LVL28:
+  50:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 377              		.loc 1 50 9 is_stmt 0 view .LVU68
+ 378 0024 FFF7FEFF 		bl	printf
+ 379              	.LVL29:
+  50:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 380              		.loc 1 50 9 view .LVU69
+ 381 0028 F2E7     		b	.L26
+ 382              	.L34:
+ 383 002a 00BF     		.align	2
+ 384              	.L33:
+ 385 002c 48000000 		.word	.LC3
+ 386 0030 00000000 		.word	robotState
+ 387 0034 00000000 		.word	.LC6
+ 388 0038 1C000000 		.word	.LC7
+ 389              		.cfi_endproc
+ 390              	.LFE137:
+ 392              		.section	.text.RobotState_SyncWheelSpeed_real,"ax",%progbits
+ 393              		.align	1
+ 394              		.global	RobotState_SyncWheelSpeed_real
+ 395              		.syntax unified
+ 396              		.thumb
+ 397              		.thumb_func
+ 398              		.fpu fpv4-sp-d16
+ 400              	RobotState_SyncWheelSpeed_real:
+ 401              	.LVL30:
+ 402              	.LFB138:
+  55:Cus/ROBOT_STATE/robot_state.c **** 
+  56:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SyncWheelSpeed_real(char wheel, int speed) {
+ 403              		.loc 1 56 60 is_stmt 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407              		.loc 1 56 60 is_stmt 0 view .LVU71
+ 408 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/ccZYZv0U.s 			page 10
+
+
+ 409              	.LCFI8:
+ 410              		.cfi_def_cfa_offset 8
+ 411              		.cfi_offset 3, -8
+ 412              		.cfi_offset 14, -4
+  57:Cus/ROBOT_STATE/robot_state.c ****     if (wheel == 'L') {
+ 413              		.loc 1 57 5 is_stmt 1 view .LVU72
+ 414              		.loc 1 57 8 is_stmt 0 view .LVU73
+ 415 0002 4C28     		cmp	r0, #76
+ 416 0004 05D0     		beq	.L40
+  58:Cus/ROBOT_STATE/robot_state.c ****         robotState.leftWheel.realSpeed = speed;
+  59:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+  60:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 417              		.loc 1 60 12 is_stmt 1 view .LVU74
+ 418              		.loc 1 60 15 is_stmt 0 view .LVU75
+ 419 0006 5228     		cmp	r0, #82
+ 420 0008 09D0     		beq	.L41
+  61:Cus/ROBOT_STATE/robot_state.c ****         robotState.rightWheel.realSpeed = speed;
+  62:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+  63:Cus/ROBOT_STATE/robot_state.c ****     } else {
+  64:Cus/ROBOT_STATE/robot_state.c ****         printf("Error: Invalid wheel identifier\n");
+ 421              		.loc 1 64 9 is_stmt 1 view .LVU76
+ 422 000a 0848     		ldr	r0, .L42
+ 423              	.LVL31:
+ 424              		.loc 1 64 9 is_stmt 0 view .LVU77
+ 425 000c FFF7FEFF 		bl	puts
+ 426              	.LVL32:
+ 427              	.L35:
+  65:Cus/ROBOT_STATE/robot_state.c ****     }
+  66:Cus/ROBOT_STATE/robot_state.c **** }
+ 428              		.loc 1 66 1 view .LVU78
+ 429 0010 08BD     		pop	{r3, pc}
+ 430              	.LVL33:
+ 431              	.L40:
+  58:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+ 432              		.loc 1 58 9 is_stmt 1 view .LVU79
+  58:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel speed set to %d\n", speed);
+ 433              		.loc 1 58 40 is_stmt 0 view .LVU80
+ 434 0012 074B     		ldr	r3, .L42+4
+ 435 0014 9961     		str	r1, [r3, #24]
+  59:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 436              		.loc 1 59 9 is_stmt 1 view .LVU81
+ 437 0016 0748     		ldr	r0, .L42+8
+ 438              	.LVL34:
+  59:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 439              		.loc 1 59 9 is_stmt 0 view .LVU82
+ 440 0018 FFF7FEFF 		bl	printf
+ 441              	.LVL35:
+  59:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
+ 442              		.loc 1 59 9 view .LVU83
+ 443 001c F8E7     		b	.L35
+ 444              	.LVL36:
+ 445              	.L41:
+  61:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+ 446              		.loc 1 61 9 is_stmt 1 view .LVU84
+  61:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
+ 447              		.loc 1 61 41 is_stmt 0 view .LVU85
+ 448 001e 044B     		ldr	r3, .L42+4
+ARM GAS  /tmp/ccZYZv0U.s 			page 11
+
+
+ 449 0020 5963     		str	r1, [r3, #52]
+  62:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 450              		.loc 1 62 9 is_stmt 1 view .LVU86
+ 451 0022 0548     		ldr	r0, .L42+12
+ 452              	.LVL37:
+  62:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 453              		.loc 1 62 9 is_stmt 0 view .LVU87
+ 454 0024 FFF7FEFF 		bl	printf
+ 455              	.LVL38:
+  62:Cus/ROBOT_STATE/robot_state.c ****     } else {
+ 456              		.loc 1 62 9 view .LVU88
+ 457 0028 F2E7     		b	.L35
+ 458              	.L43:
+ 459 002a 00BF     		.align	2
+ 460              	.L42:
+ 461 002c 48000000 		.word	.LC3
+ 462 0030 00000000 		.word	robotState
+ 463 0034 00000000 		.word	.LC6
+ 464 0038 1C000000 		.word	.LC7
+ 465              		.cfi_endproc
+ 466              	.LFE138:
+ 468              		.section	.text.RobotState_SetServoAngle,"ax",%progbits
+ 469              		.align	1
+ 470              		.global	RobotState_SetServoAngle
+ 471              		.syntax unified
+ 472              		.thumb
+ 473              		.thumb_func
+ 474              		.fpu fpv4-sp-d16
+ 476              	RobotState_SetServoAngle:
+ 477              	.LVL39:
+ 478              	.LFB139:
+  67:Cus/ROBOT_STATE/robot_state.c **** 
+  68:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetServoAngle(int angle){
+ 479              		.loc 1 68 41 is_stmt 1 view -0
+ 480              		.cfi_startproc
+ 481              		@ args = 0, pretend = 0, frame = 0
+ 482              		@ frame_needed = 0, uses_anonymous_args = 0
+ 483              		@ link register save eliminated.
+  69:Cus/ROBOT_STATE/robot_state.c ****     robotState.servoAngle = angle;
+ 484              		.loc 1 69 5 view .LVU90
+ 485              		.loc 1 69 27 is_stmt 0 view .LVU91
+ 486 0000 014B     		ldr	r3, .L45
+ 487 0002 D863     		str	r0, [r3, #60]
+  70:Cus/ROBOT_STATE/robot_state.c **** }
+ 488              		.loc 1 70 1 view .LVU92
+ 489 0004 7047     		bx	lr
+ 490              	.L46:
+ 491 0006 00BF     		.align	2
+ 492              	.L45:
+ 493 0008 00000000 		.word	robotState
+ 494              		.cfi_endproc
+ 495              	.LFE139:
+ 497              		.section	.text.RobotState_Get,"ax",%progbits
+ 498              		.align	1
+ 499              		.global	RobotState_Get
+ 500              		.syntax unified
+ 501              		.thumb
+ARM GAS  /tmp/ccZYZv0U.s 			page 12
+
+
+ 502              		.thumb_func
+ 503              		.fpu fpv4-sp-d16
+ 505              	RobotState_Get:
+ 506              	.LFB140:
+  71:Cus/ROBOT_STATE/robot_state.c **** 
+  72:Cus/ROBOT_STATE/robot_state.c **** RobotState* RobotState_Get(void) {
+ 507              		.loc 1 72 34 is_stmt 1 view -0
+ 508              		.cfi_startproc
+ 509              		@ args = 0, pretend = 0, frame = 0
+ 510              		@ frame_needed = 0, uses_anonymous_args = 0
+ 511              		@ link register save eliminated.
+  73:Cus/ROBOT_STATE/robot_state.c ****     return &robotState;
+ 512              		.loc 1 73 5 view .LVU94
+  74:Cus/ROBOT_STATE/robot_state.c **** }
+ 513              		.loc 1 74 1 is_stmt 0 view .LVU95
+ 514 0000 0048     		ldr	r0, .L48
+ 515 0002 7047     		bx	lr
+ 516              	.L49:
+ 517              		.align	2
+ 518              	.L48:
+ 519 0004 00000000 		.word	robotState
+ 520              		.cfi_endproc
+ 521              	.LFE140:
+ 523              		.comm	robotState,68,4
+ 524              		.text
+ 525              	.Letext0:
+ 526              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 527              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 528              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 529              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 530              		.file 6 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 531              		.file 7 "Cus/ROBOT_STATE/robot_state.h"
+ 532              		.file 8 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stddef.h"
+ 533              		.file 9 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_types.h"
+ 534              		.file 10 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/reent.h"
+ 535              		.file 11 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
+ 536              		.file 12 "<built-in>"
+ 537              		.file 13 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
+ARM GAS  /tmp/ccZYZv0U.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 robot_state.c
+     /tmp/ccZYZv0U.s:18     .text.RobotState_Init:0000000000000000 $t
+     /tmp/ccZYZv0U.s:26     .text.RobotState_Init:0000000000000000 RobotState_Init
+     /tmp/ccZYZv0U.s:63     .text.RobotState_Init:0000000000000028 $d
+                            *COM*:0000000000000044 robotState
+     /tmp/ccZYZv0U.s:68     .rodata.RobotState_SetOperationMode.str1.4:0000000000000000 $d
+     /tmp/ccZYZv0U.s:72     .text.RobotState_SetOperationMode:0000000000000000 $t
+     /tmp/ccZYZv0U.s:79     .text.RobotState_SetOperationMode:0000000000000000 RobotState_SetOperationMode
+     /tmp/ccZYZv0U.s:108    .text.RobotState_SetOperationMode:0000000000000010 $d
+     /tmp/ccZYZv0U.s:114    .rodata.RobotState_SetWheelControlMode.str1.4:0000000000000000 $d
+     /tmp/ccZYZv0U.s:124    .text.RobotState_SetWheelControlMode:0000000000000000 $t
+     /tmp/ccZYZv0U.s:131    .text.RobotState_SetWheelControlMode:0000000000000000 RobotState_SetWheelControlMode
+     /tmp/ccZYZv0U.s:192    .text.RobotState_SetWheelControlMode:000000000000002c $d
+     /tmp/ccZYZv0U.s:200    .rodata.RobotState_SetWheelParams.str1.4:0000000000000000 $d
+     /tmp/ccZYZv0U.s:207    .text.RobotState_SetWheelParams:0000000000000000 $t
+     /tmp/ccZYZv0U.s:214    .text.RobotState_SetWheelParams:0000000000000000 RobotState_SetWheelParams
+     /tmp/ccZYZv0U.s:301    .text.RobotState_SetWheelParams:0000000000000050 $d
+     /tmp/ccZYZv0U.s:310    .rodata.RobotState_SetWheelSpeed.str1.4:0000000000000000 $d
+     /tmp/ccZYZv0U.s:317    .text.RobotState_SetWheelSpeed:0000000000000000 $t
+     /tmp/ccZYZv0U.s:324    .text.RobotState_SetWheelSpeed:0000000000000000 RobotState_SetWheelSpeed
+     /tmp/ccZYZv0U.s:385    .text.RobotState_SetWheelSpeed:000000000000002c $d
+     /tmp/ccZYZv0U.s:393    .text.RobotState_SyncWheelSpeed_real:0000000000000000 $t
+     /tmp/ccZYZv0U.s:400    .text.RobotState_SyncWheelSpeed_real:0000000000000000 RobotState_SyncWheelSpeed_real
+     /tmp/ccZYZv0U.s:461    .text.RobotState_SyncWheelSpeed_real:000000000000002c $d
+     /tmp/ccZYZv0U.s:469    .text.RobotState_SetServoAngle:0000000000000000 $t
+     /tmp/ccZYZv0U.s:476    .text.RobotState_SetServoAngle:0000000000000000 RobotState_SetServoAngle
+     /tmp/ccZYZv0U.s:493    .text.RobotState_SetServoAngle:0000000000000008 $d
+     /tmp/ccZYZv0U.s:498    .text.RobotState_Get:0000000000000000 $t
+     /tmp/ccZYZv0U.s:505    .text.RobotState_Get:0000000000000000 RobotState_Get
+     /tmp/ccZYZv0U.s:519    .text.RobotState_Get:0000000000000004 $d
+
+UNDEFINED SYMBOLS
+printf
+puts
