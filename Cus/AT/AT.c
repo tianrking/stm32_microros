@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "robot_state.h"
 
-// ������������
+
 void handleOperationModeCommand(const char *command);
 void handleWheelCommand(const char *command);
 void handleSetSpeedCommand(const char *command);
@@ -13,13 +13,13 @@ void handleGetOperationModeCommand(const char *command);
 void handleSetWheelModeCommand(const char *command);
 void handleResetCommand(const char *command);
 void handleRebootCommand(const char *command); //system level
-// ���ұ����
+
 typedef struct {
     const char *commandPrefix;
     void (*handler)(const char*);
 } CommandHandler;
 
-// ���ұ�
+
 CommandHandler commandHandlers[] = {
     {"AT+OPMODE=", handleOperationModeCommand},
     {"AT+SETWHEEL=", handleWheelCommand},
@@ -47,26 +47,47 @@ void process_at_command(char *command) {
 }
 
 void handleOperationModeCommand(const char *command) {
-    char data[50];
-    if (strcmp(command + 10, "UART") == 0) {
+    char data[100];  // 调整缓冲区大小
+    int commandOffset = 10; // 假设操作模式从第10个字符开始
+    const char *modeCommand = command + commandOffset;
+    RobotState *currentState = RobotState_Get(); // 获取当前状态一次
+    int isExitingATMode = (currentState->operationMode == OP_MODE_AT && strcmp(modeCommand, "AT") != 0);
+
+    // 确定要发送的消息
+    if (strcmp(modeCommand, "UART") == 0) {
+        sprintf(data, "OK: Changed from AT to UART mode\r\n");
         RobotState_SetOperationMode(OP_MODE_UART);
-        sprintf(data, "OK: UART mode set\r\n");
-    } else if (strcmp(command + 10, "CAN") == 0) {
+    } else if (strcmp(modeCommand, "CAN") == 0) {
+        sprintf(data, "OK: Changed from AT to CAN mode\r\n");
         RobotState_SetOperationMode(OP_MODE_CAN);
-        sprintf(data, "OK: CAN mode set\r\n");
-    } else if (strcmp(command + 10, "MICROROS") == 0) {
+    } else if (strcmp(modeCommand, "MICROROS") == 0) {
+        sprintf(data, "OK: Changed from AT to MicroROS mode And now Reboot\r\n");
+        HAL_UART_Transmit(&huart1, (uint8_t *)data, strlen(data), 1000);
+        // HAL_Delay(500);  // 确保消息发送完成
+        // NVIC_SystemReset();  // 触发系统重启
+        // return;  // 确保不会继续执行其他代码
         RobotState_SetOperationMode(OP_MODE_MICROROS);
-        sprintf(data, "OK: MicroROS mode set\r\n");
-    } else if (strcmp(command + 10, "AT") == 0) {
-        RobotState_SetOperationMode(OP_MODE_AT);
+    } else if (strcmp(modeCommand, "AT") == 0) {
         sprintf(data, "OK: AT command mode set\r\n");
+        // No mode change if already in AT mode
+        HAL_UART_Transmit(&huart1, (uint8_t *)data, strlen(data), 1000);
+        if(currentState->operationMode != OP_MODE_AT) {
+            RobotState_SetOperationMode(OP_MODE_AT);
+        }
     } else {
         sprintf(data, "ERROR: Invalid operation mode\r\n");
     }
-    HAL_UART_Transmit(&huart2, (uint8_t *)data, strlen(data), 1000);
-    if(RobotState_Get()->operationMode == OP_MODE_AT)
+
+    // 发送模式改变信息，仅当从AT模式退出时发送
+    if (isExitingATMode) {
         HAL_UART_Transmit(&huart1, (uint8_t *)data, strlen(data), 1000);
+    }
+
+    // 总是在USART2上发送操作结果，用于调试或记录
+    HAL_UART_Transmit(&huart2, (uint8_t *)data, strlen(data), 1000);
 }
+
+
 
 void handleWheelCommand(const char *command) {
     char data[200];
@@ -136,11 +157,9 @@ void handleSetWheelModeCommand(const char *command) {
     char wheel;
     char modeStr[20];
 
-    // ���Խ�������
     if (sscanf(command + 14, "%c,%s", &wheel, modeStr) == 2) {
         MotorControlMode mode;
 
-        // ת���ַ�����ö��
         if (strcmp(modeStr, "OPEN") == 0) {
             mode = MOTOR_OPEN_LOOP;
         } else if (strcmp(modeStr, "CLOSE") == 0) {
@@ -157,7 +176,6 @@ void handleSetWheelModeCommand(const char *command) {
             return;
         }
 
-        // ����ģʽ
         if (wheel == 'L' || wheel == 'R') {
             RobotState_SetWheelControlMode(wheel, mode);
             sprintf(data, "OK: Control mode for wheel %c set to %s\r\n", wheel, modeStr);
@@ -185,9 +203,9 @@ void handleResetCommand(const char *command) {
 void handleRebootCommand(const char *command) {
     char data[50];
     sprintf(data, "OK: System rebooting...\r\n");
-    HAL_UART_Transmit(&huart2, (uint8_t *)data, strlen(data), HAL_MAX_DELAY); // ȷ����Ϣ�������
+    HAL_UART_Transmit(&huart2, (uint8_t *)data, strlen(data), HAL_MAX_DELAY); 
     if(RobotState_Get()->operationMode == OP_MODE_AT)
         HAL_UART_Transmit(&huart1, (uint8_t *)data, strlen(data), 1000);
-    HAL_Delay(100);  // ����ʱ�䷢�����
-    NVIC_SystemReset();  // ����ϵͳ����
+    HAL_Delay(100);
+    NVIC_SystemReset(); 
 }

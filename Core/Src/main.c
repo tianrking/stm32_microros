@@ -26,7 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "string.h"
+#include "AT.h"
+#include "robot_state.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,7 +61,9 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int aa,bb;
+extern uint8_t rxBuffer[RX_BUFFER_SIZE];
+extern uint16_t rxIndex;
 /* USER CODE END 0 */
 
 /**
@@ -98,7 +102,59 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  /* USER CODE END 2 */
+  memset(rxBuffer, 0, RX_BUFFER_SIZE);
+  rxIndex = 0;
+  HAL_UART_Receive_IT(&huart2, rxBuffer, 1); 
+  
+  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15) == GPIO_PIN_RESET) {
+      
+      ReInit_USART1_To_AT_MODE(); 
+      
+      memset(rxBuffer, 0, RX_BUFFER_SIZE);
+      rxIndex = 0;
+      HAL_UART_Receive_IT(&huart1, rxBuffer, 1); 
+      
+      RobotState_SetOperationMode(OP_MODE_AT) ;
+      aa++;
+      while (1==1) {
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+        HAL_Delay(100);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+        HAL_Delay(100);
+
+        // Check if the system is in AT_ONLY mode
+        if (RobotState_Get()->operationMode == OP_MODE_AT) {
+            // Send warning or status message while in AT_ONLY mode
+            static uint32_t lastSendTime = 0;
+            uint32_t currentTime = HAL_GetTick(); // 获取当前的系统时钟
+
+            // 检查是否已经过了至少2000毫秒
+            if (currentTime - lastSendTime >= 2000) {
+                lastSendTime = currentTime; // 更新上次发送时间
+
+                // 发送警告信息
+                char message[] = "Warning: System in AT_ONLY mode. Limited functionality.\r\n";
+                HAL_UART_Transmit(&huart1, (uint8_t *)message, strlen(message), 1000);
+                HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), 1000);
+            }
+        }
+
+        if(RobotState_Get()->operationMode == OP_MODE_MICROROS) {
+          DeInit_USART1();
+          MX_DMA_Init();
+          MX_USART1_UART_Init();
+          RobotState_SetOperationMode(OP_MODE_MICROROS) ;
+          bb++;
+          break;
+        }
+      }
+  } else {
+
+      RobotState_SetOperationMode(OP_MODE_MICROROS) ;
+      bb++;
+  }
 
   /* Init scheduler */
   osKernelInitialize();

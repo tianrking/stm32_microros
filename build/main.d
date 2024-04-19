@@ -37,7 +37,7 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  Core/Inc/dma.h Core/Inc/main.h Core/Inc/tim.h Core/Inc/usart.h \
- Core/Inc/gpio.h
+ Core/Inc/gpio.h Cus/AT/AT.h Cus/ROBOT_STATE/robot_state.h
 
 Core/Inc/main.h:
 
@@ -128,3 +128,7 @@ Core/Inc/tim.h:
 Core/Inc/usart.h:
 
 Core/Inc/gpio.h:
+
+Cus/AT/AT.h:
+
+Cus/ROBOT_STATE/robot_state.h:

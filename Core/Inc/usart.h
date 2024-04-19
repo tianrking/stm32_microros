@@ -48,6 +48,8 @@ void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void MX_USART1_ReInit(void);
+void ReInit_USART1_To_AT_MODE(void) ;
+void DeInit_USART1(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

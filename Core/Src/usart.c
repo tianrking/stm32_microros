@@ -345,6 +345,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 
 void MX_USART1_ReInit(void) {
+
+    __HAL_RCC_USART1_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
     huart1.Instance = USART1;
     huart1.Init.BaudRate = 9600;
     huart1.Init.WordLength = UART_WORDLENGTH_8B;
@@ -356,8 +360,81 @@ void MX_USART1_ReInit(void) {
     if (HAL_UART_Init(&huart1) != HAL_OK) {
         Error_Handler();
     }
+
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
     HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
 }
+
+/* Function to reinitialize USART1 to match the configuration of USART2 without DMA */
+void ReInit_USART1_To_AT_MODE(void) {
+    // Step 1: De-initialize USART1
+    HAL_UART_DeInit(&huart1);
+
+    // Step 2: De-initialize DMA channels associated with USART1, if they were previously enabled
+    HAL_DMA_DeInit(huart1.hdmarx);
+    HAL_DMA_DeInit(huart1.hdmatx);
+
+    // Step 3: De-initialize USART1 GPIOs
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9 | GPIO_PIN_10);
+
+    // Step 4: Reconfigure GPIO for USART1 to match USART2 setup
+    __HAL_RCC_USART1_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE(); // Assuming GPIOA is used for USART1
+
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_10; // Assuming PA9 for TX, PA10 for RX
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    // Step 5: Reinitialize USART1 with USART2's parameters
+    huart1.Instance = USART1;
+    huart1.Init.BaudRate = 115200; // Set to match USART2
+    huart1.Init.WordLength = UART_WORDLENGTH_8B;
+    huart1.Init.StopBits = UART_STOPBITS_1;
+    huart1.Init.Parity = UART_PARITY_NONE;
+    huart1.Init.Mode = UART_MODE_TX_RX;
+    huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_UART_Init(&huart1) != HAL_OK) {
+        Error_Handler();
+    }
+
+    // Step 6: Enable USART1 interrupt
+    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART1_IRQn);
+}
+
+void DeInit_USART1(void) {
+    // Step 1: Disable USART1 interrupt
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
+
+    // Step 2: De-initialize USART1 completely
+    HAL_UART_DeInit(&huart1);
+
+    // Step 3: De-initialize DMA channels if they were configured
+    if (huart1.hdmarx != NULL) {
+        HAL_DMA_DeInit(huart1.hdmarx);
+    }
+    if (huart1.hdmatx != NULL) {
+        HAL_DMA_DeInit(huart1.hdmatx);
+    }
+
+    // Step 4: De-initialize GPIOs used by USART1
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9 | GPIO_PIN_10); // Assuming PA9 and PA10
+
+    // Further steps could include turning off clocks or other power-saving measures.
+}
+
+
 
 /* USER CODE END 1 */
