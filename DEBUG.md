@@ -71,3 +71,30 @@ continue             # Continuing Execution
 - Keep your toolchain and utilities updated.
 
 By following these steps, you will be able to effectively debug your STM32F407 firmware using gdb-multiarch on a Linux system.
+
+
+## Micros Integration
+
+```bash
+docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:iron serial --dev /dev/ttyUSB0 -b 115200
+```
+
+## Bug
+
+```
+w0x7ce@w0x7ce-ASUS-TUF-Gaming-F15-FX506HC-FX506HC:~/STM32CubeMX$ docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:humble serial --dev /dev/ttyUSB0 -b 115200
+[1730772857.947723] info     | TermiosAgentLinux.cpp | init                     | running...             | fd: 3
+[1730772857.947970] info     | Root.cpp           | set_verbose_level        | logger setup           | verbose_level: 4
+[1730772860.549717] info     | Root.cpp           | create_client            | create                 | client_key: 0x5851F42D, session_id: 0x81
+[1730772860.549801] info     | SessionManager.hpp | establish_session        | session established    | client_key: 0x5851F42D, address: 0
+[1730772860.567938] info     | ProxyClient.cpp    | create_participant       | participant created    | client_key: 0x5851F42D, participant_id: 0x000(1)
+[1730772860.584608] info     | ProxyClient.cpp    | create_topic             | topic created          | client_key: 0x5851F42D, topic_id: 0x000(2), participant_id: 0x000(1)
+[1730772860.594713] info     | ProxyClient.cpp    | create_publisher         | publisher created      | client_key: 0x5851F42D, publisher_id: 0x000(3), participant_id: 0x000(1)
+[1730772860.607154] info     | ProxyClient.cpp    | create_datawriter        | datawriter created     | client_key: 0x5851F42D, datawriter_id: 0x000(5), publisher_id: 0x000(3)
+terminate called after throwing an instance of 'eprosima::fastcdr::exception::NotEnoughMemoryException'
+  what():  Not enough memory in the buffer stream
+[ros2run]: Aborted
+```
+
+ros2 topic pub /motor1_control std_msgs/msg/Int32 "data: 500"  # 设置电机1为50% PWM
+ros2 topic pub /motor2_control std_msgs/msg/Int32 "data: 1000" # 设置电机2为100% PWM

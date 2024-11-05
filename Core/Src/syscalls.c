@@ -118,26 +118,26 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
     return len;
 }
 
-caddr_t _sbrk(int incr) {
-    extern char __heap_start__ asm("end");  // Defined by the linker.
-    static char *heap_end;
-    char *prev_heap_end;
+// caddr_t _sbrk(int incr) {
+//     extern char __heap_start__ asm("end");  // Defined by the linker.
+//     static char *heap_end;
+//     char *prev_heap_end;
 
-    if (heap_end == NULL) heap_end = &__heap_start__;
+//     if (heap_end == NULL) heap_end = &__heap_start__;
 
-    prev_heap_end = heap_end;
+//     prev_heap_end = heap_end;
 
-    if (heap_end + incr > &_estack - _Min_Stack_Size) {
-            __asm("BKPT #0\n");
-        errno = ENOMEM;
-        return (caddr_t)-1;
+//     if (heap_end + incr > &_estack - _Min_Stack_Size) {
+//             __asm("BKPT #0\n");
+//         errno = ENOMEM;
+//         return (caddr_t)-1;
 
-    }
+//     }
 
-    heap_end += incr;
-    return (caddr_t)prev_heap_end;
+//     heap_end += incr;
+//     return (caddr_t)prev_heap_end;
 
-}
+// }
 
 int _close(int file)
 {

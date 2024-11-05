@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccWhVvxM.s 			page 1
+ARM GAS  /tmp/ccOEZZNa.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -26,7 +26,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   23              		.thumb_func
   24              		.fpu fpv4-sp-d16
   26              	RobotState_Init:
-  27              	.LFB133:
+  27              	.LFB137:
   28              		.file 1 "Cus/ROBOT_STATE/robot_state.c"
    1:Cus/ROBOT_STATE/robot_state.c **** #include "robot_state.h"
    2:Cus/ROBOT_STATE/robot_state.c **** #include <stdio.h>
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   45 0010 D360     		str	r3, [r2, #12]
   46 0012 1361     		str	r3, [r2, #16]
   47 0014 5361     		str	r3, [r2, #20]
-ARM GAS  /tmp/ccWhVvxM.s 			page 2
+ARM GAS  /tmp/ccOEZZNa.s 			page 2
 
 
   48 0016 9361     		str	r3, [r2, #24]
@@ -80,7 +80,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   62              	.L2:
   63 0028 00000000 		.word	robotState
   64              		.cfi_endproc
-  65              	.LFE133:
+  65              	.LFE137:
   67              		.section	.rodata.RobotState_SetOperationMode.str1.4,"aMS",%progbits,1
   68              		.align	2
   69              	.LC0:
@@ -98,7 +98,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   77              		.fpu fpv4-sp-d16
   79              	RobotState_SetOperationMode:
   80              	.LVL0:
-  81              	.LFB134:
+  81              	.LFB138:
   14:Cus/ROBOT_STATE/robot_state.c **** 
   15:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetOperationMode(OperationMode newMode) {
   82              		.loc 1 15 57 is_stmt 1 view -0
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   95 0004 024B     		ldr	r3, .L6
   96 0006 1870     		strb	r0, [r3]
   17:Cus/ROBOT_STATE/robot_state.c ****     printf("Operation mode set to %d\n", newMode);
-ARM GAS  /tmp/ccWhVvxM.s 			page 3
+ARM GAS  /tmp/ccOEZZNa.s 			page 3
 
 
   97              		.loc 1 17 5 is_stmt 1 view .LVU12
@@ -136,7 +136,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  108 0010 00000000 		.word	robotState
  109 0014 00000000 		.word	.LC0
  110              		.cfi_endproc
- 111              	.LFE134:
+ 111              	.LFE138:
  113              		.section	.rodata.RobotState_SetWheelControlMode.str1.4,"aMS",%progbits,1
  114              		.align	2
  115              	.LC1:
@@ -168,7 +168,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  129              		.fpu fpv4-sp-d16
  131              	RobotState_SetWheelControlMode:
  132              	.LVL3:
- 133              	.LFB135:
+ 133              	.LFB139:
   19:Cus/ROBOT_STATE/robot_state.c **** 
   20:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelControlMode(char wheel, MotorControlMode mode) {
  134              		.loc 1 20 72 is_stmt 1 view -0
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  138              		.loc 1 20 72 is_stmt 0 view .LVU16
  139 0000 08B5     		push	{r3, lr}
  140              	.LCFI1:
-ARM GAS  /tmp/ccWhVvxM.s 			page 4
+ARM GAS  /tmp/ccOEZZNa.s 			page 4
 
 
  141              		.cfi_def_cfa_offset 8
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  178              		.loc 1 25 43 is_stmt 0 view .LVU30
  179 001e 044B     		ldr	r3, .L15+4
  180 0020 83F83810 		strb	r1, [r3, #56]
-ARM GAS  /tmp/ccWhVvxM.s 			page 5
+ARM GAS  /tmp/ccOEZZNa.s 			page 5
 
 
   26:Cus/ROBOT_STATE/robot_state.c ****     } else {
@@ -260,7 +260,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  194 0034 00000000 		.word	.LC1
  195 0038 24000000 		.word	.LC2
  196              		.cfi_endproc
- 197              	.LFE135:
+ 197              	.LFE139:
  199              		.section	.rodata.RobotState_SetWheelParams.str1.4,"aMS",%progbits,1
  200              		.align	2
  201              	.LC4:
@@ -285,7 +285,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  212              		.fpu fpv4-sp-d16
  214              	RobotState_SetWheelParams:
  215              	.LVL12:
- 216              	.LFB136:
+ 216              	.LFB140:
   31:Cus/ROBOT_STATE/robot_state.c **** 
   32:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelParams(char wheel, WheelParams params) {
  217              		.loc 1 32 64 is_stmt 1 view -0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  224              		.cfi_def_cfa_offset 16
  225 0002 38B5     		push	{r3, r4, r5, lr}
  226              	.LCFI3:
-ARM GAS  /tmp/ccWhVvxM.s 			page 6
+ARM GAS  /tmp/ccOEZZNa.s 			page 6
 
 
  227              		.cfi_def_cfa_offset 32
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  269 0022 05AD     		add	r5, sp, #20
  270 0024 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
  271              	.LVL16:
-ARM GAS  /tmp/ccWhVvxM.s 			page 7
+ARM GAS  /tmp/ccOEZZNa.s 			page 7
 
 
   34:Cus/ROBOT_STATE/robot_state.c ****         printf("Left wheel parameters updated\n");
@@ -402,7 +402,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  304 005c 20000000 		.word	robotState+32
  305 0060 20000000 		.word	.LC5
  306              		.cfi_endproc
- 307              	.LFE136:
+ 307              	.LFE140:
  309              		.section	.rodata.RobotState_SetWheelSpeed.str1.4,"aMS",%progbits,1
  310              		.align	2
  311              	.LC6:
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  315      65656C20 
  315      73706565 
  315      64207365 
-ARM GAS  /tmp/ccWhVvxM.s 			page 8
+ARM GAS  /tmp/ccOEZZNa.s 			page 8
 
 
  316              		.section	.text.RobotState_SetWheelSpeed,"ax",%progbits
@@ -430,7 +430,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  322              		.fpu fpv4-sp-d16
  324              	RobotState_SetWheelSpeed:
  325              	.LVL21:
- 326              	.LFB137:
+ 326              	.LFB141:
   43:Cus/ROBOT_STATE/robot_state.c **** 
   44:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetWheelSpeed(char wheel, int speed) {
  327              		.loc 1 44 54 view -0
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  357              		.loc 1 46 42 is_stmt 0 view .LVU61
  358 0012 074B     		ldr	r3, .L33+4
  359 0014 5961     		str	r1, [r3, #20]
-ARM GAS  /tmp/ccWhVvxM.s 			page 9
+ARM GAS  /tmp/ccOEZZNa.s 			page 9
 
 
   47:Cus/ROBOT_STATE/robot_state.c ****     } else if (wheel == 'R') {
@@ -519,7 +519,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  387 0034 00000000 		.word	.LC6
  388 0038 1C000000 		.word	.LC7
  389              		.cfi_endproc
- 390              	.LFE137:
+ 390              	.LFE141:
  392              		.section	.text.RobotState_SyncWheelSpeed_real,"ax",%progbits
  393              		.align	1
  394              		.global	RobotState_SyncWheelSpeed_real
@@ -529,7 +529,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  398              		.fpu fpv4-sp-d16
  400              	RobotState_SyncWheelSpeed_real:
  401              	.LVL30:
- 402              	.LFB138:
+ 402              	.LFB142:
   55:Cus/ROBOT_STATE/robot_state.c **** 
   56:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SyncWheelSpeed_real(char wheel, int speed) {
  403              		.loc 1 56 60 is_stmt 1 view -0
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  406              		@ frame_needed = 0, uses_anonymous_args = 0
  407              		.loc 1 56 60 is_stmt 0 view .LVU71
  408 0000 08B5     		push	{r3, lr}
-ARM GAS  /tmp/ccWhVvxM.s 			page 10
+ARM GAS  /tmp/ccOEZZNa.s 			page 10
 
 
  409              	.LCFI8:
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
   61:Cus/ROBOT_STATE/robot_state.c ****         printf("Right wheel speed set to %d\n", speed);
  447              		.loc 1 61 41 is_stmt 0 view .LVU85
  448 001e 044B     		ldr	r3, .L42+4
-ARM GAS  /tmp/ccWhVvxM.s 			page 11
+ARM GAS  /tmp/ccOEZZNa.s 			page 11
 
 
  449 0020 5963     		str	r1, [r3, #52]
@@ -621,7 +621,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  463 0034 00000000 		.word	.LC6
  464 0038 1C000000 		.word	.LC7
  465              		.cfi_endproc
- 466              	.LFE138:
+ 466              	.LFE142:
  468              		.section	.text.RobotState_SetServoAngle,"ax",%progbits
  469              		.align	1
  470              		.global	RobotState_SetServoAngle
@@ -631,7 +631,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  474              		.fpu fpv4-sp-d16
  476              	RobotState_SetServoAngle:
  477              	.LVL39:
- 478              	.LFB139:
+ 478              	.LFB143:
   67:Cus/ROBOT_STATE/robot_state.c **** 
   68:Cus/ROBOT_STATE/robot_state.c **** void RobotState_SetServoAngle(int angle){
  479              		.loc 1 68 41 is_stmt 1 view -0
@@ -652,19 +652,19 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  492              	.L45:
  493 0008 00000000 		.word	robotState
  494              		.cfi_endproc
- 495              	.LFE139:
+ 495              	.LFE143:
  497              		.section	.text.RobotState_Get,"ax",%progbits
  498              		.align	1
  499              		.global	RobotState_Get
  500              		.syntax unified
  501              		.thumb
-ARM GAS  /tmp/ccWhVvxM.s 			page 12
+ARM GAS  /tmp/ccOEZZNa.s 			page 12
 
 
  502              		.thumb_func
  503              		.fpu fpv4-sp-d16
  505              	RobotState_Get:
- 506              	.LFB140:
+ 506              	.LFB144:
   71:Cus/ROBOT_STATE/robot_state.c **** 
   72:Cus/ROBOT_STATE/robot_state.c **** RobotState* RobotState_Get(void) {
  507              		.loc 1 72 34 is_stmt 1 view -0
@@ -683,7 +683,7 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  518              	.L48:
  519 0004 00000000 		.word	robotState
  520              		.cfi_endproc
- 521              	.LFE140:
+ 521              	.LFE144:
  523              		.comm	robotState,68,4
  524              		.text
  525              	.Letext0:
@@ -699,40 +699,40 @@ ARM GAS  /tmp/ccWhVvxM.s 			page 1
  535              		.file 11 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
  536              		.file 12 "<built-in>"
  537              		.file 13 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
-ARM GAS  /tmp/ccWhVvxM.s 			page 13
+ARM GAS  /tmp/ccOEZZNa.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 robot_state.c
-     /tmp/ccWhVvxM.s:18     .text.RobotState_Init:0000000000000000 $t
-     /tmp/ccWhVvxM.s:26     .text.RobotState_Init:0000000000000000 RobotState_Init
-     /tmp/ccWhVvxM.s:63     .text.RobotState_Init:0000000000000028 $d
+     /tmp/ccOEZZNa.s:18     .text.RobotState_Init:0000000000000000 $t
+     /tmp/ccOEZZNa.s:26     .text.RobotState_Init:0000000000000000 RobotState_Init
+     /tmp/ccOEZZNa.s:63     .text.RobotState_Init:0000000000000028 $d
                             *COM*:0000000000000044 robotState
-     /tmp/ccWhVvxM.s:68     .rodata.RobotState_SetOperationMode.str1.4:0000000000000000 $d
-     /tmp/ccWhVvxM.s:72     .text.RobotState_SetOperationMode:0000000000000000 $t
-     /tmp/ccWhVvxM.s:79     .text.RobotState_SetOperationMode:0000000000000000 RobotState_SetOperationMode
-     /tmp/ccWhVvxM.s:108    .text.RobotState_SetOperationMode:0000000000000010 $d
-     /tmp/ccWhVvxM.s:114    .rodata.RobotState_SetWheelControlMode.str1.4:0000000000000000 $d
-     /tmp/ccWhVvxM.s:124    .text.RobotState_SetWheelControlMode:0000000000000000 $t
-     /tmp/ccWhVvxM.s:131    .text.RobotState_SetWheelControlMode:0000000000000000 RobotState_SetWheelControlMode
-     /tmp/ccWhVvxM.s:192    .text.RobotState_SetWheelControlMode:000000000000002c $d
-     /tmp/ccWhVvxM.s:200    .rodata.RobotState_SetWheelParams.str1.4:0000000000000000 $d
-     /tmp/ccWhVvxM.s:207    .text.RobotState_SetWheelParams:0000000000000000 $t
-     /tmp/ccWhVvxM.s:214    .text.RobotState_SetWheelParams:0000000000000000 RobotState_SetWheelParams
-     /tmp/ccWhVvxM.s:301    .text.RobotState_SetWheelParams:0000000000000050 $d
-     /tmp/ccWhVvxM.s:310    .rodata.RobotState_SetWheelSpeed.str1.4:0000000000000000 $d
-     /tmp/ccWhVvxM.s:317    .text.RobotState_SetWheelSpeed:0000000000000000 $t
-     /tmp/ccWhVvxM.s:324    .text.RobotState_SetWheelSpeed:0000000000000000 RobotState_SetWheelSpeed
-     /tmp/ccWhVvxM.s:385    .text.RobotState_SetWheelSpeed:000000000000002c $d
-     /tmp/ccWhVvxM.s:393    .text.RobotState_SyncWheelSpeed_real:0000000000000000 $t
-     /tmp/ccWhVvxM.s:400    .text.RobotState_SyncWheelSpeed_real:0000000000000000 RobotState_SyncWheelSpeed_real
-     /tmp/ccWhVvxM.s:461    .text.RobotState_SyncWheelSpeed_real:000000000000002c $d
-     /tmp/ccWhVvxM.s:469    .text.RobotState_SetServoAngle:0000000000000000 $t
-     /tmp/ccWhVvxM.s:476    .text.RobotState_SetServoAngle:0000000000000000 RobotState_SetServoAngle
-     /tmp/ccWhVvxM.s:493    .text.RobotState_SetServoAngle:0000000000000008 $d
-     /tmp/ccWhVvxM.s:498    .text.RobotState_Get:0000000000000000 $t
-     /tmp/ccWhVvxM.s:505    .text.RobotState_Get:0000000000000000 RobotState_Get
-     /tmp/ccWhVvxM.s:519    .text.RobotState_Get:0000000000000004 $d
+     /tmp/ccOEZZNa.s:68     .rodata.RobotState_SetOperationMode.str1.4:0000000000000000 $d
+     /tmp/ccOEZZNa.s:72     .text.RobotState_SetOperationMode:0000000000000000 $t
+     /tmp/ccOEZZNa.s:79     .text.RobotState_SetOperationMode:0000000000000000 RobotState_SetOperationMode
+     /tmp/ccOEZZNa.s:108    .text.RobotState_SetOperationMode:0000000000000010 $d
+     /tmp/ccOEZZNa.s:114    .rodata.RobotState_SetWheelControlMode.str1.4:0000000000000000 $d
+     /tmp/ccOEZZNa.s:124    .text.RobotState_SetWheelControlMode:0000000000000000 $t
+     /tmp/ccOEZZNa.s:131    .text.RobotState_SetWheelControlMode:0000000000000000 RobotState_SetWheelControlMode
+     /tmp/ccOEZZNa.s:192    .text.RobotState_SetWheelControlMode:000000000000002c $d
+     /tmp/ccOEZZNa.s:200    .rodata.RobotState_SetWheelParams.str1.4:0000000000000000 $d
+     /tmp/ccOEZZNa.s:207    .text.RobotState_SetWheelParams:0000000000000000 $t
+     /tmp/ccOEZZNa.s:214    .text.RobotState_SetWheelParams:0000000000000000 RobotState_SetWheelParams
+     /tmp/ccOEZZNa.s:301    .text.RobotState_SetWheelParams:0000000000000050 $d
+     /tmp/ccOEZZNa.s:310    .rodata.RobotState_SetWheelSpeed.str1.4:0000000000000000 $d
+     /tmp/ccOEZZNa.s:317    .text.RobotState_SetWheelSpeed:0000000000000000 $t
+     /tmp/ccOEZZNa.s:324    .text.RobotState_SetWheelSpeed:0000000000000000 RobotState_SetWheelSpeed
+     /tmp/ccOEZZNa.s:385    .text.RobotState_SetWheelSpeed:000000000000002c $d
+     /tmp/ccOEZZNa.s:393    .text.RobotState_SyncWheelSpeed_real:0000000000000000 $t
+     /tmp/ccOEZZNa.s:400    .text.RobotState_SyncWheelSpeed_real:0000000000000000 RobotState_SyncWheelSpeed_real
+     /tmp/ccOEZZNa.s:461    .text.RobotState_SyncWheelSpeed_real:000000000000002c $d
+     /tmp/ccOEZZNa.s:469    .text.RobotState_SetServoAngle:0000000000000000 $t
+     /tmp/ccOEZZNa.s:476    .text.RobotState_SetServoAngle:0000000000000000 RobotState_SetServoAngle
+     /tmp/ccOEZZNa.s:493    .text.RobotState_SetServoAngle:0000000000000008 $d
+     /tmp/ccOEZZNa.s:498    .text.RobotState_Get:0000000000000000 $t
+     /tmp/ccOEZZNa.s:505    .text.RobotState_Get:0000000000000000 RobotState_Get
+     /tmp/ccOEZZNa.s:519    .text.RobotState_Get:0000000000000004 $d
 
 UNDEFINED SYMBOLS
 printf

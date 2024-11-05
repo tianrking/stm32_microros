@@ -1,23 +1,56 @@
 // motor.h
-#ifndef MOTOR_H
-#define MOTOR_H
+#ifndef __MOTOR_H
+#define __MOTOR_H
 
-#include "stm32f4xx_hal.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include "main.h"
+#include "tim.h"
+
+// ç”µæœºæ–¹å‘æšä¸¾
+typedef enum {
+    MOTOR_FORWARD = 1,
+    MOTOR_BACKWARD = -1,
+    MOTOR_STOP = 0
+} MotorDirection;
+
+// ç”µæœºé…ç½®ç»“æ„ä½“
 typedef struct {
-    TIM_HandleTypeDef *htim;  // ¶¨Ê±Æ÷¾ä±ú
-    uint32_t tim_channel;     // ¶¨Ê±Æ÷Í¨µÀ
-    GPIO_TypeDef* port_dir1;  // ·½Ïò¿ØÖÆÒı½Å1µÄGPIO¶Ë¿Ú
-    uint16_t pin_dir1;        // ·½Ïò¿ØÖÆÒı½Å1
-    GPIO_TypeDef* port_dir2;  // ·½Ïò¿ØÖÆÒı½Å2µÄGPIO¶Ë¿Ú
-    uint16_t pin_dir2;        // ·½Ïò¿ØÖÆÒı½Å2
-} Motor;
+    TIM_HandleTypeDef *htim;        // å®šæ—¶å™¨å¥æŸ„
+    uint32_t channel;               // PWMé€šé“
+    GPIO_TypeDef *dir_port1;        // æ–¹å‘æ§åˆ¶ç«¯å£1
+    uint16_t dir_pin1;              // æ–¹å‘æ§åˆ¶å¼•è„š1
+    GPIO_TypeDef *dir_port2;        // æ–¹å‘æ§åˆ¶ç«¯å£2
+    uint16_t dir_pin2;              // æ–¹å‘æ§åˆ¶å¼•è„š2
+    uint32_t current_speed;         // å½“å‰é€Ÿåº¦å€¼(0-100)
+    MotorDirection current_dir;      // å½“å‰æ–¹å‘
+} Motor_HandleTypeDef;
 
-void Motor_Init(Motor *motor, TIM_HandleTypeDef *htim, uint32_t tim_channel,
-                GPIO_TypeDef* port_dir1, uint16_t pin_dir1,
-                GPIO_TypeDef* port_dir2, uint16_t pin_dir2);
+// ç”µæœºåˆå§‹åŒ–ç»“æ„ä½“
+typedef struct {
+    TIM_HandleTypeDef *htim;
+    uint32_t channel;
+    GPIO_TypeDef *dir_port1;
+    uint16_t dir_pin1;
+    GPIO_TypeDef *dir_port2;
+    uint16_t dir_pin2;
+} Motor_InitTypeDef;
 
-void SetMotorSpeed(Motor *motor, uint32_t speed);
-void SetMotorDirection(Motor *motor, int direction);
-void SetMotorControl(Motor *motor, int32_t speed);
-#endif // MOTOR_H
+// å‡½æ•°å£°æ˜
+void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init);
+void Motor_SetSpeed(Motor_HandleTypeDef *hmotor, int32_t speed);
+void Motor_Stop(Motor_HandleTypeDef *hmotor);
+
+// é¢„å®šä¹‰çš„ç”µæœºé…ç½®
+extern Motor_HandleTypeDef hmotor1;  // ç”µæœº1å¥æŸ„
+extern Motor_HandleTypeDef hmotor2;  // ç”µæœº2å¥æŸ„
+
+void Motors_Init(void);  // åˆå§‹åŒ–æ‰€æœ‰ç”µæœº
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __MOTOR_H */

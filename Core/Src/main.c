@@ -19,7 +19,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "can.h"
+#include "crc.h"
 #include "dma.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -97,64 +100,17 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
-  MX_TIM4_Init();
   MX_USART1_UART_Init();
-  MX_UART4_Init();
+  MX_CRC_Init();
+  MX_CAN1_Init();
+  MX_I2C1_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
+  MX_TIM5_Init();
+  MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 
-  memset(rxBuffer, 0, RX_BUFFER_SIZE);
-  rxIndex = 0;
-  HAL_UART_Receive_IT(&huart2, rxBuffer, 1); 
-  
-  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15) == GPIO_PIN_RESET) {
-      
-      ReInit_USART1_To_AT_MODE(); 
-      
-      memset(rxBuffer, 0, RX_BUFFER_SIZE);
-      rxIndex = 0;
-      HAL_UART_Receive_IT(&huart1, rxBuffer, 1); 
-      
-      RobotState_SetOperationMode(OP_MODE_AT) ;
-      aa++;
-      while (1==1) {
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-        HAL_Delay(100);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-        HAL_Delay(100);
-
-        // Check if the system is in AT_ONLY mode
-        if (RobotState_Get()->operationMode == OP_MODE_AT) {
-            // Send warning or status message while in AT_ONLY mode
-            static uint32_t lastSendTime = 0;
-            uint32_t currentTime = HAL_GetTick(); // 获取当前的系统时钟
-
-            // 检查是否已经过了至少2000毫秒
-            if (currentTime - lastSendTime >= 2000) {
-                lastSendTime = currentTime; // 更新上次发送时间
-
-                // 发送警告信息
-                char message[] = "Warning: System in AT_ONLY mode. Limited functionality.\r\n";
-                HAL_UART_Transmit(&huart1, (uint8_t *)message, strlen(message), 1000);
-                HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), 1000);
-            }
-        }
-
-        if(RobotState_Get()->operationMode == OP_MODE_MICROROS) {
-          DeInit_USART1();
-          MX_DMA_Init();
-          MX_USART1_UART_Init();
-          RobotState_SetOperationMode(OP_MODE_MICROROS) ;
-          bb++;
-          break;
-        }
-      }
-  } else {
-
-      RobotState_SetOperationMode(OP_MODE_MICROROS) ;
-      bb++;
-  }
+  /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
@@ -226,12 +182,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+#include "encoder.h"
+#include "tim.h"
 /* USER CODE END 4 */
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
+  * @note   This function is called  when TIM14 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -242,10 +199,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1) {
+  if (htim->Instance == TIM14) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+
+    if (htim->Instance == TIM12)
+    {
+        // 每秒更新一次速度
+        Encoder_Update(&hencoder1);
+        Encoder_Update(&hencoder2);
+    }
 
   /* USER CODE END Callback 1 */
 }

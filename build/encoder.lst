@@ -1,0 +1,466 @@
+ARM GAS  /tmp/ccZWxsfs.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"encoder.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Encoder_Init,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	Encoder_Init:
+  26              	.LVL0:
+  27              	.LFB134:
+  28              		.file 1 "Cus/MOTOR_DRV/encoder.c"
+   1:Cus/MOTOR_DRV/encoder.c **** // encoder.c
+   2:Cus/MOTOR_DRV/encoder.c **** #include "encoder.h"
+   3:Cus/MOTOR_DRV/encoder.c **** #include "tim.h"
+   4:Cus/MOTOR_DRV/encoder.c **** 
+   5:Cus/MOTOR_DRV/encoder.c **** Encoder_HandleTypeDef hencoder1;
+   6:Cus/MOTOR_DRV/encoder.c **** Encoder_HandleTypeDef hencoder2;
+   7:Cus/MOTOR_DRV/encoder.c **** 
+   8:Cus/MOTOR_DRV/encoder.c **** static void Encoder_Init(Encoder_HandleTypeDef *hencoder, 
+   9:Cus/MOTOR_DRV/encoder.c ****                         TIM_HandleTypeDef *htim_encoder, 
+  10:Cus/MOTOR_DRV/encoder.c ****                         float counts_per_revolution)
+  11:Cus/MOTOR_DRV/encoder.c **** {
+  29              		.loc 1 11 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 11 1 is_stmt 0 view .LVU1
+  34 0000 38B5     		push	{r3, r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0C46     		mov	r4, r1
+  12:Cus/MOTOR_DRV/encoder.c ****     hencoder->htim_encoder = htim_encoder;
+  42              		.loc 1 12 5 is_stmt 1 view .LVU2
+  43              		.loc 1 12 28 is_stmt 0 view .LVU3
+  44 0004 0160     		str	r1, [r0]
+  13:Cus/MOTOR_DRV/encoder.c ****     hencoder->counts_per_revolution = counts_per_revolution;
+  45              		.loc 1 13 5 is_stmt 1 view .LVU4
+ARM GAS  /tmp/ccZWxsfs.s 			page 2
+
+
+  46              		.loc 1 13 37 is_stmt 0 view .LVU5
+  47 0006 80ED010A 		vstr.32	s0, [r0, #4]
+  14:Cus/MOTOR_DRV/encoder.c ****     hencoder->last_pulse_count = 0;
+  48              		.loc 1 14 5 is_stmt 1 view .LVU6
+  49              		.loc 1 14 32 is_stmt 0 view .LVU7
+  50 000a 0025     		movs	r5, #0
+  51 000c 8560     		str	r5, [r0, #8]
+  15:Cus/MOTOR_DRV/encoder.c ****     hencoder->speed_rpm = 0.0f;
+  52              		.loc 1 15 5 is_stmt 1 view .LVU8
+  53              		.loc 1 15 25 is_stmt 0 view .LVU9
+  54 000e 0023     		movs	r3, #0
+  55 0010 C360     		str	r3, [r0, #12]	@ float
+  16:Cus/MOTOR_DRV/encoder.c ****     hencoder->speed_rps = 0.0f;
+  56              		.loc 1 16 5 is_stmt 1 view .LVU10
+  57              		.loc 1 16 25 is_stmt 0 view .LVU11
+  58 0012 0361     		str	r3, [r0, #16]	@ float
+  17:Cus/MOTOR_DRV/encoder.c ****     
+  18:Cus/MOTOR_DRV/encoder.c ****     // 启动编码器
+  19:Cus/MOTOR_DRV/encoder.c ****     HAL_TIM_Encoder_Start(htim_encoder, TIM_CHANNEL_ALL);
+  59              		.loc 1 19 5 is_stmt 1 view .LVU12
+  60 0014 3C21     		movs	r1, #60
+  61              	.LVL1:
+  62              		.loc 1 19 5 is_stmt 0 view .LVU13
+  63 0016 2046     		mov	r0, r4
+  64              	.LVL2:
+  65              		.loc 1 19 5 view .LVU14
+  66 0018 FFF7FEFF 		bl	HAL_TIM_Encoder_Start
+  67              	.LVL3:
+  20:Cus/MOTOR_DRV/encoder.c ****     __HAL_TIM_SET_COUNTER(htim_encoder, 0);
+  68              		.loc 1 20 5 is_stmt 1 view .LVU15
+  69 001c 2368     		ldr	r3, [r4]
+  70 001e 5D62     		str	r5, [r3, #36]
+  21:Cus/MOTOR_DRV/encoder.c **** }
+  71              		.loc 1 21 1 is_stmt 0 view .LVU16
+  72 0020 38BD     		pop	{r3, r4, r5, pc}
+  73              		.loc 1 21 1 view .LVU17
+  74              		.cfi_endproc
+  75              	.LFE134:
+  77              		.section	.text.Encoders_Init,"ax",%progbits
+  78              		.align	1
+  79              		.global	Encoders_Init
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  83              		.fpu fpv4-sp-d16
+  85              	Encoders_Init:
+  86              	.LFB135:
+  22:Cus/MOTOR_DRV/encoder.c **** 
+  23:Cus/MOTOR_DRV/encoder.c **** void Encoders_Init(void)
+  24:Cus/MOTOR_DRV/encoder.c **** {
+  87              		.loc 1 24 1 is_stmt 1 view -0
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91 0000 08B5     		push	{r3, lr}
+  92              	.LCFI1:
+  93              		.cfi_def_cfa_offset 8
+ARM GAS  /tmp/ccZWxsfs.s 			page 3
+
+
+  94              		.cfi_offset 3, -8
+  95              		.cfi_offset 14, -4
+  96 0002 2DED028B 		vpush.64	{d8}
+  97              	.LCFI2:
+  98              		.cfi_def_cfa_offset 16
+  99              		.cfi_offset 80, -16
+ 100              		.cfi_offset 81, -12
+  25:Cus/MOTOR_DRV/encoder.c ****     // 初始化两个编码器
+  26:Cus/MOTOR_DRV/encoder.c ****     Encoder_Init(&hencoder1, &htim5, 1320.0f);  // TIM5
+ 101              		.loc 1 26 5 view .LVU19
+ 102 0006 9FED0A8A 		vldr.32	s16, .L5
+ 103 000a B0EE480A 		vmov.f32	s0, s16
+ 104 000e 0949     		ldr	r1, .L5+4
+ 105 0010 0948     		ldr	r0, .L5+8
+ 106 0012 FFF7FEFF 		bl	Encoder_Init
+ 107              	.LVL4:
+  27:Cus/MOTOR_DRV/encoder.c ****     Encoder_Init(&hencoder2, &htim3, 1320.0f);  // TIM3
+ 108              		.loc 1 27 5 view .LVU20
+ 109 0016 B0EE480A 		vmov.f32	s0, s16
+ 110 001a 0849     		ldr	r1, .L5+12
+ 111 001c 0848     		ldr	r0, .L5+16
+ 112 001e FFF7FEFF 		bl	Encoder_Init
+ 113              	.LVL5:
+  28:Cus/MOTOR_DRV/encoder.c ****     
+  29:Cus/MOTOR_DRV/encoder.c ****     // 启动TIM12作为1秒定时器
+  30:Cus/MOTOR_DRV/encoder.c ****     HAL_TIM_Base_Start_IT(&htim12);
+ 114              		.loc 1 30 5 view .LVU21
+ 115 0022 0848     		ldr	r0, .L5+20
+ 116 0024 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 117              	.LVL6:
+  31:Cus/MOTOR_DRV/encoder.c **** }
+ 118              		.loc 1 31 1 is_stmt 0 view .LVU22
+ 119 0028 BDEC028B 		vldm	sp!, {d8}
+ 120              	.LCFI3:
+ 121              		.cfi_restore 80
+ 122              		.cfi_restore 81
+ 123              		.cfi_def_cfa_offset 8
+ 124 002c 08BD     		pop	{r3, pc}
+ 125              	.L6:
+ 126 002e 00BF     		.align	2
+ 127              	.L5:
+ 128 0030 0000A544 		.word	1151664128
+ 129 0034 00000000 		.word	htim5
+ 130 0038 00000000 		.word	hencoder1
+ 131 003c 00000000 		.word	htim3
+ 132 0040 00000000 		.word	hencoder2
+ 133 0044 00000000 		.word	htim12
+ 134              		.cfi_endproc
+ 135              	.LFE135:
+ 137              		.section	.text.Encoder_Update,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	Encoder_Update
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.fpu fpv4-sp-d16
+ 145              	Encoder_Update:
+ARM GAS  /tmp/ccZWxsfs.s 			page 4
+
+
+ 146              	.LVL7:
+ 147              	.LFB136:
+  32:Cus/MOTOR_DRV/encoder.c **** 
+  33:Cus/MOTOR_DRV/encoder.c **** void Encoder_Update(Encoder_HandleTypeDef *hencoder)
+  34:Cus/MOTOR_DRV/encoder.c **** {
+ 148              		.loc 1 34 1 is_stmt 1 view -0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              		@ link register save eliminated.
+  35:Cus/MOTOR_DRV/encoder.c ****     // 读取当前计数值
+  36:Cus/MOTOR_DRV/encoder.c ****     int32_t current_count = (int16_t)__HAL_TIM_GET_COUNTER(hencoder->htim_encoder);
+ 153              		.loc 1 36 5 view .LVU24
+ 154              		.loc 1 36 38 is_stmt 0 view .LVU25
+ 155 0000 0368     		ldr	r3, [r0]
+ 156 0002 1B68     		ldr	r3, [r3]
+ 157 0004 5A6A     		ldr	r2, [r3, #36]
+ 158              		.loc 1 36 29 view .LVU26
+ 159 0006 12B2     		sxth	r2, r2
+ 160              	.LVL8:
+  37:Cus/MOTOR_DRV/encoder.c ****     
+  38:Cus/MOTOR_DRV/encoder.c ****     // 计算脉冲差值
+  39:Cus/MOTOR_DRV/encoder.c ****     int32_t pulse_diff = current_count - hencoder->last_pulse_count;
+ 161              		.loc 1 39 5 is_stmt 1 view .LVU27
+ 162              		.loc 1 39 50 is_stmt 0 view .LVU28
+ 163 0008 8368     		ldr	r3, [r0, #8]
+ 164              		.loc 1 39 13 view .LVU29
+ 165 000a D31A     		subs	r3, r2, r3
+ 166              	.LVL9:
+  40:Cus/MOTOR_DRV/encoder.c ****     
+  41:Cus/MOTOR_DRV/encoder.c ****     // 处理计数器溢出/下溢
+  42:Cus/MOTOR_DRV/encoder.c ****     if (pulse_diff > 32767) {
+ 167              		.loc 1 42 5 is_stmt 1 view .LVU30
+ 168              		.loc 1 42 8 is_stmt 0 view .LVU31
+ 169 000c B3F5004F 		cmp	r3, #32768
+ 170 0010 13DB     		blt	.L8
+  43:Cus/MOTOR_DRV/encoder.c ****         pulse_diff -= 65536;
+ 171              		.loc 1 43 9 is_stmt 1 view .LVU32
+ 172              		.loc 1 43 20 is_stmt 0 view .LVU33
+ 173 0012 A3F58033 		sub	r3, r3, #65536
+ 174              	.LVL10:
+ 175              	.L9:
+  44:Cus/MOTOR_DRV/encoder.c ****     } else if (pulse_diff < -32768) {
+  45:Cus/MOTOR_DRV/encoder.c ****         pulse_diff += 65536;
+  46:Cus/MOTOR_DRV/encoder.c ****     }
+  47:Cus/MOTOR_DRV/encoder.c ****     
+  48:Cus/MOTOR_DRV/encoder.c ****     // 计算RPS (每秒转数)
+  49:Cus/MOTOR_DRV/encoder.c ****     // RPS = pulse_diff / counts_per_revolution
+  50:Cus/MOTOR_DRV/encoder.c ****     float rps = (float)pulse_diff / hencoder->counts_per_revolution;
+ 176              		.loc 1 50 5 is_stmt 1 view .LVU34
+ 177              		.loc 1 50 17 is_stmt 0 view .LVU35
+ 178 0016 07EE903A 		vmov	s15, r3	@ int
+ 179 001a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 180              		.loc 1 50 45 view .LVU36
+ 181 001e D0ED016A 		vldr.32	s13, [r0, #4]
+ 182              		.loc 1 50 11 view .LVU37
+ 183 0022 87EEA67A 		vdiv.f32	s14, s15, s13
+ARM GAS  /tmp/ccZWxsfs.s 			page 5
+
+
+ 184              	.LVL11:
+  51:Cus/MOTOR_DRV/encoder.c ****     
+  52:Cus/MOTOR_DRV/encoder.c ****     // 计算RPM
+  53:Cus/MOTOR_DRV/encoder.c ****     float rpm = rps * 60.0f;
+ 185              		.loc 1 53 5 is_stmt 1 view .LVU38
+ 186              		.loc 1 53 11 is_stmt 0 view .LVU39
+ 187 0026 DFED087A 		vldr.32	s15, .L10
+ 188 002a 67EE277A 		vmul.f32	s15, s14, s15
+ 189              	.LVL12:
+  54:Cus/MOTOR_DRV/encoder.c ****     
+  55:Cus/MOTOR_DRV/encoder.c ****     // 更新速度值
+  56:Cus/MOTOR_DRV/encoder.c ****     hencoder->speed_rps = rps;
+ 190              		.loc 1 56 5 is_stmt 1 view .LVU40
+ 191              		.loc 1 56 25 is_stmt 0 view .LVU41
+ 192 002e 80ED047A 		vstr.32	s14, [r0, #16]
+  57:Cus/MOTOR_DRV/encoder.c ****     hencoder->speed_rpm = rpm;
+ 193              		.loc 1 57 5 is_stmt 1 view .LVU42
+ 194              		.loc 1 57 25 is_stmt 0 view .LVU43
+ 195 0032 C0ED037A 		vstr.32	s15, [r0, #12]
+  58:Cus/MOTOR_DRV/encoder.c ****     
+  59:Cus/MOTOR_DRV/encoder.c ****     // 保存当前计数值
+  60:Cus/MOTOR_DRV/encoder.c ****     hencoder->last_pulse_count = current_count;
+ 196              		.loc 1 60 5 is_stmt 1 view .LVU44
+ 197              		.loc 1 60 32 is_stmt 0 view .LVU45
+ 198 0036 8260     		str	r2, [r0, #8]
+  61:Cus/MOTOR_DRV/encoder.c **** }
+ 199              		.loc 1 61 1 view .LVU46
+ 200 0038 7047     		bx	lr
+ 201              	.LVL13:
+ 202              	.L8:
+  44:Cus/MOTOR_DRV/encoder.c ****         pulse_diff += 65536;
+ 203              		.loc 1 44 12 is_stmt 1 view .LVU47
+  44:Cus/MOTOR_DRV/encoder.c ****         pulse_diff += 65536;
+ 204              		.loc 1 44 15 is_stmt 0 view .LVU48
+ 205 003a 13F5004F 		cmn	r3, #32768
+ 206 003e EADA     		bge	.L9
+  45:Cus/MOTOR_DRV/encoder.c ****     }
+ 207              		.loc 1 45 9 is_stmt 1 view .LVU49
+  45:Cus/MOTOR_DRV/encoder.c ****     }
+ 208              		.loc 1 45 20 is_stmt 0 view .LVU50
+ 209 0040 03F58033 		add	r3, r3, #65536
+ 210              	.LVL14:
+  45:Cus/MOTOR_DRV/encoder.c ****     }
+ 211              		.loc 1 45 20 view .LVU51
+ 212 0044 E7E7     		b	.L9
+ 213              	.L11:
+ 214 0046 00BF     		.align	2
+ 215              	.L10:
+ 216 0048 00007042 		.word	1114636288
+ 217              		.cfi_endproc
+ 218              	.LFE136:
+ 220              		.section	.text.Encoder_GetSpeedRPM,"ax",%progbits
+ 221              		.align	1
+ 222              		.global	Encoder_GetSpeedRPM
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ARM GAS  /tmp/ccZWxsfs.s 			page 6
+
+
+ 226              		.fpu fpv4-sp-d16
+ 228              	Encoder_GetSpeedRPM:
+ 229              	.LVL15:
+ 230              	.LFB137:
+  62:Cus/MOTOR_DRV/encoder.c **** 
+  63:Cus/MOTOR_DRV/encoder.c **** float Encoder_GetSpeedRPM(Encoder_HandleTypeDef *hencoder)
+  64:Cus/MOTOR_DRV/encoder.c **** {
+ 231              		.loc 1 64 1 is_stmt 1 view -0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              		@ link register save eliminated.
+  65:Cus/MOTOR_DRV/encoder.c ****     return hencoder->speed_rpm;
+ 236              		.loc 1 65 5 view .LVU53
+ 237              		.loc 1 65 20 is_stmt 0 view .LVU54
+ 238 0000 90ED030A 		vldr.32	s0, [r0, #12]
+  66:Cus/MOTOR_DRV/encoder.c **** }
+ 239              		.loc 1 66 1 view .LVU55
+ 240 0004 7047     		bx	lr
+ 241              		.cfi_endproc
+ 242              	.LFE137:
+ 244              		.section	.text.Encoder_GetSpeedRPS,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	Encoder_GetSpeedRPS
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 250              		.fpu fpv4-sp-d16
+ 252              	Encoder_GetSpeedRPS:
+ 253              	.LVL16:
+ 254              	.LFB138:
+  67:Cus/MOTOR_DRV/encoder.c **** 
+  68:Cus/MOTOR_DRV/encoder.c **** float Encoder_GetSpeedRPS(Encoder_HandleTypeDef *hencoder)
+  69:Cus/MOTOR_DRV/encoder.c **** {
+ 255              		.loc 1 69 1 is_stmt 1 view -0
+ 256              		.cfi_startproc
+ 257              		@ args = 0, pretend = 0, frame = 0
+ 258              		@ frame_needed = 0, uses_anonymous_args = 0
+ 259              		@ link register save eliminated.
+  70:Cus/MOTOR_DRV/encoder.c ****     return hencoder->speed_rps;
+ 260              		.loc 1 70 5 view .LVU57
+ 261              		.loc 1 70 20 is_stmt 0 view .LVU58
+ 262 0000 90ED040A 		vldr.32	s0, [r0, #16]
+  71:Cus/MOTOR_DRV/encoder.c **** }
+ 263              		.loc 1 71 1 view .LVU59
+ 264 0004 7047     		bx	lr
+ 265              		.cfi_endproc
+ 266              	.LFE138:
+ 268              		.section	.text.Encoder_GetCount,"ax",%progbits
+ 269              		.align	1
+ 270              		.global	Encoder_GetCount
+ 271              		.syntax unified
+ 272              		.thumb
+ 273              		.thumb_func
+ 274              		.fpu fpv4-sp-d16
+ 276              	Encoder_GetCount:
+ 277              	.LVL17:
+ARM GAS  /tmp/ccZWxsfs.s 			page 7
+
+
+ 278              	.LFB139:
+  72:Cus/MOTOR_DRV/encoder.c **** 
+  73:Cus/MOTOR_DRV/encoder.c **** int32_t Encoder_GetCount(Encoder_HandleTypeDef *hencoder)
+  74:Cus/MOTOR_DRV/encoder.c **** {
+ 279              		.loc 1 74 1 is_stmt 1 view -0
+ 280              		.cfi_startproc
+ 281              		@ args = 0, pretend = 0, frame = 0
+ 282              		@ frame_needed = 0, uses_anonymous_args = 0
+ 283              		@ link register save eliminated.
+  75:Cus/MOTOR_DRV/encoder.c ****     return (int16_t)__HAL_TIM_GET_COUNTER(hencoder->htim_encoder);
+ 284              		.loc 1 75 5 view .LVU61
+ 285              		.loc 1 75 21 is_stmt 0 view .LVU62
+ 286 0000 0368     		ldr	r3, [r0]
+ 287 0002 1B68     		ldr	r3, [r3]
+ 288 0004 586A     		ldr	r0, [r3, #36]
+ 289              	.LVL18:
+  76:Cus/MOTOR_DRV/encoder.c **** }
+ 290              		.loc 1 76 1 view .LVU63
+ 291 0006 00B2     		sxth	r0, r0
+ 292 0008 7047     		bx	lr
+ 293              		.cfi_endproc
+ 294              	.LFE139:
+ 296              		.section	.text.Encoder_ResetCount,"ax",%progbits
+ 297              		.align	1
+ 298              		.global	Encoder_ResetCount
+ 299              		.syntax unified
+ 300              		.thumb
+ 301              		.thumb_func
+ 302              		.fpu fpv4-sp-d16
+ 304              	Encoder_ResetCount:
+ 305              	.LVL19:
+ 306              	.LFB140:
+  77:Cus/MOTOR_DRV/encoder.c **** 
+  78:Cus/MOTOR_DRV/encoder.c **** void Encoder_ResetCount(Encoder_HandleTypeDef *hencoder)
+  79:Cus/MOTOR_DRV/encoder.c **** {
+ 307              		.loc 1 79 1 is_stmt 1 view -0
+ 308              		.cfi_startproc
+ 309              		@ args = 0, pretend = 0, frame = 0
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311              		@ link register save eliminated.
+  80:Cus/MOTOR_DRV/encoder.c ****     __HAL_TIM_SET_COUNTER(hencoder->htim_encoder, 0);
+ 312              		.loc 1 80 5 view .LVU65
+ 313 0000 0368     		ldr	r3, [r0]
+ 314 0002 1A68     		ldr	r2, [r3]
+ 315 0004 0023     		movs	r3, #0
+ 316 0006 5362     		str	r3, [r2, #36]
+  81:Cus/MOTOR_DRV/encoder.c ****     hencoder->last_pulse_count = 0;
+ 317              		.loc 1 81 5 view .LVU66
+ 318              		.loc 1 81 32 is_stmt 0 view .LVU67
+ 319 0008 8360     		str	r3, [r0, #8]
+  82:Cus/MOTOR_DRV/encoder.c **** }
+ 320              		.loc 1 82 1 view .LVU68
+ 321 000a 7047     		bx	lr
+ 322              		.cfi_endproc
+ 323              	.LFE140:
+ 325              		.comm	hencoder2,20,4
+ 326              		.comm	hencoder1,20,4
+ARM GAS  /tmp/ccZWxsfs.s 			page 8
+
+
+ 327              		.text
+ 328              	.Letext0:
+ 329              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 330              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 331              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 332              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 333              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 334              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 335              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 336              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 337              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 338              		.file 11 "Cus/MOTOR_DRV/encoder.h"
+ 339              		.file 12 "Core/Inc/tim.h"
+ARM GAS  /tmp/ccZWxsfs.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 encoder.c
+     /tmp/ccZWxsfs.s:18     .text.Encoder_Init:0000000000000000 $t
+     /tmp/ccZWxsfs.s:25     .text.Encoder_Init:0000000000000000 Encoder_Init
+     /tmp/ccZWxsfs.s:78     .text.Encoders_Init:0000000000000000 $t
+     /tmp/ccZWxsfs.s:85     .text.Encoders_Init:0000000000000000 Encoders_Init
+     /tmp/ccZWxsfs.s:128    .text.Encoders_Init:0000000000000030 $d
+                            *COM*:0000000000000014 hencoder1
+                            *COM*:0000000000000014 hencoder2
+     /tmp/ccZWxsfs.s:138    .text.Encoder_Update:0000000000000000 $t
+     /tmp/ccZWxsfs.s:145    .text.Encoder_Update:0000000000000000 Encoder_Update
+     /tmp/ccZWxsfs.s:216    .text.Encoder_Update:0000000000000048 $d
+     /tmp/ccZWxsfs.s:221    .text.Encoder_GetSpeedRPM:0000000000000000 $t
+     /tmp/ccZWxsfs.s:228    .text.Encoder_GetSpeedRPM:0000000000000000 Encoder_GetSpeedRPM
+     /tmp/ccZWxsfs.s:245    .text.Encoder_GetSpeedRPS:0000000000000000 $t
+     /tmp/ccZWxsfs.s:252    .text.Encoder_GetSpeedRPS:0000000000000000 Encoder_GetSpeedRPS
+     /tmp/ccZWxsfs.s:269    .text.Encoder_GetCount:0000000000000000 $t
+     /tmp/ccZWxsfs.s:276    .text.Encoder_GetCount:0000000000000000 Encoder_GetCount
+     /tmp/ccZWxsfs.s:297    .text.Encoder_ResetCount:0000000000000000 $t
+     /tmp/ccZWxsfs.s:304    .text.Encoder_ResetCount:0000000000000000 Encoder_ResetCount
+
+UNDEFINED SYMBOLS
+HAL_TIM_Encoder_Start
+HAL_TIM_Base_Start_IT
+htim5
+htim3
+htim12

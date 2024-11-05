@@ -19,15 +19,16 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "FreeRTOS.h"
-#include "cmsis_os.h"
-#include "main.h"
 #include "task.h"
-
+#include "main.h"
+#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "gpio.h"
 #include "usart.h"
+#include "tim.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,8 +47,8 @@ typedef StaticTask_t osStaticThreadDef_t;
 #include <rmw_microxrcedds_c/config.h>
 #include <uxr/client/transport.h>
 
-
 #include <std_msgs/msg/int32.h>
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -72,15 +73,27 @@ void *microros_zero_allocate(size_t number_of_elements, size_t size_of_element,
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
-uint32_t defaultTaskBuffer[4000];
+uint32_t defaultTaskBuffer[ 6000 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .cb_mem = &defaultTaskControlBlock,
-    .cb_size = sizeof(defaultTaskControlBlock),
-    .stack_mem = &defaultTaskBuffer[0],
-    .stack_size = sizeof(defaultTaskBuffer),
-    .priority = (osPriority_t)osPriorityNormal,
+  .name = "defaultTask",
+  .cb_mem = &defaultTaskControlBlock,
+  .cb_size = sizeof(defaultTaskControlBlock),
+  .stack_mem = &defaultTaskBuffer[0],
+  .stack_size = sizeof(defaultTaskBuffer),
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for myTask02 */
+osThreadId_t myTask02Handle;
+uint32_t myTask02Buffer[ 2000 ];
+osStaticThreadDef_t myTask02ControlBlock;
+const osThreadAttr_t myTask02_attributes = {
+  .name = "myTask02",
+  .cb_mem = &myTask02ControlBlock,
+  .cb_size = sizeof(myTask02ControlBlock),
+  .stack_mem = &myTask02Buffer[0],
+  .stack_size = sizeof(myTask02Buffer),
+  .priority = (osPriority_t) osPriorityNormal,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,14 +102,15 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
+void StartTask02(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
@@ -120,8 +134,10 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle =
-      osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of myTask02 */
+  myTask02Handle = osThreadNew(StartTask02, NULL, &myTask02_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -130,6 +146,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -154,8 +171,48 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     temp_ret = rcl_publish(&publisher, &msg, NULL);
   }
 }
+
+#include "motor.h"
+// 添加两个订阅者
+rcl_subscription_t motor1_subscriber;
+rcl_subscription_t motor2_subscriber;
+// 添加电机控制消息
+std_msgs__msg__Int32 motor1_msg;
+std_msgs__msg__Int32 motor2_msg;
+
+int32_t target_1_speed=0;
+int32_t target_2_speed=0;
+// 电机1回调函数
+void motor1_callback(const void * msgin)
+{
+    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    target_1_speed = msg->data;
+    
+    // 限制输入范围在-1000到1000
+    if (target_1_speed > 1000) target_1_speed = 1000;
+    if (target_1_speed < -1000) target_1_speed = -1000;
+    
+    // 使用改进的电机驱动设置速度
+    Motor_SetSpeed(&hmotor1, target_1_speed);
+}
+
+void motor2_callback(const void * msgin)
+{
+    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    target_2_speed = msg->data;
+    
+    // 限制输入范围在-1000到1000
+    if (target_2_speed > 1000) target_2_speed = 1000;
+    if (target_2_speed < -1000) target_2_speed = -1000;
+    
+    // 使用改进的电机驱动设置速度
+    Motor_SetSpeed(&hmotor2, target_2_speed);
+}
+
+
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument) {
+void StartDefaultTask(void *argument)
+{
   /* USER CODE BEGIN StartDefaultTask */
   rmw_uros_set_custom_transport(true, (void *)&huart1, cubemx_transport_open,
                                 cubemx_transport_close, cubemx_transport_write,
@@ -180,16 +237,40 @@ void StartDefaultTask(void *argument) {
 
   // create node
   rclc_node_init_default(&node, "cubemx_node", "", &support);
-  rclc_executor_init(&executor, &support.context, 5, &allocator);
+  rclc_executor_init(&executor, &support.context, 7, &allocator);
 
   // create publisher
   rclc_publisher_init_default(&publisher, &node,
                               ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-                              "cubemx_publisher");
+                              "ping_publisher");
+
+  // 创建电机1订阅者
+  rclc_subscription_init_default(
+    &motor1_subscriber,
+    &node,
+    ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+    "motor1_control");
+
+  // 创建电机2订阅者
+  rclc_subscription_init_default(
+    &motor2_subscriber,
+    &node,
+    ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+    "motor2_control");
+
 
   rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(100), timer_callback);
 
   rclc_executor_add_timer(&executor, &timer);
+
+  rclc_executor_add_subscription(&executor, &motor1_subscriber, &motor1_msg, 
+                                &motor1_callback, ON_NEW_DATA);
+  rclc_executor_add_subscription(&executor, &motor2_subscriber, &motor2_msg,
+                                &motor2_callback, ON_NEW_DATA);
+
+  Motors_Init();
+  Encoders_Init();
+
   /* Infinite loop */
   for (;;) {
     // rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
@@ -206,7 +287,26 @@ void StartDefaultTask(void *argument) {
   /* USER CODE END StartDefaultTask */
 }
 
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the myTask02 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+void StartTask02(void *argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartTask02 */
+}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
+

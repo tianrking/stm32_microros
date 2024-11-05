@@ -1,48 +1,119 @@
 // motor.c
 #include "motor.h"
 
-void Motor_Init(Motor *motor, TIM_HandleTypeDef *htim, uint32_t tim_channel,
-                GPIO_TypeDef* port_dir1, uint16_t pin_dir1,
-                GPIO_TypeDef* port_dir2, uint16_t pin_dir2) {
-    motor->htim = htim;
-    motor->tim_channel = tim_channel;
-    motor->port_dir1 = port_dir1;
-    motor->pin_dir1 = pin_dir1;
-    motor->port_dir2 = port_dir2;
-    motor->pin_dir2 = pin_dir2;
+// å…¨å±€ç”µæœºå¥æŸ„å®šä¹‰
+Motor_HandleTypeDef hmotor1;
+Motor_HandleTypeDef hmotor2;
 
-    // ³õÊ¼»¯PWM
-    HAL_TIM_PWM_Start(htim, tim_channel);
+// å†…éƒ¨å‡½æ•°å£°æ˜Ž
+static void Motor_SetDirection(Motor_HandleTypeDef *hmotor, MotorDirection dir);
 
-    // ³õÊ¼»¯·½Ïò¿ØÖÆÒý½Å
-//    GPIO_InitTypeDef GPIO_InitStruct = {0};
-//    GPIO_InitStruct.Pin = pin_dir1 | pin_dir2;
-//    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-//    GPIO_InitStruct.Pull = GPIO_NOPULL;
-//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-//    HAL_GPIO_Init(port_dir1, &GPIO_InitStruct);  // ×¢Òâ£ºÈç¹ûÁ½¸ö·½ÏòÒý½Å²»ÔÚÍ¬Ò»¶Ë¿Ú£¬ÐèÒª·Ö±ð³õÊ¼»¯
+void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
+{
+    // é…ç½®ç”µæœºå‚æ•°
+    hmotor->htim = init->htim;
+    hmotor->channel = init->channel;
+    hmotor->dir_port1 = init->dir_port1;
+    hmotor->dir_pin1 = init->dir_pin1;
+    hmotor->dir_port2 = init->dir_port2;
+    hmotor->dir_pin2 = init->dir_pin2;
+    
+    // åˆå§‹åŒ–é»˜è®¤çŠ¶æ€
+    hmotor->current_speed = 0;
+    hmotor->current_dir = MOTOR_STOP;
+    
+    // å¯åŠ¨PWM
+    HAL_TIM_PWM_Start(hmotor->htim, hmotor->channel);
+    
+    // ç¡®ä¿ç”µæœºåˆå§‹çŠ¶æ€ä¸ºåœæ­¢
+    Motor_Stop(hmotor);
 }
 
-void SetMotorSpeed(Motor *motor, uint32_t speed) {
-    __HAL_TIM_SET_COMPARE(motor->htim, motor->tim_channel, speed);
+void Motors_Init(void)
+{
+    // ç”µæœº1åˆå§‹åŒ–é…ç½® (PD8/PD9æ–¹å‘, PD12 PWM-TIM4_CH1)
+    Motor_InitTypeDef motor1_init = {
+        .htim = &htim1,
+        .channel = TIM_CHANNEL_1,
+        .dir_port1 = GPIOE,
+        .dir_pin1 = GPIO_PIN_7,
+        .dir_port2 = GPIOB,
+        .dir_pin2 = GPIO_PIN_1
+    };
+    
+    // ç”µæœº2åˆå§‹åŒ–é…ç½® (/PD11æ–¹å‘, PD13 PWM-TIM4_CH2)
+    Motor_InitTypeDef motor2_init = {
+        .htim = &htim1,
+        .channel = TIM_CHANNEL_2,
+        .dir_port1 = GPIOE,
+        .dir_pin1 = GPIO_PIN_8,
+        .dir_port2 = GPIOE,
+        .dir_pin2 = GPIO_PIN_10
+    };
+    
+    Motor_Init(&hmotor1, &motor1_init);
+    Motor_Init(&hmotor2, &motor2_init);
 }
 
-void SetMotorDirection(Motor *motor, int direction) {
-    HAL_GPIO_WritePin(motor->port_dir1, motor->pin_dir1, (direction > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(motor->port_dir2, motor->pin_dir2, (direction < 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-}
-
-void SetMotorControl(Motor *motor, int32_t speed) {
-    if (speed < 0) {
-        HAL_GPIO_WritePin(motor->port_dir1, motor->pin_dir1, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(motor->port_dir2, motor->pin_dir2, GPIO_PIN_SET);
-        speed = -speed;  // ËÙ¶ÈÈ¡¾ø¶ÔÖµ£¬ÒòÎªPWM²»ÄÜÎª¸º
+void Motor_SetSpeed(Motor_HandleTypeDef *hmotor, int32_t speed)
+{
+    // ç¡®å®šæ–¹å‘å¹¶èŽ·å–ç»å¯¹å€¼
+    MotorDirection dir;
+    uint32_t abs_speed;
+    
+    if (speed > 0) {
+        dir = MOTOR_FORWARD;
+        abs_speed = (uint32_t)speed;
+    } else if (speed < 0) {
+        dir = MOTOR_BACKWARD;
+        abs_speed = (uint32_t)(-speed);
     } else {
-        HAL_GPIO_WritePin(motor->port_dir1, motor->pin_dir1, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(motor->port_dir2, motor->pin_dir2, GPIO_PIN_RESET);
+        dir = MOTOR_STOP;
+        abs_speed = 0;
     }
+    
+    // é™åˆ¶æœ€å¤§å€¼ä¸º1000
+    if (abs_speed > 1000) {
+        abs_speed = 1000;
+    }
+    
+    // è®¾ç½®æ–¹å‘
+    Motor_SetDirection(hmotor, dir);
+    
+    // ç›´æŽ¥è®¾ç½®PWMå€¼
+    __HAL_TIM_SET_COMPARE(hmotor->htim, hmotor->channel, abs_speed);
+    
+    // æ›´æ–°å½“å‰çŠ¶æ€
+    hmotor->current_speed = abs_speed;
+    hmotor->current_dir = dir;
+}
 
-    // È·±£PWMÖµ²»³¬³ö·¶Î§
-    uint32_t pwm_value = (uint32_t) (speed > 100 ? 100 : speed);
-    __HAL_TIM_SET_COMPARE(motor->htim, motor->tim_channel, pwm_value);
+void Motor_Stop(Motor_HandleTypeDef *hmotor)
+{
+    Motor_SetDirection(hmotor, MOTOR_STOP);
+    __HAL_TIM_SET_COMPARE(hmotor->htim, hmotor->channel, 0);
+    hmotor->current_speed = 0;
+    hmotor->current_dir = MOTOR_STOP;
+}
+
+// å†…éƒ¨å‡½æ•°å®žçŽ°
+static void Motor_SetDirection(Motor_HandleTypeDef *hmotor, MotorDirection dir) {
+    switch (dir) {
+        case MOTOR_FORWARD:
+            // æ­£å‘ï¼š1,0
+            HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_SET);    // 1
+            HAL_GPIO_WritePin(hmotor->dir_port2, hmotor->dir_pin2, GPIO_PIN_RESET);  // 0
+            break;
+        case MOTOR_BACKWARD:
+            // åå‘ï¼š0,1
+            HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_RESET);  // 0
+            HAL_GPIO_WritePin(hmotor->dir_port2, hmotor->dir_pin2, GPIO_PIN_SET);    // 1
+            break;
+        case MOTOR_STOP:
+        default:
+            // åœæ­¢ï¼š0,0
+            HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_RESET);  // 0
+            HAL_GPIO_WritePin(hmotor->dir_port2, hmotor->dir_pin2, GPIO_PIN_RESET);  // 0
+            break;
+    }
 }

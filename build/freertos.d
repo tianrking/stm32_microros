@@ -6,11 +6,9 @@ build/freertos.o: Core/Src/freertos.c \
  Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
  Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- Core/Inc/main.h Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ Middlewares/Third_Party/FreeRTOS/Source/include/list.h Core/Inc/main.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  Core/Inc/stm32f4xx_hal_conf.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -28,15 +26,21 @@ build/freertos.o: Core/Src/freertos.c \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h Core/Inc/gpio.h \
- Core/Inc/main.h Core/Inc/usart.h \
+ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ Core/Inc/gpio.h Core/Inc/main.h Core/Inc/usart.h Core/Inc/tim.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/error_handling.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils/error_handling.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils/allocator.h \
@@ -184,7 +188,8 @@ build/freertos.o: Core/Src/freertos.c \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__struct.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__functions.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/rosidl_generator_c__visibility_control.h \
- micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h \
+ Cus/MOTOR_DRV/motor.h
 
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -200,13 +205,9 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
 
 Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
 
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
 Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 
 Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
 Core/Inc/main.h:
 
@@ -250,11 +251,19 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h:
 
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h:
 
+Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h:
+
+Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h:
+
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h:
 
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h:
 
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h:
+
+Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h:
+
+Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h:
 
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 
@@ -266,11 +275,17 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
+Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
+
+Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+
 Core/Inc/gpio.h:
 
 Core/Inc/main.h:
 
 Core/Inc/usart.h:
+
+Core/Inc/tim.h:
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/error_handling.h:
 
@@ -567,3 +582,5 @@ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/rosidl_generator_c__visibility_control.h:
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h:
+
+Cus/MOTOR_DRV/motor.h:
