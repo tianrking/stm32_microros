@@ -183,30 +183,45 @@ std_msgs__msg__Int32 motor2_msg;
 int32_t target_1_speed=0;
 int32_t target_2_speed=0;
 // 电机1回调函数
+// void motor1_callback(const void * msgin)
+// {
+//     const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+//     target_1_speed = msg->data;
+    
+//     // 限制输入范围在-1000到1000
+//     if (target_1_speed > 1000) target_1_speed = 1000;
+//     if (target_1_speed < -1000) target_1_speed = -1000;
+    
+//     // 使用改进的电机驱动设置速度
+//     Motor_SetSpeed(&hmotor1, target_1_speed);
+// }
+
+// void motor2_callback(const void * msgin)
+// {
+//     const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+//     target_2_speed = msg->data;
+    
+//     // 限制输入范围在-1000到1000
+//     if (target_2_speed > 1000) target_2_speed = 1000;
+//     if (target_2_speed < -1000) target_2_speed = -1000;
+    
+//     // 使用改进的电机驱动设置速度
+//     Motor_SetSpeed(&hmotor2, target_2_speed);
+// }
+
+
 void motor1_callback(const void * msgin)
 {
     const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
-    target_1_speed = msg->data;
-    
-    // 限制输入范围在-1000到1000
-    if (target_1_speed > 1000) target_1_speed = 1000;
-    if (target_1_speed < -1000) target_1_speed = -1000;
-    
-    // 使用改进的电机驱动设置速度
-    Motor_SetSpeed(&hmotor1, target_1_speed);
+    float target_rpm = (float)msg->data;  // 输入为目标RPM
+    Motor_SetTargetSpeed(&hmotor1, target_rpm);
 }
 
 void motor2_callback(const void * msgin)
 {
     const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
-    target_2_speed = msg->data;
-    
-    // 限制输入范围在-1000到1000
-    if (target_2_speed > 1000) target_2_speed = 1000;
-    if (target_2_speed < -1000) target_2_speed = -1000;
-    
-    // 使用改进的电机驱动设置速度
-    Motor_SetSpeed(&hmotor2, target_2_speed);
+    float target_rpm = (float)msg->data;  // 输入为目标RPM
+    Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
 
 

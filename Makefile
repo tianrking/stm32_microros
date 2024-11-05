@@ -187,7 +187,8 @@ C_SOURCES +=  \
 Cus/AT/AT.c \
 Cus/ROBOT_STATE/robot_state.c \
 Cus/MOTOR_DRV/motor.c \
-Cus/MOTOR_DRV/encoder.c
+Cus/MOTOR_DRV/encoder.c \
+Cus/MOTOR_DRV/pid.c
 
 #######################################
 # micro-ROS addons

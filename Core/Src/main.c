@@ -184,6 +184,8 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 #include "encoder.h"
 #include "tim.h"
+#include "pid.h"
+#include "motor.h"
 /* USER CODE END 4 */
 
 /**
@@ -209,6 +211,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // 每秒更新一次速度
         Encoder_Update(&hencoder1);
         Encoder_Update(&hencoder2);
+
+        // 更新电机速度控制
+        Motor_UpdateSpeed(&hmotor1);
+        Motor_UpdateSpeed(&hmotor2);
     }
 
   /* USER CODE END Callback 1 */

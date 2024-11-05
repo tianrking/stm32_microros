@@ -17,10 +17,17 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
     hmotor->dir_pin1 = init->dir_pin1;
     hmotor->dir_port2 = init->dir_port2;
     hmotor->dir_pin2 = init->dir_pin2;
+    hmotor->encoder = init->encoder;
     
     // 初始化默认状态
     hmotor->current_speed = 0;
     hmotor->current_dir = MOTOR_STOP;
+    hmotor->target_rpm = 0;
+    hmotor->current_rpm = 0;
+    
+    // 初始化PID控制器
+    PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);  // PID参数需要调整
+    PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
     
     // 启动PWM
     HAL_TIM_PWM_Start(hmotor->htim, hmotor->channel);
@@ -31,30 +38,33 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
 
 void Motors_Init(void)
 {
-    // 电机1初始化配置 (PD8/PD9方向, PD12 PWM-TIM4_CH1)
+    // 电机1初始化配置
     Motor_InitTypeDef motor1_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_1,
         .dir_port1 = GPIOE,
         .dir_pin1 = GPIO_PIN_7,
         .dir_port2 = GPIOB,
-        .dir_pin2 = GPIO_PIN_1
+        .dir_pin2 = GPIO_PIN_1,
+        .encoder = &hencoder1
     };
     
-    // 电机2初始化配置 (/PD11方向, PD13 PWM-TIM4_CH2)
+    // 电机2初始化配置
     Motor_InitTypeDef motor2_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_2,
         .dir_port1 = GPIOE,
         .dir_pin1 = GPIO_PIN_8,
         .dir_port2 = GPIOE,
-        .dir_pin2 = GPIO_PIN_10
+        .dir_pin2 = GPIO_PIN_10,
+        .encoder = &hencoder2
     };
     
     Motor_Init(&hmotor1, &motor1_init);
     Motor_Init(&hmotor2, &motor2_init);
 }
 
+// 原始PWM控制接口保持不变
 void Motor_SetSpeed(Motor_HandleTypeDef *hmotor, int32_t speed)
 {
     // 确定方向并获取绝对值
@@ -94,10 +104,33 @@ void Motor_Stop(Motor_HandleTypeDef *hmotor)
     __HAL_TIM_SET_COMPARE(hmotor->htim, hmotor->channel, 0);
     hmotor->current_speed = 0;
     hmotor->current_dir = MOTOR_STOP;
+    hmotor->target_rpm = 0;
+    hmotor->current_rpm = 0;
+    PID_Reset(&hmotor->pid);
+}
+
+// 新增速度控制接口
+void Motor_SetTargetSpeed(Motor_HandleTypeDef *hmotor, float target_rpm)
+{
+    hmotor->target_rpm = target_rpm;
+    PID_SetSetpoint(&hmotor->pid, target_rpm);
+}
+
+void Motor_UpdateSpeed(Motor_HandleTypeDef *hmotor)
+{
+    // 获取当前速度
+    hmotor->current_rpm = Encoder_GetSpeedRPM(hmotor->encoder);
+    
+    // 更新PID控制器
+    float pid_output = PID_Update(&hmotor->pid, hmotor->current_rpm);
+    
+    // 设置电机PWM
+    Motor_SetSpeed(hmotor, (int32_t)pid_output);
 }
 
 // 内部函数实现
-static void Motor_SetDirection(Motor_HandleTypeDef *hmotor, MotorDirection dir) {
+static void Motor_SetDirection(Motor_HandleTypeDef *hmotor, MotorDirection dir)
+{
     switch (dir) {
         case MOTOR_FORWARD:
             // 正向：1,0
