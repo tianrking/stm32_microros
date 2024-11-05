@@ -224,6 +224,58 @@ void motor2_callback(const void * msgin)
     Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
 
+#include <geometry_msgs/msg/twist.h>
+#include <math.h>
+
+/* 添加机器人参数定义 */
+#define WHEEL_SEPARATION 0.32f  // 轮距(m)
+#define WHEEL_RADIUS 0.065f     // 轮子半径(m)
+#define MAX_LINEAR_SPEED 1.0f   // 最大线速度(m/s)
+#define MAX_ANGULAR_SPEED 2.0f  // 最大角速度(rad/s)
+#define RPM_TO_RADS 0.10472f   // RPM转换为rad/s (2*PI/60)
+#define RADS_TO_RPM 9.5493f    // rad/s转换为RPM (60/2*PI)
+
+/* 添加Twist消息订阅者 */
+rcl_subscription_t cmd_vel_subscriber;
+geometry_msgs__msg__Twist cmd_vel_msg;
+
+/* 运动学逆解函数声明 */
+static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm);
+
+/* Twist消息回调函数 */
+void cmd_vel_callback(const void * msgin)
+{
+    const geometry_msgs__msg__Twist * msg = (const geometry_msgs__msg__Twist *)msgin;
+    float linear_x = (float)msg->linear.x;  // 线速度 m/s
+    float angular_z = (float)msg->angular.z; // 角速度 rad/s
+    
+    // 限制速度范围
+    if (linear_x > MAX_LINEAR_SPEED) linear_x = MAX_LINEAR_SPEED;
+    if (linear_x < -MAX_LINEAR_SPEED) linear_x = -MAX_LINEAR_SPEED;
+    if (angular_z > MAX_ANGULAR_SPEED) angular_z = MAX_ANGULAR_SPEED;
+    if (angular_z < -MAX_ANGULAR_SPEED) angular_z = -MAX_ANGULAR_SPEED;
+    
+    // 计算左右轮目标转速
+    float left_rpm, right_rpm;
+    calculate_wheel_speeds(linear_x, angular_z, &left_rpm, &right_rpm);
+    
+    // 设置电机目标速度
+    Motor_SetTargetSpeed(&hmotor1, left_rpm);
+    Motor_SetTargetSpeed(&hmotor2, right_rpm);
+}
+
+/* 运动学逆解函数实现 */
+static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm)
+{
+    // 差速运动学方程
+    float left_wheel_speed = (linear_x - angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
+    float right_wheel_speed = (linear_x + angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
+    
+    // 转换为RPM
+    *left_rpm = left_wheel_speed * RADS_TO_RPM;
+    *right_rpm = right_wheel_speed * RADS_TO_RPM;
+}
+
 
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
@@ -259,19 +311,40 @@ void StartDefaultTask(void *argument)
                               ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
                               "ping_publisher");
 
-  // 创建电机1订阅者
-  rclc_subscription_init_default(
-    &motor1_subscriber,
-    &node,
-    ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-    "motor1_control");
+  // // 创建电机1订阅者
+  // rclc_subscription_init_default(
+  //   &motor1_subscriber,
+  //   &node,
+  //   ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+  //   "motor1_control");
 
-  // 创建电机2订阅者
+  // // 创建电机2订阅者
+  // rclc_subscription_init_default(
+  //   &motor2_subscriber,
+  //   &node,
+  //   ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+  //   "motor2_control");
+
+    // 创建右轮电机订阅者
   rclc_subscription_init_default(
-    &motor2_subscriber,
-    &node,
-    ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-    "motor2_control");
+      &motor1_subscriber,
+      &node,
+      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+      "wheel_right/target_speed");  // 更直观的右轮速度控制话题
+
+  // 创建左轮电机订阅者
+  rclc_subscription_init_default(
+      &motor2_subscriber,
+      &node,
+      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+      "wheel_left/target_speed");   // 更直观的左轮速度控制话题
+      
+  // 创建cmd_vel订阅者
+  rclc_subscription_init_default(
+      &cmd_vel_subscriber,
+      &node,
+      ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
+      "cmd_vel");
 
 
   rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(100), timer_callback);
@@ -282,6 +355,13 @@ void StartDefaultTask(void *argument)
                                 &motor1_callback, ON_NEW_DATA);
   rclc_executor_add_subscription(&executor, &motor2_subscriber, &motor2_msg,
                                 &motor2_callback, ON_NEW_DATA);
+      // 添加到执行器
+  rclc_executor_add_subscription(
+        &executor, 
+        &cmd_vel_subscriber, 
+        &cmd_vel_msg,
+        &cmd_vel_callback, 
+        ON_NEW_DATA);
 
   Motors_Init();
   Encoders_Init();

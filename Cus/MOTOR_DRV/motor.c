@@ -18,6 +18,7 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
     hmotor->dir_port2 = init->dir_port2;
     hmotor->dir_pin2 = init->dir_pin2;
     hmotor->encoder = init->encoder;
+    hmotor->install_dir = init->install_dir;  // 添加安装方向
     
     // 初始化默认状态
     hmotor->current_speed = 0;
@@ -26,7 +27,7 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
     hmotor->current_rpm = 0;
     
     // 初始化PID控制器
-    PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);  // PID参数需要调整
+    PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);
     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
     
     // 启动PWM
@@ -36,9 +37,10 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
     Motor_Stop(hmotor);
 }
 
+
 void Motors_Init(void)
 {
-    // 电机1初始化配置
+    // 电机1初始化配置 (左轮)
     Motor_InitTypeDef motor1_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_1,
@@ -46,10 +48,11 @@ void Motors_Init(void)
         .dir_pin1 = GPIO_PIN_7,
         .dir_port2 = GPIOB,
         .dir_pin2 = GPIO_PIN_1,
-        .encoder = &hencoder1
+        .encoder = &hencoder1,
+        .install_dir = MOTOR_INSTALL_NORMAL  // R轮电机正常方向
     };
     
-    // 电机2初始化配置
+    // 电机2初始化配置 (右轮)
     Motor_InitTypeDef motor2_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_2,
@@ -57,7 +60,8 @@ void Motors_Init(void)
         .dir_pin1 = GPIO_PIN_8,
         .dir_port2 = GPIOE,
         .dir_pin2 = GPIO_PIN_10,
-        .encoder = &hencoder2
+        .encoder = &hencoder2,
+        .install_dir = MOTOR_INSTALL_INVERTED  // L轮电机反向安装
     };
     
     Motor_Init(&hmotor1, &motor1_init);
@@ -67,16 +71,19 @@ void Motors_Init(void)
 // 原始PWM控制接口保持不变
 void Motor_SetSpeed(Motor_HandleTypeDef *hmotor, int32_t speed)
 {
+    // 根据安装方向调整实际速度
+    int32_t actual_speed = speed * hmotor->install_dir;
+    
     // 确定方向并获取绝对值
     MotorDirection dir;
     uint32_t abs_speed;
     
-    if (speed > 0) {
+    if (actual_speed > 0) {
         dir = MOTOR_FORWARD;
-        abs_speed = (uint32_t)speed;
-    } else if (speed < 0) {
+        abs_speed = (uint32_t)actual_speed;
+    } else if (actual_speed < 0) {
         dir = MOTOR_BACKWARD;
-        abs_speed = (uint32_t)(-speed);
+        abs_speed = (uint32_t)(-actual_speed);
     } else {
         dir = MOTOR_STOP;
         abs_speed = 0;
@@ -109,11 +116,12 @@ void Motor_Stop(Motor_HandleTypeDef *hmotor)
     PID_Reset(&hmotor->pid);
 }
 
-// 新增速度控制接口
 void Motor_SetTargetSpeed(Motor_HandleTypeDef *hmotor, float target_rpm)
 {
-    hmotor->target_rpm = target_rpm;
-    PID_SetSetpoint(&hmotor->pid, target_rpm);
+    // 根据安装方向调整目标转速
+    float actual_target_rpm = target_rpm * hmotor->install_dir;
+    hmotor->target_rpm = actual_target_rpm;
+    PID_SetSetpoint(&hmotor->pid, actual_target_rpm);
 }
 
 void Motor_UpdateSpeed(Motor_HandleTypeDef *hmotor)
@@ -131,7 +139,11 @@ void Motor_UpdateSpeed(Motor_HandleTypeDef *hmotor)
 // 内部函数实现
 static void Motor_SetDirection(Motor_HandleTypeDef *hmotor, MotorDirection dir)
 {
-    switch (dir) {
+    // 根据安装方向调整实际方向
+    MotorDirection actual_dir = (dir == MOTOR_STOP) ? MOTOR_STOP : 
+                               (dir * hmotor->install_dir == 1) ? MOTOR_FORWARD : MOTOR_BACKWARD;
+    
+    switch (actual_dir) {
         case MOTOR_FORWARD:
             // 正向：1,0
             HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_SET);    // 1

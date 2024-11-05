@@ -11,6 +11,11 @@ extern "C" {
 #include "pid.h"
 #include "encoder.h"
 
+typedef enum {
+    MOTOR_INSTALL_NORMAL = 1,    // 正常安装
+    MOTOR_INSTALL_INVERTED = -1  // 反向安装
+} MotorInstallDirection;
+
 // 电机方向枚举
 typedef enum {
     MOTOR_FORWARD = 1,
@@ -28,7 +33,7 @@ typedef struct {
     uint16_t dir_pin2;              // 方向控制引脚2
     uint32_t current_speed;         // 当前速度值(0-1000)
     MotorDirection current_dir;      // 当前方向
-    // 增加速度控制相关字段
+    MotorInstallDirection install_dir; // 安装方向
     PID_HandleTypeDef pid;          // PID控制器
     Encoder_HandleTypeDef *encoder; // 编码器
     float target_rpm;               // 目标转速
@@ -43,7 +48,8 @@ typedef struct {
     uint16_t dir_pin1;
     GPIO_TypeDef *dir_port2;
     uint16_t dir_pin2;
-    Encoder_HandleTypeDef *encoder; // 添加编码器
+    Encoder_HandleTypeDef *encoder;
+    MotorInstallDirection install_dir; // 添加安装方向
 } Motor_InitTypeDef;
 
 // 函数声明
