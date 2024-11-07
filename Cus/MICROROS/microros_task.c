@@ -1,95 +1,235 @@
-// #include "microros_task.h"
-// #include "FreeRTOS.h"
-// #include "task.h"
-// #include "cmsis_os.h"
-// #include "main.h"
-// #include "usart.h"
-// #include "rcl/rcl.h"
-// #include "rclc/rclc.h"
-// #include "rclc/executor.h"
-// #include "std_msgs/msg/int32.h"
+#include "microros_task.h"
+#include "gpio.h"
+#include "usart.h"
+#include "tim.h"
+#include "motor.h"
+
+#include <rcl/error_handling.h>
+#include <rcl/rcl.h>
+#include <rclc/executor.h>
+#include <rclc/rclc.h>
+#include <rmw_microros/rmw_microros.h>
+#include <rmw_microxrcedds_c/config.h>
+#include <uxr/client/transport.h>
+#include <std_msgs/msg/int32.h>
+#include <geometry_msgs/msg/twist.h>
+#include <math.h>
+
+/* Robot parameters */
+#define WHEEL_SEPARATION 0.32f
+#define WHEEL_RADIUS 0.065f
+#define MAX_LINEAR_SPEED 1.0f
+#define MAX_ANGULAR_SPEED 2.0f
+#define RPM_TO_RADS 0.10472f
+#define RADS_TO_RPM 9.5493f
+
+/* Static variables */
+static rcl_publisher_t publisher;
+static std_msgs__msg__Int32 msg;
+static rclc_support_t support;
+static rcl_allocator_t allocator;
+static rclc_executor_t executor;
+static rcl_node_t node;
+static rcl_timer_t timer;
+static int countt;
+static rcl_ret_t temp_ret;
+
+/* Subscribers */
+static rcl_subscription_t motor1_subscriber;
+static rcl_subscription_t motor2_subscriber;
+static rcl_subscription_t cmd_vel_subscriber;
+static std_msgs__msg__Int32 motor1_msg;
+static std_msgs__msg__Int32 motor2_msg;
+static geometry_msgs__msg__Twist cmd_vel_msg;
+
+/* Static function declarations */
+static void timer_callback(rcl_timer_t *timer, int64_t last_call_time);
+static void motor1_callback(const void * msgin);
+static void motor2_callback(const void * msgin);
+static void cmd_vel_callback(const void * msgin);
+static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm);
 
 
-// #include <rcl/error_handling.h>
-// #include <uxr/client/transport.h>
-// #include <rmw_microxrcedds_c/config.h>
-// #include <rmw_microros/rmw_microros.h>
+static rcl_publisher_t right_wheel_feedback_publisher;
+static rcl_publisher_t left_wheel_feedback_publisher;
+static rcl_publisher_t right_wheel_target_publisher;
+static rcl_publisher_t left_wheel_target_publisher;
 
-// #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if (temp_rc != RCL_RET_OK) { error_loop(); } }
-// #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if (temp_rc != RCL_RET_OK) { printf("Failed status on line %d: %d. Continuing.\n", __LINE__, temp_rc); } }
+static std_msgs__msg__Int32 right_wheel_feedback_msg;
+static std_msgs__msg__Int32 left_wheel_feedback_msg;
+static std_msgs__msg__Int32 right_wheel_target_msg;
+static std_msgs__msg__Int32 left_wheel_target_msg;
 
-// bool cubemx_transport_open(struct uxrCustomTransport * transport);
-// bool cubemx_transport_close(struct uxrCustomTransport * transport);
-// size_t cubemx_transport_write(struct uxrCustomTransport* transport, const uint8_t * buf, size_t len, uint8_t * err);
-// size_t cubemx_transport_read(struct uxrCustomTransport* transport, uint8_t* buf, size_t len, int timeout, uint8_t* err);
+/* Timer callback implementation */
+static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
+    if (timer != NULL) {
+        msg.data = countt--;
+        temp_ret = rcl_publish(&publisher, &msg, NULL);
 
-// void * microros_allocate(size_t size, void * state);
-// void microros_deallocate(void * pointer, void * state);
-// void * microros_reallocate(void * pointer, size_t size, void * state);
-// void * microros_zero_allocate(size_t number_of_elements, size_t size_of_element, void * state);
+        // 更新并发布右轮状态
+        right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
+        right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+        rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
+        rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
+        
+        // 更新并发布左轮状态
+        left_wheel_feedback_msg.data = (int32_t)hmotor2.current_rpm;   // 实际速度
+        left_wheel_target_msg.data = (int32_t)hmotor2.target_rpm;      // 目标速度
+        rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
+        rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
+    }
+}
 
-// rcl_allocator_t allocator;
-// rclc_support_t support;
-// rcl_node_t node;
-// rclc_executor_t executor;
+/* Motor callbacks implementation */
+static void motor1_callback(const void * msgin) {
+    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    float target_rpm = (float)msg->data;
+    Motor_SetTargetSpeed(&hmotor1, target_rpm);
+}
 
-// rcl_publisher_t publisher;
-// std_msgs__msg__Int32 msg;
+static void motor2_callback(const void * msgin) {
+    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    float target_rpm = (float)msg->data;
+    Motor_SetTargetSpeed(&hmotor2, target_rpm);
+}
 
+/* Cmd_vel callback implementation */
+static void cmd_vel_callback(const void * msgin) {
+    const geometry_msgs__msg__Twist * msg = (const geometry_msgs__msg__Twist *)msgin;
+    float linear_x = (float)msg->linear.x;
+    float angular_z = (float)msg->angular.z;
+    
+    // Limit speed range
+    linear_x = fminf(fmaxf(linear_x, -MAX_LINEAR_SPEED), MAX_LINEAR_SPEED);
+    angular_z = fminf(fmaxf(angular_z, -MAX_ANGULAR_SPEED), MAX_ANGULAR_SPEED);
+    
+    float left_rpm, right_rpm;
+    calculate_wheel_speeds(linear_x, angular_z, &left_rpm, &right_rpm);
+    
+    Motor_SetTargetSpeed(&hmotor1, left_rpm);
+    Motor_SetTargetSpeed(&hmotor2, right_rpm);
+}
 
-// void error_loop(void)
-// {
-//     while(1) {
-//         // Handle error, maybe blink an LED in a specific pattern or reset the microcontroller
-//         osDelay(1000);
-//     }
-// }
+/* Wheel speed calculation */
+static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm) {
+    float left_wheel_speed = (linear_x - angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
+    float right_wheel_speed = (linear_x + angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
+    
+    *left_rpm = left_wheel_speed * RADS_TO_RPM;
+    *right_rpm = right_wheel_speed * RADS_TO_RPM;
+}
 
-// void micro_ros_task(void *argument)
-// {
+/* MicroROS initialization */
+void MicroROS_Init(void) {
+    rmw_uros_set_custom_transport(
+        true,
+        (void *)&huart1,
+        cubemx_transport_open,
+        cubemx_transport_close,
+        cubemx_transport_write,
+        cubemx_transport_read
+    );
 
-//     rmw_uros_set_custom_transport(
-//       true,
-//       (void *) &huart1,
-//       cubemx_transport_open,
-//       cubemx_transport_close,
-//       cubemx_transport_write,
-//       cubemx_transport_read);
+    rcl_allocator_t freeRTOS_allocator = rcutils_get_zero_initialized_allocator();
+    freeRTOS_allocator.allocate = microros_allocate;
+    freeRTOS_allocator.deallocate = microros_deallocate;
+    freeRTOS_allocator.reallocate = microros_reallocate;
+    freeRTOS_allocator.zero_allocate = microros_zero_allocate;
 
-//     rcl_allocator_t freeRTOS_allocator = rcutils_get_zero_initialized_allocator();
-//     freeRTOS_allocator.allocate = microros_allocate;
-//     freeRTOS_allocator.deallocate = microros_deallocate;
-//     freeRTOS_allocator.reallocate = microros_reallocate;
-//     freeRTOS_allocator.zero_allocate =  microros_zero_allocate;
+    if (!rcutils_set_default_allocator(&freeRTOS_allocator)) {
+        printf("Error on default allocators (line %d)\n", __LINE__);
+    }
 
-//     if (!rcutils_set_default_allocator(&freeRTOS_allocator)) {
-//         printf("Error on default allocators (line %d)\n", __LINE__);
-//     }
+    allocator = rcl_get_default_allocator();
+    rclc_support_init(&support, 0, NULL, &allocator);
+    rclc_node_init_default(&node, "cubemx_node", "", &support);
+    rclc_executor_init(&executor, &support.context, 12, &allocator);
 
+    // Initialize publisher
+    rclc_publisher_init_default(
+        &publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "ping_ping"
+    );
 
-//     allocator = rcl_get_default_allocator();
-//     RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
-//     RCCHECK(rclc_node_init_default(&node, "test", "", &support));
+    // 初始化右轮速度发布者
+    rclc_publisher_init_default(
+        &right_wheel_feedback_publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_right/feedback"
+    );
+    
+    rclc_publisher_init_default(
+        &right_wheel_target_publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_right/target"
+    );
+    
+    // 初始化左轮速度发布者
+    rclc_publisher_init_default(
+        &left_wheel_feedback_publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_left/feedback"
+    );
+    
+    rclc_publisher_init_default(
+        &left_wheel_target_publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_left/target"
+    );
 
-//     RCCHECK(rclc_publisher_init_default(
-//         &publisher,
-//         &node,
-//         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-//         "test_topic"));
+    // Initialize subscribers
+    rclc_subscription_init_default(
+        &motor1_subscriber,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_right/target_speed"
+    );
 
-//     // Executor initialization
-//     RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
+    rclc_subscription_init_default(
+        &motor2_subscriber,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "wheel_left/target_speed"
+    );
 
-//     int32_t count = 0; // Variable to store the incrementing integer
+    rclc_subscription_init_default(
+        &cmd_vel_subscriber,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
+        "cmd_vel"
+    );
 
-//     while(1) {
-//         msg.data = count++;
-//         RCCHECK(rcl_publish(&publisher, &msg, NULL));
-//         osDelay(1000); // Delay for 1000ms or 1 second
-//     }
+    // Initialize timer
+    rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(10), timer_callback);
 
-//     // Cleanup if ever exit loop
-//     rcl_publisher_fini(&publisher, &node);
-//     rcl_node_fini(&node);
-//     rclc_support_fini(&support);
-// }
+    // Add timer and subscribers to executor
+    rclc_executor_add_timer(&executor, &timer);
+    rclc_executor_add_subscription(&executor, &motor1_subscriber, &motor1_msg, &motor1_callback, ON_NEW_DATA);
+    rclc_executor_add_subscription(&executor, &motor2_subscriber, &motor2_msg, &motor2_callback, ON_NEW_DATA);
+    rclc_executor_add_subscription(&executor, &cmd_vel_subscriber, &cmd_vel_msg, &cmd_vel_callback, ON_NEW_DATA);
+
+    // Initialize motors and encoders
+    Motors_Init();
+    Encoders_Init();
+}
+
+/* MicroROS task implementation */
+void MicroROS_TaskStart(void *argument) {
+    for (;;) {
+        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+
+        msg.data++;
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+        osDelay(200);
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+        osDelay(200);
+    }
+}

@@ -27,6 +27,7 @@ openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
 ```bash
 gdb-multiarch
 target remote localhost:3333
+target extended-remote :3333
 ```
 
 ### 4. Load and Debug Your Program

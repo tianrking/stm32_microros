@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccik0I5S.s 			page 1
+ARM GAS  /tmp/ccJuR8iQ.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
   28:Cus/MOTOR_DRV/motor.c ****     
   29:Cus/MOTOR_DRV/motor.c ****     // 初始化PID控制器
   30:Cus/MOTOR_DRV/motor.c ****     PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);
-ARM GAS  /tmp/ccik0I5S.s 			page 2
+ARM GAS  /tmp/ccJuR8iQ.s 			page 2
 
 
   31:Cus/MOTOR_DRV/motor.c ****     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
   85:Cus/MOTOR_DRV/motor.c ****         dir = MOTOR_BACKWARD;
   86:Cus/MOTOR_DRV/motor.c ****         abs_speed = (uint32_t)(-actual_speed);
   87:Cus/MOTOR_DRV/motor.c ****     } else {
-ARM GAS  /tmp/ccik0I5S.s 			page 3
+ARM GAS  /tmp/ccJuR8iQ.s 			page 3
 
 
   88:Cus/MOTOR_DRV/motor.c ****         dir = MOTOR_STOP;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
   29              		.loc 1 141 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /tmp/ccik0I5S.s 			page 4
+ARM GAS  /tmp/ccJuR8iQ.s 			page 4
 
 
   32              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  157:Cus/MOTOR_DRV/motor.c ****         case MOTOR_STOP:
  158:Cus/MOTOR_DRV/motor.c ****         default:
  159:Cus/MOTOR_DRV/motor.c ****             // 停止：0,0
-ARM GAS  /tmp/ccik0I5S.s 			page 5
+ARM GAS  /tmp/ccJuR8iQ.s 			page 5
 
 
  160:Cus/MOTOR_DRV/motor.c ****             HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_RESET);  // 0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  108 004a A18A     		ldrh	r1, [r4, #20]
  109 004c 2069     		ldr	r0, [r4, #16]
  110 004e FFF7FEFF 		bl	HAL_GPIO_WritePin
-ARM GAS  /tmp/ccik0I5S.s 			page 6
+ARM GAS  /tmp/ccJuR8iQ.s 			page 6
 
 
  111              	.LVL15:
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  155              		.loc 1 83 9 view .LVU36
   82:Cus/MOTOR_DRV/motor.c ****         abs_speed = (uint32_t)actual_speed;
  156              		.loc 1 82 13 is_stmt 0 view .LVU37
-ARM GAS  /tmp/ccik0I5S.s 			page 7
+ARM GAS  /tmp/ccJuR8iQ.s 			page 7
 
 
  157 0010 0126     		movs	r6, #1
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
   88:Cus/MOTOR_DRV/motor.c ****         abs_speed = 0;
  197              		.loc 1 88 13 view .LVU52
  198 0034 0026     		movs	r6, #0
-ARM GAS  /tmp/ccik0I5S.s 			page 8
+ARM GAS  /tmp/ccJuR8iQ.s 			page 8
 
 
   89:Cus/MOTOR_DRV/motor.c ****     }
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  101:Cus/MOTOR_DRV/motor.c ****     
  241              		.loc 1 101 5 discriminator 6 view .LVU65
  242 0060 2B68     		ldr	r3, [r5]
-ARM GAS  /tmp/ccik0I5S.s 			page 9
+ARM GAS  /tmp/ccJuR8iQ.s 			page 9
 
 
  243 0062 1B68     		ldr	r3, [r3]
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  290 001a 2377     		strb	r3, [r4, #28]
  114:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
  291              		.loc 1 114 5 is_stmt 1 view .LVU75
-ARM GAS  /tmp/ccik0I5S.s 			page 10
+ARM GAS  /tmp/ccJuR8iQ.s 			page 10
 
 
  114:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  337              		.global	Motor_Init
  338              		.syntax unified
  339              		.thumb
-ARM GAS  /tmp/ccik0I5S.s 			page 11
+ARM GAS  /tmp/ccJuR8iQ.s 			page 11
 
 
  340              		.thumb_func
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
   18:Cus/MOTOR_DRV/motor.c ****     hmotor->dir_pin2 = init->dir_pin2;
  380              		.loc 1 18 29 is_stmt 0 view .LVU101
  381 0014 0B69     		ldr	r3, [r1, #16]
-ARM GAS  /tmp/ccik0I5S.s 			page 12
+ARM GAS  /tmp/ccJuR8iQ.s 			page 12
 
 
   18:Cus/MOTOR_DRV/motor.c ****     hmotor->dir_pin2 = init->dir_pin2;
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  417 0044 B7EE000A 		vmov.f32	s0, #1.0e+0
  418 0048 2846     		mov	r0, r5
  419              	.LVL36:
-ARM GAS  /tmp/ccik0I5S.s 			page 13
+ARM GAS  /tmp/ccJuR8iQ.s 			page 13
 
 
   30:Cus/MOTOR_DRV/motor.c ****     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  469              		.cfi_def_cfa_offset 16
  470              		.cfi_offset 4, -16
  471              		.cfi_offset 5, -12
-ARM GAS  /tmp/ccik0I5S.s 			page 14
+ARM GAS  /tmp/ccJuR8iQ.s 			page 14
 
 
  472              		.cfi_offset 6, -8
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  520              		.align	1
  521              		.global	Motor_SetTargetSpeed
  522              		.syntax unified
-ARM GAS  /tmp/ccik0I5S.s 			page 15
+ARM GAS  /tmp/ccJuR8iQ.s 			page 15
 
 
  523              		.thumb
@@ -898,7 +898,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  568              		.thumb_func
  569              		.fpu fpv4-sp-d16
  571              	Motor_UpdateSpeed:
-ARM GAS  /tmp/ccik0I5S.s 			page 16
+ARM GAS  /tmp/ccJuR8iQ.s 			page 16
 
 
  572              	.LVL48:
@@ -958,7 +958,7 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  616              	.LC0:
  617 0000 00000000 		.word	htim1
  618 0004 00000000 		.word	0
-ARM GAS  /tmp/ccik0I5S.s 			page 17
+ARM GAS  /tmp/ccJuR8iQ.s 			page 17
 
 
  619 0008 00100240 		.word	1073876992
@@ -998,30 +998,30 @@ ARM GAS  /tmp/ccik0I5S.s 			page 1
  653              		.file 13 "Cus/MOTOR_DRV/pid.h"
  654              		.file 14 "Cus/MOTOR_DRV/encoder.h"
  655              		.file 15 "Cus/MOTOR_DRV/motor.h"
-ARM GAS  /tmp/ccik0I5S.s 			page 18
+ARM GAS  /tmp/ccJuR8iQ.s 			page 18
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 motor.c
-     /tmp/ccik0I5S.s:18     .text.Motor_SetDirection:0000000000000000 $t
-     /tmp/ccik0I5S.s:25     .text.Motor_SetDirection:0000000000000000 Motor_SetDirection
-     /tmp/ccik0I5S.s:118    .text.Motor_SetSpeed:0000000000000000 $t
-     /tmp/ccik0I5S.s:125    .text.Motor_SetSpeed:0000000000000000 Motor_SetSpeed
-     /tmp/ccik0I5S.s:250    .text.Motor_Stop:0000000000000000 $t
-     /tmp/ccik0I5S.s:257    .text.Motor_Stop:0000000000000000 Motor_Stop
-     /tmp/ccik0I5S.s:336    .text.Motor_Init:0000000000000000 $t
-     /tmp/ccik0I5S.s:343    .text.Motor_Init:0000000000000000 Motor_Init
-     /tmp/ccik0I5S.s:445    .text.Motor_Init:000000000000006c $d
-     /tmp/ccik0I5S.s:454    .text.Motors_Init:0000000000000000 $t
-     /tmp/ccik0I5S.s:461    .text.Motors_Init:0000000000000000 Motors_Init
-     /tmp/ccik0I5S.s:513    .text.Motors_Init:000000000000003c $d
+     /tmp/ccJuR8iQ.s:18     .text.Motor_SetDirection:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:25     .text.Motor_SetDirection:0000000000000000 Motor_SetDirection
+     /tmp/ccJuR8iQ.s:118    .text.Motor_SetSpeed:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:125    .text.Motor_SetSpeed:0000000000000000 Motor_SetSpeed
+     /tmp/ccJuR8iQ.s:250    .text.Motor_Stop:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:257    .text.Motor_Stop:0000000000000000 Motor_Stop
+     /tmp/ccJuR8iQ.s:336    .text.Motor_Init:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:343    .text.Motor_Init:0000000000000000 Motor_Init
+     /tmp/ccJuR8iQ.s:445    .text.Motor_Init:000000000000006c $d
+     /tmp/ccJuR8iQ.s:454    .text.Motors_Init:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:461    .text.Motors_Init:0000000000000000 Motors_Init
+     /tmp/ccJuR8iQ.s:513    .text.Motors_Init:000000000000003c $d
                             *COM*:0000000000000054 hmotor1
                             *COM*:0000000000000054 hmotor2
-     /tmp/ccik0I5S.s:520    .text.Motor_SetTargetSpeed:0000000000000000 $t
-     /tmp/ccik0I5S.s:527    .text.Motor_SetTargetSpeed:0000000000000000 Motor_SetTargetSpeed
-     /tmp/ccik0I5S.s:564    .text.Motor_UpdateSpeed:0000000000000000 $t
-     /tmp/ccik0I5S.s:571    .text.Motor_UpdateSpeed:0000000000000000 Motor_UpdateSpeed
-     /tmp/ccik0I5S.s:614    .rodata:0000000000000000 $d
+     /tmp/ccJuR8iQ.s:520    .text.Motor_SetTargetSpeed:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:527    .text.Motor_SetTargetSpeed:0000000000000000 Motor_SetTargetSpeed
+     /tmp/ccJuR8iQ.s:564    .text.Motor_UpdateSpeed:0000000000000000 $t
+     /tmp/ccJuR8iQ.s:571    .text.Motor_UpdateSpeed:0000000000000000 Motor_UpdateSpeed
+     /tmp/ccJuR8iQ.s:614    .rodata:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_WritePin

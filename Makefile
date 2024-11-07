@@ -181,14 +181,16 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 C_INCLUDES += \
 -ICus/AT \
 -ICus/ROBOT_STATE \
--ICus/MOTOR_DRV 
+-ICus/MOTOR_DRV  \
+-ICus/MICROROS 
 
 C_SOURCES +=  \
 Cus/AT/AT.c \
 Cus/ROBOT_STATE/robot_state.c \
 Cus/MOTOR_DRV/motor.c \
 Cus/MOTOR_DRV/encoder.c \
-Cus/MOTOR_DRV/pid.c
+Cus/MOTOR_DRV/pid.c \
+Cus/MICROROS/microros_task.c
 
 #######################################
 # micro-ROS addons
