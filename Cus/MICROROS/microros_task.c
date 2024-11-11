@@ -12,6 +12,7 @@
 #include <rmw_microxrcedds_c/config.h>
 #include <uxr/client/transport.h>
 #include <std_msgs/msg/int32.h>
+#include <std_msgs/msg/float64.h>
 #include <geometry_msgs/msg/twist.h>
 #include <math.h>
 
@@ -38,8 +39,8 @@ static rcl_ret_t temp_ret;
 static rcl_subscription_t motor1_subscriber;
 static rcl_subscription_t motor2_subscriber;
 static rcl_subscription_t cmd_vel_subscriber;
-static std_msgs__msg__Int32 motor1_msg;
-static std_msgs__msg__Int32 motor2_msg;
+static std_msgs__msg__Float64 motor1_msg;
+static std_msgs__msg__Float64 motor2_msg;
 static geometry_msgs__msg__Twist cmd_vel_msg;
 
 /* Static function declarations */
@@ -55,10 +56,10 @@ static rcl_publisher_t left_wheel_feedback_publisher;
 static rcl_publisher_t right_wheel_target_publisher;
 static rcl_publisher_t left_wheel_target_publisher;
 
-static std_msgs__msg__Int32 right_wheel_feedback_msg;
-static std_msgs__msg__Int32 left_wheel_feedback_msg;
-static std_msgs__msg__Int32 right_wheel_target_msg;
-static std_msgs__msg__Int32 left_wheel_target_msg;
+static std_msgs__msg__Float64 right_wheel_feedback_msg;
+static std_msgs__msg__Float64 left_wheel_feedback_msg;
+static std_msgs__msg__Float64 right_wheel_target_msg;
+static std_msgs__msg__Float64 left_wheel_target_msg;
 
 /* Timer callback implementation */
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
@@ -67,14 +68,17 @@ static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
         temp_ret = rcl_publish(&publisher, &msg, NULL);
 
         // 更新并发布右轮状态
-        right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
-        right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+        // right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
+        // right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+
+        right_wheel_feedback_msg.data = hmotor1.current_rpm;  // 实际速度
+        right_wheel_target_msg.data = hmotor1.target_rpm;     // 目标速度
         rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
         rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
         
         // 更新并发布左轮状态
-        left_wheel_feedback_msg.data = (int32_t)hmotor2.current_rpm;   // 实际速度
-        left_wheel_target_msg.data = (int32_t)hmotor2.target_rpm;      // 目标速度
+        left_wheel_feedback_msg.data = hmotor2.current_rpm;   // 实际速度
+        left_wheel_target_msg.data = hmotor2.target_rpm;      // 目标速度
         rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
         rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
     }
@@ -82,13 +86,13 @@ static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
 
 /* Motor callbacks implementation */
 static void motor1_callback(const void * msgin) {
-    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
     float target_rpm = (float)msg->data;
     Motor_SetTargetSpeed(&hmotor1, target_rpm);
 }
 
 static void motor2_callback(const void * msgin) {
-    const std_msgs__msg__Int32 * msg = (const std_msgs__msg__Int32 *)msgin;
+    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
     float target_rpm = (float)msg->data;
     Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
@@ -157,14 +161,14 @@ void MicroROS_Init(void) {
     rclc_publisher_init_default(
         &right_wheel_feedback_publisher,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_right/feedback"
     );
     
     rclc_publisher_init_default(
         &right_wheel_target_publisher,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_right/target"
     );
     
@@ -172,14 +176,14 @@ void MicroROS_Init(void) {
     rclc_publisher_init_default(
         &left_wheel_feedback_publisher,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_left/feedback"
     );
     
     rclc_publisher_init_default(
         &left_wheel_target_publisher,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_left/target"
     );
 
@@ -187,14 +191,14 @@ void MicroROS_Init(void) {
     rclc_subscription_init_default(
         &motor1_subscriber,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_right/target_speed"
     );
 
     rclc_subscription_init_default(
         &motor2_subscriber,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
         "wheel_left/target_speed"
     );
 

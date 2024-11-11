@@ -191,12 +191,34 @@ build/freertos.o: Core/Src/freertos.c \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__functions.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/rosidl_generator_c__visibility_control.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/float32.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__functions.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__type_support.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/string.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/string.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/primitives_sequence.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__functions.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__type_support.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/nav_sat_fix.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/header__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_status__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__functions.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/rosidl_generator_c__visibility_control.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__type_support.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/twist.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__struct.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/vector3__struct.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__functions.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/rosidl_generator_c__visibility_control.h \
- micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__type_support.h
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__type_support.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/trigger.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__struct.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__functions.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/msg/rosidl_generator_c__visibility_control.h \
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__type_support.h
 
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -600,6 +622,40 @@ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/int32__type_support.h:
 
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/float32.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__functions.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32__type_support.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/string.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/string.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rosidl_runtime_c/primitives_sequence.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__functions.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/string__type_support.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/nav_sat_fix.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/header__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_status__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__functions.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/rosidl_generator_c__visibility_control.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/sensor_msgs/msg/detail/nav_sat_fix__type_support.h:
+
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/twist.h:
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__struct.h:
@@ -611,3 +667,13 @@ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/rosidl_generator_c__visibility_control.h:
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/geometry_msgs/msg/detail/twist__type_support.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/trigger.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__struct.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__functions.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/msg/rosidl_generator_c__visibility_control.h:
+
+micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_srvs/srv/detail/trigger__type_support.h:

@@ -19,7 +19,13 @@ extern "C" {
 #include <rmw_microxrcedds_c/config.h>
 #include <uxr/client/transport.h>
 #include <std_msgs/msg/int32.h>
+#include <std_msgs/msg/float32.h>
+#include <std_msgs/msg/string.h>
+#include <sensor_msgs/msg/nav_sat_fix.h>
 #include <geometry_msgs/msg/twist.h>
+#include <std_srvs/srv/trigger.h>
+
+
 #include <math.h>
 
 // MicroROS Task initialization and start function
@@ -37,6 +43,14 @@ void *microros_allocate(size_t size, void *state);
 void microros_deallocate(void *pointer, void *state);
 void *microros_reallocate(void *pointer, size_t size, void *state);
 void *microros_zero_allocate(size_t number_of_elements, size_t size_of_element, void *state);
+
+/* Vehicle type definitions */
+typedef enum {
+    VEHICLE_TYPE_ACKERMANN = 1,    // 阿克曼小车 (2WD1S)
+    VEHICLE_TYPE_DIFFERENTIAL = 2,  // 两轮差速小车-履带车 (2WD)
+    VEHICLE_TYPE_MECANUM = 3,      // 四轮全向车 (4WD)
+    VEHICLE_TYPE_BOAT = 4          // 差速船 (DEV)
+} VehicleType;
 
 #ifdef __cplusplus
 }
