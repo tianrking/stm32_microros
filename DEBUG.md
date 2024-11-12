@@ -25,7 +25,7 @@ openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
 
 ### 3. Start gdb-multiarch
 ```bash
-gdb-multiarch
+
 target remote localhost:3333
 target extended-remote :3333
 ```
@@ -101,3 +101,7 @@ ros2 topic pub wheel_right/target_speed std_msgs/msg/Float64 "data: 500" # 设�
 ros2 topic pub wheel_left/target_speed std_msgs/msg/Float64 "data: 1000" # 设置电机2为100% PWM
 
 ros2 topic pub pid_params std_msgs/msg/Float32MultiArray "data: [2.5, 3.2, 0.05]" 测试PID
+
+ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'mecanum,0.065,0.32,0.32'"
+ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'ackermann,0.065,0.32,0.32'"
+ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'differential,0.065,0.32,0.32'"

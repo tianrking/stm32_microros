@@ -224,7 +224,8 @@ build/freertos.o: Core/Src/freertos.c \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_layout__struct.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/multi_array_dimension__struct.h \
  micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32_multi_array__functions.h \
- micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32_multi_array__type_support.h
+ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32_multi_array__type_support.h \
+ Cus/MICROROS/microros_state.h Cus/MOTOR_DRV/pid.h
 
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -695,3 +696,7 @@ micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32_multi_array__functions.h:
 
 micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/std_msgs/msg/detail/float32_multi_array__type_support.h:
+
+Cus/MICROROS/microros_state.h:
+
+Cus/MOTOR_DRV/pid.h:

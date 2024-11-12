@@ -190,7 +190,8 @@ Cus/ROBOT_STATE/robot_state.c \
 Cus/MOTOR_DRV/motor.c \
 Cus/MOTOR_DRV/encoder.c \
 Cus/MOTOR_DRV/pid.c \
-Cus/MICROROS/microros_task.c
+Cus/MICROROS/microros_task.c \
+Cus/MICROROS/microros_state.c
 
 #######################################
 # micro-ROS addons

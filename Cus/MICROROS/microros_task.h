@@ -25,7 +25,9 @@ extern "C" {
 #include <geometry_msgs/msg/twist.h>
 #include <std_srvs/srv/trigger.h>
 #include <std_msgs/msg/float32_multi_array.h>
+#include "microros_state.h"
 
+#include "pid.h"
 
 #include <math.h>
 
@@ -46,27 +48,27 @@ void *microros_reallocate(void *pointer, size_t size, void *state);
 void *microros_zero_allocate(size_t number_of_elements, size_t size_of_element, void *state);
 
 /* Vehicle type definitions */
-typedef enum {
-    VEHICLE_TYPE_ACKERMANN = 1,    // 阿克曼小车 (2WD1S)
-    VEHICLE_TYPE_DIFFERENTIAL = 2,  // 两轮差速小车-履带车 (2WD)
-    VEHICLE_TYPE_MECANUM = 3,      // 四轮全向车 (4WD)
-    VEHICLE_TYPE_BOAT = 4          // 差速船 (DEV)
-} VehicleType;
+// typedef enum {
+//     VEHICLE_TYPE_ACKERMANN = 1,    // 阿克曼小车 (2WD1S)
+//     VEHICLE_TYPE_DIFFERENTIAL = 2,  // 两轮差速小车-履带车 (2WD)
+//     VEHICLE_TYPE_MECANUM = 3,      // 四轮全向车 (4WD)
+//     VEHICLE_TYPE_BOAT = 4          // 差速船 (DEV)
+// } VehicleType;
 
-/* Vehicle parameters structure */
-typedef struct {
-    VehicleType type;
-    float wheelRadius;
-    float vehicleWidth;
-    float vehicleLength;
-} VehicleParams;
+// /* Vehicle parameters structure */
+// typedef struct {
+//     VehicleType type;
+//     float wheelRadius;
+//     float vehicleWidth;
+//     float vehicleLength;
+// } VehicleParams;
 
-/* PID parameters structure */
-typedef struct {
-    float p;
-    float i;
-    float d;
-} PIDParams;
+// /* PID parameters structure */
+// typedef struct {
+//     float p;
+//     float i;
+//     float d;
+// } PIDParams;
 
 #ifdef __cplusplus
 }

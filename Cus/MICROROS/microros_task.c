@@ -50,20 +50,13 @@ static rcl_subscription_t pid_params_subscriber;
 static std_msgs__msg__Float32MultiArray pid_params_msg = {0};  // 初始化为0
 
 /* Global parameters */
-// static VehicleParams current_vehicle_params = {
-VehicleParams current_vehicle_params = {
-    .type = VEHICLE_TYPE_DIFFERENTIAL,  // 默认为差速
-    .wheelRadius = 0.065f,
-    .vehicleWidth = 0.32f,
-    .vehicleLength = 0.32f
-};
-
-// static PIDParams current_pid_params = {
-PIDParams current_pid_params = {
-    .p = 1.0f,
-    .i = 0.0f,
-    .d = 0.0f
-};
+// // static VehicleParams current_vehicle_params = {
+// VehicleParams current_vehicle_params = {
+//     .type = VEHICLE_TYPE_DIFFERENTIAL,  // 默认为差速
+//     .wheelRadius = 0.065f,
+//     .vehicleWidth = 0.32f,
+//     .vehicleLength = 0.32f
+// };
 
 /* Static function declarations */
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time);
@@ -162,37 +155,23 @@ static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_
 /* PID parameters callback */
 static void pid_params_callback(const void * msgin) {
     const std_msgs__msg__Float32MultiArray * msg = (const std_msgs__msg__Float32MultiArray *)msgin;
-    
-    if (msg == NULL) {
-        return;
-    }
-
-    // 打印调试信息
-    printf("Received PID params, size: %d\n", msg->data.size);
-    
-    // 确保收到了3个参数
+    gggg++;
     if (msg->data.size == 3) {
-        current_pid_params.p = msg->data.data[0];
-        current_pid_params.i = msg->data.data[1];
-        current_pid_params.d = msg->data.data[2];
+        // 更新电机1的PID参数
+        if (MicroROSState_UpdatePIDParams(&hmotor1.pid, 
+                                        msg->data.data[0], 
+                                        msg->data.data[1], 
+                                        msg->data.data[2])) {
+            // PID参数更新成功
+        }
         
-        // 打印接收到的参数
-        // printf("New PID params: P=%.2f, I=%.2f, D=%.2f\n", 
-        //        current_pid_params.p,
-        //        current_pid_params.i,
-        //        current_pid_params.d);
-               
-        gggg++;  // 更新计数器
-        
-        // 更新电机PID参数
-        // Motor_UpdatePIDParams(&hmotor1, 
-        //                     current_pid_params.p, 
-        //                     current_pid_params.i, 
-        //                     current_pid_params.d);
-        // Motor_UpdatePIDParams(&hmotor2, 
-        //                     current_pid_params.p, 
-        //                     current_pid_params.i, 
-        //                     current_pid_params.d);
+        // 更新电机2的PID参数
+        if (MicroROSState_UpdatePIDParams(&hmotor2.pid, 
+                                        msg->data.data[0], 
+                                        msg->data.data[1], 
+                                        msg->data.data[2])) {
+            // PID参数更新成功
+        }
     }
 }
 
@@ -215,58 +194,92 @@ static void vehicle_params_callback(const void * msgin) {
         return;
     }
 
-    // 创建一个临时缓冲区来存储消息数据，因为strtok会修改原字符串
+    // 创建临时缓冲区来存储消息数据
     char buffer[100];
     strncpy(buffer, msg->data.data, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';  // 确保字符串结束
 
-    char *next_token = NULL;
-    char *token;
+    // 用于存储解析后的参数
+    VehicleType parsed_type = VEHICLE_TYPE_DIFFERENTIAL;
+    float wheel_radius = 0.0f;
+    float vehicle_width = 0.0f;
+    float vehicle_length = 0.0f;
 
-    // 解析车辆类型
-    token = str_split_next(buffer, ',', &next_token);
-    if (token != NULL) {
-        // 设置车辆类型
-        if (strcmp(token, "differential") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_DIFFERENTIAL;
-        } else if (strcmp(token, "ackermann") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_ACKERMANN;
-        } else if (strcmp(token, "mecanum") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_MECANUM;
-        } else if (strcmp(token, "boat") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_BOAT;
+    // 使用strtok解析字符串
+    char* token = strtok(buffer, ",");
+    int param_count = 0;
+    
+    while (token != NULL && param_count < 4) {
+        // 去除首尾空格
+        while (*token == ' ') token++;
+        char* end = token + strlen(token) - 1;
+        while (end > token && *end == ' ') {
+            *end = '\0';
+            end--;
         }
 
-        // 解析轮半径
-        token = str_split_next(next_token, ',', &next_token);
-        if (token != NULL) {
-            current_vehicle_params.wheelRadius = atof(token);
-
-            // 解析车宽
-            token = str_split_next(next_token, ',', &next_token);
-            if (token != NULL) {
-                current_vehicle_params.vehicleWidth = atof(token);
-
-                // 解析车长
-                token = str_split_next(next_token, ',', &next_token);
-                if (token != NULL) {
-                    current_vehicle_params.vehicleLength = atof(token);
-
-                    // 打印接收到的参数
-                    // printf("Vehicle Params updated:\n");
-                    // printf("Type: %d\n", current_vehicle_params.type);
-                    // printf("Wheel Radius: %.3f\n", current_vehicle_params.wheelRadius);
-                    // printf("Width: %.3f\n", current_vehicle_params.vehicleWidth);
-                    // printf("Length: %.3f\n", current_vehicle_params.vehicleLength);
+        switch (param_count) {
+            case 0:  // 车辆类型
+                if (strcmp(token, "differential") == 0) {
+                    parsed_type = VEHICLE_TYPE_DIFFERENTIAL;
+                } else if (strcmp(token, "ackermann") == 0) {
+                    parsed_type = VEHICLE_TYPE_ACKERMANN;
+                } else if (strcmp(token, "mecanum") == 0) {
+                    parsed_type = VEHICLE_TYPE_MECANUM;
+                } else if (strcmp(token, "boat") == 0) {
+                    parsed_type = VEHICLE_TYPE_BOAT;
                 }
-            }
+                break;
+                
+            case 1:  // 轮半径
+                wheel_radius = atof(token);
+                break;
+                
+            case 2:  // 车身宽度
+                vehicle_width = atof(token);
+                break;
+                
+            case 3:  // 车身长度
+                vehicle_length = atof(token);
+                break;
         }
+        
+        token = strtok(NULL, ",");
+        param_count++;
+    }
+
+    // 检查是否获得了所有参数
+    if (param_count == 4) {
+        // 使用状态管理器更新参数
+        if (MicroROSState_SetVehicleParams(parsed_type, 
+                                         wheel_radius, 
+                                         vehicle_width, 
+                                         vehicle_length)) {
+            // 参数更新成功，获取更新后的参数
+            const VehicleParams* params = MicroROSState_GetVehicleParams();
+            
+            // 打印确认信息（可选）
+            // printf("Vehicle parameters updated:\n");
+            // printf("Type: %s\n", MicroROSState_GetVehicleTypeString(params->type));
+            // printf("Wheel Radius: %.3f m\n", params->wheelRadius);
+            // printf("Vehicle Width: %.3f m\n", params->vehicleWidth);
+            // printf("Vehicle Length: %.3f m\n", params->vehicleLength);
+            
+            // TODO: 如果需要，这里可以添加其他更新逻辑
+            // 例如：更新运动学模型参数等
+        } else {
+            printf("Error: Invalid vehicle parameters\n");
+        }
+    } else {
+        printf("Error: Invalid parameter count (expected 4, got %d)\n", param_count);
     }
 }
 
-
 /* MicroROS initialization */
 void MicroROS_Init(void) {
+
+    MicroROSState_Init(); 
+
     rmw_uros_set_custom_transport(
         true,
         (void *)&huart1,
