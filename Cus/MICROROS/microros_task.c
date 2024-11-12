@@ -88,6 +88,10 @@ static std_msgs__msg__Float64 left_wheel_feedback_msg;
 static std_msgs__msg__Float64 right_wheel_target_msg;
 static std_msgs__msg__Float64 left_wheel_target_msg;
 
+// 修改订阅者声明
+static rcl_subscription_t vehicle_params_subscriber;
+static std_msgs__msg__String vehicle_params_msg = {0};  // 初始化为0
+
 /* Timer callback implementation */
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     if (timer != NULL) {
@@ -192,33 +196,74 @@ static void pid_params_callback(const void * msgin) {
     }
 }
 
-/* Vehicle type conversion */
-static VehicleType string_to_vehicle_type(const char* type_str) {
-    if (strcmp(type_str, "ackermann") == 0) return VEHICLE_TYPE_ACKERMANN;
-    if (strcmp(type_str, "differential") == 0) return VEHICLE_TYPE_DIFFERENTIAL;
-    if (strcmp(type_str, "mecanum") == 0) return VEHICLE_TYPE_MECANUM;
-    if (strcmp(type_str, "boat") == 0) return VEHICLE_TYPE_BOAT;
-    return VEHICLE_TYPE_DIFFERENTIAL;  // 默认返回差速类型
+// 字符串解析辅助函数
+static char* str_split_next(char* str, char delim, char** next) {
+    char* token = str;
+    if (str == NULL) return NULL;
+    
+    *next = strchr(str, delim);
+    if (*next != NULL) {
+        **next = '\0';  // 将分隔符替换为字符串结束符
+        *next = *next + 1;  // 移动到下一个字符
+    }
+    return token;
 }
 
-/* Vehicle parameters callback 也相应简化 */
-// static void vehicle_params_callback(const void * msgin) {
-//     const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
-//     char type_str[20];
-//     float wheelRadius, vehicleWidth, vehicleLength;
-    
-//     // 格式: "类型,轮半径,车宽,车长"
-//     if(sscanf(msg->data.data, "%[^,],%f,%f,%f", 
-//               type_str, &wheelRadius, &vehicleWidth, &vehicleLength) == 4) {
-        
-//         current_vehicle_params.type = string_to_vehicle_type(type_str);
-//         current_vehicle_params.wheelRadius = wheelRadius;
-//         current_vehicle_params.vehicleWidth = vehicleWidth;
-//         current_vehicle_params.vehicleLength = vehicleLength;
-        
-//         // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // LED指示接收成功
-//     }
-// }
+static void vehicle_params_callback(const void * msgin) {
+    const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
+    if (msg == NULL || msg->data.data == NULL) {
+        return;
+    }
+
+    // 创建一个临时缓冲区来存储消息数据，因为strtok会修改原字符串
+    char buffer[100];
+    strncpy(buffer, msg->data.data, sizeof(buffer) - 1);
+    buffer[sizeof(buffer) - 1] = '\0';  // 确保字符串结束
+
+    char *next_token = NULL;
+    char *token;
+
+    // 解析车辆类型
+    token = str_split_next(buffer, ',', &next_token);
+    if (token != NULL) {
+        // 设置车辆类型
+        if (strcmp(token, "differential") == 0) {
+            current_vehicle_params.type = VEHICLE_TYPE_DIFFERENTIAL;
+        } else if (strcmp(token, "ackermann") == 0) {
+            current_vehicle_params.type = VEHICLE_TYPE_ACKERMANN;
+        } else if (strcmp(token, "mecanum") == 0) {
+            current_vehicle_params.type = VEHICLE_TYPE_MECANUM;
+        } else if (strcmp(token, "boat") == 0) {
+            current_vehicle_params.type = VEHICLE_TYPE_BOAT;
+        }
+
+        // 解析轮半径
+        token = str_split_next(next_token, ',', &next_token);
+        if (token != NULL) {
+            current_vehicle_params.wheelRadius = atof(token);
+
+            // 解析车宽
+            token = str_split_next(next_token, ',', &next_token);
+            if (token != NULL) {
+                current_vehicle_params.vehicleWidth = atof(token);
+
+                // 解析车长
+                token = str_split_next(next_token, ',', &next_token);
+                if (token != NULL) {
+                    current_vehicle_params.vehicleLength = atof(token);
+
+                    // 打印接收到的参数
+                    // printf("Vehicle Params updated:\n");
+                    // printf("Type: %d\n", current_vehicle_params.type);
+                    // printf("Wheel Radius: %.3f\n", current_vehicle_params.wheelRadius);
+                    // printf("Width: %.3f\n", current_vehicle_params.vehicleWidth);
+                    // printf("Length: %.3f\n", current_vehicle_params.vehicleLength);
+                }
+            }
+        }
+    }
+}
+
 
 /* MicroROS initialization */
 void MicroROS_Init(void) {
@@ -323,12 +368,17 @@ void MicroROS_Init(void) {
         // printf("Error creating pid_params subscriber: %d\n", ret);
     }
 
-    // rclc_subscription_init_default(
-    //     &vehicle_params_subscriber,
-    //     &node,
-    //     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
-    //     "vehicle_params"
-    // );
+    // 为String消息分配内存
+    vehicle_params_msg.data.capacity = 100;  // 最大字符数
+    vehicle_params_msg.data.size = 0;
+    vehicle_params_msg.data.data = (char*)malloc(vehicle_params_msg.data.capacity);
+
+    ret = rclc_subscription_init_default(
+        &vehicle_params_subscriber,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "vehicle_params"
+    );
 
 
     // Initialize timer
@@ -347,7 +397,7 @@ void MicroROS_Init(void) {
         &pid_params_callback,
         ON_NEW_DATA
     );
-    // rclc_executor_add_subscription(&executor, &vehicle_params_subscriber, &vehicle_params_msg, &vehicle_params_callback, ON_NEW_DATA);
+    rclc_executor_add_subscription(&executor, &vehicle_params_subscriber, &vehicle_params_msg, &vehicle_params_callback, ON_NEW_DATA);
 
 
     // Initialize motors and encoders
