@@ -43,12 +43,39 @@ static std_msgs__msg__Float64 motor1_msg;
 static std_msgs__msg__Float64 motor2_msg;
 static geometry_msgs__msg__Twist cmd_vel_msg;
 
+static rcl_subscription_t vehicle_params_subscriber;
+static std_msgs__msg__String vehicle_params_msg;
+
+static rcl_subscription_t pid_params_subscriber;
+static std_msgs__msg__Float32MultiArray pid_params_msg = {0};  // 初始化为0
+
+/* Global parameters */
+// static VehicleParams current_vehicle_params = {
+VehicleParams current_vehicle_params = {
+    .type = VEHICLE_TYPE_DIFFERENTIAL,  // 默认为差速
+    .wheelRadius = 0.065f,
+    .vehicleWidth = 0.32f,
+    .vehicleLength = 0.32f
+};
+
+// static PIDParams current_pid_params = {
+PIDParams current_pid_params = {
+    .p = 1.0f,
+    .i = 0.0f,
+    .d = 0.0f
+};
+
 /* Static function declarations */
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time);
 static void motor1_callback(const void * msgin);
 static void motor2_callback(const void * msgin);
 static void cmd_vel_callback(const void * msgin);
 static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm);
+
+
+static void pid_params_callback(const void * msgin);
+static void vehicle_params_callback(const void * msgin);
+static VehicleType string_to_vehicle_type(const char* type_str);
 
 
 static rcl_publisher_t right_wheel_feedback_publisher;
@@ -84,20 +111,24 @@ static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     }
 }
 
+float gggg;
+
 /* Motor callbacks implementation */
 static void motor1_callback(const void * msgin) {
+    gggg++;
     const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
     float target_rpm = (float)msg->data;
     Motor_SetTargetSpeed(&hmotor1, target_rpm);
 }
 
+
 static void motor2_callback(const void * msgin) {
+    gggg++;
     const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
     float target_rpm = (float)msg->data;
     Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
 
-/* Cmd_vel callback implementation */
 static void cmd_vel_callback(const void * msgin) {
     const geometry_msgs__msg__Twist * msg = (const geometry_msgs__msg__Twist *)msgin;
     float linear_x = (float)msg->linear.x;
@@ -123,6 +154,72 @@ static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_
     *right_rpm = right_wheel_speed * RADS_TO_RPM;
 }
 
+
+/* PID parameters callback */
+static void pid_params_callback(const void * msgin) {
+    const std_msgs__msg__Float32MultiArray * msg = (const std_msgs__msg__Float32MultiArray *)msgin;
+    
+    if (msg == NULL) {
+        return;
+    }
+
+    // 打印调试信息
+    printf("Received PID params, size: %d\n", msg->data.size);
+    
+    // 确保收到了3个参数
+    if (msg->data.size == 3) {
+        current_pid_params.p = msg->data.data[0];
+        current_pid_params.i = msg->data.data[1];
+        current_pid_params.d = msg->data.data[2];
+        
+        // 打印接收到的参数
+        // printf("New PID params: P=%.2f, I=%.2f, D=%.2f\n", 
+        //        current_pid_params.p,
+        //        current_pid_params.i,
+        //        current_pid_params.d);
+               
+        gggg++;  // 更新计数器
+        
+        // 更新电机PID参数
+        // Motor_UpdatePIDParams(&hmotor1, 
+        //                     current_pid_params.p, 
+        //                     current_pid_params.i, 
+        //                     current_pid_params.d);
+        // Motor_UpdatePIDParams(&hmotor2, 
+        //                     current_pid_params.p, 
+        //                     current_pid_params.i, 
+        //                     current_pid_params.d);
+    }
+}
+
+/* Vehicle type conversion */
+static VehicleType string_to_vehicle_type(const char* type_str) {
+    if (strcmp(type_str, "ackermann") == 0) return VEHICLE_TYPE_ACKERMANN;
+    if (strcmp(type_str, "differential") == 0) return VEHICLE_TYPE_DIFFERENTIAL;
+    if (strcmp(type_str, "mecanum") == 0) return VEHICLE_TYPE_MECANUM;
+    if (strcmp(type_str, "boat") == 0) return VEHICLE_TYPE_BOAT;
+    return VEHICLE_TYPE_DIFFERENTIAL;  // 默认返回差速类型
+}
+
+/* Vehicle parameters callback 也相应简化 */
+// static void vehicle_params_callback(const void * msgin) {
+//     const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
+//     char type_str[20];
+//     float wheelRadius, vehicleWidth, vehicleLength;
+    
+//     // 格式: "类型,轮半径,车宽,车长"
+//     if(sscanf(msg->data.data, "%[^,],%f,%f,%f", 
+//               type_str, &wheelRadius, &vehicleWidth, &vehicleLength) == 4) {
+        
+//         current_vehicle_params.type = string_to_vehicle_type(type_str);
+//         current_vehicle_params.wheelRadius = wheelRadius;
+//         current_vehicle_params.vehicleWidth = vehicleWidth;
+//         current_vehicle_params.vehicleLength = vehicleLength;
+        
+//         // HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // LED指示接收成功
+//     }
+// }
+
 /* MicroROS initialization */
 void MicroROS_Init(void) {
     rmw_uros_set_custom_transport(
@@ -147,7 +244,7 @@ void MicroROS_Init(void) {
     allocator = rcl_get_default_allocator();
     rclc_support_init(&support, 0, NULL, &allocator);
     rclc_node_init_default(&node, "cubemx_node", "", &support);
-    rclc_executor_init(&executor, &support.context, 12, &allocator);
+    rclc_executor_init(&executor, &support.context, 16, &allocator);
 
     // Initialize publisher
     rclc_publisher_init_default(
@@ -209,6 +306,31 @@ void MicroROS_Init(void) {
         "cmd_vel"
     );
 
+    // 在创建订阅者之前，先初始化消息结构
+    pid_params_msg.data.capacity = 3;
+    pid_params_msg.data.size = 0;
+    pid_params_msg.data.data = (float*)malloc(3 * sizeof(float));
+
+    // 初始化PID参数订阅者
+    rcl_ret_t ret = rclc_subscription_init_default(
+        &pid_params_subscriber,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float32MultiArray),
+        "pid_params"
+    );
+    
+    if (ret != RCL_RET_OK) {
+        // printf("Error creating pid_params subscriber: %d\n", ret);
+    }
+
+    // rclc_subscription_init_default(
+    //     &vehicle_params_subscriber,
+    //     &node,
+    //     ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
+    //     "vehicle_params"
+    // );
+
+
     // Initialize timer
     rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(10), timer_callback);
 
@@ -217,6 +339,16 @@ void MicroROS_Init(void) {
     rclc_executor_add_subscription(&executor, &motor1_subscriber, &motor1_msg, &motor1_callback, ON_NEW_DATA);
     rclc_executor_add_subscription(&executor, &motor2_subscriber, &motor2_msg, &motor2_callback, ON_NEW_DATA);
     rclc_executor_add_subscription(&executor, &cmd_vel_subscriber, &cmd_vel_msg, &cmd_vel_callback, ON_NEW_DATA);
+
+    ret = rclc_executor_add_subscription(
+        &executor,
+        &pid_params_subscriber,
+        &pid_params_msg,
+        &pid_params_callback,
+        ON_NEW_DATA
+    );
+    // rclc_executor_add_subscription(&executor, &vehicle_params_subscriber, &vehicle_params_msg, &vehicle_params_callback, ON_NEW_DATA);
+
 
     // Initialize motors and encoders
     Motors_Init();

@@ -24,6 +24,7 @@ extern "C" {
 #include <sensor_msgs/msg/nav_sat_fix.h>
 #include <geometry_msgs/msg/twist.h>
 #include <std_srvs/srv/trigger.h>
+#include <std_msgs/msg/float32_multi_array.h>
 
 
 #include <math.h>
@@ -51,6 +52,21 @@ typedef enum {
     VEHICLE_TYPE_MECANUM = 3,      // 四轮全向车 (4WD)
     VEHICLE_TYPE_BOAT = 4          // 差速船 (DEV)
 } VehicleType;
+
+/* Vehicle parameters structure */
+typedef struct {
+    VehicleType type;
+    float wheelRadius;
+    float vehicleWidth;
+    float vehicleLength;
+} VehicleParams;
+
+/* PID parameters structure */
+typedef struct {
+    float p;
+    float i;
+    float d;
+} PIDParams;
 
 #ifdef __cplusplus
 }

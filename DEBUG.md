@@ -97,5 +97,7 @@ terminate called after throwing an instance of 'eprosima::fastcdr::exception::No
 [ros2run]: Aborted
 ```
 
-ros2 topic pub /motor1_control std_msgs/msg/Int32 "data: 500"  # 设置电机1为50% PWM
-ros2 topic pub /motor2_control std_msgs/msg/Int32 "data: 1000" # 设置电机2为100% PWM
+ros2 topic pub wheel_right/target_speed std_msgs/msg/Float64 "data: 500" # 设置电机1为50% PWM
+ros2 topic pub wheel_left/target_speed std_msgs/msg/Float64 "data: 1000" # 设置电机2为100% PWM
+
+ros2 topic pub pid_params std_msgs/msg/Float32MultiArray "data: [2.5, 3.2, 0.05]" 测试PID
