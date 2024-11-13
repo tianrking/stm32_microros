@@ -15,8 +15,15 @@
 #include <std_msgs/msg/float64.h>
 #include <geometry_msgs/msg/twist.h>
 #include <math.h>
+#include "cmsis_os.h"
 
-/* Robot parameters */
+/* Constants */
+#define MAX_QUEUED_MESSAGES 10
+#define MAX_PROCESS_PER_SPIN 5  // 每次spin最多处理的消息数
+#define EXECUTOR_RESET_INTERVAL 5000  // 每5秒检查一次执行器状态
+#define QUEUE_WARNING_THRESHOLD 8     // 队列警告阈值
+
+/* Wheel parameters */
 #define WHEEL_SEPARATION 0.32f
 #define WHEEL_RADIUS 0.065f
 #define MAX_LINEAR_SPEED 1.0f
@@ -24,132 +31,91 @@
 #define RPM_TO_RADS 0.10472f
 #define RADS_TO_RPM 9.5493f
 
-/* Static variables */
-static rcl_publisher_t publisher;
-static std_msgs__msg__Int32 msg;
-static rclc_support_t support;
-static rcl_allocator_t allocator;
-static rclc_executor_t executor;
-static rcl_node_t node;
-static rcl_timer_t timer;
-static int countt;
-static rcl_ret_t temp_ret;
+/* Monitoring counters */
+static volatile uint32_t total_messages = 0;     // 总接收消息数
+static volatile uint32_t processed_messages = 0;  // 已处理消息数
+static volatile uint32_t dropped_messages = 0;    // 丢弃的消息数
+static volatile uint32_t current_queue = 0;      // 当前队列大小
+static volatile uint32_t max_queue = 0;          // 最大队列大小
+static volatile uint32_t last_executor_run = 0;  // 最后执行器运行时间
+static volatile uint32_t executor_errors = 0;    // 执行器错误次数
+static volatile uint32_t publish_errors = 0;     // 发布错误次数
 
-/* Subscribers */
-static rcl_subscription_t motor1_subscriber;
-static rcl_subscription_t motor2_subscriber;
-static rcl_subscription_t cmd_vel_subscriber;
-static std_msgs__msg__Float64 motor1_msg;
-static std_msgs__msg__Float64 motor2_msg;
-static geometry_msgs__msg__Twist cmd_vel_msg;
+/* Status flags */
+static volatile bool executor_healthy = true;
+static volatile bool queue_warning = false;
 
-static rcl_subscription_t vehicle_params_subscriber;
-static std_msgs__msg__String vehicle_params_msg;
-
-static rcl_subscription_t pid_params_subscriber;
-static std_msgs__msg__Float32MultiArray pid_params_msg = {0};  // 初始化为0
-
-/* Global parameters */
-// static VehicleParams current_vehicle_params = {
-VehicleParams current_vehicle_params = {
-    .type = VEHICLE_TYPE_DIFFERENTIAL,  // 默认为差速
-    .wheelRadius = 0.065f,
-    .vehicleWidth = 0.32f,
-    .vehicleLength = 0.32f
-};
-
-// static PIDParams current_pid_params = {
-PIDParams current_pid_params = {
-    .p = 1.0f,
-    .i = 0.0f,
-    .d = 0.0f
-};
-
-/* Static function declarations */
+/* Function declarations */
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time);
 static void motor1_callback(const void * msgin);
 static void motor2_callback(const void * msgin);
 static void cmd_vel_callback(const void * msgin);
 static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm);
+static void check_executor_health(void);
+static void reset_executors_if_needed(void);
+void debug_print(const char* str);
+void num_to_str(uint32_t num, char* str);
 
+/* Debug functions */
+void debug_print(const char* str) {
+    HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), 100);
+}
 
-static void pid_params_callback(const void * msgin);
-static void vehicle_params_callback(const void * msgin);
-static VehicleType string_to_vehicle_type(const char* type_str);
+void num_to_str(uint32_t num, char* str) {
+    char temp[20];
+    int idx = 0;
+    do {
+        temp[idx++] = num % 10 + '0';
+        num /= 10;
+    } while(num > 0);
+    
+    int j = 0;
+    while(idx > 0) {
+        str[j++] = temp[--idx];
+    }
+    str[j] = '\0';
+}
 
+/* Static variables */
+static rcl_publisher_t publisher;
+static std_msgs__msg__Int32 msg;
+static rclc_support_t support;
+static rcl_allocator_t allocator;
+static rclc_executor_t executor_sub;  // 处理订阅
+static rclc_executor_t executor_pub;  // 处理发布和定时器
+static rcl_node_t node;
+static rcl_timer_t timer;
+static int countt;
+static rcl_ret_t temp_ret;
 
+/* Publishers */
 static rcl_publisher_t right_wheel_feedback_publisher;
 static rcl_publisher_t left_wheel_feedback_publisher;
 static rcl_publisher_t right_wheel_target_publisher;
 static rcl_publisher_t left_wheel_target_publisher;
 
+/* Publisher messages */
 static std_msgs__msg__Float64 right_wheel_feedback_msg;
 static std_msgs__msg__Float64 left_wheel_feedback_msg;
 static std_msgs__msg__Float64 right_wheel_target_msg;
 static std_msgs__msg__Float64 left_wheel_target_msg;
 
-// 修改订阅者声明
-static rcl_subscription_t vehicle_params_subscriber;
-static std_msgs__msg__String vehicle_params_msg = {0};  // 初始化为0
+/* Subscribers */
+static rcl_subscription_t motor1_subscriber;
+static rcl_subscription_t motor2_subscriber;
+static rcl_subscription_t cmd_vel_subscriber;
 
-/* Timer callback implementation */
-static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
-    if (timer != NULL) {
-        msg.data = countt--;
-        temp_ret = rcl_publish(&publisher, &msg, NULL);
+/* Subscriber messages */
+static std_msgs__msg__Float64 motor1_msg;
+static std_msgs__msg__Float64 motor2_msg;
+static geometry_msgs__msg__Twist cmd_vel_msg;
 
-        // 更新并发布右轮状态
-        // right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
-        // right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+/* Monitoring counters */
+static volatile uint32_t executor_count = 0;
+static volatile uint32_t callback_count = 0;
+static volatile uint32_t timer_count = 0;
 
-        right_wheel_feedback_msg.data = hmotor1.current_rpm;  // 实际速度
-        right_wheel_target_msg.data = hmotor1.target_rpm;     // 目标速度
-        rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
-        rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
-        
-        // 更新并发布左轮状态
-        left_wheel_feedback_msg.data = hmotor2.current_rpm;   // 实际速度
-        left_wheel_target_msg.data = hmotor2.target_rpm;      // 目标速度
-        rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
-        rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
-    }
-}
-
-float gggg;
-
-/* Motor callbacks implementation */
-static void motor1_callback(const void * msgin) {
-    gggg++;
-    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
-    float target_rpm = (float)msg->data;
-    Motor_SetTargetSpeed(&hmotor1, target_rpm);
-}
-
-
-static void motor2_callback(const void * msgin) {
-    gggg++;
-    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
-    float target_rpm = (float)msg->data;
-    Motor_SetTargetSpeed(&hmotor2, target_rpm);
-}
-
-static void cmd_vel_callback(const void * msgin) {
-    const geometry_msgs__msg__Twist * msg = (const geometry_msgs__msg__Twist *)msgin;
-    float linear_x = (float)msg->linear.x;
-    float angular_z = (float)msg->angular.z;
-    
-    // Limit speed range
-    linear_x = fminf(fmaxf(linear_x, -MAX_LINEAR_SPEED), MAX_LINEAR_SPEED);
-    angular_z = fminf(fmaxf(angular_z, -MAX_ANGULAR_SPEED), MAX_ANGULAR_SPEED);
-    
-    float left_rpm, right_rpm;
-    calculate_wheel_speeds(linear_x, angular_z, &left_rpm, &right_rpm);
-    
-    Motor_SetTargetSpeed(&hmotor1, left_rpm);
-    Motor_SetTargetSpeed(&hmotor2, right_rpm);
-}
-
-/* Wheel speed calculation */
+/* Helper functions */
 static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_rpm, float *right_rpm) {
     float left_wheel_speed = (linear_x - angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
     float right_wheel_speed = (linear_x + angular_z * WHEEL_SEPARATION / 2.0f) / WHEEL_RADIUS;
@@ -158,112 +124,144 @@ static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_
     *right_rpm = right_wheel_speed * RADS_TO_RPM;
 }
 
-
-/* PID parameters callback */
-static void pid_params_callback(const void * msgin) {
-    const std_msgs__msg__Float32MultiArray * msg = (const std_msgs__msg__Float32MultiArray *)msgin;
+/* 执行器健康检查 */
+static void check_executor_health(void) {
+    uint32_t now = HAL_GetTick();
     
-    if (msg == NULL) {
-        return;
+    // 检查执行器是否长时间未运行
+    if(now - last_executor_run > EXECUTOR_RESET_INTERVAL) {
+        executor_healthy = false;
+        executor_errors++;
     }
-
-    // 打印调试信息
-    printf("Received PID params, size: %d\n", msg->data.size);
     
-    // 确保收到了3个参数
-    if (msg->data.size == 3) {
-        current_pid_params.p = msg->data.data[0];
-        current_pid_params.i = msg->data.data[1];
-        current_pid_params.d = msg->data.data[2];
-        
-        // 打印接收到的参数
-        // printf("New PID params: P=%.2f, I=%.2f, D=%.2f\n", 
-        //        current_pid_params.p,
-        //        current_pid_params.i,
-        //        current_pid_params.d);
-               
-        gggg++;  // 更新计数器
-        
-        // 更新电机PID参数
-        // Motor_UpdatePIDParams(&hmotor1, 
-        //                     current_pid_params.p, 
-        //                     current_pid_params.i, 
-        //                     current_pid_params.d);
-        // Motor_UpdatePIDParams(&hmotor2, 
-        //                     current_pid_params.p, 
-        //                     current_pid_params.i, 
-        //                     current_pid_params.d);
+    // 检查队列状态
+    if(current_queue >= QUEUE_WARNING_THRESHOLD) {
+        queue_warning = true;
+    } else {
+        queue_warning = false;
     }
 }
 
-// 字符串解析辅助函数
-static char* str_split_next(char* str, char delim, char** next) {
-    char* token = str;
-    if (str == NULL) return NULL;
-    
-    *next = strchr(str, delim);
-    if (*next != NULL) {
-        **next = '\0';  // 将分隔符替换为字符串结束符
-        *next = *next + 1;  // 移动到下一个字符
+/* 重置执行器 */
+static void reset_executors_if_needed(void) {
+    if(!executor_healthy || queue_warning) {
+        rclc_executor_prepare(&executor_sub);
+        rclc_executor_prepare(&executor_pub);
+        executor_healthy = true;
+        queue_warning = false;
+        current_queue = 0;  // 重置队列计数
     }
-    return token;
 }
 
-static void vehicle_params_callback(const void * msgin) {
-    const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
-    if (msg == NULL || msg->data.data == NULL) {
-        return;
-    }
-
-    // 创建一个临时缓冲区来存储消息数据，因为strtok会修改原字符串
-    char buffer[100];
-    strncpy(buffer, msg->data.data, sizeof(buffer) - 1);
-    buffer[sizeof(buffer) - 1] = '\0';  // 确保字符串结束
-
-    char *next_token = NULL;
-    char *token;
-
-    // 解析车辆类型
-    token = str_split_next(buffer, ',', &next_token);
-    if (token != NULL) {
-        // 设置车辆类型
-        if (strcmp(token, "differential") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_DIFFERENTIAL;
-        } else if (strcmp(token, "ackermann") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_ACKERMANN;
-        } else if (strcmp(token, "mecanum") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_MECANUM;
-        } else if (strcmp(token, "boat") == 0) {
-            current_vehicle_params.type = VEHICLE_TYPE_BOAT;
+/* Callback Implementation */
+static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
+    timer_count++;
+    if (timer != NULL) {
+        // 检查状态
+        check_executor_health();
+        
+        // pingping 消息发布
+        msg.data = countt--;
+        temp_ret = rcl_publish(&publisher, (const void*)&msg, NULL);
+        if(temp_ret != RCL_RET_OK) {
+            publish_errors++;
         }
-
-        // 解析轮半径
-        token = str_split_next(next_token, ',', &next_token);
-        if (token != NULL) {
-            current_vehicle_params.wheelRadius = atof(token);
-
-            // 解析车宽
-            token = str_split_next(next_token, ',', &next_token);
-            if (token != NULL) {
-                current_vehicle_params.vehicleWidth = atof(token);
-
-                // 解析车长
-                token = str_split_next(next_token, ',', &next_token);
-                if (token != NULL) {
-                    current_vehicle_params.vehicleLength = atof(token);
-
-                    // 打印接收到的参数
-                    // printf("Vehicle Params updated:\n");
-                    // printf("Type: %d\n", current_vehicle_params.type);
-                    // printf("Wheel Radius: %.3f\n", current_vehicle_params.wheelRadius);
-                    // printf("Width: %.3f\n", current_vehicle_params.vehicleWidth);
-                    // printf("Length: %.3f\n", current_vehicle_params.vehicleLength);
+        
+        // 准备所有数据
+        right_wheel_feedback_msg.data = hmotor1.current_rpm;
+        right_wheel_target_msg.data = hmotor1.target_rpm;
+        left_wheel_feedback_msg.data = hmotor2.current_rpm;
+        left_wheel_target_msg.data = hmotor2.target_rpm;
+        
+        // 批量发布
+        temp_ret = rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
+        if(temp_ret == RCL_RET_OK) {
+            temp_ret = rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
+            if(temp_ret == RCL_RET_OK) {
+                temp_ret = rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
+                if(temp_ret == RCL_RET_OK) {
+                    temp_ret = rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
                 }
             }
         }
+        
+        if(temp_ret != RCL_RET_OK) {
+            publish_errors++;
+            if(publish_errors > 5) {  // 连续错误超过阈值
+                reset_executors_if_needed();
+                publish_errors = 0;
+            }
+        } else {
+            publish_errors = 0;  // 成功发布则重置错误计数
+        }
     }
 }
 
+static void motor1_callback(const void * msgin) {
+    if(current_queue >= MAX_QUEUED_MESSAGES) {
+        dropped_messages++;
+        return;  // 队列满则丢弃
+    }
+    
+    total_messages++;
+    current_queue++;
+    
+    if(current_queue > max_queue) {
+        max_queue = current_queue;
+    }
+    
+    callback_count++;
+    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
+    float target_rpm = (float)msg->data;
+    Motor_SetTargetSpeed(&hmotor1, target_rpm);
+    
+    processed_messages++;
+    current_queue--;
+}
+
+static void motor2_callback(const void * msgin) {
+    if(current_queue >= MAX_QUEUED_MESSAGES) {
+        dropped_messages++;
+        return;
+    }
+    
+    total_messages++;
+    current_queue++;
+    
+    callback_count++;
+    const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
+    float target_rpm = (float)msg->data;
+    Motor_SetTargetSpeed(&hmotor2, target_rpm);
+    
+    processed_messages++;
+    current_queue--;
+}
+
+static void cmd_vel_callback(const void * msgin) {
+    if(current_queue >= MAX_QUEUED_MESSAGES) {
+        dropped_messages++;
+        return;
+    }
+    
+    total_messages++;
+    current_queue++;
+    
+    const geometry_msgs__msg__Twist * msg = (const geometry_msgs__msg__Twist *)msgin;
+    float linear_x = (float)msg->linear.x;
+    float angular_z = (float)msg->angular.z;
+    
+    linear_x = fminf(fmaxf(linear_x, -MAX_LINEAR_SPEED), MAX_LINEAR_SPEED);
+    angular_z = fminf(fmaxf(angular_z, -MAX_ANGULAR_SPEED), MAX_ANGULAR_SPEED);
+    
+    float left_rpm, right_rpm;
+    calculate_wheel_speeds(linear_x, angular_z, &left_rpm, &right_rpm);
+    
+    Motor_SetTargetSpeed(&hmotor1, left_rpm);
+    Motor_SetTargetSpeed(&hmotor2, right_rpm);
+    
+    processed_messages++;
+    current_queue--;
+}
 
 /* MicroROS initialization */
 void MicroROS_Init(void) {
@@ -283,15 +281,22 @@ void MicroROS_Init(void) {
     freeRTOS_allocator.zero_allocate = microros_zero_allocate;
 
     if (!rcutils_set_default_allocator(&freeRTOS_allocator)) {
-        printf("Error on default allocators (line %d)\n", __LINE__);
+        debug_print("Error on default allocators\r\n");
     }
 
     allocator = rcl_get_default_allocator();
     rclc_support_init(&support, 0, NULL, &allocator);
     rclc_node_init_default(&node, "cubemx_node", "", &support);
-    rclc_executor_init(&executor, &support.context, 16, &allocator);
 
-    // Initialize publisher
+    // 初始化两个执行器，减小handle数量
+    // rclc_executor_init(&executor_sub, &support.context, 3, &allocator); // 3个订阅
+    // rclc_executor_init(&executor_pub, &support.context, 1, &allocator); // 1个定时器
+
+    rclc_executor_init(&executor_sub, &support.context, 4, &allocator);  // 3+2 预留
+    rclc_executor_init(&executor_pub, &support.context, 6, &allocator);  // 1+1 预留
+
+
+    // Initialize publishers
     rclc_publisher_init_default(
         &publisher,
         &node,
@@ -299,7 +304,6 @@ void MicroROS_Init(void) {
         "ping_ping"
     );
 
-    // 初始化右轮速度发布者
     rclc_publisher_init_default(
         &right_wheel_feedback_publisher,
         &node,
@@ -314,7 +318,6 @@ void MicroROS_Init(void) {
         "wheel_right/target"
     );
     
-    // 初始化左轮速度发布者
     rclc_publisher_init_default(
         &left_wheel_feedback_publisher,
         &node,
@@ -351,71 +354,134 @@ void MicroROS_Init(void) {
         "cmd_vel"
     );
 
-    // 在创建订阅者之前，先初始化消息结构
-    pid_params_msg.data.capacity = 3;
-    pid_params_msg.data.size = 0;
-    pid_params_msg.data.data = (float*)malloc(3 * sizeof(float));
+    // Initialize timer with longer period
+    rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(100), timer_callback);
 
-    // 初始化PID参数订阅者
-    rcl_ret_t ret = rclc_subscription_init_default(
-        &pid_params_subscriber,
-        &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float32MultiArray),
-        "pid_params"
-    );
-    
-    if (ret != RCL_RET_OK) {
-        // printf("Error creating pid_params subscriber: %d\n", ret);
-    }
-
-    // 为String消息分配内存
-    vehicle_params_msg.data.capacity = 100;  // 最大字符数
-    vehicle_params_msg.data.size = 0;
-    vehicle_params_msg.data.data = (char*)malloc(vehicle_params_msg.data.capacity);
-
-    ret = rclc_subscription_init_default(
-        &vehicle_params_subscriber,
-        &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-        "vehicle_params"
-    );
-
-
-    // Initialize timer
-    rclc_timer_init_default(&timer, &support, RCL_MS_TO_NS(10), timer_callback);
-
-    // Add timer and subscribers to executor
-    rclc_executor_add_timer(&executor, &timer);
-    rclc_executor_add_subscription(&executor, &motor1_subscriber, &motor1_msg, &motor1_callback, ON_NEW_DATA);
-    rclc_executor_add_subscription(&executor, &motor2_subscriber, &motor2_msg, &motor2_callback, ON_NEW_DATA);
-    rclc_executor_add_subscription(&executor, &cmd_vel_subscriber, &cmd_vel_msg, &cmd_vel_callback, ON_NEW_DATA);
-
-    ret = rclc_executor_add_subscription(
-        &executor,
-        &pid_params_subscriber,
-        &pid_params_msg,
-        &pid_params_callback,
-        ON_NEW_DATA
-    );
-    rclc_executor_add_subscription(&executor, &vehicle_params_subscriber, &vehicle_params_msg, &vehicle_params_callback, ON_NEW_DATA);
-
+    // 添加到各自的执行器
+    rclc_executor_add_timer(&executor_pub, &timer);
+    rclc_executor_add_subscription(&executor_sub, &motor1_subscriber, &motor1_msg, &motor1_callback, ON_NEW_DATA);
+    rclc_executor_add_subscription(&executor_sub, &motor2_subscriber, &motor2_msg, &motor2_callback, ON_NEW_DATA);
+    rclc_executor_add_subscription(&executor_sub, &cmd_vel_subscriber, &cmd_vel_msg, &cmd_vel_callback, ON_NEW_DATA);
 
     // Initialize motors and encoders
     Motors_Init();
     Encoders_Init();
+    
+    // 初始化监控变量
+    executor_healthy = true;
+    queue_warning = false;
+    last_executor_run = HAL_GetTick();
 }
 
 /* MicroROS task implementation */
 void MicroROS_TaskStart(void *argument) {
+    uint32_t last_print_time = 0;
+    uint32_t last_sub_time = 0;
+    uint32_t last_pub_time = 0;
+    uint32_t last_reset_time = 0;
+    uint32_t last_health_check = 0;
+    char num_str[20];
+    rcl_ret_t ret;
+    
     for (;;) {
-        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
-
-        msg.data++;
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-        osDelay(200);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-        osDelay(200);
+        uint32_t now = HAL_GetTick();
+        
+        // 定期健康检查
+        if(now - last_health_check >= 1000) {
+            check_executor_health();
+            if(!executor_healthy || queue_warning) {
+                reset_executors_if_needed();
+            }
+            last_health_check = now;
+        }
+        
+        // 处理订阅消息（高频率）
+        if(now - last_sub_time >= 1) {
+            executor_count++;
+            ret = rclc_executor_spin_some(&executor_sub, RCL_MS_TO_NS(1));
+            if(ret == RCL_RET_OK) {
+                last_executor_run = now;  // 更新最后成功执行时间
+            }
+            last_sub_time = now;
+        }
+        
+        // 处理发布消息（较低频率）
+        if(now - last_pub_time >= 2) {
+            ret = rclc_executor_spin_some(&executor_pub, RCL_MS_TO_NS(1));
+            if(ret == RCL_RET_OK) {
+                last_executor_run = now;
+            }
+            last_pub_time = now;
+        }
+        
+        // 定期重置计数器（防止溢出）
+        if(now - last_reset_time >= 10000) {
+            if(current_queue > 0) {  // 如果还有未处理的消息，记录错误
+                executor_errors++;
+            }
+            total_messages = 0;
+            processed_messages = 0;
+            current_queue = 0;
+            max_queue = 0;
+            last_reset_time = now;
+        }
+        
+        // 打印统计信息
+        if(now - last_print_time >= 1000) {
+            debug_print("\r\n--- Stats ---\r\n");
+            
+            debug_print("Exec: ");
+            num_to_str(executor_count, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Callback: ");
+            num_to_str(callback_count, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Timer: ");
+            num_to_str(timer_count, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Total: ");
+            num_to_str(total_messages, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Processed: ");
+            num_to_str(processed_messages, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Queue: ");
+            num_to_str(current_queue, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("MaxQ: ");
+            num_to_str(max_queue, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Dropped: ");
+            num_to_str(dropped_messages, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            debug_print("Errors: ");
+            num_to_str(executor_errors, num_str);
+            debug_print(num_str);
+            debug_print("\r\n");
+            
+            // 重置部分计数器
+            executor_count = 0;
+            callback_count = 0;
+            timer_count = 0;
+            last_print_time = now;
+        }
+        
+        osDelay(1);
     }
 }

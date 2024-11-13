@@ -68,6 +68,10 @@ typedef struct {
     float d;
 } PIDParams;
 
+
+// int should_publish_ros;
+volatile uint8_t should_publish_ros ;
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccWidhm1.s 			page 1
+ARM GAS  /tmp/ccwVkWvc.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccWidhm1.s 			page 1
   27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
   28:Core/Src/freertos.c **** #include "gpio.h"
   29:Core/Src/freertos.c **** #include "usart.h"
-ARM GAS  /tmp/ccWidhm1.s 			page 2
+ARM GAS  /tmp/ccwVkWvc.s 			page 2
 
 
   30:Core/Src/freertos.c **** #include "tim.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccWidhm1.s 			page 1
   84:Core/Src/freertos.c **** 
   85:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
   86:Core/Src/freertos.c **** void StartTask02(void *argument);
-ARM GAS  /tmp/ccWidhm1.s 			page 3
+ARM GAS  /tmp/ccwVkWvc.s 			page 3
 
 
   87:Core/Src/freertos.c **** 
@@ -158,56 +158,57 @@ ARM GAS  /tmp/ccWidhm1.s 			page 1
  121:Core/Src/freertos.c ****   myTask02Handle = osThreadNew(StartTask02, NULL, &myTask02_attributes);
  122:Core/Src/freertos.c **** 
  123:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
- 124:Core/Src/freertos.c ****   /* add threads, ... */
- 125:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
- 126:Core/Src/freertos.c **** 
- 127:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
- 128:Core/Src/freertos.c ****   /* add events, ... */
- 129:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
- 130:Core/Src/freertos.c **** 
- 131:Core/Src/freertos.c **** }
- 132:Core/Src/freertos.c **** 
- 133:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
- 134:Core/Src/freertos.c **** /**
- 135:Core/Src/freertos.c ****  * @brief  Function implementing the defaultTask thread.
- 136:Core/Src/freertos.c ****  * @param  argument: Not used
- 137:Core/Src/freertos.c ****  * @retval None
- 138:Core/Src/freertos.c ****  */
- 139:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
- 140:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
- 141:Core/Src/freertos.c **** {
-  30              		.loc 1 141 1 view -0
+ 124:Core/Src/freertos.c ****   HAL_TIM_Base_Start_IT(&htim13);
+ 125:Core/Src/freertos.c ****   /* add threads, ... */
+ 126:Core/Src/freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 127:Core/Src/freertos.c **** 
+ 128:Core/Src/freertos.c ****   /* USER CODE BEGIN RTOS_EVENTS */
+ 129:Core/Src/freertos.c ****   /* add events, ... */
+ 130:Core/Src/freertos.c ****   /* USER CODE END RTOS_EVENTS */
+ 131:Core/Src/freertos.c **** 
+ 132:Core/Src/freertos.c **** }
+ 133:Core/Src/freertos.c **** 
+ 134:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 135:Core/Src/freertos.c **** /**
+ 136:Core/Src/freertos.c ****  * @brief  Function implementing the defaultTask thread.
+ 137:Core/Src/freertos.c ****  * @param  argument: Not used
+ 138:Core/Src/freertos.c ****  * @retval None
+ 139:Core/Src/freertos.c ****  */
+ 140:Core/Src/freertos.c **** /* USER CODE END Header_StartDefaultTask */
+ 141:Core/Src/freertos.c **** void StartDefaultTask(void *argument)
+ 142:Core/Src/freertos.c **** {
+  30              		.loc 1 142 1 view -0
+ARM GAS  /tmp/ccwVkWvc.s 			page 4
+
+
   31              		.cfi_startproc
-ARM GAS  /tmp/ccWidhm1.s 			page 4
-
-
   32              		@ args = 0, pretend = 0, frame = 0
   33              		@ frame_needed = 0, uses_anonymous_args = 0
-  34              		.loc 1 141 1 is_stmt 0 view .LVU1
+  34              		.loc 1 142 1 is_stmt 0 view .LVU1
   35 0000 10B5     		push	{r4, lr}
   36              	.LCFI0:
   37              		.cfi_def_cfa_offset 8
   38              		.cfi_offset 4, -8
   39              		.cfi_offset 14, -4
   40 0002 0446     		mov	r4, r0
- 142:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
- 143:Core/Src/freertos.c ****   MicroROS_Init();
-  41              		.loc 1 143 3 is_stmt 1 view .LVU2
+ 143:Core/Src/freertos.c ****   /* USER CODE BEGIN StartDefaultTask */
+ 144:Core/Src/freertos.c ****   MicroROS_Init();
+  41              		.loc 1 144 3 is_stmt 1 view .LVU2
   42 0004 FFF7FEFF 		bl	MicroROS_Init
   43              	.LVL1:
- 144:Core/Src/freertos.c ****   
- 145:Core/Src/freertos.c ****   /* Start MicroROS task */
- 146:Core/Src/freertos.c ****   MicroROS_TaskStart(argument);
-  44              		.loc 1 146 3 view .LVU3
+ 145:Core/Src/freertos.c ****   
+ 146:Core/Src/freertos.c ****   /* Start MicroROS task */
+ 147:Core/Src/freertos.c ****   MicroROS_TaskStart(argument);
+  44              		.loc 1 147 3 view .LVU3
   45 0008 2046     		mov	r0, r4
   46 000a FFF7FEFF 		bl	MicroROS_TaskStart
   47              	.LVL2:
- 147:Core/Src/freertos.c **** 
- 148:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
- 149:Core/Src/freertos.c **** }
-  48              		.loc 1 149 1 is_stmt 0 view .LVU4
+ 148:Core/Src/freertos.c **** 
+ 149:Core/Src/freertos.c ****   /* USER CODE END StartDefaultTask */
+ 150:Core/Src/freertos.c **** }
+  48              		.loc 1 150 1 is_stmt 0 view .LVU4
   49 000e 10BD     		pop	{r4, pc}
-  50              		.loc 1 149 1 view .LVU5
+  50              		.loc 1 150 1 view .LVU5
   51              		.cfi_endproc
   52              	.LFE143:
   54              		.section	.text.StartTask02,"ax",%progbits
@@ -219,45 +220,45 @@ ARM GAS  /tmp/ccWidhm1.s 			page 1
   60              		.fpu fpv4-sp-d16
   62              	StartTask02:
   63              	.LFB144:
- 150:Core/Src/freertos.c **** 
- 151:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartTask02 */
- 152:Core/Src/freertos.c **** /**
- 153:Core/Src/freertos.c **** * @brief Function implementing the myTask02 thread.
- 154:Core/Src/freertos.c **** * @param argument: Not used
- 155:Core/Src/freertos.c **** * @retval None
- 156:Core/Src/freertos.c **** */
- 157:Core/Src/freertos.c **** /* USER CODE END Header_StartTask02 */
- 158:Core/Src/freertos.c **** void StartTask02(void *argument)
- 159:Core/Src/freertos.c **** {
-  64              		.loc 1 159 1 is_stmt 1 view -0
+ 151:Core/Src/freertos.c **** 
+ 152:Core/Src/freertos.c **** /* USER CODE BEGIN Header_StartTask02 */
+ 153:Core/Src/freertos.c **** /**
+ 154:Core/Src/freertos.c **** * @brief Function implementing the myTask02 thread.
+ 155:Core/Src/freertos.c **** * @param argument: Not used
+ 156:Core/Src/freertos.c **** * @retval None
+ 157:Core/Src/freertos.c **** */
+ 158:Core/Src/freertos.c **** /* USER CODE END Header_StartTask02 */
+ 159:Core/Src/freertos.c **** void StartTask02(void *argument)
+ 160:Core/Src/freertos.c **** {
+  64              		.loc 1 160 1 is_stmt 1 view -0
   65              		.cfi_startproc
   66              		@ Volatile: function does not return.
   67              		@ args = 0, pretend = 0, frame = 0
   68              		@ frame_needed = 0, uses_anonymous_args = 0
   69              	.LVL3:
-  70              		.loc 1 159 1 is_stmt 0 view .LVU7
+  70              		.loc 1 160 1 is_stmt 0 view .LVU7
   71 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/ccwVkWvc.s 			page 5
+
+
   72              	.LCFI1:
-ARM GAS  /tmp/ccWidhm1.s 			page 5
-
-
   73              		.cfi_def_cfa_offset 8
   74              		.cfi_offset 3, -8
   75              		.cfi_offset 14, -4
   76              	.LVL4:
   77              	.L4:
- 160:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
- 161:Core/Src/freertos.c ****   /* Infinite loop */
- 162:Core/Src/freertos.c ****   for(;;)
-  78              		.loc 1 162 3 is_stmt 1 discriminator 1 view .LVU8
- 163:Core/Src/freertos.c ****   {
- 164:Core/Src/freertos.c ****     osDelay(1);
-  79              		.loc 1 164 5 discriminator 1 view .LVU9
+ 161:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
+ 162:Core/Src/freertos.c ****   /* Infinite loop */
+ 163:Core/Src/freertos.c ****   for(;;)
+  78              		.loc 1 163 3 is_stmt 1 discriminator 1 view .LVU8
+ 164:Core/Src/freertos.c ****   {
+ 165:Core/Src/freertos.c ****     osDelay(1);
+  79              		.loc 1 165 5 discriminator 1 view .LVU9
   80 0002 0120     		movs	r0, #1
   81 0004 FFF7FEFF 		bl	osDelay
   82              	.LVL5:
- 162:Core/Src/freertos.c ****   {
-  83              		.loc 1 162 8 discriminator 1 view .LVU10
+ 163:Core/Src/freertos.c ****   {
+  83              		.loc 1 163 8 discriminator 1 view .LVU10
   84 0008 FBE7     		b	.L4
   85              		.cfi_endproc
   86              	.LFE144:
@@ -284,159 +285,172 @@ ARM GAS  /tmp/ccWidhm1.s 			page 1
  107              		.loc 1 118 3 view .LVU12
  118:Core/Src/freertos.c **** 
  108              		.loc 1 118 23 is_stmt 0 view .LVU13
- 109 0002 074A     		ldr	r2, .L8
+ 109 0002 094A     		ldr	r2, .L8
  110 0004 0021     		movs	r1, #0
- 111 0006 0748     		ldr	r0, .L8+4
+ 111 0006 0948     		ldr	r0, .L8+4
  112 0008 FFF7FEFF 		bl	osThreadNew
  113              	.LVL6:
  118:Core/Src/freertos.c **** 
  114              		.loc 1 118 21 view .LVU14
- 115 000c 064B     		ldr	r3, .L8+8
+ 115 000c 084B     		ldr	r3, .L8+8
  116 000e 1860     		str	r0, [r3]
  121:Core/Src/freertos.c **** 
  117              		.loc 1 121 3 is_stmt 1 view .LVU15
  121:Core/Src/freertos.c **** 
  118              		.loc 1 121 20 is_stmt 0 view .LVU16
- 119 0010 064A     		ldr	r2, .L8+12
-ARM GAS  /tmp/ccWidhm1.s 			page 6
+ARM GAS  /tmp/ccwVkWvc.s 			page 6
 
 
+ 119 0010 084A     		ldr	r2, .L8+12
  120 0012 0021     		movs	r1, #0
- 121 0014 0648     		ldr	r0, .L8+16
+ 121 0014 0848     		ldr	r0, .L8+16
  122 0016 FFF7FEFF 		bl	osThreadNew
  123              	.LVL7:
  121:Core/Src/freertos.c **** 
  124              		.loc 1 121 18 view .LVU17
- 125 001a 064B     		ldr	r3, .L8+20
+ 125 001a 084B     		ldr	r3, .L8+20
  126 001c 1860     		str	r0, [r3]
- 131:Core/Src/freertos.c **** 
- 127              		.loc 1 131 1 view .LVU18
- 128 001e 08BD     		pop	{r3, pc}
- 129              	.L9:
- 130              		.align	2
- 131              	.L8:
- 132 0020 00000000 		.word	.LANCHOR0
- 133 0024 00000000 		.word	StartDefaultTask
- 134 0028 00000000 		.word	defaultTaskHandle
- 135 002c 00000000 		.word	.LANCHOR1
- 136 0030 00000000 		.word	StartTask02
- 137 0034 00000000 		.word	myTask02Handle
- 138              		.cfi_endproc
- 139              	.LFE142:
- 141              		.global	myTask02_attributes
- 142              		.section	.rodata.str1.4,"aMS",%progbits,1
- 143              		.align	2
- 144              	.LC0:
- 145 0000 6D795461 		.ascii	"myTask02\000"
- 145      736B3032 
- 145      00
- 146              		.comm	myTask02ControlBlock,92,4
- 147              		.comm	myTask02Buffer,8000,4
- 148              		.comm	myTask02Handle,4,4
- 149              		.global	defaultTask_attributes
- 150 0009 000000   		.align	2
- 151              	.LC1:
- 152 000c 64656661 		.ascii	"defaultTask\000"
- 152      756C7454 
- 152      61736B00 
- 153              		.comm	defaultTaskControlBlock,92,4
- 154              		.comm	defaultTaskBuffer,24000,4
- 155              		.comm	defaultTaskHandle,4,4
- 156              		.section	.rodata.defaultTask_attributes,"a"
- 157              		.align	2
- 158              		.set	.LANCHOR0,. + 0
- 161              	defaultTask_attributes:
- 162 0000 0C000000 		.word	.LC1
- 163 0004 00000000 		.space	4
- 164 0008 00000000 		.word	defaultTaskControlBlock
- 165 000c 5C000000 		.word	92
- 166 0010 00000000 		.word	defaultTaskBuffer
- 167 0014 C05D0000 		.word	24000
- 168 0018 18000000 		.word	24
- 169 001c 00000000 		.space	8
- 169      00000000 
- 170              		.section	.rodata.myTask02_attributes,"a"
- 171              		.align	2
- 172              		.set	.LANCHOR1,. + 0
-ARM GAS  /tmp/ccWidhm1.s 			page 7
+ 124:Core/Src/freertos.c ****   /* add threads, ... */
+ 127              		.loc 1 124 3 is_stmt 1 view .LVU18
+ 128 001e 0848     		ldr	r0, .L8+24
+ 129 0020 FFF7FEFF 		bl	HAL_TIM_Base_Start_IT
+ 130              	.LVL8:
+ 132:Core/Src/freertos.c **** 
+ 131              		.loc 1 132 1 is_stmt 0 view .LVU19
+ 132 0024 08BD     		pop	{r3, pc}
+ 133              	.L9:
+ 134 0026 00BF     		.align	2
+ 135              	.L8:
+ 136 0028 00000000 		.word	.LANCHOR0
+ 137 002c 00000000 		.word	StartDefaultTask
+ 138 0030 00000000 		.word	defaultTaskHandle
+ 139 0034 00000000 		.word	.LANCHOR1
+ 140 0038 00000000 		.word	StartTask02
+ 141 003c 00000000 		.word	myTask02Handle
+ 142 0040 00000000 		.word	htim13
+ 143              		.cfi_endproc
+ 144              	.LFE142:
+ 146              		.global	myTask02_attributes
+ 147              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 148              		.align	2
+ 149              	.LC0:
+ 150 0000 6D795461 		.ascii	"myTask02\000"
+ 150      736B3032 
+ 150      00
+ 151              		.comm	myTask02ControlBlock,92,4
+ 152              		.comm	myTask02Buffer,8000,4
+ 153              		.comm	myTask02Handle,4,4
+ 154              		.global	defaultTask_attributes
+ 155 0009 000000   		.align	2
+ 156              	.LC1:
+ 157 000c 64656661 		.ascii	"defaultTask\000"
+ 157      756C7454 
+ 157      61736B00 
+ 158              		.comm	defaultTaskControlBlock,92,4
+ 159              		.comm	defaultTaskBuffer,24000,4
+ 160              		.comm	defaultTaskHandle,4,4
+ 161              		.comm	should_publish_ros,1,1
+ 162              		.section	.rodata.defaultTask_attributes,"a"
+ 163              		.align	2
+ 164              		.set	.LANCHOR0,. + 0
+ 167              	defaultTask_attributes:
+ 168 0000 0C000000 		.word	.LC1
+ 169 0004 00000000 		.space	4
+ 170 0008 00000000 		.word	defaultTaskControlBlock
+ 171 000c 5C000000 		.word	92
+ARM GAS  /tmp/ccwVkWvc.s 			page 7
 
 
- 175              	myTask02_attributes:
- 176 0000 00000000 		.word	.LC0
- 177 0004 00000000 		.space	4
- 178 0008 00000000 		.word	myTask02ControlBlock
- 179 000c 5C000000 		.word	92
- 180 0010 00000000 		.word	myTask02Buffer
- 181 0014 401F0000 		.word	8000
- 182 0018 18000000 		.word	24
- 183 001c 00000000 		.space	8
- 183      00000000 
- 184              		.text
- 185              	.Letext0:
- 186              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stddef.h"
- 187              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
- 188              		.file 4 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
- 189              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 190              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
- 191              		.file 7 "Core/Inc/FreeRTOSConfig.h"
- 192              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
- 193              		.file 9 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
- 194              		.file 10 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 195              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 196              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 197              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 198              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 199              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 200              		.file 16 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 201              		.file 17 "Core/Inc/usart.h"
- 202              		.file 18 "Core/Inc/tim.h"
- 203              		.file 19 "Cus/MOTOR_DRV/pid.h"
- 204              		.file 20 "Cus/MOTOR_DRV/encoder.h"
- 205              		.file 21 "Cus/MOTOR_DRV/motor.h"
- 206              		.file 22 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stdarg.h"
- 207              		.file 23 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
- 208              		.file 24 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_types.h"
- 209              		.file 25 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/reent.h"
- 210              		.file 26 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
- 211              		.file 27 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdlib.h"
- 212              		.file 28 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 213              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 214              		.file 30 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
- 215              		.file 31 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 216              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/dom
- 217              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
- 218              		.file 34 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
- 219              		.file 35 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 220              		.file 36 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 221              		.file 37 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/math.h"
- 222              		.file 38 "Cus/MICROROS/microros_task.h"
- 223              		.file 39 "<built-in>"
-ARM GAS  /tmp/ccWidhm1.s 			page 8
+ 172 0010 00000000 		.word	defaultTaskBuffer
+ 173 0014 C05D0000 		.word	24000
+ 174 0018 18000000 		.word	24
+ 175 001c 00000000 		.space	8
+ 175      00000000 
+ 176              		.section	.rodata.myTask02_attributes,"a"
+ 177              		.align	2
+ 178              		.set	.LANCHOR1,. + 0
+ 181              	myTask02_attributes:
+ 182 0000 00000000 		.word	.LC0
+ 183 0004 00000000 		.space	4
+ 184 0008 00000000 		.word	myTask02ControlBlock
+ 185 000c 5C000000 		.word	92
+ 186 0010 00000000 		.word	myTask02Buffer
+ 187 0014 401F0000 		.word	8000
+ 188 0018 18000000 		.word	24
+ 189 001c 00000000 		.space	8
+ 189      00000000 
+ 190              		.text
+ 191              	.Letext0:
+ 192              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stddef.h"
+ 193              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 194              		.file 4 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 195              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 196              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
+ 197              		.file 7 "Core/Inc/FreeRTOSConfig.h"
+ 198              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
+ 199              		.file 9 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 200              		.file 10 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 201              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 202              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 203              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 204              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 205              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 206              		.file 16 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 207              		.file 17 "Core/Inc/usart.h"
+ 208              		.file 18 "Core/Inc/tim.h"
+ 209              		.file 19 "Cus/MOTOR_DRV/pid.h"
+ 210              		.file 20 "Cus/MOTOR_DRV/encoder.h"
+ 211              		.file 21 "Cus/MOTOR_DRV/motor.h"
+ 212              		.file 22 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stdarg.h"
+ 213              		.file 23 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
+ 214              		.file 24 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_types.h"
+ 215              		.file 25 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/reent.h"
+ 216              		.file 26 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
+ 217              		.file 27 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdlib.h"
+ 218              		.file 28 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 219              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 220              		.file 30 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
+ 221              		.file 31 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 222              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/dom
+ 223              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
+ 224              		.file 34 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 225              		.file 35 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 226              		.file 36 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 227              		.file 37 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/math.h"
+ 228              		.file 38 "Cus/MICROROS/microros_task.h"
+ARM GAS  /tmp/ccwVkWvc.s 			page 8
+
+
+ 229              		.file 39 "<built-in>"
+ARM GAS  /tmp/ccwVkWvc.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 freertos.c
-     /tmp/ccWidhm1.s:18     .text.StartDefaultTask:0000000000000000 $t
-     /tmp/ccWidhm1.s:26     .text.StartDefaultTask:0000000000000000 StartDefaultTask
-     /tmp/ccWidhm1.s:55     .text.StartTask02:0000000000000000 $t
-     /tmp/ccWidhm1.s:62     .text.StartTask02:0000000000000000 StartTask02
-     /tmp/ccWidhm1.s:89     .text.MX_FREERTOS_Init:0000000000000000 $t
-     /tmp/ccWidhm1.s:96     .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
-     /tmp/ccWidhm1.s:132    .text.MX_FREERTOS_Init:0000000000000020 $d
+     /tmp/ccwVkWvc.s:18     .text.StartDefaultTask:0000000000000000 $t
+     /tmp/ccwVkWvc.s:26     .text.StartDefaultTask:0000000000000000 StartDefaultTask
+     /tmp/ccwVkWvc.s:55     .text.StartTask02:0000000000000000 $t
+     /tmp/ccwVkWvc.s:62     .text.StartTask02:0000000000000000 StartTask02
+     /tmp/ccwVkWvc.s:89     .text.MX_FREERTOS_Init:0000000000000000 $t
+     /tmp/ccwVkWvc.s:96     .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
+     /tmp/ccwVkWvc.s:136    .text.MX_FREERTOS_Init:0000000000000028 $d
                             *COM*:0000000000000004 defaultTaskHandle
                             *COM*:0000000000000004 myTask02Handle
-     /tmp/ccWidhm1.s:175    .rodata.myTask02_attributes:0000000000000000 myTask02_attributes
-     /tmp/ccWidhm1.s:143    .rodata.str1.4:0000000000000000 $d
+     /tmp/ccwVkWvc.s:181    .rodata.myTask02_attributes:0000000000000000 myTask02_attributes
+     /tmp/ccwVkWvc.s:148    .rodata.str1.4:0000000000000000 $d
                             *COM*:000000000000005c myTask02ControlBlock
                             *COM*:0000000000001f40 myTask02Buffer
-     /tmp/ccWidhm1.s:161    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
+     /tmp/ccwVkWvc.s:167    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
                             *COM*:000000000000005c defaultTaskControlBlock
                             *COM*:0000000000005dc0 defaultTaskBuffer
-     /tmp/ccWidhm1.s:157    .rodata.defaultTask_attributes:0000000000000000 $d
-     /tmp/ccWidhm1.s:171    .rodata.myTask02_attributes:0000000000000000 $d
+                            *COM*:0000000000000001 should_publish_ros
+     /tmp/ccwVkWvc.s:163    .rodata.defaultTask_attributes:0000000000000000 $d
+     /tmp/ccwVkWvc.s:177    .rodata.myTask02_attributes:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 MicroROS_Init
 MicroROS_TaskStart
 osDelay
 osThreadNew
+HAL_TIM_Base_Start_IT
+htim13

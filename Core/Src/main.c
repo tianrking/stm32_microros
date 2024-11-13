@@ -108,6 +108,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM5_Init();
   MX_TIM12_Init();
+  MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -186,6 +187,8 @@ void SystemClock_Config(void)
 #include "tim.h"
 #include "pid.h"
 #include "motor.h"
+#include "microros_task.h"
+
 /* USER CODE END 4 */
 
 /**
@@ -215,6 +218,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // 更新电机速度控制
         Motor_UpdateSpeed(&hmotor1);
         Motor_UpdateSpeed(&hmotor2);
+    }
+
+    if (htim->Instance == TIM13) {
+        should_publish_ros = 1;  // 设置发布标志
     }
 
   /* USER CODE END Callback 1 */

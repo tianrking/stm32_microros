@@ -121,6 +121,7 @@ void MX_FREERTOS_Init(void) {
   myTask02Handle = osThreadNew(StartTask02, NULL, &myTask02_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
+  HAL_TIM_Base_Start_IT(&htim13);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
