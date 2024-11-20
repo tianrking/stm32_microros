@@ -41,7 +41,7 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
 void Motors_Init(void)
 {
     // 电机1初始化配置 (左轮)
-    Motor_InitTypeDef motor1_init = {
+    Motor_InitTypeDef motor2_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_1,
         .dir_port1 = GPIOE,
@@ -53,7 +53,7 @@ void Motors_Init(void)
     };
     
     // 电机2初始化配置 (右轮)
-    Motor_InitTypeDef motor2_init = {
+    Motor_InitTypeDef motor1_init = {
         .htim = &htim1,
         .channel = TIM_CHANNEL_2,
         .dir_port1 = GPIOE,

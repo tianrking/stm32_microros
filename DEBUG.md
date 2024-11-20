@@ -25,7 +25,7 @@ openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
 
 ### 3. Start gdb-multiarch
 ```bash
-
+gdb-multiarch
 target remote localhost:3333
 target extended-remote :3333
 ```
@@ -97,11 +97,14 @@ terminate called after throwing an instance of 'eprosima::fastcdr::exception::No
 [ros2run]: Aborted
 ```
 
-ros2 topic pub wheel_right/target_speed std_msgs/msg/Float64 "data: 500" # 设置电机1为50% PWM
-ros2 topic pub wheel_left/target_speed std_msgs/msg/Float64 "data: 1000" # 设置电机2为100% PWM
+ros2 topic pub wheel_right/target std_msgs/msg/Float64 "data: 0.1" # 设置电机1为0.1m/s
+ros2 topic pub wheel_left/target_speed std_msgs/msg/Float64 "data: 0.15" # 设置电机2为0.15m/s
 
-ros2 topic pub pid_params std_msgs/msg/Float32MultiArray "data: [2.5, 3.2, 0.05]" 测试PID
+# 测试其他PID组合
+ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"p\":1.0,\"i\":0.5,\"d\":0.1}'"
+ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"p\":3.0,\"i\":2.0,\"d\":0.2}'" 
 
+# 设置车身参数 切换结算模型 默认二驱差速
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'mecanum,0.065,0.32,0.32'"
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'ackermann,0.065,0.32,0.32'"
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'differential,0.065,0.32,0.32'"

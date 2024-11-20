@@ -125,6 +125,12 @@ static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
         right_wheel_feedback_msg.data = right_wheel_speed;  // 右轮实际线速度
         left_wheel_feedback_msg.data = left_wheel_speed;    // 左轮实际线速度
 
+        left_wheel_target_msg.data = hmotor2.target_rpm / 4000.0f;      // 目标速度
+        right_wheel_target_msg.data = -hmotor1.target_rpm / 4000.0f;     // 目标速度
+
+        rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
+        rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
+
         // 4. 发布消息
         rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
         rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
@@ -145,7 +151,7 @@ static void motor1_callback(const void * msgin) {
 static void motor2_callback(const void * msgin) {
     gggg++;
     const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
-    float target_rpm = (float)msg->data *4000;
+    float target_rpm = (float)msg->data *4000;  // rpm -> speed
     Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
 
