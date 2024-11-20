@@ -47,7 +47,7 @@ static rcl_subscription_t vehicle_params_subscriber;
 static std_msgs__msg__String vehicle_params_msg;
 
 static rcl_subscription_t pid_params_subscriber;
-static std_msgs__msg__Float32MultiArray pid_params_msg = {0};  // 初始化为0
+static std_msgs__msg__String pid_params_msg = {0};
 
 /* Global parameters */
 // // static VehicleParams current_vehicle_params = {
@@ -86,25 +86,48 @@ static rcl_subscription_t vehicle_params_subscriber;
 static std_msgs__msg__String vehicle_params_msg = {0};  // 初始化为0
 
 /* Timer callback implementation */
+// static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
+//     if (timer != NULL) {
+//         msg.data = countt--;
+//         temp_ret = rcl_publish(&publisher, &msg, NULL);
+
+//         // 更新并发布右轮状态
+//         // right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
+//         // right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+
+//         right_wheel_feedback_msg.data = hmotor1.current_rpm;  // 实际速度
+//         right_wheel_target_msg.data = hmotor1.target_rpm;     // 目标速度
+//         rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
+//         // rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
+        
+//         // 更新并发布左轮状态
+//         left_wheel_feedback_msg.data = hmotor2.current_rpm;   // 实际速度
+//         left_wheel_target_msg.data = hmotor2.target_rpm;      // 目标速度
+//         rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
+//         // rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
+//     // }
+// }
+
 static void timer_callback(rcl_timer_t *timer, int64_t last_call_time) {
     if (timer != NULL) {
         msg.data = countt--;
         temp_ret = rcl_publish(&publisher, &msg, NULL);
 
-        // 更新并发布右轮状态
-        // right_wheel_feedback_msg.data = (int32_t)hmotor1.current_rpm;  // 实际速度
-        // right_wheel_target_msg.data = (int32_t)hmotor1.target_rpm;     // 目标速度
+        // 1. 先将当前RPM转换为弧度/秒
+        float right_wheel_rads = hmotor1.current_rpm * 1;  // RPM -> rad/s
+        float left_wheel_rads = hmotor2.current_rpm * 1;   // RPM -> rad/s
 
-        right_wheel_feedback_msg.data = hmotor1.current_rpm;  // 实际速度
-        right_wheel_target_msg.data = hmotor1.target_rpm;     // 目标速度
+        // 2. 从弧度/秒转换为线速度 (m/s)
+        float right_wheel_speed = right_wheel_rads * WHEEL_RADIUS;  // rad/s * r = m/s
+        float left_wheel_speed = left_wheel_rads * WHEEL_RADIUS;    // rad/s * r = m/s
+
+        // 3. 更新并发布轮子状态（单位：m/s）
+        right_wheel_feedback_msg.data = right_wheel_speed;  // 右轮实际线速度
+        left_wheel_feedback_msg.data = left_wheel_speed;    // 左轮实际线速度
+
+        // 4. 发布消息
         rcl_publish(&right_wheel_feedback_publisher, &right_wheel_feedback_msg, NULL);
-        rcl_publish(&right_wheel_target_publisher, &right_wheel_target_msg, NULL);
-        
-        // 更新并发布左轮状态
-        left_wheel_feedback_msg.data = hmotor2.current_rpm;   // 实际速度
-        left_wheel_target_msg.data = hmotor2.target_rpm;      // 目标速度
         rcl_publish(&left_wheel_feedback_publisher, &left_wheel_feedback_msg, NULL);
-        rcl_publish(&left_wheel_target_publisher, &left_wheel_target_msg, NULL);
     }
 }
 
@@ -138,8 +161,8 @@ static void cmd_vel_callback(const void * msgin) {
     float left_rpm, right_rpm;
     calculate_wheel_speeds(linear_x, angular_z, &left_rpm, &right_rpm);
     
-    Motor_SetTargetSpeed(&hmotor1, left_rpm);
-    Motor_SetTargetSpeed(&hmotor2, right_rpm);
+    Motor_SetTargetSpeed(&hmotor1, left_rpm *10);
+    Motor_SetTargetSpeed(&hmotor2, right_rpm *10);
 }
 
 /* Wheel speed calculation */
@@ -154,23 +177,83 @@ static void calculate_wheel_speeds(float linear_x, float angular_z, float *left_
 
 /* PID parameters callback */
 static void pid_params_callback(const void * msgin) {
-    const std_msgs__msg__Float32MultiArray * msg = (const std_msgs__msg__Float32MultiArray *)msgin;
-    gggg++;
-    if (msg->data.size == 3) {
-        // 更新电机1的PID参数
-        if (MicroROSState_UpdatePIDParams(&hmotor1.pid, 
-                                        msg->data.data[0], 
-                                        msg->data.data[1], 
-                                        msg->data.data[2])) {
-            // PID参数更新成功
+    const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
+    if (msg == NULL || msg->data.data == NULL) {
+        return;
+    }
+    
+    // 创建临时缓冲区来存储消息数据
+    char buffer[100];
+    strncpy(buffer, msg->data.data, sizeof(buffer) - 1);
+    buffer[sizeof(buffer) - 1] = '\0';  // 确保字符串结束
+    
+    // 移除可能存在的首尾单引号
+    if (buffer[0] == '\'') {
+        memmove(buffer, buffer + 1, strlen(buffer));
+    }
+    if (buffer[strlen(buffer) - 1] == '\'') {
+        buffer[strlen(buffer) - 1] = '\0';
+    }
+    
+    // 移除 JSON 的大括号
+    char* json_start = strchr(buffer, '{');
+    char* json_end = strrchr(buffer, '}');
+    if (json_start && json_end) {
+        *json_end = '\0';
+        json_start++; // 跳过 {
+    } else {
+        return; // JSON 格式错误
+    }
+    
+    // 初始化 PID 参数
+    float p = 0.0f, i = 0.0f, d = 0.0f;
+    
+    // 使用 strtok 解析每个键值对
+    char* token = strtok(json_start, ",");
+    while (token != NULL) {
+        // 去除首尾空格
+        while (*token == ' ') token++;
+        char* end = token + strlen(token) - 1;
+        while (end > token && (*end == ' ' || *end == '"')) {
+            *end = '\0';
+            end--;
         }
         
-        // 更新电机2的PID参数
-        if (MicroROSState_UpdatePIDParams(&hmotor2.pid, 
-                                        msg->data.data[0], 
-                                        msg->data.data[1], 
-                                        msg->data.data[2])) {
-            // PID参数更新成功
+        // 查找键值分隔符 ":"
+        char* separator = strchr(token, ':');
+        if (separator) {
+            *separator = '\0';
+            char* key = token;
+            char* value = separator + 1;
+            
+            // 去除键中的引号
+            if (key[0] == '"') key++;
+            if (key[strlen(key) - 1] == '"') key[strlen(key) - 1] = '\0';
+            
+            // 根据键名设置相应的值
+            if (strcmp(key, "p") == 0) {
+                p = atof(value);
+            } else if (strcmp(key, "i") == 0) {
+                i = atof(value);
+            } else if (strcmp(key, "d") == 0) {
+                d = atof(value);
+            }
+        }
+        
+        token = strtok(NULL, ",");
+    }
+    
+    // printf("Parsed PID values - P: %.3f, I: %.3f, D: %.3f\n", p, i, d);
+    gggg++;
+    // 更新 PID 参数
+    if (p >= 0.0f) {
+            gggg++;
+        if (MicroROSState_UpdatePIDParams(&hmotor1.pid, p, i, d)) {
+                gggg++;
+            printf("Motor1 PID params updated successfully\n");
+        }
+        if (MicroROSState_UpdatePIDParams(&hmotor2.pid, p, i, d)) {
+            printf("Motor2 PID params updated successfully\n");
         }
     }
 }
@@ -365,21 +448,19 @@ void MicroROS_Init(void) {
     );
 
     // 在创建订阅者之前，先初始化消息结构
-    pid_params_msg.data.capacity = 3;
-    pid_params_msg.data.size = 0;
-    pid_params_msg.data.data = (float*)malloc(3 * sizeof(float));
 
-    // 初始化PID参数订阅者
+    // 为String消息分配内存
+    pid_params_msg.data.capacity = 100;  // 最大字符数
+    pid_params_msg.data.size = 0;
+    pid_params_msg.data.data = (char*)malloc(pid_params_msg.data.capacity);
+
+    // 初始化订阅者
     rcl_ret_t ret = rclc_subscription_init_default(
         &pid_params_subscriber,
         &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float32MultiArray),
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
         "pid_params"
     );
-    
-    if (ret != RCL_RET_OK) {
-        // printf("Error creating pid_params subscriber: %d\n", ret);
-    }
 
     // 为String消息分配内存
     vehicle_params_msg.data.capacity = 100;  // 最大字符数
