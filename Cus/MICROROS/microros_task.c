@@ -137,7 +137,7 @@ float gggg;
 static void motor1_callback(const void * msgin) {
     gggg++;
     const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
-    float target_rpm = (float)msg->data;
+    float target_rpm = (float)msg->data *4000;
     Motor_SetTargetSpeed(&hmotor1, target_rpm);
 }
 
@@ -145,7 +145,7 @@ static void motor1_callback(const void * msgin) {
 static void motor2_callback(const void * msgin) {
     gggg++;
     const std_msgs__msg__Float64 * msg = (const std_msgs__msg__Float64 *)msgin;
-    float target_rpm = (float)msg->data;
+    float target_rpm = (float)msg->data *4000;
     Motor_SetTargetSpeed(&hmotor2, target_rpm);
 }
 
