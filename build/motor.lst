@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccuoQXaZ.s 			page 1
+ARM GAS  /tmp/ccnzcFlH.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -57,8 +57,8 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
   27:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
   28:Cus/MOTOR_DRV/motor.c ****     
   29:Cus/MOTOR_DRV/motor.c ****     // 初始化PID控制器
-  30:Cus/MOTOR_DRV/motor.c ****     PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);
-ARM GAS  /tmp/ccuoQXaZ.s 			page 2
+  30:Cus/MOTOR_DRV/motor.c ****     PID_Init(&hmotor->pid, 1.0f, 0, 0.01f, 0.0f);
+ARM GAS  /tmp/ccnzcFlH.s 			page 2
 
 
   31:Cus/MOTOR_DRV/motor.c ****     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
   85:Cus/MOTOR_DRV/motor.c ****         dir = MOTOR_BACKWARD;
   86:Cus/MOTOR_DRV/motor.c ****         abs_speed = (uint32_t)(-actual_speed);
   87:Cus/MOTOR_DRV/motor.c ****     } else {
-ARM GAS  /tmp/ccuoQXaZ.s 			page 3
+ARM GAS  /tmp/ccnzcFlH.s 			page 3
 
 
   88:Cus/MOTOR_DRV/motor.c ****         dir = MOTOR_STOP;
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
   29              		.loc 1 141 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /tmp/ccuoQXaZ.s 			page 4
+ARM GAS  /tmp/ccnzcFlH.s 			page 4
 
 
   32              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  157:Cus/MOTOR_DRV/motor.c ****         case MOTOR_STOP:
  158:Cus/MOTOR_DRV/motor.c ****         default:
  159:Cus/MOTOR_DRV/motor.c ****             // 停止：0,0
-ARM GAS  /tmp/ccuoQXaZ.s 			page 5
+ARM GAS  /tmp/ccnzcFlH.s 			page 5
 
 
  160:Cus/MOTOR_DRV/motor.c ****             HAL_GPIO_WritePin(hmotor->dir_port1, hmotor->dir_pin1, GPIO_PIN_RESET);  // 0
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  108 004a A18A     		ldrh	r1, [r4, #20]
  109 004c 2069     		ldr	r0, [r4, #16]
  110 004e FFF7FEFF 		bl	HAL_GPIO_WritePin
-ARM GAS  /tmp/ccuoQXaZ.s 			page 6
+ARM GAS  /tmp/ccnzcFlH.s 			page 6
 
 
  111              	.LVL15:
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  155              		.loc 1 83 9 view .LVU36
   82:Cus/MOTOR_DRV/motor.c ****         abs_speed = (uint32_t)actual_speed;
  156              		.loc 1 82 13 is_stmt 0 view .LVU37
-ARM GAS  /tmp/ccuoQXaZ.s 			page 7
+ARM GAS  /tmp/ccnzcFlH.s 			page 7
 
 
  157 0010 0126     		movs	r6, #1
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
   88:Cus/MOTOR_DRV/motor.c ****         abs_speed = 0;
  197              		.loc 1 88 13 view .LVU52
  198 0034 0026     		movs	r6, #0
-ARM GAS  /tmp/ccuoQXaZ.s 			page 8
+ARM GAS  /tmp/ccnzcFlH.s 			page 8
 
 
   89:Cus/MOTOR_DRV/motor.c ****     }
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  101:Cus/MOTOR_DRV/motor.c ****     
  241              		.loc 1 101 5 discriminator 6 view .LVU65
  242 0060 2B68     		ldr	r3, [r5]
-ARM GAS  /tmp/ccuoQXaZ.s 			page 9
+ARM GAS  /tmp/ccnzcFlH.s 			page 9
 
 
  243 0062 1B68     		ldr	r3, [r3]
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  290 001a 2377     		strb	r3, [r4, #28]
  114:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
  291              		.loc 1 114 5 is_stmt 1 view .LVU75
-ARM GAS  /tmp/ccuoQXaZ.s 			page 10
+ARM GAS  /tmp/ccnzcFlH.s 			page 10
 
 
  114:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  337              		.global	Motor_Init
  338              		.syntax unified
  339              		.thumb
-ARM GAS  /tmp/ccuoQXaZ.s 			page 11
+ARM GAS  /tmp/ccnzcFlH.s 			page 11
 
 
  340              		.thumb_func
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
   18:Cus/MOTOR_DRV/motor.c ****     hmotor->dir_pin2 = init->dir_pin2;
  380              		.loc 1 18 29 is_stmt 0 view .LVU101
  381 0014 0B69     		ldr	r3, [r1, #16]
-ARM GAS  /tmp/ccuoQXaZ.s 			page 12
+ARM GAS  /tmp/ccnzcFlH.s 			page 12
 
 
   18:Cus/MOTOR_DRV/motor.c ****     hmotor->dir_pin2 = init->dir_pin2;
@@ -703,22 +703,22 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  406              		.loc 1 26 5 is_stmt 1 view .LVU116
   26:Cus/MOTOR_DRV/motor.c ****     hmotor->current_rpm = 0;
  407              		.loc 1 26 24 is_stmt 0 view .LVU117
- 408 002c DFED0F1A 		vldr.32	s3, .L32
- 409 0030 C0ED131A 		vstr.32	s3, [r0, #76]
+ 408 002c DFED0F0A 		vldr.32	s1, .L32
+ 409 0030 C0ED130A 		vstr.32	s1, [r0, #76]
   27:Cus/MOTOR_DRV/motor.c ****     
  410              		.loc 1 27 5 is_stmt 1 view .LVU118
   27:Cus/MOTOR_DRV/motor.c ****     
  411              		.loc 1 27 25 is_stmt 0 view .LVU119
- 412 0034 C0ED141A 		vstr.32	s3, [r0, #80]
+ 412 0034 C0ED140A 		vstr.32	s1, [r0, #80]
   30:Cus/MOTOR_DRV/motor.c ****     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
  413              		.loc 1 30 5 is_stmt 1 view .LVU120
  414 0038 00F12005 		add	r5, r0, #32
- 415 003c 9FED0C1A 		vldr.32	s2, .L32+4
- 416 0040 DFED0C0A 		vldr.32	s1, .L32+8
+ 415 003c F0EE601A 		vmov.f32	s3, s1
+ 416 0040 9FED0B1A 		vldr.32	s2, .L32+4
  417 0044 B7EE000A 		vmov.f32	s0, #1.0e+0
  418 0048 2846     		mov	r0, r5
  419              	.LVL36:
-ARM GAS  /tmp/ccuoQXaZ.s 			page 13
+ARM GAS  /tmp/ccnzcFlH.s 			page 13
 
 
   30:Cus/MOTOR_DRV/motor.c ****     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
@@ -727,8 +727,8 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  422              	.LVL37:
   31:Cus/MOTOR_DRV/motor.c ****     
  423              		.loc 1 31 5 is_stmt 1 view .LVU122
- 424 004e DFED0A0A 		vldr.32	s1, .L32+12
- 425 0052 9FED0A0A 		vldr.32	s0, .L32+16
+ 424 004e DFED090A 		vldr.32	s1, .L32+8
+ 425 0052 9FED090A 		vldr.32	s0, .L32+12
  426 0056 2846     		mov	r0, r5
  427 0058 FFF7FEFF 		bl	PID_SetOutputLimits
  428              	.LVL38:
@@ -754,274 +754,273 @@ ARM GAS  /tmp/ccuoQXaZ.s 			page 1
  444              	.L32:
  445 006c 00000000 		.word	0
  446 0070 0AD7233C 		.word	1008981770
- 447 0074 CDCCCC3D 		.word	1036831949
- 448 0078 00007A44 		.word	1148846080
- 449 007c 00007AC4 		.word	3296329728
- 450              		.cfi_endproc
- 451              	.LFE134:
- 453              		.section	.text.Motors_Init,"ax",%progbits
- 454              		.align	1
- 455              		.global	Motors_Init
- 456              		.syntax unified
- 457              		.thumb
- 458              		.thumb_func
- 459              		.fpu fpv4-sp-d16
- 461              	Motors_Init:
- 462              	.LFB135:
+ 447 0074 00007A44 		.word	1148846080
+ 448 0078 00007AC4 		.word	3296329728
+ 449              		.cfi_endproc
+ 450              	.LFE134:
+ 452              		.section	.text.Motors_Init,"ax",%progbits
+ 453              		.align	1
+ 454              		.global	Motors_Init
+ 455              		.syntax unified
+ 456              		.thumb
+ 457              		.thumb_func
+ 458              		.fpu fpv4-sp-d16
+ 460              	Motors_Init:
+ 461              	.LFB135:
   42:Cus/MOTOR_DRV/motor.c ****     // 电机1初始化配置 (左轮)
- 463              		.loc 1 42 1 is_stmt 1 view -0
- 464              		.cfi_startproc
- 465              		@ args = 0, pretend = 0, frame = 64
- 466              		@ frame_needed = 0, uses_anonymous_args = 0
- 467 0000 70B5     		push	{r4, r5, r6, lr}
- 468              	.LCFI4:
- 469              		.cfi_def_cfa_offset 16
- 470              		.cfi_offset 4, -16
- 471              		.cfi_offset 5, -12
-ARM GAS  /tmp/ccuoQXaZ.s 			page 14
+ 462              		.loc 1 42 1 is_stmt 1 view -0
+ 463              		.cfi_startproc
+ 464              		@ args = 0, pretend = 0, frame = 64
+ 465              		@ frame_needed = 0, uses_anonymous_args = 0
+ 466 0000 70B5     		push	{r4, r5, r6, lr}
+ 467              	.LCFI4:
+ 468              		.cfi_def_cfa_offset 16
+ 469              		.cfi_offset 4, -16
+ 470              		.cfi_offset 5, -12
+ 471              		.cfi_offset 6, -8
+ARM GAS  /tmp/ccnzcFlH.s 			page 14
 
 
- 472              		.cfi_offset 6, -8
- 473              		.cfi_offset 14, -4
- 474 0002 90B0     		sub	sp, sp, #64
- 475              	.LCFI5:
- 476              		.cfi_def_cfa_offset 80
+ 472              		.cfi_offset 14, -4
+ 473 0002 90B0     		sub	sp, sp, #64
+ 474              	.LCFI5:
+ 475              		.cfi_def_cfa_offset 80
   44:Cus/MOTOR_DRV/motor.c ****         .htim = &htim1,
- 477              		.loc 1 44 5 view .LVU128
+ 476              		.loc 1 44 5 view .LVU128
   44:Cus/MOTOR_DRV/motor.c ****         .htim = &htim1,
- 478              		.loc 1 44 23 is_stmt 0 view .LVU129
- 479 0004 0D4C     		ldr	r4, .L36
- 480 0006 08AD     		add	r5, sp, #32
- 481 0008 2646     		mov	r6, r4
- 482 000a 0FCE     		ldmia	r6!, {r0, r1, r2, r3}
- 483 000c 0FC5     		stmia	r5!, {r0, r1, r2, r3}
- 484 000e 96E80F00 		ldm	r6, {r0, r1, r2, r3}
- 485 0012 85E80F00 		stm	r5, {r0, r1, r2, r3}
+ 477              		.loc 1 44 23 is_stmt 0 view .LVU129
+ 478 0004 0D4C     		ldr	r4, .L36
+ 479 0006 08AD     		add	r5, sp, #32
+ 480 0008 2646     		mov	r6, r4
+ 481 000a 0FCE     		ldmia	r6!, {r0, r1, r2, r3}
+ 482 000c 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+ 483 000e 96E80F00 		ldm	r6, {r0, r1, r2, r3}
+ 484 0012 85E80F00 		stm	r5, {r0, r1, r2, r3}
   56:Cus/MOTOR_DRV/motor.c ****         .htim = &htim1,
- 486              		.loc 1 56 5 is_stmt 1 view .LVU130
+ 485              		.loc 1 56 5 is_stmt 1 view .LVU130
   56:Cus/MOTOR_DRV/motor.c ****         .htim = &htim1,
- 487              		.loc 1 56 23 is_stmt 0 view .LVU131
- 488 0016 6D46     		mov	r5, sp
- 489 0018 2034     		adds	r4, r4, #32
- 490 001a 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
- 491 001c 0FC5     		stmia	r5!, {r0, r1, r2, r3}
- 492 001e 94E80F00 		ldm	r4, {r0, r1, r2, r3}
- 493 0022 85E80F00 		stm	r5, {r0, r1, r2, r3}
+ 486              		.loc 1 56 23 is_stmt 0 view .LVU131
+ 487 0016 6D46     		mov	r5, sp
+ 488 0018 2034     		adds	r4, r4, #32
+ 489 001a 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 490 001c 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+ 491 001e 94E80F00 		ldm	r4, {r0, r1, r2, r3}
+ 492 0022 85E80F00 		stm	r5, {r0, r1, r2, r3}
   67:Cus/MOTOR_DRV/motor.c ****     Motor_Init(&hmotor2, &motor2_init);
- 494              		.loc 1 67 5 is_stmt 1 view .LVU132
- 495 0026 08A9     		add	r1, sp, #32
- 496 0028 0548     		ldr	r0, .L36+4
- 497 002a FFF7FEFF 		bl	Motor_Init
- 498              	.LVL42:
+ 493              		.loc 1 67 5 is_stmt 1 view .LVU132
+ 494 0026 08A9     		add	r1, sp, #32
+ 495 0028 0548     		ldr	r0, .L36+4
+ 496 002a FFF7FEFF 		bl	Motor_Init
+ 497              	.LVL42:
   68:Cus/MOTOR_DRV/motor.c **** }
- 499              		.loc 1 68 5 view .LVU133
- 500 002e 6946     		mov	r1, sp
- 501 0030 0448     		ldr	r0, .L36+8
- 502 0032 FFF7FEFF 		bl	Motor_Init
- 503              	.LVL43:
+ 498              		.loc 1 68 5 view .LVU133
+ 499 002e 6946     		mov	r1, sp
+ 500 0030 0448     		ldr	r0, .L36+8
+ 501 0032 FFF7FEFF 		bl	Motor_Init
+ 502              	.LVL43:
   69:Cus/MOTOR_DRV/motor.c **** 
- 504              		.loc 1 69 1 is_stmt 0 view .LVU134
- 505 0036 10B0     		add	sp, sp, #64
- 506              	.LCFI6:
- 507              		.cfi_def_cfa_offset 16
- 508              		@ sp needed
- 509 0038 70BD     		pop	{r4, r5, r6, pc}
- 510              	.L37:
- 511 003a 00BF     		.align	2
- 512              	.L36:
- 513 003c 00000000 		.word	.LANCHOR0
- 514 0040 00000000 		.word	hmotor1
- 515 0044 00000000 		.word	hmotor2
- 516              		.cfi_endproc
- 517              	.LFE135:
- 519              		.section	.text.Motor_SetTargetSpeed,"ax",%progbits
- 520              		.align	1
- 521              		.global	Motor_SetTargetSpeed
- 522              		.syntax unified
-ARM GAS  /tmp/ccuoQXaZ.s 			page 15
+ 503              		.loc 1 69 1 is_stmt 0 view .LVU134
+ 504 0036 10B0     		add	sp, sp, #64
+ 505              	.LCFI6:
+ 506              		.cfi_def_cfa_offset 16
+ 507              		@ sp needed
+ 508 0038 70BD     		pop	{r4, r5, r6, pc}
+ 509              	.L37:
+ 510 003a 00BF     		.align	2
+ 511              	.L36:
+ 512 003c 00000000 		.word	.LANCHOR0
+ 513 0040 00000000 		.word	hmotor1
+ 514 0044 00000000 		.word	hmotor2
+ 515              		.cfi_endproc
+ 516              	.LFE135:
+ 518              		.section	.text.Motor_SetTargetSpeed,"ax",%progbits
+ 519              		.align	1
+ 520              		.global	Motor_SetTargetSpeed
+ 521              		.syntax unified
+ 522              		.thumb
+ARM GAS  /tmp/ccnzcFlH.s 			page 15
 
 
- 523              		.thumb
- 524              		.thumb_func
- 525              		.fpu fpv4-sp-d16
- 527              	Motor_SetTargetSpeed:
- 528              	.LVL44:
- 529              	.LFB138:
+ 523              		.thumb_func
+ 524              		.fpu fpv4-sp-d16
+ 526              	Motor_SetTargetSpeed:
+ 527              	.LVL44:
+ 528              	.LFB138:
  120:Cus/MOTOR_DRV/motor.c ****     // 根据安装方向调整目标转速
- 530              		.loc 1 120 1 is_stmt 1 view -0
- 531              		.cfi_startproc
- 532              		@ args = 0, pretend = 0, frame = 0
- 533              		@ frame_needed = 0, uses_anonymous_args = 0
+ 529              		.loc 1 120 1 is_stmt 1 view -0
+ 530              		.cfi_startproc
+ 531              		@ args = 0, pretend = 0, frame = 0
+ 532              		@ frame_needed = 0, uses_anonymous_args = 0
  120:Cus/MOTOR_DRV/motor.c ****     // 根据安装方向调整目标转速
- 534              		.loc 1 120 1 is_stmt 0 view .LVU136
- 535 0000 08B5     		push	{r3, lr}
- 536              	.LCFI7:
- 537              		.cfi_def_cfa_offset 8
- 538              		.cfi_offset 3, -8
- 539              		.cfi_offset 14, -4
+ 533              		.loc 1 120 1 is_stmt 0 view .LVU136
+ 534 0000 08B5     		push	{r3, lr}
+ 535              	.LCFI7:
+ 536              		.cfi_def_cfa_offset 8
+ 537              		.cfi_offset 3, -8
+ 538              		.cfi_offset 14, -4
  122:Cus/MOTOR_DRV/motor.c ****     hmotor->target_rpm = actual_target_rpm;
- 540              		.loc 1 122 5 is_stmt 1 view .LVU137
+ 539              		.loc 1 122 5 is_stmt 1 view .LVU137
  122:Cus/MOTOR_DRV/motor.c ****     hmotor->target_rpm = actual_target_rpm;
- 541              		.loc 1 122 50 is_stmt 0 view .LVU138
- 542 0002 90F91D30 		ldrsb	r3, [r0, #29]
- 543 0006 07EE903A 		vmov	s15, r3	@ int
+ 540              		.loc 1 122 50 is_stmt 0 view .LVU138
+ 541 0002 90F91D30 		ldrsb	r3, [r0, #29]
+ 542 0006 07EE903A 		vmov	s15, r3	@ int
  122:Cus/MOTOR_DRV/motor.c ****     hmotor->target_rpm = actual_target_rpm;
- 544              		.loc 1 122 42 view .LVU139
- 545 000a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 543              		.loc 1 122 42 view .LVU139
+ 544 000a F8EEE77A 		vcvt.f32.s32	s15, s15
  122:Cus/MOTOR_DRV/motor.c ****     hmotor->target_rpm = actual_target_rpm;
- 546              		.loc 1 122 11 view .LVU140
- 547 000e 27EE800A 		vmul.f32	s0, s15, s0
- 548              	.LVL45:
+ 545              		.loc 1 122 11 view .LVU140
+ 546 000e 27EE800A 		vmul.f32	s0, s15, s0
+ 547              	.LVL45:
  123:Cus/MOTOR_DRV/motor.c ****     PID_SetSetpoint(&hmotor->pid, actual_target_rpm);
- 549              		.loc 1 123 5 is_stmt 1 view .LVU141
+ 548              		.loc 1 123 5 is_stmt 1 view .LVU141
  123:Cus/MOTOR_DRV/motor.c ****     PID_SetSetpoint(&hmotor->pid, actual_target_rpm);
- 550              		.loc 1 123 24 is_stmt 0 view .LVU142
- 551 0012 80ED130A 		vstr.32	s0, [r0, #76]
+ 549              		.loc 1 123 24 is_stmt 0 view .LVU142
+ 550 0012 80ED130A 		vstr.32	s0, [r0, #76]
  124:Cus/MOTOR_DRV/motor.c **** }
- 552              		.loc 1 124 5 is_stmt 1 view .LVU143
- 553 0016 2030     		adds	r0, r0, #32
- 554              	.LVL46:
+ 551              		.loc 1 124 5 is_stmt 1 view .LVU143
+ 552 0016 2030     		adds	r0, r0, #32
+ 553              	.LVL46:
  124:Cus/MOTOR_DRV/motor.c **** }
- 555              		.loc 1 124 5 is_stmt 0 view .LVU144
- 556 0018 FFF7FEFF 		bl	PID_SetSetpoint
- 557              	.LVL47:
+ 554              		.loc 1 124 5 is_stmt 0 view .LVU144
+ 555 0018 FFF7FEFF 		bl	PID_SetSetpoint
+ 556              	.LVL47:
  125:Cus/MOTOR_DRV/motor.c **** 
- 558              		.loc 1 125 1 view .LVU145
- 559 001c 08BD     		pop	{r3, pc}
- 560              		.cfi_endproc
- 561              	.LFE138:
- 563              		.section	.text.Motor_UpdateSpeed,"ax",%progbits
- 564              		.align	1
- 565              		.global	Motor_UpdateSpeed
- 566              		.syntax unified
- 567              		.thumb
- 568              		.thumb_func
- 569              		.fpu fpv4-sp-d16
- 571              	Motor_UpdateSpeed:
-ARM GAS  /tmp/ccuoQXaZ.s 			page 16
+ 557              		.loc 1 125 1 view .LVU145
+ 558 001c 08BD     		pop	{r3, pc}
+ 559              		.cfi_endproc
+ 560              	.LFE138:
+ 562              		.section	.text.Motor_UpdateSpeed,"ax",%progbits
+ 563              		.align	1
+ 564              		.global	Motor_UpdateSpeed
+ 565              		.syntax unified
+ 566              		.thumb
+ 567              		.thumb_func
+ 568              		.fpu fpv4-sp-d16
+ 570              	Motor_UpdateSpeed:
+ 571              	.LVL48:
+ARM GAS  /tmp/ccnzcFlH.s 			page 16
 
 
- 572              	.LVL48:
- 573              	.LFB139:
+ 572              	.LFB139:
  128:Cus/MOTOR_DRV/motor.c ****     // 获取当前速度
- 574              		.loc 1 128 1 is_stmt 1 view -0
- 575              		.cfi_startproc
- 576              		@ args = 0, pretend = 0, frame = 0
- 577              		@ frame_needed = 0, uses_anonymous_args = 0
+ 573              		.loc 1 128 1 is_stmt 1 view -0
+ 574              		.cfi_startproc
+ 575              		@ args = 0, pretend = 0, frame = 0
+ 576              		@ frame_needed = 0, uses_anonymous_args = 0
  128:Cus/MOTOR_DRV/motor.c ****     // 获取当前速度
- 578              		.loc 1 128 1 is_stmt 0 view .LVU147
- 579 0000 10B5     		push	{r4, lr}
- 580              	.LCFI8:
- 581              		.cfi_def_cfa_offset 8
- 582              		.cfi_offset 4, -8
- 583              		.cfi_offset 14, -4
- 584 0002 0446     		mov	r4, r0
+ 577              		.loc 1 128 1 is_stmt 0 view .LVU147
+ 578 0000 10B5     		push	{r4, lr}
+ 579              	.LCFI8:
+ 580              		.cfi_def_cfa_offset 8
+ 581              		.cfi_offset 4, -8
+ 582              		.cfi_offset 14, -4
+ 583 0002 0446     		mov	r4, r0
  130:Cus/MOTOR_DRV/motor.c ****     
- 585              		.loc 1 130 5 is_stmt 1 view .LVU148
+ 584              		.loc 1 130 5 is_stmt 1 view .LVU148
  130:Cus/MOTOR_DRV/motor.c ****     
- 586              		.loc 1 130 27 is_stmt 0 view .LVU149
- 587 0004 806C     		ldr	r0, [r0, #72]
- 588              	.LVL49:
+ 585              		.loc 1 130 27 is_stmt 0 view .LVU149
+ 586 0004 806C     		ldr	r0, [r0, #72]
+ 587              	.LVL49:
  130:Cus/MOTOR_DRV/motor.c ****     
- 589              		.loc 1 130 27 view .LVU150
- 590 0006 FFF7FEFF 		bl	Encoder_GetSpeedRPM
- 591              	.LVL50:
+ 588              		.loc 1 130 27 view .LVU150
+ 589 0006 FFF7FEFF 		bl	Encoder_GetSpeedRPM
+ 590              	.LVL50:
  130:Cus/MOTOR_DRV/motor.c ****     
- 592              		.loc 1 130 25 view .LVU151
- 593 000a 84ED140A 		vstr.32	s0, [r4, #80]
+ 591              		.loc 1 130 25 view .LVU151
+ 592 000a 84ED140A 		vstr.32	s0, [r4, #80]
  133:Cus/MOTOR_DRV/motor.c ****     
- 594              		.loc 1 133 5 is_stmt 1 view .LVU152
+ 593              		.loc 1 133 5 is_stmt 1 view .LVU152
  133:Cus/MOTOR_DRV/motor.c ****     
- 595              		.loc 1 133 24 is_stmt 0 view .LVU153
- 596 000e 04F12000 		add	r0, r4, #32
- 597 0012 FFF7FEFF 		bl	PID_Update
- 598              	.LVL51:
+ 594              		.loc 1 133 24 is_stmt 0 view .LVU153
+ 595 000e 04F12000 		add	r0, r4, #32
+ 596 0012 FFF7FEFF 		bl	PID_Update
+ 597              	.LVL51:
  136:Cus/MOTOR_DRV/motor.c **** }
- 599              		.loc 1 136 5 is_stmt 1 view .LVU154
- 600 0016 FDEEC07A 		vcvt.s32.f32	s15, s0
- 601 001a 17EE901A 		vmov	r1, s15	@ int
- 602 001e 2046     		mov	r0, r4
- 603 0020 FFF7FEFF 		bl	Motor_SetSpeed
- 604              	.LVL52:
+ 598              		.loc 1 136 5 is_stmt 1 view .LVU154
+ 599 0016 FDEEC07A 		vcvt.s32.f32	s15, s0
+ 600 001a 17EE901A 		vmov	r1, s15	@ int
+ 601 001e 2046     		mov	r0, r4
+ 602 0020 FFF7FEFF 		bl	Motor_SetSpeed
+ 603              	.LVL52:
  137:Cus/MOTOR_DRV/motor.c **** 
- 605              		.loc 1 137 1 is_stmt 0 view .LVU155
- 606 0024 10BD     		pop	{r4, pc}
+ 604              		.loc 1 137 1 is_stmt 0 view .LVU155
+ 605 0024 10BD     		pop	{r4, pc}
  137:Cus/MOTOR_DRV/motor.c **** 
- 607              		.loc 1 137 1 view .LVU156
- 608              		.cfi_endproc
- 609              	.LFE139:
- 611              		.comm	hmotor2,84,4
- 612              		.comm	hmotor1,84,4
- 613              		.section	.rodata
- 614              		.align	2
- 615              		.set	.LANCHOR0,. + 0
- 616              	.LC0:
- 617 0000 00000000 		.word	htim1
- 618 0004 00000000 		.word	0
-ARM GAS  /tmp/ccuoQXaZ.s 			page 17
+ 606              		.loc 1 137 1 view .LVU156
+ 607              		.cfi_endproc
+ 608              	.LFE139:
+ 610              		.comm	hmotor2,84,4
+ 611              		.comm	hmotor1,84,4
+ 612              		.section	.rodata
+ 613              		.align	2
+ 614              		.set	.LANCHOR0,. + 0
+ 615              	.LC0:
+ 616 0000 00000000 		.word	htim1
+ 617 0004 00000000 		.word	0
+ 618 0008 00100240 		.word	1073876992
+ARM GAS  /tmp/ccnzcFlH.s 			page 17
 
 
- 619 0008 00100240 		.word	1073876992
- 620 000c 8000     		.short	128
- 621 000e 0000     		.space	2
- 622 0010 00040240 		.word	1073873920
- 623 0014 0200     		.short	2
- 624 0016 0000     		.space	2
- 625 0018 00000000 		.word	hencoder1
- 626 001c 01       		.byte	1
- 627 001d 000000   		.space	3
- 628              	.LC1:
- 629 0020 00000000 		.word	htim1
- 630 0024 04000000 		.word	4
- 631 0028 00100240 		.word	1073876992
- 632 002c 0001     		.short	256
- 633 002e 0000     		.space	2
- 634 0030 00100240 		.word	1073876992
- 635 0034 0004     		.short	1024
- 636 0036 0000     		.space	2
- 637 0038 00000000 		.word	hencoder2
- 638 003c FF       		.byte	-1
- 639 003d 000000   		.space	3
- 640              		.text
- 641              	.Letext0:
- 642              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
- 643              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
- 644              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
- 645              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
- 646              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 647              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 648              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 649              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 650              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 651              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 652              		.file 12 "Core/Inc/tim.h"
- 653              		.file 13 "Cus/MOTOR_DRV/pid.h"
- 654              		.file 14 "Cus/MOTOR_DRV/encoder.h"
- 655              		.file 15 "Cus/MOTOR_DRV/motor.h"
-ARM GAS  /tmp/ccuoQXaZ.s 			page 18
+ 619 000c 8000     		.short	128
+ 620 000e 0000     		.space	2
+ 621 0010 00040240 		.word	1073873920
+ 622 0014 0200     		.short	2
+ 623 0016 0000     		.space	2
+ 624 0018 00000000 		.word	hencoder1
+ 625 001c 01       		.byte	1
+ 626 001d 000000   		.space	3
+ 627              	.LC1:
+ 628 0020 00000000 		.word	htim1
+ 629 0024 04000000 		.word	4
+ 630 0028 00100240 		.word	1073876992
+ 631 002c 0001     		.short	256
+ 632 002e 0000     		.space	2
+ 633 0030 00100240 		.word	1073876992
+ 634 0034 0004     		.short	1024
+ 635 0036 0000     		.space	2
+ 636 0038 00000000 		.word	hencoder2
+ 637 003c FF       		.byte	-1
+ 638 003d 000000   		.space	3
+ 639              		.text
+ 640              	.Letext0:
+ 641              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 642              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 643              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 644              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 645              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 646              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 647              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 648              		.file 9 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 649              		.file 10 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 650              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 651              		.file 12 "Core/Inc/tim.h"
+ 652              		.file 13 "Cus/MOTOR_DRV/pid.h"
+ 653              		.file 14 "Cus/MOTOR_DRV/encoder.h"
+ 654              		.file 15 "Cus/MOTOR_DRV/motor.h"
+ARM GAS  /tmp/ccnzcFlH.s 			page 18
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 motor.c
-     /tmp/ccuoQXaZ.s:18     .text.Motor_SetDirection:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:25     .text.Motor_SetDirection:0000000000000000 Motor_SetDirection
-     /tmp/ccuoQXaZ.s:118    .text.Motor_SetSpeed:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:125    .text.Motor_SetSpeed:0000000000000000 Motor_SetSpeed
-     /tmp/ccuoQXaZ.s:250    .text.Motor_Stop:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:257    .text.Motor_Stop:0000000000000000 Motor_Stop
-     /tmp/ccuoQXaZ.s:336    .text.Motor_Init:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:343    .text.Motor_Init:0000000000000000 Motor_Init
-     /tmp/ccuoQXaZ.s:445    .text.Motor_Init:000000000000006c $d
-     /tmp/ccuoQXaZ.s:454    .text.Motors_Init:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:461    .text.Motors_Init:0000000000000000 Motors_Init
-     /tmp/ccuoQXaZ.s:513    .text.Motors_Init:000000000000003c $d
+     /tmp/ccnzcFlH.s:18     .text.Motor_SetDirection:0000000000000000 $t
+     /tmp/ccnzcFlH.s:25     .text.Motor_SetDirection:0000000000000000 Motor_SetDirection
+     /tmp/ccnzcFlH.s:118    .text.Motor_SetSpeed:0000000000000000 $t
+     /tmp/ccnzcFlH.s:125    .text.Motor_SetSpeed:0000000000000000 Motor_SetSpeed
+     /tmp/ccnzcFlH.s:250    .text.Motor_Stop:0000000000000000 $t
+     /tmp/ccnzcFlH.s:257    .text.Motor_Stop:0000000000000000 Motor_Stop
+     /tmp/ccnzcFlH.s:336    .text.Motor_Init:0000000000000000 $t
+     /tmp/ccnzcFlH.s:343    .text.Motor_Init:0000000000000000 Motor_Init
+     /tmp/ccnzcFlH.s:445    .text.Motor_Init:000000000000006c $d
+     /tmp/ccnzcFlH.s:453    .text.Motors_Init:0000000000000000 $t
+     /tmp/ccnzcFlH.s:460    .text.Motors_Init:0000000000000000 Motors_Init
+     /tmp/ccnzcFlH.s:512    .text.Motors_Init:000000000000003c $d
                             *COM*:0000000000000054 hmotor1
                             *COM*:0000000000000054 hmotor2
-     /tmp/ccuoQXaZ.s:520    .text.Motor_SetTargetSpeed:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:527    .text.Motor_SetTargetSpeed:0000000000000000 Motor_SetTargetSpeed
-     /tmp/ccuoQXaZ.s:564    .text.Motor_UpdateSpeed:0000000000000000 $t
-     /tmp/ccuoQXaZ.s:571    .text.Motor_UpdateSpeed:0000000000000000 Motor_UpdateSpeed
-     /tmp/ccuoQXaZ.s:614    .rodata:0000000000000000 $d
+     /tmp/ccnzcFlH.s:519    .text.Motor_SetTargetSpeed:0000000000000000 $t
+     /tmp/ccnzcFlH.s:526    .text.Motor_SetTargetSpeed:0000000000000000 Motor_SetTargetSpeed
+     /tmp/ccnzcFlH.s:563    .text.Motor_UpdateSpeed:0000000000000000 $t
+     /tmp/ccnzcFlH.s:570    .text.Motor_UpdateSpeed:0000000000000000 Motor_UpdateSpeed
+     /tmp/ccnzcFlH.s:613    .rodata:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_WritePin

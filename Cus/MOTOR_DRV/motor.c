@@ -27,7 +27,7 @@ void Motor_Init(Motor_HandleTypeDef *hmotor, Motor_InitTypeDef *init)
     hmotor->current_rpm = 0;
     
     // 初始化PID控制器
-    PID_Init(&hmotor->pid, 1.0f, 0.1f, 0.01f, 0.0f);
+    PID_Init(&hmotor->pid, 1.0f, 0, 0.01f, 0.0f);
     PID_SetOutputLimits(&hmotor->pid, -1000.0f, 1000.0f);
     
     // 启动PWM

@@ -105,3 +105,8 @@ ros2 topic pub pid_params std_msgs/msg/Float32MultiArray "data: [2.5, 3.2, 0.05]
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'mecanum,0.065,0.32,0.32'"
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'ackermann,0.065,0.32,0.32'"
 ros2 topic pub /vehicle_params std_msgs/msg/String "data: 'differential,0.065,0.32,0.32'"
+
+
+
+
+print state_manager

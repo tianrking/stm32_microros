@@ -324,7 +324,7 @@ void MicroROS_Init(void) {
         &right_wheel_target_publisher,
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
-        "wheel_right/target"
+        "wheel_right/target_speed"
     );
     
     // 初始化左轮速度发布者
@@ -339,7 +339,7 @@ void MicroROS_Init(void) {
         &left_wheel_target_publisher,
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
-        "wheel_left/target"
+        "wheel_left/target_speed"
     );
 
     // Initialize subscribers
@@ -347,14 +347,14 @@ void MicroROS_Init(void) {
         &motor1_subscriber,
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
-        "wheel_right/target_speed"
+        "wheel_right/target"
     );
 
     rclc_subscription_init_default(
         &motor2_subscriber,
         &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Float64),
-        "wheel_left/target_speed"
+        "wheel_left/target"
     );
 
     rclc_subscription_init_default(
@@ -421,14 +421,14 @@ void MicroROS_Init(void) {
 /* MicroROS task implementation */
 void MicroROS_TaskStart(void *argument) {
     for (;;) {
-        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(10));
 
         msg.data++;
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-        osDelay(200);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
-        osDelay(200);
+        // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        // HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+        osDelay(10);
+        // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+        // HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+        // osDelay(200);
     }
 }
