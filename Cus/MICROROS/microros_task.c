@@ -17,10 +17,10 @@
 #include <math.h>
 
 /* Robot parameters */
-#define WHEEL_SEPARATION 0.32f
-#define WHEEL_RADIUS 0.065f
-#define MAX_LINEAR_SPEED 1.0f
-#define MAX_ANGULAR_SPEED 2.0f
+#define WHEEL_SEPARATION 0.2f  //m
+#define WHEEL_RADIUS 0.02f  //m
+#define MAX_LINEAR_SPEED 5.0f  //CMD_VEL
+#define MAX_ANGULAR_SPEED 180.0f //CMD_VEL
 #define RPM_TO_RADS 0.10472f
 #define RADS_TO_RPM 9.5493f
 
