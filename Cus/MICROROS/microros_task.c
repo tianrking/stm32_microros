@@ -211,8 +211,9 @@ static void pid_params_callback(const void * msgin) {
         return; // JSON 格式错误
     }
     
-    // 初始化 PID 参数
+    // 初始化参数
     float p = 0.0f, i = 0.0f, d = 0.0f;
+    int motor_id = 0; // 新增电机ID参数
     
     // 使用 strtok 解析每个键值对
     char* token = strtok(json_start, ",");
@@ -237,7 +238,9 @@ static void pid_params_callback(const void * msgin) {
             if (key[strlen(key) - 1] == '"') key[strlen(key) - 1] = '\0';
             
             // 根据键名设置相应的值
-            if (strcmp(key, "p") == 0) {
+            if (strcmp(key, "id") == 0) {
+                motor_id = atoi(value);
+            } else if (strcmp(key, "p") == 0) {
                 p = atof(value);
             } else if (strcmp(key, "i") == 0) {
                 i = atof(value);
@@ -249,17 +252,18 @@ static void pid_params_callback(const void * msgin) {
         token = strtok(NULL, ",");
     }
     
-    // printf("Parsed PID values - P: %.3f, I: %.3f, D: %.3f\n", p, i, d);
-    gggg++;
-    // 更新 PID 参数
+    // 根据电机ID更新相应的PID参数
     if (p >= 0.0f) {
-            gggg++;
-        if (MicroROSState_UpdatePIDParams(&hmotor1.pid, p, i, d)) {
-                gggg++;
-            printf("Motor1 PID params updated successfully\n");
-        }
-        if (MicroROSState_UpdatePIDParams(&hmotor2.pid, p, i, d)) {
-            printf("Motor2 PID params updated successfully\n");
+        if (motor_id == 1) {
+            if (MicroROSState_UpdatePIDParams(&hmotor1.pid, p, i, d)) {
+                // printf("Motor1 PID params updated successfully\n");
+            }
+        } else if (motor_id == 2) {
+            if (MicroROSState_UpdatePIDParams(&hmotor2.pid, p, i, d)) {
+                // printf("Motor2 PID params updated successfully\n");
+            }
+        } else {
+            // printf("Invalid motor ID: %d\n", motor_id);
         }
     }
 }

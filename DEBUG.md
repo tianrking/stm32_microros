@@ -128,7 +128,7 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.2, y: 0.0, z: 0.
 ```
 
 3. PID参数设置
-```bash
+<!-- ```bash
 # 话题：/pid_params
 # 消息类型：std_msgs/msg/String
 # 说明：通过JSON字符串设置电机PID参数
@@ -138,6 +138,13 @@ ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"p\":1.0,\"i\":0.5,\"d\
 
 # 示例2：设置更激进的PID参数
 ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"p\":3.0,\"i\":2.0,\"d\":0.2}'"
+``` -->
+
+```bash
+ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"id\":1,\"p\":1.0,\"i\":0.5,\"d\":0.1}'"
+
+# 示例2：设置电机2（右电机）的PID参数
+ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"id\":2,\"p\":3.0,\"i\":2.0,\"d\":0.2}'"
 ```
 
 4. 车辆参数配置
@@ -231,7 +238,7 @@ ros2 topic pub /pid_params std_msgs/msg/String "data: '{\"p\":1.5,\"i\":0.8,\"d\
 2. 所有尺寸参数（车轮半径、轮距、轴距）均使用米为单位
 3. PID参数可以实时调整，建议从小参数开始调试
 4. 速度值的单位统一使用米/秒（m/s）和弧度/秒（rad/s）
-5. 更改车身参数或驱动模式后，系统会自动使用相应的运动学模型进行速度解算
+5. 更改车身参数或驱动模式后，系统会自动使用相应的运动学模型进行速度解算 但是目前这个版本只有接口 目前只含有差速模型的结算
 6. 实际速度会受到硬件限制，请根据实际情况设置合适的速度值
 7. 在进行PID调试时，建议先使用较小的速度值进行测试
 8. 修改车辆参数后，建议先进行低速测试以验证配置是否正确

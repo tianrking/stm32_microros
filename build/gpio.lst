@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccksAJja.s 			page 1
+ARM GAS  /tmp/cc3Ag7cn.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   28:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
   29:Core/Src/gpio.c **** /* Configure GPIO                                                             */
   30:Core/Src/gpio.c **** /*----------------------------------------------------------------------------*/
-ARM GAS  /tmp/ccksAJja.s 			page 2
+ARM GAS  /tmp/cc3Ag7cn.s 			page 2
 
 
   31:Core/Src/gpio.c **** /* USER CODE BEGIN 1 */
@@ -108,7 +108,7 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   55              		.loc 1 48 3 view .LVU4
   56 0012 0194     		str	r4, [sp, #4]
   57              		.loc 1 48 3 view .LVU5
-  58 0014 384B     		ldr	r3, .L3
+  58 0014 3C4B     		ldr	r3, .L3
   59 0016 1A6B     		ldr	r2, [r3, #48]
   60 0018 42F00402 		orr	r2, r2, #4
   61 001c 1A63     		str	r2, [r3, #48]
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   65 0024 0192     		str	r2, [sp, #4]
   66              		.loc 1 48 3 view .LVU7
   67 0026 019A     		ldr	r2, [sp, #4]
-ARM GAS  /tmp/ccksAJja.s 			page 3
+ARM GAS  /tmp/cc3Ag7cn.s 			page 3
 
 
   68              	.LBE2:
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
  118              		.loc 1 52 3 view .LVU27
  119              	.LBB6:
  120              		.loc 1 52 3 view .LVU28
-ARM GAS  /tmp/ccksAJja.s 			page 4
+ARM GAS  /tmp/cc3Ag7cn.s 			page 4
 
 
  121 0064 0594     		str	r4, [sp, #20]
@@ -215,30 +215,30 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   55:Core/Src/gpio.c ****   /*Configure GPIO pin Output Level */
   56:Core/Src/gpio.c ****   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
  150              		.loc 1 56 3 view .LVU39
- 151 008c DFF87480 		ldr	r8, .L3+12
- 152 0090 2246     		mov	r2, r4
- 153 0092 4FF40051 		mov	r1, #8192
- 154 0096 4046     		mov	r0, r8
- 155 0098 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 151 008c 1F4F     		ldr	r7, .L3+4
+ 152 008e 2246     		mov	r2, r4
+ 153 0090 4FF40051 		mov	r1, #8192
+ 154 0094 3846     		mov	r0, r7
+ 155 0096 FFF7FEFF 		bl	HAL_GPIO_WritePin
  156              	.LVL0:
   57:Core/Src/gpio.c **** 
   58:Core/Src/gpio.c ****   /*Configure GPIO pin Output Level */
   59:Core/Src/gpio.c ****   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
  157              		.loc 1 59 3 view .LVU40
- 158 009c 174F     		ldr	r7, .L3+4
+ 158 009a DFF87880 		ldr	r8, .L3+12
  159 009e 2246     		mov	r2, r4
  160 00a0 0221     		movs	r1, #2
- 161 00a2 3846     		mov	r0, r7
+ 161 00a2 4046     		mov	r0, r8
  162 00a4 FFF7FEFF 		bl	HAL_GPIO_WritePin
  163              	.LVL1:
   60:Core/Src/gpio.c **** 
   61:Core/Src/gpio.c ****   /*Configure GPIO pin Output Level */
   62:Core/Src/gpio.c ****   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10, GPIO_PIN_RESET);
  164              		.loc 1 62 3 view .LVU41
- 165 00a8 154E     		ldr	r6, .L3+8
+ 165 00a8 194E     		ldr	r6, .L3+8
  166 00aa 2246     		mov	r2, r4
  167 00ac 4FF4B061 		mov	r1, #1408
-ARM GAS  /tmp/ccksAJja.s 			page 5
+ARM GAS  /tmp/cc3Ag7cn.s 			page 5
 
 
  168 00b0 3046     		mov	r0, r6
@@ -267,7 +267,7 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   69:Core/Src/gpio.c ****   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
  185              		.loc 1 69 3 is_stmt 1 view .LVU50
  186 00c4 07A9     		add	r1, sp, #28
- 187 00c6 4046     		mov	r0, r8
+ 187 00c6 3846     		mov	r0, r7
  188 00c8 FFF7FEFF 		bl	HAL_GPIO_Init
  189              	.LVL3:
   70:Core/Src/gpio.c **** 
@@ -275,8 +275,8 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   72:Core/Src/gpio.c ****   GPIO_InitStruct.Pin = GPIO_PIN_1;
  190              		.loc 1 72 3 view .LVU51
  191              		.loc 1 72 23 is_stmt 0 view .LVU52
- 192 00cc 0223     		movs	r3, #2
- 193 00ce 0793     		str	r3, [sp, #28]
+ 192 00cc 0227     		movs	r7, #2
+ 193 00ce 0797     		str	r7, [sp, #28]
   73:Core/Src/gpio.c ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
  194              		.loc 1 73 3 is_stmt 1 view .LVU53
  195              		.loc 1 73 24 is_stmt 0 view .LVU54
@@ -292,13 +292,13 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
   76:Core/Src/gpio.c ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
  203              		.loc 1 76 3 is_stmt 1 view .LVU59
  204 00d6 07A9     		add	r1, sp, #28
- 205 00d8 3846     		mov	r0, r7
+ 205 00d8 4046     		mov	r0, r8
  206 00da FFF7FEFF 		bl	HAL_GPIO_Init
  207              	.LVL4:
   77:Core/Src/gpio.c **** 
   78:Core/Src/gpio.c ****   /*Configure GPIO pins : PE7 PE8 PE10 */
   79:Core/Src/gpio.c ****   GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10;
-ARM GAS  /tmp/ccksAJja.s 			page 6
+ARM GAS  /tmp/cc3Ag7cn.s 			page 6
 
 
  208              		.loc 1 79 3 view .LVU60
@@ -324,39 +324,62 @@ ARM GAS  /tmp/ccksAJja.s 			page 1
  224 00ee FFF7FEFF 		bl	HAL_GPIO_Init
  225              	.LVL5:
   84:Core/Src/gpio.c **** 
-  85:Core/Src/gpio.c **** }
- 226              		.loc 1 85 1 is_stmt 0 view .LVU69
- 227 00f2 0CB0     		add	sp, sp, #48
- 228              	.LCFI2:
- 229              		.cfi_def_cfa_offset 24
- 230              		@ sp needed
- 231 00f4 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
- 232              	.L4:
- 233              		.align	2
- 234              	.L3:
- 235 00f8 00380240 		.word	1073887232
- 236 00fc 00040240 		.word	1073873920
- 237 0100 00100240 		.word	1073876992
- 238 0104 00080240 		.word	1073874944
- 239              		.cfi_endproc
- 240              	.LFE134:
- 242              		.text
- 243              	.Letext0:
- 244              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
- 245              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
- 246              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
- 247              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
- 248              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 249              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
- 250              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
-ARM GAS  /tmp/ccksAJja.s 			page 7
+  85:Core/Src/gpio.c ****   /*Configure GPIO pin : PtPin */
+  86:Core/Src/gpio.c ****   GPIO_InitStruct.Pin = DETECT_MICROROS_Pin;
+ 226              		.loc 1 86 3 view .LVU69
+ 227              		.loc 1 86 23 is_stmt 0 view .LVU70
+ 228 00f2 0797     		str	r7, [sp, #28]
+  87:Core/Src/gpio.c ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 229              		.loc 1 87 3 is_stmt 1 view .LVU71
+ 230              		.loc 1 87 24 is_stmt 0 view .LVU72
+ 231 00f4 0894     		str	r4, [sp, #32]
+  88:Core/Src/gpio.c ****   GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 232              		.loc 1 88 3 is_stmt 1 view .LVU73
+ 233              		.loc 1 88 24 is_stmt 0 view .LVU74
+ 234 00f6 0995     		str	r5, [sp, #36]
+  89:Core/Src/gpio.c ****   HAL_GPIO_Init(DETECT_MICROROS_GPIO_Port, &GPIO_InitStruct);
+ 235              		.loc 1 89 3 is_stmt 1 view .LVU75
+ 236 00f8 07A9     		add	r1, sp, #28
+ 237 00fa 3046     		mov	r0, r6
+ 238 00fc FFF7FEFF 		bl	HAL_GPIO_Init
+ 239              	.LVL6:
+  90:Core/Src/gpio.c **** 
+  91:Core/Src/gpio.c **** }
+ 240              		.loc 1 91 1 is_stmt 0 view .LVU76
+ 241 0100 0CB0     		add	sp, sp, #48
+ 242              	.LCFI2:
+ 243              		.cfi_def_cfa_offset 24
+ 244              		@ sp needed
+ 245 0102 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 246              	.L4:
+ 247 0106 00BF     		.align	2
+ 248              	.L3:
+ 249 0108 00380240 		.word	1073887232
+ 250 010c 00080240 		.word	1073874944
+ 251 0110 00100240 		.word	1073876992
+ 252 0114 00040240 		.word	1073873920
+ARM GAS  /tmp/cc3Ag7cn.s 			page 7
+
+
+ 253              		.cfi_endproc
+ 254              	.LFE134:
+ 256              		.text
+ 257              	.Letext0:
+ 258              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 259              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 260              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 261              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 262              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 263              		.file 7 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 264              		.file 8 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ARM GAS  /tmp/cc3Ag7cn.s 			page 8
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 gpio.c
-     /tmp/ccksAJja.s:18     .text.MX_GPIO_Init:0000000000000000 $t
-     /tmp/ccksAJja.s:26     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
-     /tmp/ccksAJja.s:235    .text.MX_GPIO_Init:00000000000000f8 $d
+     /tmp/cc3Ag7cn.s:18     .text.MX_GPIO_Init:0000000000000000 $t
+     /tmp/cc3Ag7cn.s:26     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
+     /tmp/cc3Ag7cn.s:249    .text.MX_GPIO_Init:0000000000000108 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_WritePin

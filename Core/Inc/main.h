@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DETECT_MICROROS_Pin GPIO_PIN_1
+#define DETECT_MICROROS_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
 

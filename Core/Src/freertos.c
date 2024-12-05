@@ -154,13 +154,26 @@ void StartDefaultTask(void *argument)
 * @param argument: Not used
 * @retval None
 */
+GPIO_PinState pinState;
 /* USER CODE END Header_StartTask02 */
 void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartTask02 */
+  
   /* Infinite loop */
   for(;;)
   {
+    // 读取GPIOE1引脚状态
+    pinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_1);
+    
+    // 如果是低电平状态
+    if(pinState == GPIO_PIN_RESET)
+    {
+      // 执行系统复位5
+      HAL_NVIC_SystemReset();
+      // MicroROS_Init();
+    }
+    
     osDelay(1);
   }
   /* USER CODE END StartTask02 */

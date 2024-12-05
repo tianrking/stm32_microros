@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccmmr6x5.s 			page 1
+ARM GAS  /tmp/ccUYpxD5.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccmmr6x5.s 			page 1
   27:Core/Src/freertos.c **** /* USER CODE BEGIN Includes */
   28:Core/Src/freertos.c **** #include "gpio.h"
   29:Core/Src/freertos.c **** #include "usart.h"
-ARM GAS  /tmp/ccmmr6x5.s 			page 2
+ARM GAS  /tmp/ccUYpxD5.s 			page 2
 
 
   30:Core/Src/freertos.c **** #include "tim.h"
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccmmr6x5.s 			page 1
   84:Core/Src/freertos.c **** 
   85:Core/Src/freertos.c **** void StartDefaultTask(void *argument);
   86:Core/Src/freertos.c **** void StartTask02(void *argument);
-ARM GAS  /tmp/ccmmr6x5.s 			page 3
+ARM GAS  /tmp/ccUYpxD5.s 			page 3
 
 
   87:Core/Src/freertos.c **** 
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccmmr6x5.s 			page 1
  141:Core/Src/freertos.c **** {
   30              		.loc 1 141 1 view -0
   31              		.cfi_startproc
-ARM GAS  /tmp/ccmmr6x5.s 			page 4
+ARM GAS  /tmp/ccUYpxD5.s 			page 4
 
 
   32              		@ args = 0, pretend = 0, frame = 0
@@ -226,217 +226,270 @@ ARM GAS  /tmp/ccmmr6x5.s 			page 1
  154:Core/Src/freertos.c **** * @param argument: Not used
  155:Core/Src/freertos.c **** * @retval None
  156:Core/Src/freertos.c **** */
- 157:Core/Src/freertos.c **** /* USER CODE END Header_StartTask02 */
- 158:Core/Src/freertos.c **** void StartTask02(void *argument)
- 159:Core/Src/freertos.c **** {
-  64              		.loc 1 159 1 is_stmt 1 view -0
+ 157:Core/Src/freertos.c **** GPIO_PinState pinState;
+ 158:Core/Src/freertos.c **** /* USER CODE END Header_StartTask02 */
+ 159:Core/Src/freertos.c **** void StartTask02(void *argument)
+ 160:Core/Src/freertos.c **** {
+  64              		.loc 1 160 1 is_stmt 1 view -0
   65              		.cfi_startproc
   66              		@ Volatile: function does not return.
   67              		@ args = 0, pretend = 0, frame = 0
   68              		@ frame_needed = 0, uses_anonymous_args = 0
   69              	.LVL3:
-  70              		.loc 1 159 1 is_stmt 0 view .LVU7
+  70              		.loc 1 160 1 is_stmt 0 view .LVU7
   71 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/ccUYpxD5.s 			page 5
+
+
   72              	.LCFI1:
-ARM GAS  /tmp/ccmmr6x5.s 			page 5
-
-
   73              		.cfi_def_cfa_offset 8
   74              		.cfi_offset 3, -8
   75              		.cfi_offset 14, -4
-  76              	.LVL4:
-  77              	.L4:
- 160:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
- 161:Core/Src/freertos.c ****   /* Infinite loop */
- 162:Core/Src/freertos.c ****   for(;;)
-  78              		.loc 1 162 3 is_stmt 1 discriminator 1 view .LVU8
- 163:Core/Src/freertos.c ****   {
- 164:Core/Src/freertos.c ****     osDelay(1);
-  79              		.loc 1 164 5 discriminator 1 view .LVU9
-  80 0002 0120     		movs	r0, #1
-  81 0004 FFF7FEFF 		bl	osDelay
+  76 0002 02E0     		b	.L5
+  77              	.LVL4:
+  78              	.L4:
+ 161:Core/Src/freertos.c ****   /* USER CODE BEGIN StartTask02 */
+ 162:Core/Src/freertos.c ****   
+ 163:Core/Src/freertos.c ****   /* Infinite loop */
+ 164:Core/Src/freertos.c ****   for(;;)
+ 165:Core/Src/freertos.c ****   {
+ 166:Core/Src/freertos.c ****     // 读取GPIOE1引脚状态
+ 167:Core/Src/freertos.c ****     pinState = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_1);
+ 168:Core/Src/freertos.c ****     
+ 169:Core/Src/freertos.c ****     // 如果是低电平状态
+ 170:Core/Src/freertos.c ****     if(pinState == GPIO_PIN_RESET)
+ 171:Core/Src/freertos.c ****     {
+ 172:Core/Src/freertos.c ****       // 执行系统复位5
+ 173:Core/Src/freertos.c ****       HAL_NVIC_SystemReset();
+ 174:Core/Src/freertos.c ****       // MicroROS_Init();
+ 175:Core/Src/freertos.c ****     }
+ 176:Core/Src/freertos.c ****     
+ 177:Core/Src/freertos.c ****     osDelay(1);
+  79              		.loc 1 177 5 is_stmt 1 view .LVU8
+  80 0004 0120     		movs	r0, #1
+  81 0006 FFF7FEFF 		bl	osDelay
   82              	.LVL5:
- 162:Core/Src/freertos.c ****   {
-  83              		.loc 1 162 8 discriminator 1 view .LVU10
-  84 0008 FBE7     		b	.L4
-  85              		.cfi_endproc
-  86              	.LFE144:
-  88              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
-  89              		.align	1
-  90              		.global	MX_FREERTOS_Init
-  91              		.syntax unified
-  92              		.thumb
-  93              		.thumb_func
-  94              		.fpu fpv4-sp-d16
-  96              	MX_FREERTOS_Init:
-  97              	.LFB142:
+ 164:Core/Src/freertos.c ****   {
+  83              		.loc 1 164 8 view .LVU9
+  84              	.L5:
+ 164:Core/Src/freertos.c ****   {
+  85              		.loc 1 164 3 view .LVU10
+ 167:Core/Src/freertos.c ****     
+  86              		.loc 1 167 5 view .LVU11
+ 167:Core/Src/freertos.c ****     
+  87              		.loc 1 167 16 is_stmt 0 view .LVU12
+  88 000a 0221     		movs	r1, #2
+  89 000c 0448     		ldr	r0, .L7
+  90 000e FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  91              	.LVL6:
+ 167:Core/Src/freertos.c ****     
+  92              		.loc 1 167 14 view .LVU13
+  93 0012 044B     		ldr	r3, .L7+4
+  94 0014 1870     		strb	r0, [r3]
+ 170:Core/Src/freertos.c ****     {
+  95              		.loc 1 170 5 is_stmt 1 view .LVU14
+ 170:Core/Src/freertos.c ****     {
+  96              		.loc 1 170 7 is_stmt 0 view .LVU15
+  97 0016 0028     		cmp	r0, #0
+  98 0018 F4D1     		bne	.L4
+ 173:Core/Src/freertos.c ****       // MicroROS_Init();
+  99              		.loc 1 173 7 is_stmt 1 view .LVU16
+ 100 001a FFF7FEFF 		bl	HAL_NVIC_SystemReset
+ 101              	.LVL7:
+ 102 001e F1E7     		b	.L4
+ 103              	.L8:
+ARM GAS  /tmp/ccUYpxD5.s 			page 6
+
+
+ 104              		.align	2
+ 105              	.L7:
+ 106 0020 00100240 		.word	1073876992
+ 107 0024 00000000 		.word	pinState
+ 108              		.cfi_endproc
+ 109              	.LFE144:
+ 111              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	MX_FREERTOS_Init
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.fpu fpv4-sp-d16
+ 119              	MX_FREERTOS_Init:
+ 120              	.LFB142:
   95:Core/Src/freertos.c ****   /* USER CODE BEGIN Init */
-  98              		.loc 1 95 29 view -0
-  99              		.cfi_startproc
- 100              		@ args = 0, pretend = 0, frame = 0
- 101              		@ frame_needed = 0, uses_anonymous_args = 0
- 102 0000 08B5     		push	{r3, lr}
- 103              	.LCFI2:
- 104              		.cfi_def_cfa_offset 8
- 105              		.cfi_offset 3, -8
- 106              		.cfi_offset 14, -4
+ 121              		.loc 1 95 29 view -0
+ 122              		.cfi_startproc
+ 123              		@ args = 0, pretend = 0, frame = 0
+ 124              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125 0000 08B5     		push	{r3, lr}
+ 126              	.LCFI2:
+ 127              		.cfi_def_cfa_offset 8
+ 128              		.cfi_offset 3, -8
+ 129              		.cfi_offset 14, -4
  118:Core/Src/freertos.c **** 
- 107              		.loc 1 118 3 view .LVU12
+ 130              		.loc 1 118 3 view .LVU18
  118:Core/Src/freertos.c **** 
- 108              		.loc 1 118 23 is_stmt 0 view .LVU13
- 109 0002 074A     		ldr	r2, .L8
- 110 0004 0021     		movs	r1, #0
- 111 0006 0748     		ldr	r0, .L8+4
- 112 0008 FFF7FEFF 		bl	osThreadNew
- 113              	.LVL6:
+ 131              		.loc 1 118 23 is_stmt 0 view .LVU19
+ 132 0002 074A     		ldr	r2, .L11
+ 133 0004 0021     		movs	r1, #0
+ 134 0006 0748     		ldr	r0, .L11+4
+ 135 0008 FFF7FEFF 		bl	osThreadNew
+ 136              	.LVL8:
  118:Core/Src/freertos.c **** 
- 114              		.loc 1 118 21 view .LVU14
- 115 000c 064B     		ldr	r3, .L8+8
- 116 000e 1860     		str	r0, [r3]
+ 137              		.loc 1 118 21 view .LVU20
+ 138 000c 064B     		ldr	r3, .L11+8
+ 139 000e 1860     		str	r0, [r3]
  121:Core/Src/freertos.c **** 
- 117              		.loc 1 121 3 is_stmt 1 view .LVU15
+ 140              		.loc 1 121 3 is_stmt 1 view .LVU21
  121:Core/Src/freertos.c **** 
- 118              		.loc 1 121 20 is_stmt 0 view .LVU16
- 119 0010 064A     		ldr	r2, .L8+12
-ARM GAS  /tmp/ccmmr6x5.s 			page 6
-
-
- 120 0012 0021     		movs	r1, #0
- 121 0014 0648     		ldr	r0, .L8+16
- 122 0016 FFF7FEFF 		bl	osThreadNew
- 123              	.LVL7:
+ 141              		.loc 1 121 20 is_stmt 0 view .LVU22
+ 142 0010 064A     		ldr	r2, .L11+12
+ 143 0012 0021     		movs	r1, #0
+ 144 0014 0648     		ldr	r0, .L11+16
+ 145 0016 FFF7FEFF 		bl	osThreadNew
+ 146              	.LVL9:
  121:Core/Src/freertos.c **** 
- 124              		.loc 1 121 18 view .LVU17
- 125 001a 064B     		ldr	r3, .L8+20
- 126 001c 1860     		str	r0, [r3]
+ 147              		.loc 1 121 18 view .LVU23
+ 148 001a 064B     		ldr	r3, .L11+20
+ 149 001c 1860     		str	r0, [r3]
  131:Core/Src/freertos.c **** 
- 127              		.loc 1 131 1 view .LVU18
- 128 001e 08BD     		pop	{r3, pc}
- 129              	.L9:
- 130              		.align	2
- 131              	.L8:
- 132 0020 00000000 		.word	.LANCHOR0
- 133 0024 00000000 		.word	StartDefaultTask
- 134 0028 00000000 		.word	defaultTaskHandle
- 135 002c 00000000 		.word	.LANCHOR1
- 136 0030 00000000 		.word	StartTask02
- 137 0034 00000000 		.word	myTask02Handle
- 138              		.cfi_endproc
- 139              	.LFE142:
- 141              		.global	myTask02_attributes
- 142              		.section	.rodata.str1.4,"aMS",%progbits,1
- 143              		.align	2
- 144              	.LC0:
- 145 0000 6D795461 		.ascii	"myTask02\000"
- 145      736B3032 
- 145      00
- 146              		.comm	myTask02ControlBlock,92,4
- 147              		.comm	myTask02Buffer,8000,4
- 148              		.comm	myTask02Handle,4,4
- 149              		.global	defaultTask_attributes
- 150 0009 000000   		.align	2
- 151              	.LC1:
- 152 000c 64656661 		.ascii	"defaultTask\000"
- 152      756C7454 
- 152      61736B00 
- 153              		.comm	defaultTaskControlBlock,92,4
- 154              		.comm	defaultTaskBuffer,24000,4
- 155              		.comm	defaultTaskHandle,4,4
- 156              		.section	.rodata.defaultTask_attributes,"a"
- 157              		.align	2
- 158              		.set	.LANCHOR0,. + 0
- 161              	defaultTask_attributes:
- 162 0000 0C000000 		.word	.LC1
- 163 0004 00000000 		.space	4
- 164 0008 00000000 		.word	defaultTaskControlBlock
- 165 000c 5C000000 		.word	92
- 166 0010 00000000 		.word	defaultTaskBuffer
- 167 0014 C05D0000 		.word	24000
- 168 0018 18000000 		.word	24
- 169 001c 00000000 		.space	8
- 169      00000000 
- 170              		.section	.rodata.myTask02_attributes,"a"
- 171              		.align	2
- 172              		.set	.LANCHOR1,. + 0
-ARM GAS  /tmp/ccmmr6x5.s 			page 7
+ 150              		.loc 1 131 1 view .LVU24
+ 151 001e 08BD     		pop	{r3, pc}
+ 152              	.L12:
+ 153              		.align	2
+ 154              	.L11:
+ARM GAS  /tmp/ccUYpxD5.s 			page 7
 
 
- 175              	myTask02_attributes:
- 176 0000 00000000 		.word	.LC0
- 177 0004 00000000 		.space	4
- 178 0008 00000000 		.word	myTask02ControlBlock
- 179 000c 5C000000 		.word	92
- 180 0010 00000000 		.word	myTask02Buffer
- 181 0014 401F0000 		.word	8000
- 182 0018 18000000 		.word	24
- 183 001c 00000000 		.space	8
- 183      00000000 
- 184              		.text
- 185              	.Letext0:
- 186              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stddef.h"
- 187              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
- 188              		.file 4 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
- 189              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
- 190              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
- 191              		.file 7 "Core/Inc/FreeRTOSConfig.h"
- 192              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
- 193              		.file 9 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
- 194              		.file 10 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
- 195              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
- 196              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
- 197              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
- 198              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
- 199              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
- 200              		.file 16 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
- 201              		.file 17 "Core/Inc/usart.h"
- 202              		.file 18 "Core/Inc/tim.h"
- 203              		.file 19 "Cus/MOTOR_DRV/pid.h"
- 204              		.file 20 "Cus/MOTOR_DRV/encoder.h"
- 205              		.file 21 "Cus/MOTOR_DRV/motor.h"
- 206              		.file 22 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stdarg.h"
- 207              		.file 23 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
- 208              		.file 24 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_types.h"
- 209              		.file 25 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/reent.h"
- 210              		.file 26 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
- 211              		.file 27 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdlib.h"
- 212              		.file 28 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 213              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
- 214              		.file 30 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
- 215              		.file 31 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
- 216              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/dom
- 217              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
- 218              		.file 34 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
- 219              		.file 35 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 220              		.file 36 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
- 221              		.file 37 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/math.h"
- 222              		.file 38 "Cus/MICROROS/microros_task.h"
- 223              		.file 39 "<built-in>"
-ARM GAS  /tmp/ccmmr6x5.s 			page 8
+ 155 0020 00000000 		.word	.LANCHOR0
+ 156 0024 00000000 		.word	StartDefaultTask
+ 157 0028 00000000 		.word	defaultTaskHandle
+ 158 002c 00000000 		.word	.LANCHOR1
+ 159 0030 00000000 		.word	StartTask02
+ 160 0034 00000000 		.word	myTask02Handle
+ 161              		.cfi_endproc
+ 162              	.LFE142:
+ 164              		.comm	pinState,1,1
+ 165              		.global	myTask02_attributes
+ 166              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 167              		.align	2
+ 168              	.LC0:
+ 169 0000 6D795461 		.ascii	"myTask02\000"
+ 169      736B3032 
+ 169      00
+ 170              		.comm	myTask02ControlBlock,92,4
+ 171              		.comm	myTask02Buffer,8000,4
+ 172              		.comm	myTask02Handle,4,4
+ 173              		.global	defaultTask_attributes
+ 174 0009 000000   		.align	2
+ 175              	.LC1:
+ 176 000c 64656661 		.ascii	"defaultTask\000"
+ 176      756C7454 
+ 176      61736B00 
+ 177              		.comm	defaultTaskControlBlock,92,4
+ 178              		.comm	defaultTaskBuffer,24000,4
+ 179              		.comm	defaultTaskHandle,4,4
+ 180              		.section	.rodata.defaultTask_attributes,"a"
+ 181              		.align	2
+ 182              		.set	.LANCHOR0,. + 0
+ 185              	defaultTask_attributes:
+ 186 0000 0C000000 		.word	.LC1
+ 187 0004 00000000 		.space	4
+ 188 0008 00000000 		.word	defaultTaskControlBlock
+ 189 000c 5C000000 		.word	92
+ 190 0010 00000000 		.word	defaultTaskBuffer
+ 191 0014 C05D0000 		.word	24000
+ 192 0018 18000000 		.word	24
+ 193 001c 00000000 		.space	8
+ 193      00000000 
+ 194              		.section	.rodata.myTask02_attributes,"a"
+ 195              		.align	2
+ 196              		.set	.LANCHOR1,. + 0
+ 199              	myTask02_attributes:
+ 200 0000 00000000 		.word	.LC0
+ 201 0004 00000000 		.space	4
+ 202 0008 00000000 		.word	myTask02ControlBlock
+ 203 000c 5C000000 		.word	92
+ 204 0010 00000000 		.word	myTask02Buffer
+ 205 0014 401F0000 		.word	8000
+ 206 0018 18000000 		.word	24
+ 207 001c 00000000 		.space	8
+ 207      00000000 
+ 208              		.text
+ 209              	.Letext0:
+ 210              		.file 2 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stddef.h"
+ARM GAS  /tmp/ccUYpxD5.s 			page 8
+
+
+ 211              		.file 3 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 212              		.file 4 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 213              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 214              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h"
+ 215              		.file 7 "Core/Inc/FreeRTOSConfig.h"
+ 216              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
+ 217              		.file 9 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 218              		.file 10 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 219              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 220              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 221              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 222              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h"
+ 223              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ 224              		.file 16 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 225              		.file 17 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h"
+ 226              		.file 18 "Core/Inc/usart.h"
+ 227              		.file 19 "Core/Inc/tim.h"
+ 228              		.file 20 "Cus/MOTOR_DRV/pid.h"
+ 229              		.file 21 "Cus/MOTOR_DRV/encoder.h"
+ 230              		.file 22 "Cus/MOTOR_DRV/motor.h"
+ 231              		.file 23 "/opt/gcc-arm-none-eabi-9-2020-q2-update/lib/gcc/arm-none-eabi/9.3.1/include/stdarg.h"
+ 232              		.file 24 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdio.h"
+ 233              		.file 25 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/_types.h"
+ 234              		.file 26 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/reent.h"
+ 235              		.file 27 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/sys/lock.h"
+ 236              		.file 28 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/stdlib.h"
+ 237              		.file 29 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 238              		.file 30 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcutils
+ 239              		.file 31 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/tim
+ 240              		.file 32 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/typ
+ 241              		.file 33 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/dom
+ 242              		.file 34 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl/nod
+ 243              		.file 35 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rmw/qos
+ 244              		.file 36 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 245              		.file 37 "micro_ros_stm32cubemx_utils/microros_static_library/libmicroros/microros_include/rcl_act
+ 246              		.file 38 "/opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/math.h"
+ 247              		.file 39 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h"
+ 248              		.file 40 "Cus/MICROROS/microros_task.h"
+ 249              		.file 41 "<built-in>"
+ARM GAS  /tmp/ccUYpxD5.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 freertos.c
-     /tmp/ccmmr6x5.s:18     .text.StartDefaultTask:0000000000000000 $t
-     /tmp/ccmmr6x5.s:26     .text.StartDefaultTask:0000000000000000 StartDefaultTask
-     /tmp/ccmmr6x5.s:55     .text.StartTask02:0000000000000000 $t
-     /tmp/ccmmr6x5.s:62     .text.StartTask02:0000000000000000 StartTask02
-     /tmp/ccmmr6x5.s:89     .text.MX_FREERTOS_Init:0000000000000000 $t
-     /tmp/ccmmr6x5.s:96     .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
-     /tmp/ccmmr6x5.s:132    .text.MX_FREERTOS_Init:0000000000000020 $d
+     /tmp/ccUYpxD5.s:18     .text.StartDefaultTask:0000000000000000 $t
+     /tmp/ccUYpxD5.s:26     .text.StartDefaultTask:0000000000000000 StartDefaultTask
+     /tmp/ccUYpxD5.s:55     .text.StartTask02:0000000000000000 $t
+     /tmp/ccUYpxD5.s:62     .text.StartTask02:0000000000000000 StartTask02
+     /tmp/ccUYpxD5.s:106    .text.StartTask02:0000000000000020 $d
+                            *COM*:0000000000000001 pinState
+     /tmp/ccUYpxD5.s:112    .text.MX_FREERTOS_Init:0000000000000000 $t
+     /tmp/ccUYpxD5.s:119    .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
+     /tmp/ccUYpxD5.s:155    .text.MX_FREERTOS_Init:0000000000000020 $d
                             *COM*:0000000000000004 defaultTaskHandle
                             *COM*:0000000000000004 myTask02Handle
-     /tmp/ccmmr6x5.s:175    .rodata.myTask02_attributes:0000000000000000 myTask02_attributes
-     /tmp/ccmmr6x5.s:143    .rodata.str1.4:0000000000000000 $d
+     /tmp/ccUYpxD5.s:199    .rodata.myTask02_attributes:0000000000000000 myTask02_attributes
+     /tmp/ccUYpxD5.s:167    .rodata.str1.4:0000000000000000 $d
                             *COM*:000000000000005c myTask02ControlBlock
                             *COM*:0000000000001f40 myTask02Buffer
-     /tmp/ccmmr6x5.s:161    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
+     /tmp/ccUYpxD5.s:185    .rodata.defaultTask_attributes:0000000000000000 defaultTask_attributes
                             *COM*:000000000000005c defaultTaskControlBlock
                             *COM*:0000000000005dc0 defaultTaskBuffer
-     /tmp/ccmmr6x5.s:157    .rodata.defaultTask_attributes:0000000000000000 $d
-     /tmp/ccmmr6x5.s:171    .rodata.myTask02_attributes:0000000000000000 $d
+     /tmp/ccUYpxD5.s:181    .rodata.defaultTask_attributes:0000000000000000 $d
+     /tmp/ccUYpxD5.s:195    .rodata.myTask02_attributes:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 MicroROS_Init
 MicroROS_TaskStart
 osDelay
+HAL_GPIO_ReadPin
+HAL_NVIC_SystemReset
 osThreadNew
